@@ -1,0 +1,52 @@
+generated: '2026-09-20'
+method: searched
+source: https://docs.gr4vy.com/guides/api/ + openapi/gr4vy-openapi.yml + https://gr4vy.com/regulation-and-compliance/
+standards:
+- id: openapi-3.1
+  conforms: true
+  evidence: 'https://github.com/gr4vy/gr4vy-openapi/blob/main/openapi.json declares openapi: 3.1.0'
+- id: jwt-rfc7519
+  conforms: true
+  evidence: https://docs.gr4vy.com/guides/api/jwts - bearer JWTs self-signed with ES512 or RS512, claims iss/nbf/exp/jti/scopes
+- id: oauth2
+  conforms: false
+  evidence: The spec names its scheme OAuth2PasswordBearer (type oauth2, password flow, tokenUrl auth/token) but
+    the documented integration auth (https://docs.gr4vy.com/guides/api/authentication) is a merchant-signed JWT
+    bearer, not an OAuth 2.0 authorization grant; no /.well-known/oauth-authorization-server is served.
+- id: oidc
+  conforms: false
+  evidence: No /.well-known/openid-configuration on gr4vy.com or docs.gr4vy.com (404).
+- id: idempotency
+  conforms: true
+  evidence: https://docs.gr4vy.com/guides/api/idempotent-requests - Idempotency-Key header, 24h retention, scoped
+    to 4 transaction endpoints; spec declares idempotency-key header on 8 operations
+- id: pagination
+  conforms: true
+  evidence: https://docs.gr4vy.com/guides/api/pagination - cursor pagination (cursor, limit; next_cursor/previous_cursor)
+- id: rfc7240-prefer
+  conforms: true
+  evidence: 'https://docs.gr4vy.com/guides/api/prefer-header - Prefer: resource=<type> on void and capture'
+- id: rfc9457
+  conforms: false
+  evidence: Errors are application/json with a bespoke {type,code,status,message,details[]} envelope; no application/problem+json
+    in the spec.
+- id: webhook-hmac-sha256
+  conforms: true
+  evidence: https://docs.gr4vy.com/guides/features/webhooks/signatures - X-Gr4vy-Webhook-Signatures HMAC SHA256
+    over {timestamp}.{payload}
+- id: pci-dss
+  conforms: true
+  level: Level 1
+  evidence: https://gr4vy.com/regulation-and-compliance/ - "Our PCI DSS Level 1 certification..." (provider claim;
+    attestation document not public)
+- id: emv-3ds
+  conforms: true
+  evidence: https://docs.gr4vy.com/guides/features/3ds/testing - 3-D Secure scenarios and test cards
+- id: psd2-sca
+  conforms: true
+  evidence: https://docs.gr4vy.com/updates - 2026-07-02 "Issuer-mandated 3-D Secure" tagged 3DS/SCA/PSD2 (SCA support
+    via 3DS; Gr4vy is an orchestrator, not an ASPSP, so no PSD2 XS2A API)
+domain_standard:
+  found: false
+  note: The contract declares no market-domain standard signature (no ISO 20022 message types, no Open Banking/FDX
+    shapes). Payment orchestration has no single wire standard; reward-only check, nothing asserted.

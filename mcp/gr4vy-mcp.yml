@@ -1,0 +1,54 @@
+generated: '2026-09-20'
+method: probed
+status: live
+source: https://docs.gr4vy.com/mcp
+description: Gr4vy serves a hosted, unauthenticated documentation MCP server (Mintlify-hosted) on its docs host.
+  It exposes search and read-only filesystem retrieval over the published docs plus a feedback tool; it does NOT
+  execute payment operations. The docs also carry a guide for building your own ChatGPT-app MCP server on top of
+  Gr4vy (https://docs.gr4vy.com/guides/payments/chatgpt-app/mcp-server) and two sample agentic-commerce repos (gr4vy/gr4vy-python-adk,
+  gr4vy/gr4vy-typescript-adk), none of which is a Gr4vy-hosted payments MCP.
+server:
+  name: Gr4vy
+  version: 1.0.0
+  transport: streamable-http
+  url: https://docs.gr4vy.com/mcp
+  auth: none
+  scope: documentation search/retrieval only
+tools:
+- name: search_gr4vy
+  title: Search documentation
+  description: Search across the Gr4vy knowledge base to find relevant information, code examples, API references,
+    and guides. Use this tool when you need to answer questions about Gr4vy, find specific documentation, understand
+    how features work, or locate implementation details. The search returns contextual content with titles and direct
+    links to the documentation pages. If you need the full content of a speci
+  input_schema_file: mcp/gr4vy-mcp-tools-list.json
+- name: query_docs_filesystem_gr4vy
+  title: null
+  description: 'Run a read-only shell-like query against a virtualized, in-memory filesystem rooted at `/` that
+    contains ONLY the Gr4vy documentation pages and OpenAPI specs. This is NOT a shell on any real machine — nothing
+    runs on the user''s computer, the server host, or any network. The filesystem is a sandbox backed by documentation
+    chunks.
+
+
+    This is how you read documentation pages: there is no separate "get '
+  input_schema_file: mcp/gr4vy-mcp-tools-list.json
+- name: submit_feedback
+  title: Submit documentation feedback
+  description: Report a problem with this documentation site so the docs team can fix it. Use when a documentation
+    page is incorrect, outdated, confusing, incomplete, or has a broken example. This is for feedback about the
+    documentation content itself — not for product support requests or feedback about this tool or assistant.
+  input_schema_file: mcp/gr4vy-mcp-tools-list.json
+resources:
+- name: gr4vy
+  description: Agent skill guidance resource
+files:
+  tools_list: mcp/gr4vy-mcp-tools-list.json
+  descriptor: mcp/gr4vy-mcp-server-descriptor.json
+deployment:
+  mode: remote
+  endpoint: https://docs.gr4vy.com/mcp
+  auth: none
+  verified: probed
+  probe: POST tools/list -> HTTP 200 text/event-stream, 3 tools with inputSchema; GET -> HTTP 200 application/json
+    server descriptor
+  checked: '2026-09-20'

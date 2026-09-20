@@ -1,0 +1,1301 @@
+openapi: 3.2.0
+info:
+  title: Gr4vy Card Details API
+  version: '1.0'
+  description: 'Operations tagged Card Details across 2 of this provider''s published API definitions: gr4vy-docs-v1-openapi.json, gr4vy-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.sandbox.{id}.gr4vy.app
+  x-speakeasy-server-id: sandbox
+  variables:
+    id:
+      default: example
+      description: The subdomain for your Gr4vy instance.
+- url: https://api.{id}.gr4vy.app
+  x-speakeasy-server-id: production
+  variables:
+    id:
+      default: example
+      description: The subdomain for your Gr4vy instance.
+tags:
+- name: Card Details
+  description: Endpoints to retrieve details of a card by utilising a BIN lookup table.
+  x-internal: true
+paths:
+  /card-details:
+    get:
+      operationId: get-card-details
+      summary: Get card details
+      description: 'Retrieves details about a card using either that
+
+        card''s BIN or for stored cards the `payment_method_id`.'
+      tags:
+      - Card Details
+      x-internal: true
+      x-speakeasy-ignore: true
+      parameters:
+      - schema:
+          type: string
+          example: USD
+        in: query
+        name: currency
+        required: true
+        description: 'Filters the results to only the items which support this currency code. A
+
+          currency is formatted as 3-letter ISO currency code.'
+      - schema:
+          type: integer
+          example: 500
+        in: query
+        name: amount
+        description: Used by the Flow engine to filter the results based on the transaction amount.
+      - schema:
+          type: string
+          minLength: 8
+          maxLength: 8
+          example: '42424242'
+        in: query
+        name: bin
+        description: The first 8 digits (the BIN) of the card.
+      - schema:
+          type: string
+          example: US
+        in: query
+        name: country
+        description: 'Filters the results to only the items which support this country code. A
+
+          country is formatted as 2-letter ISO country code.'
+      - schema:
+          type: string
+          example: capture
+          enum:
+          - authorize
+          - capture
+        in: query
+        name: intent
+        description: The intent of the transaction.
+      - schema:
+          type: boolean
+          example: true
+        in: query
+        name: is_subsequent_payment
+        description: 'Used by the Flow engine to filter available options based on the value
+
+          of the `is_subsequent_payment` flag.'
+      - schema:
+          type: boolean
+          example: true
+        in: query
+        name: merchant_initiated
+        description: 'Used by the Flow engine to filter available options based on the value
+
+          of the `merchant_initiated` flag.'
+      - schema:
+          type: string
+          example: '{"restricted_items": "True"}'
+        in: query
+        name: metadata
+        description: 'Used by the Flow engine to filter available options based on various
+
+          client-defined parameters. If present, this must be a string representing
+
+          a valid JSON dictionary.'
+      - schema:
+          type: string
+          example: 46973e9d-88a7-44a6-abfe-be4ff0134ff4
+          format: uuid
+        in: query
+        name: payment_method_id
+        description: Filters for transactions that have a payment method with an ID that matches exactly with the provided value.
+      - schema:
+          type: string
+          example: recurring
+          enum:
+          - ecommerce
+          - moto
+          - recurring
+          - installment
+          - card_on_file
+        in: query
+        name: payment_source
+        description: 'Used by the Flow engine to filter available options based on the
+
+          payment source.'
+      responses:
+        '200':
+          description: Returns information about a card.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CardDetails'
+        '400':
+          description: Returns an error if any of the query parameters are not recognised.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400BadRequest'
+        '401':
+          description: Returns an error if no valid authentication was provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401Unauthorized'
+      security:
+      - bearerAuth: []
+    servers:
+    - url: https://api.sandbox.{id}.gr4vy.app
+      x-speakeasy-server-id: sandbox
+      variables:
+        id:
+          default: example
+          description: The subdomain for your Gr4vy instance.
+    - url: https://api.{id}.gr4vy.app
+      x-speakeasy-server-id: production
+      variables:
+        id:
+          default: example
+          description: The subdomain for your Gr4vy instance.
+components:
+  schemas:
+    Error400BadRequest:
+      title: Bad Request
+      type: object
+      description: Bad Request (HTTP 400).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: A short code that describes the reason for the error.
+          example: bad_request
+          enum:
+          - bad_request
+          - incorrect_json
+          - invalid_credentials
+        status:
+          type: integer
+          description: '`400`.'
+          example: 400
+          enum:
+          - 400
+        message:
+          type: string
+          description: A human-readable reason for the error.
+          example: Missing '****' field
+        details:
+          type: array
+          description: A list of detail objects that further clarify the reason for the error.
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    ErrorDetail:
+      title: Error details
+      description: Additional detail about the part of a request body that caused an issue.
+      type: object
+      x-tags:
+      - Errors
+      properties:
+        location:
+          type: string
+          example: body
+          description: The location where the error caused an issue.
+          enum:
+          - query
+          - body
+          - path
+          - header
+        type:
+          type: string
+          example: value_error.missing
+          description: A unique identifier for the type of error that occurred.
+        pointer:
+          type: string
+          example: /payment_method/number
+          description: 'The exact item for which the validation did not succeed. This is a JSON
+
+            pointer for request bodies, while for query, path, and header parameters
+
+            it is the name of the parameter.'
+        message:
+          type: string
+          example: field required
+          description: A human readable message for this error detail.
+    CardDetails:
+      title: Card Details
+      type: object
+      description: Details about a card.
+      properties:
+        type:
+          type: string
+          description: '`card-detail`.'
+          example: card-detail
+          enum:
+          - card-detail
+        id:
+          type: string
+          format: bin
+          minLength: 8
+          maxLength: 8
+          description: 'The 8 digit BIN of the card. When looking up card details using a
+
+            `payment_method_id` this value will be `null`.'
+          example: '42424242'
+        card_type:
+          type: string
+          description: The type of card.
+          example: credit
+          enum:
+          - credit
+          - debit
+        scheme:
+          description: The scheme/brand of the card.
+          type:
+          - string
+          - 'null'
+          example: visa
+          enum:
+          - accel
+          - amex
+          - bancontact
+          - carte-bancaire
+          - cirrus
+          - culiance
+          - dankort
+          - diners-club
+          - discover
+          - eftpos-australia
+          - elo
+          - hipercard
+          - jcb
+          - maestro
+          - mastercard
+          - mir
+          - nyce
+          - other
+          - pulse
+          - rupay
+          - star
+          - uatp
+          - unionpay
+          - visa
+          - null
+        scheme_icon_url:
+          type: string
+          description: An icon to display for the card scheme.
+          example: https://api.sandbox.example.gr4vy.app/assets/card-scheme-definitions/visa.svg
+        country:
+          type: string
+          description: The 2-letter ISO code of the issuing country of the card.
+          example: US
+        required_fields:
+          $ref: '#/components/schemas/RequiredFields'
+    RequiredFields:
+      title: Required Fields
+      type: object
+      description: The fields that are required to process a transaction for this payment option.
+      properties:
+        first_name:
+          type: boolean
+          description: The first (given) name of the buyer.
+          readOnly: true
+        last_name:
+          type: boolean
+          description: The last (family) name of the buyer.
+          readOnly: true
+        email_address:
+          type: boolean
+          description: The email address of the buyer.
+          readOnly: true
+        phone_number:
+          type: boolean
+          description: The phone number of the buyer.
+          readOnly: true
+        address:
+          type: object
+          description: The billing address of the buyer.
+          properties:
+            city:
+              type: boolean
+              description: The city for the billing address.
+              readOnly: true
+            country:
+              type: boolean
+              description: The country for the billing address.
+              readOnly: true
+            postal_code:
+              type: boolean
+              description: The postal code or zip code for the billing address.
+              readOnly: true
+            state:
+              type: boolean
+              description: The state, county, or province for the billing address.
+              readOnly: true
+            house_number_or_name:
+              type: boolean
+              description: 'The house number or name for the billing address. Not all payment
+
+                services use this field but some do.'
+              readOnly: true
+            line1:
+              type: boolean
+              description: The first line of the billing address.
+              readOnly: true
+        tax_id:
+          type: boolean
+          description: The tax id code associated with the billing details.
+          readOnly: true
+    Error401Unauthorized:
+      title: Unauthorized Error
+      type: object
+      description: Unauthorized Error (HTTP 401).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`unauthorized`.'
+          example: unauthorized
+          enum:
+          - unauthorized
+        status:
+          type: integer
+          description: '`401`.'
+          example: 401
+          enum:
+          - 401
+        message:
+          type: string
+          description: No valid API authentication found.
+          example: No valid API authentication found
+          enum:
+          - No valid API authentication found
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    Error401:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `unauthorized`
+          default: unauthorized
+          examples:
+          - unauthorized
+        status:
+          type: integer
+          title: Status
+          description: Always `401`.
+          default: 401
+          examples:
+          - 401
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: No valid API authentication found
+          examples:
+          - No valid API authentication found
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error401
+    TransactionIntent:
+      type: string
+      enum:
+      - authorize
+      - capture
+      title: TransactionIntent
+    Error403:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `forbidden`
+          default: forbidden
+          examples:
+          - forbidden
+        status:
+          type: integer
+          title: Status
+          description: Always `403`.
+          default: 403
+          examples:
+          - 403
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error403
+    CardDetail:
+      properties:
+        type:
+          type: string
+          const: card-detail
+          title: Type
+          description: Always `card-detail`.
+          default: card-detail
+          examples:
+          - card-detail
+        id:
+          anyOf:
+          - type: string
+            maxLength: 8
+            minLength: 6
+            pattern: ^\d+$
+          - type: 'null'
+          title: Id
+          description: The Bank Identification Number (BIN) of the card.
+          examples:
+          - '123456'
+          - '345678'
+        card_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Card Type
+          description: The type of the card.
+          examples:
+          - credit
+          - debit
+          - prepaid
+        scheme:
+          anyOf:
+          - $ref: '#/components/schemas/CardScheme'
+          - type: 'null'
+          description: The card scheme/network.
+          examples:
+          - visa
+          - mastercard
+          - amex
+        additional_schemes:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/CardScheme'
+            type: array
+          - type: 'null'
+          title: Additional Schemes
+          description: Additional schemes of the card besides the primary scheme.
+          examples:
+          - - eftpos-australia
+        additional_schemes_details:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/AdditionalSchemeDetail'
+            type: array
+          - type: 'null'
+          title: Additional Schemes Details
+          description: Per-scheme details (name and icon URL) for each additional scheme. Mirrors `additional_schemes` — null when `additional_schemes` is null.
+          examples:
+          - - icon_url: https://cdn.example.gr4vy.app/assets/icons/card-schemes/eftpos-australia.svg
+              scheme: eftpos-australia
+        scheme_icon_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scheme Icon Url
+          description: URL to the card scheme's icon.
+          examples:
+          - https://cdn.example.gr4vy.app/assets/icons/card-schemes/mastercard.svg
+        country:
+          anyOf:
+          - type: string
+            pattern: ^[A-Z]{2}$
+            examples:
+            - DE
+            - GB
+            - US
+          - type: 'null'
+          title: Country
+          description: The country code associated with the card.
+          examples:
+          - US
+          - GB
+          - DE
+        required_fields:
+          anyOf:
+          - $ref: '#/components/schemas/RequiredFields_2'
+          - type: 'null'
+          description: Fields that are required for this card type.
+          examples:
+          - address:
+              postal_code: true
+            cvv: true
+      additionalProperties: false
+      type: object
+      title: CardDetail
+    ErrorLocation:
+      type: string
+      enum:
+      - query
+      - body
+      - path
+      - header
+      - unknown
+      title: ErrorLocation
+    Error500:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `server_error`
+          default: server_error
+          examples:
+          - server_error
+        status:
+          type: integer
+          title: Status
+          description: Always `500`.
+          default: 500
+          examples:
+          - 500
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error500
+    Error405:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `method_not_allowed`
+          default: method_not_allowed
+          examples:
+          - method_not_allowed
+        status:
+          type: integer
+          title: Status
+          description: Always `405`.
+          default: 405
+          examples:
+          - 405
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Method Not Allowed
+          examples:
+          - Method Not Allowed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error405
+    Error404:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `not_found`
+          default: not_found
+          examples:
+          - not_found
+        status:
+          type: integer
+          title: Status
+          description: Always `404`.
+          default: 404
+          examples:
+          - 404
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: The resource could not be found
+          examples:
+          - The resource could not be found
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error404
+    Error425:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `too_early`
+          default: too_early
+          examples:
+          - too_early
+        status:
+          type: integer
+          title: Status
+          description: Always `425`.
+          default: 425
+          examples:
+          - 425
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error425
+    ErrorDetail_2:
+      properties:
+        location:
+          $ref: '#/components/schemas/ErrorLocation'
+          description: The part of the request where the property can be found that caused the error.
+          examples:
+          - body
+        pointer:
+          anyOf:
+          - type: string
+            format: json-pointer
+          - type: string
+          title: Pointer
+          description: A JSON pointer for the particular property that caused the error.
+          examples:
+          - /currency
+        message:
+          type: string
+          title: Message
+          description: A human-readdable explanation of the error.
+          examples:
+          - 'Unknown ISO 4217 currency code: USX'
+        type:
+          type: string
+          title: Type
+          description: The type of error that was raised for this property.
+          examples:
+          - value_error
+      additionalProperties: false
+      type: object
+      required:
+      - location
+      - pointer
+      - message
+      - type
+      title: ErrorDetail
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    CardScheme:
+      type: string
+      enum:
+      - accel
+      - amex
+      - bancontact
+      - carte-bancaire
+      - cirrus
+      - culiance
+      - dankort
+      - diners-club
+      - discover
+      - eftpos-australia
+      - elo
+      - hipercard
+      - jcb
+      - maestro
+      - mastercard
+      - mir
+      - nyce
+      - other
+      - pulse
+      - qcard
+      - rupay
+      - star
+      - uatp
+      - unionpay
+      - visa
+      title: CardScheme
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    Error409:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `duplicate_record`
+          default: duplicate_record
+          examples:
+          - duplicate_record
+        status:
+          type: integer
+          title: Status
+          description: Always `409`.
+          default: 409
+          examples:
+          - 409
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+        resource_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Resource Id
+          description: The ID of the conflicting resource.
+          examples:
+          - cdc70639-cb9c-4222-a73f-b8ce39f7821b
+      additionalProperties: false
+      type: object
+      title: Error409
+    AdditionalSchemeDetail:
+      properties:
+        scheme:
+          $ref: '#/components/schemas/CardScheme'
+          description: The card scheme/network.
+          examples:
+          - eftpos-australia
+        icon_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Icon Url
+          description: URL to the card scheme's icon. Null when the scheme has no icon.
+          examples:
+          - https://cdn.example.gr4vy.app/assets/icons/card-schemes/eftpos-australia.svg
+      additionalProperties: false
+      type: object
+      required:
+      - scheme
+      - icon_url
+      title: AdditionalSchemeDetail
+    RequiredFields_2:
+      properties:
+        first_name:
+          type: boolean
+          title: First Name
+          description: Defines if the `first_name` field for a buyer is required.
+          default: false
+          examples:
+          - true
+        last_name:
+          type: boolean
+          title: Last Name
+          description: Defines if the `last_name` field for a buyer is required.
+          default: false
+          examples:
+          - true
+        email_address:
+          type: boolean
+          title: Email Address
+          description: Defines if the `email_address` field for a buyer is required.
+          default: false
+          examples:
+          - true
+        phone_number:
+          type: boolean
+          title: Phone Number
+          description: Defines if the `phone_number` field for a buyer is required.
+          default: false
+          examples:
+          - true
+        tax_id:
+          type: boolean
+          title: Tax Id
+          description: Defines if the `tax_id` field for a buyer is required.
+          default: false
+          examples:
+          - true
+        address:
+          $ref: '#/components/schemas/RequiredAddressFields'
+          description: Defines if the `address` fields required for the buyer.
+      additionalProperties: false
+      type: object
+      required:
+      - address
+      title: RequiredFields
+    TransactionPaymentSource:
+      type: string
+      enum:
+      - ecommerce
+      - moto
+      - recurring
+      - installment
+      - card_on_file
+      title: TransactionPaymentSource
+      description: The way payment method information made it to this transaction.
+    Error504:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `gateway_timeout`
+          default: gateway_timeout
+          examples:
+          - gateway_timeout
+        status:
+          type: integer
+          title: Status
+          default: 504
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error504
+    Error502:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `bad_gateway`
+          default: bad_gateway
+          examples:
+          - bad_gateway
+        status:
+          type: integer
+          title: Status
+          description: Always `502`.
+          default: 502
+          examples:
+          - 502
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error502
+    Error429:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `too_many_requests`
+          default: too_many_requests
+          examples:
+          - too_many_requests
+        status:
+          type: integer
+          title: Status
+          description: Always `429`.
+          default: 429
+          examples:
+          - 429
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error429
+    Error400:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `bad_request`
+          default: bad_request
+          examples:
+          - bad_request
+        status:
+          type: integer
+          title: Status
+          description: Always `400`.
+          default: 400
+          examples:
+          - 400
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error400
+    RequiredAddressFields:
+      properties:
+        organization:
+          type: boolean
+          title: Organization
+          description: Defines if the `organization` field for a buyer's address is required.
+          default: false
+          examples:
+          - true
+        house_number_or_name:
+          type: boolean
+          title: House Number Or Name
+          description: Defines if the `house_number_or_name` field for a buyer's address is required.
+          default: false
+          examples:
+          - true
+        line1:
+          type: boolean
+          title: Line1
+          description: Defines if the `line1` field for a buyer's address is required.
+          default: false
+          examples:
+          - true
+        line2:
+          type: boolean
+          title: Line2
+          description: Defines if the `line2` field for a buyer's address is required.
+          default: false
+          examples:
+          - true
+        city:
+          type: boolean
+          title: City
+          description: Defines if the `city` field for a buyer's address is required.
+          default: false
+          examples:
+          - true
+        postal_code:
+          type: boolean
+          title: Postal Code
+          description: Defines if the `postal_code` field for a buyer's address is required.
+          default: false
+          examples:
+          - true
+        state:
+          type: boolean
+          title: State
+          description: Defines if the `state` field for a buyer's address is required.
+          default: false
+          examples:
+          - true
+        state_code:
+          type: boolean
+          title: State Code
+          description: Defines if the `state_code` field for a buyer's address is required.
+          default: false
+          examples:
+          - true
+        country:
+          type: boolean
+          title: Country
+          description: Defines if the `country` field for a buyer's address is required.
+          default: false
+          examples:
+          - true
+      additionalProperties: false
+      type: object
+      title: RequiredAddressFields
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    OAuth2PasswordBearer:
+      type: oauth2
+      flows:
+        password:
+          scopes:
+            embed: Shorthand for all gr4vy embed related scopes
+            sessions.refresh: Refresh access-token
+            anti-fraud-service-definitions.read: Read Anti Fraud Service Definitions
+            anti-fraud-services.read: Read Anti Fraud Services
+            api-key-pairs.read: Read API Key Pairs
+            api-logs.read: Read API Logs
+            apple-pay-certificates.read: Read Apple Pay Certificates
+            audit-logs.read: Read Audit Logs
+            bin-checker.read: Read BIN Checker
+            buyers.read: Read Buyers
+            buyers.billing-details.read: Read Billing Details
+            card-scheme-definitions.read: Read Card Scheme Definitions
+            checkout-sessions.read: Read Checkout Sessions
+            connections.read: Read Connections
+            digital-wallets.read: Read Digital Wallets
+            flows.read: Read Flows
+            gift-card-service-definitions.read: Read Gift Card Service Definitions
+            gift-card-services.read: Read Gift Card Services
+            gift-cards.read: Read Gift Cards
+            merchant-accounts.read: Read Merchant Accounts
+            payment-links.read: Read Payment Links
+            payment-method-definitions.read: Read Payment Method Definitions
+            payment-methods.read: Read Payment Methods
+            payment-options.read: Read Payment Options
+            payment-service-definitions.read: Read Payment Service Definitions
+            payment-services.read: Read Payment Service
+            payouts.read: Read Payouts
+            reports.read: Read Reports
+            roles.read: Read Roles
+            three-ds-scenarios.read: Read 3DS Scenarios
+            transactions.read: Read Transactions
+            users.me.read: Read User Profile
+            vault-forward.read: Read Vault Forward
+            vault-forward-authentications.read: Read Vault Forward Authentications
+            vault-forward-configs.read: Read Vault Forward Configurations
+            vault-forward-definitions.read: Read Vault Forward Definitions
+            webhook-subscriptions.read: Read Webhook Subscriptions
+            business-contexts.read: Read Business Contexts
+            health-dashboard.read: Read Health Dashboard
+            metrics-explorer.read: Read Metrics Explorer
+            monitoring.read: Read Monitoring
+            reset.read: Read Reset
+            sessions.read: Read Sessions
+            users.read: Read Users
+            anti-fraud-service-definitions.write: Write Anti Fraud Service Definitions
+            anti-fraud-services.write: Write Anti Fraud Services
+            api-key-pairs.write: Write API Key Pairs
+            api-logs.write: Write API Logs
+            apple-pay-certificates.write: Write Apple Pay Certificates
+            audit-logs.write: Write Audit Logs
+            bin-checker.write: Write BIN Checker
+            buyers.write: Write Buyers
+            buyers.billing-details.write: Write Billing Details
+            card-scheme-definitions.write: Write Card Scheme Definitions
+            checkout-sessions.write: Write Checkout Sessions
+            connections.write: Write Connections
+            digital-wallets.write: Write Digital Wallets
+            flows.write: Write Flows
+            gift-card-service-definitions.write: Write Gift Card Service Definitions
+            gift-card-services.write: Write Gift Card Services
+            gift-cards.write: Write Gift Cards
+            merchant-accounts.write: Write Merchant Accounts
+            payment-links.write: Write Payment Links
+            payment-method-definitions.write: Write Payment Method Definitions
+            payment-methods.write: Write Payment Methods
+            payment-options.write: Write Payment Options
+            payment-service-definitions.write: Write Payment Service Definitions
+            payment-services.write: Write Payment Service
+            payouts.write: Write Payouts
+            reports.write: Write Reports
+            roles.write: Write Roles
+            three-ds-scenarios.write: Write 3DS Scenarios
+            transactions.write: Write Transactions
+            users.me.write: Write User Profile
+            vault-forward.write: Write Vault Forward
+            vault-forward-authentications.write: Write Vault Forward Authentications
+            vault-forward-configs.write: Write Vault Forward Configurations
+            vault-forward-definitions.write: Write Vault Forward Definitions
+            webhook-subscriptions.write: Write Webhook Subscriptions
+            business-contexts.write: Write Business Contexts
+            health-dashboard.write: Write Health Dashboard
+            metrics-explorer.write: Write Metrics Explorer
+            monitoring.write: Write Monitoring
+            reset.write: Write Reset
+            sessions.write: Write Sessions
+            users.write: Write Users
+          tokenUrl: auth/token
+x-refined-from:
+- gr4vy-docs-v1-openapi.json
+- gr4vy-openapi.json

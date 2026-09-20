@@ -1,0 +1,66 @@
+generated: '2026-09-20'
+method: probed
+source: https://docs.gr4vy.com/.well-known/agent-card.json
+card:
+  file: a2a/gr4vy-agent-card.json
+discovery:
+  path: /.well-known/agent-card.json
+  canonical: true
+  host: docs.gr4vy.com
+  note: Served from the Mintlify docs host only. gr4vy.com was probed by the pre-flight and serves no card; docs.gr4vy.com/.well-known/agent.json
+    404s. provider.organization is "Gr4vy" and the host is a gr4vy.com subdomain, so ownership is not in question.
+x-evidence:
+  fetched: '2026-09-20'
+  url: https://docs.gr4vy.com/.well-known/agent-card.json
+  http_status: 200
+  content_type: application/json
+  body_parses_as: JSON object with AgentCard shape
+agent_card:
+  name: Gr4vy
+  url: https://docs.gr4vy.com/
+  version: 1.0.0
+  protocol_version: '0.3'
+  preferred_transport: HTTP+JSON
+  provider:
+    url: https://docs.gr4vy.com/
+    organization: Gr4vy
+  documentation_url: https://docs.gr4vy.com/
+  capabilities:
+    streaming: false
+    pushNotifications: false
+  default_input_modes:
+  - text/plain
+  default_output_modes:
+  - text/plain
+  skill_count: 1
+  skills:
+  - id: gr4vy
+    url: https://docs.gr4vy.com/.well-known/agent-skills/gr4vy/skill.md
+grade_basis: 'Graded against A2A 1.0.0 hard checks: capabilities is an OBJECT (pass), protocolVersion present (pass),
+  skills is an ARRAY (pass). preferredTransport, defaultInputModes and defaultOutputModes are all declared.'
+deviations:
+- field: protocolVersion
+  observed: '0.3'
+  note: Declares A2A 0.3 rather than 1.0.0; a version statement, recorded not penalised.
+- field: skills[].tags
+  observed: empty array
+  note: The single skill carries id, name, description and url but no routing tags.
+- field: supportedInterfaces[0].url
+  observed: https://docs.gr4vy.com/
+  note: The declared interface is the documentation site, not a callable A2A endpoint. The card is a discovery surface
+    over the published Agent Skill; the callable agent surface is the docs MCP server at https://docs.gr4vy.com/mcp,
+    which the card does not reference.
+conformance:
+  grade: conformant
+cards:
+- file: a2a/gr4vy-agent-card.json
+  primary: true
+  host: docs.gr4vy.com
+  url: https://docs.gr4vy.com/.well-known/agent-card.json
+  http_status: 200
+  name: Gr4vy
+  grade: conformant
+  deviations:
+  - protocolVersion
+  - skills[].tags
+  - supportedInterfaces[0].url

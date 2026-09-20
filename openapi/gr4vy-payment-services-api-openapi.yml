@@ -1,0 +1,3157 @@
+openapi: 3.2.0
+info:
+  title: Gr4vy Payment Services API
+  version: '1.0'
+  description: 'Operations tagged Payment Services across 2 of this provider''s published API definitions: gr4vy-docs-v1-openapi.json, gr4vy-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.sandbox.{id}.gr4vy.app
+  x-speakeasy-server-id: sandbox
+  variables:
+    id:
+      default: example
+      description: The subdomain for your Gr4vy instance.
+- url: https://api.{id}.gr4vy.app
+  x-speakeasy-server-id: production
+  variables:
+    id:
+      default: example
+      description: The subdomain for your Gr4vy instance.
+tags:
+- name: Payment Services
+  description: 'In Gr4vy, a payment service represents a configured payment provider
+
+    (Stripe, PayPal, Adyen, etc) for a specific payment type (card, bitcoin,
+
+    etc)
+
+
+    The payment services API can be used to:
+
+
+    * Provide Gr4vy with the payment credentials for a payment provider.
+
+    * Set a display name for a payment provider.'
+paths:
+  /payment-services:
+    get:
+      operationId: list-payment-services
+      summary: List payment services
+      description: Lists the currently configured and activated payment services.
+      tags:
+      - Payment Services
+      parameters:
+      - schema:
+          type: integer
+          default: 20
+          example: 1
+          minimum: 1
+          maximum: 100
+          format: int32
+        in: query
+        name: limit
+        description: Defines the maximum number of items to return for this request.
+      - schema:
+          type: string
+          format: ''
+          example: ZXhhbXBsZTE
+        in: query
+        name: cursor
+        description: 'A cursor that identifies the page of results to return. This is used to
+
+          paginate the results of this API.
+
+
+          For the first page of results, this parameter can be left out.
+
+          For additional pages, use the value returned by the API in
+
+          the `next_cursor` field. Similarly the `previous_cursor` can be used to
+
+          reverse backwards in the list.'
+      - schema:
+          type: string
+          example: card
+          enum:
+          - affirm
+          - afterpay
+          - alipay
+          - alipayhk
+          - applepay
+          - bacs
+          - bancontact
+          - banked
+          - becs
+          - bitpay
+          - boleto
+          - boost
+          - card
+          - cashapp
+          - chaseorbital
+          - checkout-session
+          - clearpay
+          - click-to-pay
+          - dana
+          - dcb
+          - dlocal
+          - ebanx
+          - efecty
+          - eps
+          - everydaypay
+          - gcash
+          - gem
+          - gemds
+          - gift-card
+          - giropay
+          - givingblock
+          - gocardless
+          - googlepay
+          - googlepay_pan_only
+          - gopay
+          - grabpay
+          - id
+          - ideal
+          - kakaopay
+          - kcp
+          - klarna
+          - latitude
+          - latitudeds
+          - laybuy
+          - linepay
+          - linkaja
+          - maybankqrpay
+          - mercadopago
+          - multibanco
+          - multipago
+          - netbanking
+          - network-token
+          - oney_3x
+          - oney_4x
+          - oney_6x
+          - oney_10x
+          - oney_12x
+          - ovo
+          - oxxo
+          - payid
+          - paymaya
+          - paypal
+          - paypalpaylater
+          - payto
+          - venmo
+          - pix
+          - pse
+          - rabbitlinepay
+          - razorpay
+          - scalapay
+          - sepa
+          - shopeepay
+          - singteldash
+          - smartpay
+          - sofort
+          - spei
+          - stripedd
+          - thaiqr
+          - touchngo
+          - truemoney
+          - trustly
+          - trustlyeurope
+          - upi
+          - vipps
+          - waave
+          - webpay
+          - wechat
+          - zippay
+        in: query
+        name: method
+        description: 'Filters the results to only the items for which the `method` has been set to
+
+          this value. For example `card`.'
+      - schema:
+          type: boolean
+          example: true
+          default: false
+        in: query
+        name: deleted
+        description: 'Filters the results to only show items which have been deleted.
+
+          By default, deleted items will not be returned.'
+      responses:
+        '200':
+          description: Returns a list of payment services.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentServices'
+        '401':
+          description: Returns an error if no valid authentication was provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401Unauthorized'
+      security:
+      - bearerAuth: []
+    post:
+      summary: New payment service
+      operationId: new-payment-service
+      description: Adds a new payment service by providing a custom name and a value for each of the required fields.
+      tags:
+      - Payment Services
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentServiceRequest'
+      responses:
+        '201':
+          description: Returns the created payment service.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentService'
+              examples:
+                Stripe:
+                  value:
+                    type: payment-service
+                    id: faaad066-30b4-4997-a438-242b0752d7e1
+                    merchant_account_id: default
+                    payment_service_definition_id: stripe
+                    method: card
+                    display_name: Stripe
+                    status: pending
+                    accepted_currencies:
+                    - EUR
+                    accepted_countries:
+                    - DE
+        '400':
+          description: Returns an error if the request was badly formatted or missing required fields.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400BadRequest'
+        '401':
+          description: Returns an error if no valid authentication was provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401Unauthorized'
+      security:
+      - bearerAuth: []
+    servers:
+    - url: https://api.sandbox.{id}.gr4vy.app
+      x-speakeasy-server-id: sandbox
+      variables:
+        id:
+          default: example
+          description: The subdomain for your Gr4vy instance.
+    - url: https://api.{id}.gr4vy.app
+      x-speakeasy-server-id: production
+      variables:
+        id:
+          default: example
+          description: The subdomain for your Gr4vy instance.
+  /payment-services/{payment_service_id}:
+    parameters:
+    - schema:
+        type: string
+        example: 46973e9d-88a7-44a6-abfe-be4ff0134ff4
+      name: payment_service_id
+      in: path
+      required: true
+      description: The ID of the payment service.
+    get:
+      operationId: get-payment-service
+      summary: Get payment service
+      description: Retrieves the details of a single configured payment service.
+      tags:
+      - Payment Services
+      responses:
+        '200':
+          description: Returns a payment service.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentService'
+        '401':
+          description: Returns an error if no valid authentication was provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401Unauthorized'
+        '404':
+          description: Returns an error if the resource can not be found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404NotFound'
+      security:
+      - bearerAuth: []
+    put:
+      operationId: update-payment-service
+      summary: Update payment service
+      description: Updates an existing payment service. Allows all fields to be changed except for the service ID.
+      tags:
+      - Payment Services
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentServiceUpdate'
+      responses:
+        '201':
+          description: Returns the updated payment service.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentService'
+        '400':
+          description: Returns an error if the request was badly formatted or missing required fields.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400BadRequest'
+        '401':
+          description: Returns an error if no valid authentication was provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401Unauthorized'
+        '404':
+          description: Returns an error if the resource can not be found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404NotFound'
+      security:
+      - bearerAuth: []
+    delete:
+      operationId: delete-payment-service
+      summary: Delete payment service
+      description: Deletes a specific active payment service.
+      tags:
+      - Payment Services
+      responses:
+        '204':
+          description: Returns an empty response.
+        '401':
+          description: Returns an error if no valid authentication was provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401Unauthorized'
+        '404':
+          description: Returns an error if the resource can not be found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404NotFound'
+      security:
+      - bearerAuth: []
+    servers:
+    - url: https://api.sandbox.{id}.gr4vy.app
+      x-speakeasy-server-id: sandbox
+      variables:
+        id:
+          default: example
+          description: The subdomain for your Gr4vy instance.
+    - url: https://api.{id}.gr4vy.app
+      x-speakeasy-server-id: production
+      variables:
+        id:
+          default: example
+          description: The subdomain for your Gr4vy instance.
+  /payment-services/{payment_service_id}/sessions:
+    parameters:
+    - schema:
+        type: string
+        example: 46973e9d-88a7-44a6-abfe-be4ff0134ff4
+      name: payment_service_id
+      in: path
+      required: true
+      description: The ID of the payment service.
+    post:
+      operationId: create-payment-service-session
+      summary: Create a session for a payment service by ID
+      description: 'Creates a session for a payment service. This endpoint directly
+
+        passes the request through to the relevant payment service for processing,
+
+        and so the schema will differ based on the service used.
+
+
+        If the downstream service returns an error, this API will return a successful response
+
+        with the status code in the response.'
+      tags:
+      - Payment Services
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentServiceSessionRequest'
+      responses:
+        '200':
+          description: Returns the response from the downstream service used to generate the session.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentServiceSession'
+        '400':
+          description: 'Returns an error if the request was badly formatted or missing required
+
+            fields.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400BadRequest'
+        '401':
+          description: Returns an error if no valid authentication was provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401Unauthorized'
+        '404':
+          description: Returns an error if the referenced payment service does not exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404NotFound'
+      security:
+      - bearerAuth: []
+    servers:
+    - url: https://api.sandbox.{id}.gr4vy.app
+      x-speakeasy-server-id: sandbox
+      variables:
+        id:
+          default: example
+          description: The subdomain for your Gr4vy instance.
+    - url: https://api.{id}.gr4vy.app
+      x-speakeasy-server-id: production
+      variables:
+        id:
+          default: example
+          description: The subdomain for your Gr4vy instance.
+  /payment-services/verify:
+    post:
+      operationId: verify-payment-service
+      summary: Verify payment service credentials
+      description: Verifies a set of credentials against a payment service.
+      tags:
+      - Payment Services
+      x-internal: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentServiceVerify'
+      responses:
+        '200':
+          description: Returns 200 OK if credentials successfully verified.
+        '400':
+          description: Returns an error if the request was badly formatted, missing required fields, or if the provided credentials are invalid and failed verification against the payment service.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400BadRequest'
+        '401':
+          description: Returns an error if no valid authentication was provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401Unauthorized'
+        '404':
+          description: Returns an error if the resource can not be found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404NotFound'
+      security:
+      - bearerAuth: []
+    servers:
+    - url: https://api.sandbox.{id}.gr4vy.app
+      x-speakeasy-server-id: sandbox
+      variables:
+        id:
+          default: example
+          description: The subdomain for your Gr4vy instance.
+    - url: https://api.{id}.gr4vy.app
+      x-speakeasy-server-id: production
+      variables:
+        id:
+          default: example
+          description: The subdomain for your Gr4vy instance.
+components:
+  schemas:
+    Error404NotFound:
+      title: Not Found Error
+      type: object
+      description: Not Found Error (HTTP 404).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: The reason code for the error.
+          example: not_found
+          enum:
+          - not_found
+          - pending_creation
+        status:
+          type: integer
+          description: '`404`.'
+          example: 404
+          enum:
+          - 404
+        message:
+          type: string
+          description: The human readable reason for the error.
+          example: The resource could not be found
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    PaymentService:
+      title: A payment service
+      type: object
+      description: An active, configured payment service.
+      x-tags:
+      - Payment Services
+      properties:
+        type:
+          type: string
+          description: The type of this resource.
+          example: payment-service
+          enum:
+          - payment-service
+        id:
+          type: string
+          format: uuid
+          description: The ID of this payment service.
+          example: faaad066-30b4-4997-a438-242b0752d7e1
+          minLength: 1
+          maxLength: 200
+        accepted_countries:
+          description: 'A list of countries for which this service is enabled, in ISO two-letter
+
+            code format.'
+          example:
+          - DE
+          items:
+            maxLength: 2
+            minLength: 2
+            type: string
+          minItems: 1
+          type: array
+        accepted_currencies:
+          description: 'A list of currencies for which this service is enabled, in ISO 4217
+
+            three-letter code format.'
+          example:
+          - EUR
+          items:
+            maxLength: 3
+            minLength: 3
+            type: string
+          minItems: 1
+          type: array
+        active:
+          default: true
+          description: Defines if this service is currently active or not.
+          example: true
+          type: boolean
+        created_at:
+          description: The date and time when this service was created.
+          example: '2012-12-12T10:53:43+00:00'
+          format: date-time
+          type: string
+        display_name:
+          description: The custom name set for this service.
+          example: Stripe (Main)
+          maxLength: 200
+          minLength: 1
+          type: string
+        fields:
+          description: 'A list of fields, each containing a key-value pair for each field
+
+            configured for this payment service. Fields marked as `secret`
+
+            (see Payment Service Definition) are not returned.'
+          items:
+            properties:
+              key:
+                description: The key of the field.
+                example: secret_key
+                maxLength: 50
+                minLength: 1
+                type: string
+              value:
+                description: The value of the field.
+                example: REDACTED_STRIPE_KEY
+                maxLength: 5000
+                minLength: 1
+                type: string
+            type: object
+          type: array
+        reporting_fields:
+          description: 'A list of fields, each containing a key-value pair for each field
+
+            configured for reporting for this payment service. Fields marked as
+
+            `secret` (see Payment Service Definition) are not returned.'
+          items:
+            properties:
+              key:
+                description: The key of the field.
+                example: ssh_username
+                maxLength: 50
+                minLength: 1
+                type: string
+              value:
+                description: The value of the field.
+                example: test_ssh_username
+                maxLength: 5000
+                minLength: 1
+                type: string
+            type: object
+          type: array
+        merchant_account_id:
+          description: The unique ID for a merchant account.
+          example: default
+          type: string
+        merchant_profile:
+          allOf:
+          - $ref: '#/components/schemas/MerchantProfileSummary'
+          description: 'An object containing a key for each supported card scheme (Amex,
+
+            Discover, Mastercard and Visa), and for each key an object with
+
+            the merchant profile for this service and the corresponding scheme.'
+          type:
+          - object
+          - 'null'
+        method:
+          description: The payment method that this service handles.
+          type: string
+          example: card
+          enum:
+          - affirm
+          - afterpay
+          - alipay
+          - alipayhk
+          - applepay
+          - bacs
+          - bancontact
+          - banked
+          - becs
+          - bitpay
+          - boleto
+          - boost
+          - card
+          - cashapp
+          - chaseorbital
+          - checkout-session
+          - clearpay
+          - click-to-pay
+          - dana
+          - dcb
+          - dlocal
+          - ebanx
+          - efecty
+          - eps
+          - everydaypay
+          - gcash
+          - gem
+          - gemds
+          - gift-card
+          - giropay
+          - givingblock
+          - gocardless
+          - googlepay
+          - googlepay_pan_only
+          - gopay
+          - grabpay
+          - id
+          - ideal
+          - kakaopay
+          - kcp
+          - klarna
+          - latitude
+          - latitudeds
+          - laybuy
+          - linepay
+          - linkaja
+          - maybankqrpay
+          - mercadopago
+          - multibanco
+          - multipago
+          - netbanking
+          - network-token
+          - oney_3x
+          - oney_4x
+          - oney_6x
+          - oney_10x
+          - oney_12x
+          - ovo
+          - oxxo
+          - payid
+          - paymaya
+          - paypal
+          - paypalpaylater
+          - payto
+          - venmo
+          - pix
+          - pse
+          - rabbitlinepay
+          - razorpay
+          - scalapay
+          - sepa
+          - shopeepay
+          - singteldash
+          - smartpay
+          - sofort
+          - spei
+          - stripedd
+          - thaiqr
+          - touchngo
+          - truemoney
+          - trustly
+          - trustlyeurope
+          - upi
+          - vipps
+          - waave
+          - webpay
+          - wechat
+          - zippay
+        network_tokens_enabled:
+          description: 'Defines if network tokens are enabled for the service. This feature
+
+            can only be enabled if the payment service is set as `open_loop` and
+
+            the PSP is set up to accept network tokens.'
+          example: true
+          type: boolean
+        open_loop:
+          description: 'Defines if the service works as an open-loop service. This feature
+
+            can only be enabled if the PSP is set up to accept previous scheme
+
+            transaction IDs.'
+          example: true
+          type: boolean
+        payment_method_tokenization_enabled:
+          default: false
+          description: 'Defines if tokenization is enabled for the service. This feature
+
+            can only be enabled if the payment service is NOT set as `open_loop`
+
+            and the PSP is set up to tokenize.'
+          example: true
+          type: boolean
+        payment_service_definition_id:
+          description: 'The ID of the payment service definition used to create this service.
+
+            '
+          example: stripe-card
+          maxLength: 50
+          minLength: 1
+          type: string
+        settlement_reporting_enabled:
+          description: 'Defines if settlement reporting is enabled for the service.
+
+            This feature can only be enabled if the payment service
+
+            definition supports the `settlement_reporting` feature.'
+          example: true
+          type: boolean
+        status:
+          description: 'The current status of this service. This will start off as pending, move
+
+            to created, and might eventually move to an error status if and when the
+
+            credentials are no longer valid.
+
+            '
+          enum:
+          - pending
+          - created
+          - failed
+          type: string
+        three_d_secure_enabled:
+          default: false
+          description: 'Defines if 3-D Secure is enabled for the service. This feature
+
+            can only be enabled if the payment service definition supports
+
+            the `three_d_secure_hosted` feature.
+
+            This does not affect pass through 3-D Secure data.'
+          example: true
+          type: boolean
+        updated_at:
+          description: The date and time when this service was last updated.
+          example: '2012-12-12T10:53:43+00:00'
+          format: date-time
+          type: string
+        webhook_url:
+          description: 'The URL that needs to be configured with this payment service as the
+
+            receiving endpoint for webhooks from the service to Gr4vy. Currently,
+
+            Gr4vy does not yet automatically register webhooks on setup, and
+
+            therefore webhooks need to be registered manually by the merchant.'
+          example: https://api.example.app.gr4vy.com/i/ViYUjDkUSoiQ0ColeigGwnN0...
+          format: url
+          type:
+          - string
+          - 'null'
+    PaymentServiceSession:
+      title: Payment Service Session
+      type: object
+      description: 'A session request for a payment session. This is an opaque object
+
+        passed to the payment service.'
+      x-tags:
+      - Payment Services
+      properties:
+        type:
+          type: string
+          description: The type of this resource.
+          example: payment-service-session
+          enum:
+          - payment-service-session
+        status:
+          type: string
+          description: 'The status of the response.
+
+
+            - `succeeded` - The session was successfully generated.
+
+            - `failed` - The session could not be generated.'
+          example: succeeded
+          enum:
+          - succeeded
+          - failed
+        code:
+          type:
+          - string
+          - 'null'
+          example: UNKNOWN_ERROR
+          description: A generic error code that may be returned when the session could not be generated.
+        status_code:
+          type:
+          - number
+          - 'null'
+          example: 200
+          description: The HTTP status code received from the payment service.
+        response_body:
+          type:
+          - object
+          - 'null'
+          description: The parsed JSON received from the payment service.
+          additionalProperties: true
+          example:
+            data:
+              customerType: EXISTING
+              walletManagementUrl: https://example.com/session
+            meta: {}
+    Error400BadRequest:
+      title: Bad Request
+      type: object
+      description: Bad Request (HTTP 400).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: A short code that describes the reason for the error.
+          example: bad_request
+          enum:
+          - bad_request
+          - incorrect_json
+          - invalid_credentials
+        status:
+          type: integer
+          description: '`400`.'
+          example: 400
+          enum:
+          - 400
+        message:
+          type: string
+          description: A human-readable reason for the error.
+          example: Missing '****' field
+        details:
+          type: array
+          description: A list of detail objects that further clarify the reason for the error.
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    MerchantProfile:
+      title: Merchant Profile
+      type: object
+      description: Merchant profile for the different card schemes.
+      properties:
+        amex:
+          type:
+          - object
+          - 'null'
+          description: Merchant profile for Amex.
+          allOf:
+          - $ref: '#/components/schemas/MerchantProfileScheme'
+        dankort:
+          type:
+          - object
+          - 'null'
+          description: Merchant profile for Dankort.
+          allOf:
+          - $ref: '#/components/schemas/MerchantProfileScheme'
+        discover:
+          type:
+          - object
+          - 'null'
+          description: Merchant profile for Discover.
+          allOf:
+          - $ref: '#/components/schemas/MerchantProfileScheme'
+        jcb:
+          type:
+          - object
+          - 'null'
+          description: Merchant profile for JCB.
+          allOf:
+          - $ref: '#/components/schemas/MerchantProfileScheme'
+        mastercard:
+          type:
+          - object
+          - 'null'
+          description: Merchant profile for Mastercard.
+          allOf:
+          - $ref: '#/components/schemas/MerchantProfileScheme'
+        unionpay:
+          type:
+          - object
+          - 'null'
+          description: Merchant profile for UnionPay.
+          allOf:
+          - $ref: '#/components/schemas/MerchantProfileScheme'
+        visa:
+          type:
+          - object
+          - 'null'
+          description: Merchant profile for Visa.
+          allOf:
+          - $ref: '#/components/schemas/MerchantProfileScheme'
+    MerchantProfileSchemeSummary:
+      title: Merchant Profile (single scheme)
+      type: object
+      description: Merchant profile for a specific scheme.
+      properties:
+        merchant_acquirer_bin:
+          type: string
+          maxLength: 11
+          description: Acquirer bin to use when calling 3DS through this scheme.
+        merchant_url:
+          type: string
+          description: URL to send when calling 3DS through this scheme.
+        merchant_acquirer_id:
+          type: string
+          maxLength: 35
+          description: Merchant ID to use when calling 3DS through this scheme.
+        merchant_name:
+          type: string
+          maxLength: 40
+          description: Merchant name to use when calling 3DS through this scheme.
+        merchant_country_code:
+          type: string
+          minLength: 3
+          maxLength: 3
+          description: Merchant country code to use when calling 3DS through this scheme.
+        merchant_category_code:
+          type: string
+          maxLength: 4
+          description: Merchant category code to use when calling 3DS through this scheme.
+        created_at:
+          type: string
+          description: The date and time when this profile was created.
+          format: date-time
+          example: '2023-07-26T19:23:00.000+00:00'
+    MerchantProfileScheme:
+      title: Merchant Profile (single scheme)
+      type: object
+      description: Merchant profile for a specific scheme.
+      properties:
+        merchant_acquirer_bin:
+          type: string
+          maxLength: 11
+          description: Acquirer bin to use when calling 3DS through this scheme.
+        merchant_url:
+          type: string
+          description: URL to send when calling 3DS through this scheme.
+        merchant_acquirer_id:
+          type: string
+          maxLength: 35
+          description: Merchant ID to use when calling 3DS through this scheme.
+        merchant_name:
+          type: string
+          maxLength: 40
+          description: Merchant name to use when calling 3DS through this scheme.
+        merchant_country_code:
+          type: string
+          minLength: 3
+          maxLength: 3
+          description: Merchant country code to use when calling 3DS through this scheme.
+        merchant_category_code:
+          type: string
+          maxLength: 4
+          description: Merchant category code to use when calling 3DS through this scheme.
+    PaymentServiceUpdate:
+      title: Payment Service (Update)
+      type: object
+      description: Request body for updating an active payment service.
+      x-tags:
+      - Request Bodies
+      properties:
+        display_name:
+          type: string
+          description: A custom name for the payment service. This will be shown in the Admin UI.
+          example: Stripe (Main)
+          minLength: 1
+          maxLength: 50
+        fields:
+          type: array
+          description: A list of fields, each containing a key-value pair for each field defined by the definition for this payment service e.g. for stripe-card `secret_key` is required and so must be sent within this field.
+          items:
+            type: object
+            description: A key-value pair that represents a field defined in the definition for this payment service.
+            required:
+            - key
+            - value
+            properties:
+              key:
+                type: string
+                description: The key of the field to set a value for.
+                example: private_key
+                minLength: 1
+                maxLength: 50
+              value:
+                type: string
+                description: The value of a field to set; you can unset optional fields by setting this to an empty string `""`.
+                example: REDACTED_STRIPE_KEY
+                minLength: 0
+                maxLength: 5000
+        reporting_fields:
+          type: array
+          description: The `reporting_fields` field should contain a list of key-value pairs. Each key-value pair represents a reporting field defined by the payment service. For example, when enabling settlement reporting for `nuvei-card`, the `ssh_username` field is required and must be included in `reporting_fields`.
+          items:
+            type: object
+            description: A key-value pair that represents a reporting field defined in the definition for this payment service.
+            required:
+            - key
+            - value
+            properties:
+              key:
+                type: string
+                description: The key of the field to set a value for.
+                example: ssh_username
+                minLength: 1
+                maxLength: 50
+              value:
+                type: string
+                description: The value of a field to set; you can unset optional fields by setting this to an empty string `""`.
+                example: test_ssh_user
+                minLength: 0
+                maxLength: 5000
+        accepted_countries:
+          type: array
+          description: A list of countries that this payment service needs to support in ISO two-letter code format.
+          minItems: 1
+          items:
+            type: string
+            minLength: 2
+            maxLength: 2
+          example:
+          - US
+          - GB
+          - DE
+        accepted_currencies:
+          type: array
+          description: A list of currencies that this payment service needs to support in ISO 4217 three-letter code format.
+          minItems: 1
+          items:
+            type: string
+            minLength: 3
+            maxLength: 3
+          example:
+          - EUR
+          - USD
+          - GBP
+        three_d_secure_enabled:
+          type: boolean
+          example: true
+          default: false
+          description: 'Defines if 3-D Secure is enabled for the service. This feature
+
+            can only be enabled if the payment service definition supports
+
+            the `three_d_secure_hosted` feature.
+
+            This does not affect pass through 3-D Secure data.'
+        merchant_profile:
+          type:
+          - object
+          - 'null'
+          description: 'Configuration for each supported card scheme.
+
+            When updating a Payment Service, a key not being present will
+
+            indicate no updates to be done on that scheme, whereas an object being
+
+            sent as Null for a key will empty the configuration for that scheme.'
+          allOf:
+          - $ref: '#/components/schemas/MerchantProfile'
+        active:
+          type: boolean
+          example: true
+          default: true
+          description: Defines if this service is currently active or not.
+        open_loop:
+          type:
+          - boolean
+          - 'null'
+          example: true
+          description: 'Defines if the service works as an open-loop service. This feature
+
+            can only be enabled if the PSP is set up to accept previous scheme
+
+            transaction IDs.
+
+
+            If this value is set to `null`, it will be set to the value of
+
+            `open_loop` in the payment service definition.
+
+
+            If `open_loop_toggle` is `false` in the payment service definition,
+
+            `open_loop` should either not be provided or set to `null`, or it
+
+            will fail with a validation error.'
+        payment_method_tokenization_enabled:
+          type:
+          - boolean
+          - 'null'
+          example: true
+          description: 'Defines if tokenization is enabled for the service. This feature
+
+            can only be enabled if the payment service is NOT set as `open_loop`
+
+            and the PSP is set up to tokenize.'
+        network_tokens_enabled:
+          type:
+          - boolean
+          - 'null'
+          example: true
+          description: 'Defines if network tokens are enabled for the service. This feature
+
+            can only be enabled if the payment service is set as `open_loop` and
+
+            the PSP is set up to accept network tokens.
+
+
+            If this value is set to `null`, it will be set to the value of
+
+            `network_tokens_default` in the payment service definition.
+
+
+            If `network_tokens_toggle` is `false` in the payment service definition,
+
+            `network_tokens_enabled` should either not be provided or set to `null`,
+
+            or it will fail with a validation error.'
+        settlement_reporting_enabled:
+          type: boolean
+          example: true
+          default: false
+          description: 'Defines if settlement reporting is enabled for the service.
+
+            This feature can only be enabled if the payment service
+
+            definition supports the `settlement_reporting` feature.'
+    PaymentServiceVerify:
+      title: Payment Service (Verify)
+      type: object
+      description: Request body for verifying credentials against a payment service.
+      x-internal: true
+      x-tags:
+      - Request Bodies
+      required:
+      - payment_service_definition_id
+      - fields
+      properties:
+        payment_service_definition_id:
+          type: string
+          description: The ID of the payment service to use.
+          example: stripe-card
+          minLength: 1
+          maxLength: 50
+        payment_service_id:
+          type: string
+          format: uuid
+          example: 46973e9d-88a7-44a6-abfe-be4ff0134ff4
+          description: 'The ID of the payment service. Required if sending a partial set of
+
+            credentials in the `fields` property.'
+        fields:
+          type: array
+          description: 'A list of fields where each field is a key-value pair that represents a defined field in the definition of the payment service. You are not required to send the full list of fields if the credentials for the payment service are already stored.
+
+            For example, if your credentials for `stripe-card` are stored and you only provide a `secret_key` in the request, it will override the stored `secret_key` and verify the resulting set of credentials against the payment service.'
+          items:
+            type: object
+            description: A key-value pair that represents a field defined in the definition for this payment service.
+            required:
+            - key
+            - value
+            properties:
+              key:
+                type: string
+                description: The key of the field to set a value for.
+                example: private_key
+                minLength: 1
+                maxLength: 50
+              value:
+                type: string
+                description: The value of a field to set.
+                example: REDACTED_STRIPE_KEY
+                minLength: 1
+                maxLength: 5000
+    ErrorDetail:
+      title: Error details
+      description: Additional detail about the part of a request body that caused an issue.
+      type: object
+      x-tags:
+      - Errors
+      properties:
+        location:
+          type: string
+          example: body
+          description: The location where the error caused an issue.
+          enum:
+          - query
+          - body
+          - path
+          - header
+        type:
+          type: string
+          example: value_error.missing
+          description: A unique identifier for the type of error that occurred.
+        pointer:
+          type: string
+          example: /payment_method/number
+          description: 'The exact item for which the validation did not succeed. This is a JSON
+
+            pointer for request bodies, while for query, path, and header parameters
+
+            it is the name of the parameter.'
+        message:
+          type: string
+          example: field required
+          description: A human readable message for this error detail.
+    PaymentServiceRequest:
+      title: Payment Service (Create)
+      type: object
+      description: Request body for activating a payment service.
+      x-tags:
+      - Request Bodies
+      required:
+      - display_name
+      - payment_service_definition_id
+      - fields
+      - accepted_currencies
+      - accepted_countries
+      properties:
+        payment_service_definition_id:
+          type: string
+          description: The ID of the payment service to use.
+          example: stripe-card
+          minLength: 1
+          maxLength: 50
+        display_name:
+          type: string
+          description: A custom name for the payment service. This will be shown in the Admin UI.
+          example: Stripe (Main)
+          minLength: 1
+          maxLength: 50
+        fields:
+          type: array
+          description: A list of fields, each containing a key-value pair for each field defined by the definition for this payment service e.g. for stripe-card `secret_key` is required and so must be sent within this field.
+          items:
+            type: object
+            description: A key-value pair that represents a field defined in the definition for this payment service.
+            required:
+            - key
+            - value
+            properties:
+              key:
+                type: string
+                description: The key of the field to set a value for.
+                example: private_key
+                minLength: 1
+                maxLength: 50
+              value:
+                type: string
+                description: The value of a field to set.
+                example: REDACTED_STRIPE_KEY
+                minLength: 1
+                maxLength: 5000
+        reporting_fields:
+          type: array
+          description: The `reporting_fields` field should contain a list of key-value pairs. Each key-value pair represents a reporting field defined by the payment service. For example, when enabling settlement reporting for `nuvei-card`, the `ssh_username` field is required and must be included in `reporting_fields`.
+          items:
+            type: object
+            description: A key-value pair that represents a reporting field defined in the definition for this payment service.
+            required:
+            - key
+            - value
+            properties:
+              key:
+                type: string
+                description: The key of the field to set a value for.
+                example: ssh_username
+                minLength: 1
+                maxLength: 50
+              value:
+                type: string
+                description: The value of a field to set.
+                example: test_ssh_user
+                minLength: 1
+                maxLength: 5000
+        accepted_countries:
+          type: array
+          description: A list of countries that this payment service needs to support in ISO two-letter code format.
+          minItems: 1
+          items:
+            type: string
+            minLength: 2
+            maxLength: 2
+          example:
+          - US
+          - GB
+          - DE
+        accepted_currencies:
+          type: array
+          description: A list of currencies that this payment service needs to support in ISO 4217 three-letter code format.
+          minItems: 1
+          items:
+            type: string
+            minLength: 3
+            maxLength: 3
+          example:
+          - EUR
+          - USD
+          - GBP
+        three_d_secure_enabled:
+          type: boolean
+          example: true
+          default: false
+          description: 'Defines if 3-D Secure is enabled for the service. This feature
+
+            can only be enabled if the payment service definition supports
+
+            the `three_d_secure_hosted` feature.
+
+            This does not affect pass through 3-D Secure data.'
+        merchant_profile:
+          type:
+          - object
+          - 'null'
+          description: Configuration for each supported card scheme.
+          allOf:
+          - $ref: '#/components/schemas/MerchantProfile'
+        active:
+          type: boolean
+          example: true
+          default: true
+          description: Defines if this service is currently active or not.
+        open_loop:
+          type:
+          - boolean
+          - 'null'
+          example: true
+          description: 'Defines if the service works as an open-loop service. This feature
+
+            can only be enabled if the PSP is set up to accept previous scheme
+
+            transaction IDs.
+
+
+            If this value is not provided or is set to `null`, it will be set
+
+            to the value of `open_loop` in the payment service definition.
+
+
+            If `open_loop_toggle` is `false` in the payment service definition,
+
+            `open_loop` should either not be provided or set to `null`, or it
+
+            will fail with a validation error.'
+        payment_method_tokenization_enabled:
+          type:
+          - boolean
+          - 'null'
+          example: true
+          description: 'Defines if tokenization is enabled for the service. This feature
+
+            can only be enabled if the payment service is NOT set as `open_loop`
+
+            and the PSP is set up to tokenize.'
+        network_tokens_enabled:
+          type:
+          - boolean
+          - 'null'
+          example: true
+          description: 'Defines if network tokens are enabled for the service. This feature
+
+            can only be enabled if the payment service is set as `open_loop` and
+
+            the PSP is set up to accept network tokens.
+
+
+            If this value is not provided or is set to `null`, it will be set
+
+            to the value of `network_tokens_default` in the payment service
+
+            definition.
+
+
+            If `network_tokens_toggle` is `false` in the payment service definition,
+
+            `network_tokens_enabled` should either not be provided or set to `null`,
+
+            or it will fail with a validation error.'
+        settlement_reporting_enabled:
+          type: boolean
+          example: true
+          default: false
+          description: 'Defines if settlement reporting is enabled for the service.
+
+            This feature can only be enabled if the payment service
+
+            definition supports the `settlement_reporting` feature.'
+    PaymentServices:
+      title: A list of active payment services
+      type: object
+      description: A list of active, configured payment services.
+      x-tags:
+      - Payment Services
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentService'
+        limit:
+          type: integer
+          description: 'The limit applied to request. This represents the number of items that are at
+
+            maximum returned by this request.'
+          format: int32
+          minimum: 1
+          maximum: 100
+          example: 1
+          default: 20
+        next_cursor:
+          type:
+          - string
+          - 'null'
+          description: 'The cursor that represents the next page of results. Use the `cursor` query
+
+            parameter to fetch this page of items.'
+          example: ZXhhbXBsZTE
+          minLength: 1
+          maxLength: 1000
+        previous_cursor:
+          type:
+          - string
+          - 'null'
+          description: 'The cursor that represents the next page of results. Use the `cursor` query
+
+            parameter to fetch this page of items.'
+          example: null
+          minLength: 1
+          maxLength: 1000
+    MerchantProfileSummary:
+      title: Merchant Profile
+      type: object
+      description: Merchant profile for the different card schemes.
+      properties:
+        amex:
+          type:
+          - object
+          - 'null'
+          description: Merchant profile for Amex.
+          allOf:
+          - $ref: '#/components/schemas/MerchantProfileSchemeSummary'
+        dankort:
+          type:
+          - object
+          - 'null'
+          description: Merchant profile for Dankort.
+          allOf:
+          - $ref: '#/components/schemas/MerchantProfileSchemeSummary'
+        discover:
+          type:
+          - object
+          - 'null'
+          description: Merchant profile for Discover.
+          allOf:
+          - $ref: '#/components/schemas/MerchantProfileSchemeSummary'
+        jcb:
+          type:
+          - object
+          - 'null'
+          description: Merchant profile for JCB.
+          allOf:
+          - $ref: '#/components/schemas/MerchantProfileSchemeSummary'
+        mastercard:
+          type:
+          - object
+          - 'null'
+          description: Merchant profile for Mastercard.
+          allOf:
+          - $ref: '#/components/schemas/MerchantProfileSchemeSummary'
+        unionpay:
+          type:
+          - object
+          - 'null'
+          description: Merchant profile for UnionPay.
+          allOf:
+          - $ref: '#/components/schemas/MerchantProfileSchemeSummary'
+        visa:
+          type:
+          - object
+          - 'null'
+          description: Merchant profile for Visa.
+          allOf:
+          - $ref: '#/components/schemas/MerchantProfileSchemeSummary'
+    Error401Unauthorized:
+      title: Unauthorized Error
+      type: object
+      description: Unauthorized Error (HTTP 401).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`unauthorized`.'
+          example: unauthorized
+          enum:
+          - unauthorized
+        status:
+          type: integer
+          description: '`401`.'
+          example: 401
+          enum:
+          - 401
+        message:
+          type: string
+          description: No valid API authentication found.
+          example: No valid API authentication found
+          enum:
+          - No valid API authentication found
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    PaymentServiceSessionRequest:
+      title: Payment Service Session Request
+      type: object
+      description: A request to generate a session for a payment session.
+      x-tags:
+      - Payment Services
+      additionalProperties: true
+    Error401:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `unauthorized`
+          default: unauthorized
+          examples:
+          - unauthorized
+        status:
+          type: integer
+          title: Status
+          description: Always `401`.
+          default: 401
+          examples:
+          - 401
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: No valid API authentication found
+          examples:
+          - No valid API authentication found
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error401
+    Error403:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `forbidden`
+          default: forbidden
+          examples:
+          - forbidden
+        status:
+          type: integer
+          title: Status
+          description: Always `403`.
+          default: 403
+          examples:
+          - 403
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error403
+    ErrorLocation:
+      type: string
+      enum:
+      - query
+      - body
+      - path
+      - header
+      - unknown
+      title: ErrorLocation
+    Field:
+      properties:
+        key:
+          type: string
+          maxLength: 50
+          minLength: 1
+          title: Key
+          description: The ID of the configured field.
+          examples:
+          - api_key
+        value:
+          type: string
+          maxLength: 10000
+          minLength: 1
+          title: Value
+          description: The value of the configured field.
+          examples:
+          - key-12345
+      additionalProperties: false
+      type: object
+      required:
+      - key
+      - value
+      title: Field
+      description: A field used in a payment service
+    MerchantProfileSchemeSummary_2:
+      properties:
+        merchant_acquirer_bin:
+          type: string
+          maxLength: 11
+          title: Merchant Acquirer Bin
+          description: Acquirer BIN to use when calling 3DS through this scheme.
+          examples:
+          - '516327'
+        merchant_acquirer_id:
+          type: string
+          maxLength: 35
+          title: Merchant Acquirer Id
+          description: Merchant ID to use when calling 3DS through this scheme.
+          examples:
+          - '123456789012345'
+        merchant_name:
+          type: string
+          maxLength: 40
+          title: Merchant Name
+          description: ''
+          examples:
+          - Acme Inc.
+        merchant_country_code:
+          type: string
+          title: Merchant Country Code
+          description: The merchant's ISO 3166-1 numeric country code.
+          examples:
+          - '840'
+        merchant_category_code:
+          type: string
+          maxLength: 4
+          minLength: 4
+          title: Merchant Category Code
+          description: Merchant category code to use when calling 3DS through this scheme.
+          examples:
+          - '1234'
+        merchant_url:
+          type: string
+          title: Merchant Url
+          description: URL to send when calling 3DS through this scheme.
+          examples:
+          - https://example.com
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+          description: The date and time when this profile was first created in our system.
+          examples:
+          - '2013-07-16T19:23:00.000+00:00'
+      additionalProperties: false
+      type: object
+      required:
+      - merchant_acquirer_bin
+      - merchant_acquirer_id
+      - merchant_name
+      - merchant_country_code
+      - merchant_category_code
+      - merchant_url
+      - created_at
+      title: MerchantProfileSchemeSummary
+    Error500:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `server_error`
+          default: server_error
+          examples:
+          - server_error
+        status:
+          type: integer
+          title: Status
+          description: Always `500`.
+          default: 500
+          examples:
+          - 500
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error500
+    CreateSessionStatus:
+      type: string
+      enum:
+      - succeeded
+      - failed
+      title: CreateSessionStatus
+    Error405:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `method_not_allowed`
+          default: method_not_allowed
+          examples:
+          - method_not_allowed
+        status:
+          type: integer
+          title: Status
+          description: Always `405`.
+          default: 405
+          examples:
+          - 405
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Method Not Allowed
+          examples:
+          - Method Not Allowed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error405
+    Error404:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `not_found`
+          default: not_found
+          examples:
+          - not_found
+        status:
+          type: integer
+          title: Status
+          description: Always `404`.
+          default: 404
+          examples:
+          - 404
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: The resource could not be found
+          examples:
+          - The resource could not be found
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error404
+    PaymentServiceStatus:
+      type: string
+      enum:
+      - pending
+      - created
+      - failed
+      title: PaymentServiceStatus
+    PaymentServiceUpdate_2:
+      properties:
+        display_name:
+          anyOf:
+          - type: string
+            maxLength: 200
+            minLength: 1
+          - type: 'null'
+          title: Display Name
+          description: The display name for the payment service.
+          examples:
+          - Stripe
+        fields:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/VoidableField'
+            type: array
+          - type: 'null'
+          title: Fields
+          description: The non-secret credential fields that have been configured for this payment service. Any secret fields are omitted.
+        reporting_fields:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/VoidableField'
+            type: array
+          - type: 'null'
+          title: Reporting Fields
+          description: The non-secret reporting fields that have been configured for this payment service. Any secret fields are omitted.
+        position:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Position
+          description: Deprecated field used to define the order in which to process payment services
+          examples:
+          - 1
+        accepted_currencies:
+          anyOf:
+          - items:
+              type: string
+              pattern: ^[A-Z]{3}$
+              examples:
+              - EUR
+              - GBP
+              - USD
+            type: array
+            minItems: 1
+          - type: 'null'
+          title: Accepted Currencies
+          description: A list of currencies for which this service is enabled, in ISO 4217 three-letter code format.
+          examples:
+          - - USD
+            - EUR
+            - GBP
+        accepted_countries:
+          anyOf:
+          - items:
+              type: string
+              pattern: ^[A-Z]{2}$
+              examples:
+              - DE
+              - GB
+              - US
+            type: array
+            minItems: 1
+          - type: 'null'
+          title: Accepted Countries
+          description: A list of countries for which this service is enabled, in ISO two-letter code format.
+          examples:
+          - - US
+            - DE
+            - GB
+        active:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Active
+          description: Defines if this payment service is currently active.
+          default: true
+          examples:
+          - true
+          - false
+        three_d_secure_enabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Three D Secure Enabled
+          description: Defines if this payment service has 3DS enabled.
+          examples:
+          - true
+        merchant_profile:
+          anyOf:
+          - additionalProperties:
+              anyOf:
+              - $ref: '#/components/schemas/MerchantProfileScheme_2'
+              - type: 'null'
+            propertyNames:
+              $ref: '#/components/schemas/CardScheme'
+            type: object
+          - type: 'null'
+          title: Merchant Profile
+          description: An object containing a key for each supported card schemes, and for each key an object with the 3DS profile for this service for that scheme.
+        payment_method_tokenization_enabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Payment Method Tokenization Enabled
+          description: Defines if this payment service support payment method tokenization.
+          examples:
+          - true
+        network_tokens_enabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Network Tokens Enabled
+          description: Defines if this payment service supports network tokens.
+          examples:
+          - true
+        open_loop:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Open Loop
+          description: Defines if this payment service is open loop.
+          examples:
+          - true
+        settlement_reporting_enabled:
+          type: boolean
+          title: Settlement Reporting Enabled
+          description: Defines if this payment service has settlement reporting enabled.
+          default: false
+          examples:
+          - true
+      additionalProperties: false
+      type: object
+      title: PaymentServiceUpdate
+      description: Request body for updating a Payment Service
+    Error425:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `too_early`
+          default: too_early
+          examples:
+          - too_early
+        status:
+          type: integer
+          title: Status
+          description: Always `425`.
+          default: 425
+          examples:
+          - 425
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error425
+    ErrorDetail_2:
+      properties:
+        location:
+          $ref: '#/components/schemas/ErrorLocation'
+          description: The part of the request where the property can be found that caused the error.
+          examples:
+          - body
+        pointer:
+          anyOf:
+          - type: string
+            format: json-pointer
+          - type: string
+          title: Pointer
+          description: A JSON pointer for the particular property that caused the error.
+          examples:
+          - /currency
+        message:
+          type: string
+          title: Message
+          description: A human-readdable explanation of the error.
+          examples:
+          - 'Unknown ISO 4217 currency code: USX'
+        type:
+          type: string
+          title: Type
+          description: The type of error that was raised for this property.
+          examples:
+          - value_error
+      additionalProperties: false
+      type: object
+      required:
+      - location
+      - pointer
+      - message
+      - type
+      title: ErrorDetail
+    PaymentServices_2:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/PaymentService_2'
+          type: array
+          title: Items
+          description: A list of items returned for this request.
+        limit:
+          type: integer
+          maximum: 100.0
+          minimum: 1.0
+          title: Limit
+          description: The number of items for this page.
+          default: 20
+          examples:
+          - 20
+        next_cursor:
+          anyOf:
+          - type: string
+            maxLength: 1000
+            minLength: 1
+          - type: 'null'
+          title: Next Cursor
+          description: The cursor pointing at the next page of items.
+          examples:
+          - ZXhhbXBsZTE
+        previous_cursor:
+          anyOf:
+          - type: string
+            maxLength: 1000
+            minLength: 1
+          - type: 'null'
+          title: Previous Cursor
+          description: The cursor pointing at the previous page of items.
+          examples:
+          - Xkjss7asS
+      additionalProperties: false
+      type: object
+      required:
+      - items
+      title: PaymentServices
+    Method:
+      type: string
+      enum:
+      - abitab
+      - affirm
+      - afterpay
+      - alipay
+      - alipayhk
+      - applepay
+      - arcuspaynetwork
+      - bacs
+      - bancontact
+      - bank
+      - bcp
+      - becs
+      - bitpay
+      - blik
+      - ach
+      - boleto
+      - boost
+      - breb
+      - capitec
+      - card
+      - cashapp
+      - cashappafterpay
+      - chaseorbital
+      - clearpay
+      - click-to-pay
+      - custom_push
+      - custom_redirect
+      - custom_tokenize
+      - dana
+      - dcb
+      - dlocal
+      - duitnow
+      - ebanx
+      - eckoh
+      - efecty
+      - eps
+      - everydaypay
+      - gcash
+      - gem
+      - gemds
+      - gift-card
+      - giropay
+      - givingblock
+      - gocardless
+      - googlepay
+      - googlepay_pan_only
+      - gopay
+      - grabpay
+      - ideal
+      - interac
+      - kakaopay
+      - kcp
+      - khipu
+      - klarna
+      - konbini
+      - latitude
+      - latitudeds
+      - laybuy
+      - linepay
+      - linkaja
+      - maybankqrpay
+      - mercadopago
+      - multibanco
+      - multipago
+      - nequi
+      - netbanking
+      - network-token
+      - nupay
+      - oney_10x
+      - oney_12x
+      - oney_3x
+      - oney_4x
+      - oney_6x
+      - onlinebankingcz
+      - onelink
+      - ovo
+      - oxxo
+      - p24
+      - pagoefectivo
+      - paybybank
+      - payid
+      - paymaya
+      - paysquad
+      - paypal
+      - paypaldirectorder
+      - paypalpaylater
+      - paypay
+      - payto
+      - payvalida
+      - paze
+      - picpay
+      - pix
+      - plaid
+      - pse
+      - rabbitlinepay
+      - razorpay
+      - rapipago
+      - redpagos
+      - scalapay
+      - sepa
+      - servipag
+      - seveneleven
+      - sezzle
+      - shopeepay
+      - singteldash
+      - smartpay
+      - sofort
+      - spei
+      - stitch
+      - swish
+      - stripe
+      - stripedd
+      - stripetoken
+      - tapi
+      - tapifintechs
+      - thaiqr
+      - touchngo
+      - truemoney
+      - trustly
+      - trustlyeurope
+      - upi
+      - venmo
+      - vipps
+      - waave
+      - webpay
+      - wechat
+      - wero
+      - yape
+      - zippay
+      title: Method
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    CreateSession:
+      properties:
+        type:
+          type: string
+          const: payment-service-session
+          title: Type
+          description: Always `payment-service-session`.
+          default: payment-service-session
+          examples:
+          - payment-service-session
+        status:
+          $ref: '#/components/schemas/CreateSessionStatus'
+          description: The status of the response.
+          examples:
+          - succeeded
+        code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Code
+          description: A generic error code that may be returned when the session could not be generated.
+          examples:
+          - UNKNOWN_ERROR
+        status_code:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Status Code
+          description: The HTTP status code received from the payment service.
+          examples:
+          - 201
+        response_body:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Response Body
+          description: The JSON response body received from the payment service.
+          examples:
+          - sessionId: '12345'
+      additionalProperties: false
+      type: object
+      required:
+      - status
+      title: CreateSession
+      description: The session data received from the payment service.
+    CardScheme:
+      type: string
+      enum:
+      - accel
+      - amex
+      - bancontact
+      - carte-bancaire
+      - cirrus
+      - culiance
+      - dankort
+      - diners-club
+      - discover
+      - eftpos-australia
+      - elo
+      - hipercard
+      - jcb
+      - maestro
+      - mastercard
+      - mir
+      - nyce
+      - other
+      - pulse
+      - qcard
+      - rupay
+      - star
+      - uatp
+      - unionpay
+      - visa
+      title: CardScheme
+    PaymentService_2:
+      properties:
+        type:
+          type: string
+          const: payment-service
+          title: Type
+          description: Always `payment-service`
+          default: payment-service
+          examples:
+          - payment-service
+        id:
+          type: string
+          format: uuid
+          title: Id
+          default: The ID of the payment service
+          examples:
+          - fffd152a-9532-4087-9a4f-de58754210f0
+        merchant_account_id:
+          type: string
+          title: Merchant Account Id
+          description: The ID of the merchant account this job belongs to.
+          examples:
+          - default
+        payment_service_definition_id:
+          type: string
+          maxLength: 50
+          minLength: 1
+          title: Payment Service Definition Id
+          description: The definition ID of the service that has been configured.
+          examples:
+          - stripe-card
+        active:
+          type: boolean
+          title: Active
+          description: Defines if this payment service is currently active.
+          default: true
+          examples:
+          - true
+          - false
+        method:
+          $ref: '#/components/schemas/Method'
+          description: The payment method that this service supports.
+          examples:
+          - card
+        display_name:
+          type: string
+          maxLength: 200
+          minLength: 1
+          title: Display Name
+          description: The display name for the payment service.
+          examples:
+          - Stripe
+        position:
+          type: integer
+          title: Position
+          description: Deprecated field used to define the order in which to process payment services
+          examples:
+          - 1
+        status:
+          $ref: '#/components/schemas/PaymentServiceStatus'
+          default: The current status of this service.
+          examples:
+          - created
+        accepted_currencies:
+          items:
+            type: string
+            pattern: ^[A-Z]{3}$
+            examples:
+            - EUR
+            - GBP
+            - USD
+          type: array
+          title: Accepted Currencies
+          description: A list of currencies for which this service is enabled, in ISO 4217 three-letter code format.
+          examples:
+          - - USD
+            - EUR
+            - GBP
+        accepted_countries:
+          items:
+            type: string
+            pattern: ^[A-Z]{2}$
+            examples:
+            - DE
+            - GB
+            - US
+          type: array
+          title: Accepted Countries
+          description: A list of countries for which this service is enabled, in ISO two-letter code format.
+          examples:
+          - - US
+            - DE
+            - GB
+        payment_method_tokenization_enabled:
+          type: boolean
+          title: Payment Method Tokenization Enabled
+          description: Defines if this payment service support payment method tokenization.
+          examples:
+          - true
+        network_tokens_enabled:
+          type: boolean
+          title: Network Tokens Enabled
+          description: Defines if this payment service supports network tokens.
+          examples:
+          - true
+        open_loop:
+          type: boolean
+          title: Open Loop
+          description: Defines if this payment service is open loop.
+          examples:
+          - true
+        settlement_reporting_enabled:
+          type: boolean
+          title: Settlement Reporting Enabled
+          description: Defines if this payment service has settlement reporting enabled.
+          examples:
+          - true
+        three_d_secure_enabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Three D Secure Enabled
+          description: Defines if this payment service has 3DS enabled.
+          examples:
+          - true
+        merchant_profile:
+          anyOf:
+          - additionalProperties:
+              anyOf:
+              - $ref: '#/components/schemas/MerchantProfileSchemeSummary_2'
+              - type: 'null'
+            propertyNames:
+              $ref: '#/components/schemas/CardScheme'
+            type: object
+          - type: 'null'
+          title: Merchant Profile
+          description: An object containing a key for each supported card schemes, and for each key an object with the 3DS profile for this service for that scheme.
+        webhook_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Webhook Url
+          description: The URL that needs to be configured with this payment service as the receiving endpoint for webhooks from the service to our system. Currently, we dp not yet automatically register webhooks on setup, and therefore webhooks need to be registered manually by the merchant.
+        fields:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/Field'
+            type: array
+          - type: 'null'
+          title: Fields
+          description: The non-secret credential fields that have been configured for this payment service. Any secret fields are omitted.
+        reporting_fields:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/Field'
+            type: array
+          - type: 'null'
+          title: Reporting Fields
+          description: The non-secret reporting fields that have been configured for this payment service. Any secret fields are omitted.
+        is_deleted:
+          type: boolean
+          title: Is Deleted
+          description: Defines if this payment service has been deleted
+          default: false
+          examples:
+          - false
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+          description: The date and time when this payment service was first created in our system.
+          examples:
+          - '2013-07-16T19:23:00.000+00:00'
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+          description: The date and time when this payment service was last updated in our system.
+          examples:
+          - '2013-07-16T19:23:00.000+00:00'
+      additionalProperties: false
+      type: object
+      required:
+      - merchant_account_id
+      - payment_service_definition_id
+      - method
+      - display_name
+      - position
+      - accepted_currencies
+      - accepted_countries
+      - payment_method_tokenization_enabled
+      - network_tokens_enabled
+      - open_loop
+      - settlement_reporting_enabled
+      - created_at
+      - updated_at
+      title: PaymentService
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    VoidableField:
+      properties:
+        key:
+          type: string
+          maxLength: 50
+          minLength: 1
+          title: Key
+        value:
+          anyOf:
+          - type: string
+            maxLength: 10000
+            minLength: 1
+          - type: string
+            const: ''
+          title: Value
+      additionalProperties: false
+      type: object
+      required:
+      - key
+      - value
+      title: VoidableField
+    Error409:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `duplicate_record`
+          default: duplicate_record
+          examples:
+          - duplicate_record
+        status:
+          type: integer
+          title: Status
+          description: Always `409`.
+          default: 409
+          examples:
+          - 409
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+        resource_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Resource Id
+          description: The ID of the conflicting resource.
+          examples:
+          - cdc70639-cb9c-4222-a73f-b8ce39f7821b
+      additionalProperties: false
+      type: object
+      title: Error409
+    Error504:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `gateway_timeout`
+          default: gateway_timeout
+          examples:
+          - gateway_timeout
+        status:
+          type: integer
+          title: Status
+          default: 504
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error504
+    Error502:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `bad_gateway`
+          default: bad_gateway
+          examples:
+          - bad_gateway
+        status:
+          type: integer
+          title: Status
+          description: Always `502`.
+          default: 502
+          examples:
+          - 502
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error502
+    Error429:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `too_many_requests`
+          default: too_many_requests
+          examples:
+          - too_many_requests
+        status:
+          type: integer
+          title: Status
+          description: Always `429`.
+          default: 429
+          examples:
+          - 429
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error429
+    PaymentServiceCreate:
+      properties:
+        display_name:
+          type: string
+          maxLength: 200
+          minLength: 1
+          title: Display Name
+          description: The display name for the payment service.
+          examples:
+          - Stripe
+        payment_service_definition_id:
+          type: string
+          maxLength: 50
+          minLength: 1
+          title: Payment Service Definition Id
+          description: The definition ID of the service to configure.
+          examples:
+          - stripe-card
+        fields:
+          items:
+            $ref: '#/components/schemas/Field'
+          type: array
+          title: Fields
+          description: The non-secret credential fields that have been configured for this payment service. Any secret fields are omitted.
+        reporting_fields:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/Field'
+            type: array
+          - type: 'null'
+          title: Reporting Fields
+          description: The non-secret reporting fields that have been configured for this payment service. Any secret fields are omitted.
+        position:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Position
+          description: Deprecated field used to define the order in which to process payment services
+          examples:
+          - 1
+        accepted_currencies:
+          items:
+            type: string
+            pattern: ^[A-Z]{3}$
+            examples:
+            - EUR
+            - GBP
+            - USD
+          type: array
+          minItems: 1
+          title: Accepted Currencies
+          description: A list of currencies for which this service is enabled, in ISO 4217 three-letter code format.
+          examples:
+          - - USD
+            - EUR
+            - GBP
+        accepted_countries:
+          items:
+            type: string
+            pattern: ^[A-Z]{2}$
+            examples:
+            - DE
+            - GB
+            - US
+          type: array
+          minItems: 1
+          title: Accepted Countries
+          description: A list of countries for which this service is enabled, in ISO two-letter code format.
+          examples:
+          - - US
+            - DE
+            - GB
+        active:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Active
+          description: Defines if this payment service is currently active.
+          default: true
+          examples:
+          - true
+          - false
+        three_d_secure_enabled:
+          type: boolean
+          title: Three D Secure Enabled
+          description: Defines if this payment service has 3DS enabled.
+          default: false
+          examples:
+          - true
+        merchant_profile:
+          anyOf:
+          - additionalProperties:
+              anyOf:
+              - $ref: '#/components/schemas/MerchantProfileScheme_2'
+              - type: 'null'
+            propertyNames:
+              $ref: '#/components/schemas/CardScheme'
+            type: object
+          - type: 'null'
+          title: Merchant Profile
+          description: An object containing a key for each supported card schemes, and for each key an object with the 3DS profile for this service for that scheme.
+        payment_method_tokenization_enabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Payment Method Tokenization Enabled
+          description: Defines if this payment service support payment method tokenization.
+          examples:
+          - true
+        network_tokens_enabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Network Tokens Enabled
+          description: Defines if this payment service supports network tokens.
+          examples:
+          - true
+        open_loop:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Open Loop
+          description: Defines if this payment service is open loop.
+          examples:
+          - true
+        settlement_reporting_enabled:
+          type: boolean
+          title: Settlement Reporting Enabled
+          description: Defines if this payment service has settlement reporting enabled.
+          default: false
+          examples:
+          - true
+      additionalProperties: false
+      type: object
+      required:
+      - display_name
+      - payment_service_definition_id
+      - fields
+      - accepted_currencies
+      - accepted_countries
+      title: PaymentServiceCreate
+      description: Request body for activating a payment service
+    MerchantProfileScheme_2:
+      properties:
+        merchant_acquirer_bin:
+          type: string
+          maxLength: 11
+          title: Merchant Acquirer Bin
+          description: Acquirer BIN to use when calling 3DS through this scheme.
+          examples:
+          - '516327'
+        merchant_acquirer_id:
+          type: string
+          maxLength: 35
+          title: Merchant Acquirer Id
+          description: Merchant ID to use when calling 3DS through this scheme.
+          examples:
+          - '123456789012345'
+        merchant_name:
+          type: string
+          maxLength: 40
+          title: Merchant Name
+          description: ''
+          examples:
+          - Acme Inc.
+        merchant_country_code:
+          type: string
+          title: Merchant Country Code
+          description: The merchant's ISO 3166-1 numeric country code.
+          examples:
+          - '840'
+        merchant_category_code:
+          type: string
+          maxLength: 4
+          minLength: 4
+          title: Merchant Category Code
+          description: Merchant category code to use when calling 3DS through this scheme.
+          examples:
+          - '1234'
+        merchant_url:
+          type: string
+          title: Merchant Url
+          description: URL to send when calling 3DS through this scheme.
+          examples:
+          - https://example.com
+      additionalProperties: false
+      type: object
+      required:
+      - merchant_acquirer_bin
+      - merchant_acquirer_id
+      - merchant_name
+      - merchant_country_code
+      - merchant_category_code
+      - merchant_url
+      title: MerchantProfileScheme
+    Error400:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `bad_request`
+          default: bad_request
+          examples:
+          - bad_request
+        status:
+          type: integer
+          title: Status
+          description: Always `400`.
+          default: 400
+          examples:
+          - 400
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error400
+    VerifyCredentials:
+      properties:
+        payment_service_definition_id:
+          type: string
+          title: Payment Service Definition Id
+          description: The ID of the payment service definition to verify the fields against
+          examples:
+          - stripe-card
+        payment_service_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Payment Service Id
+          description: The optional ID of the configured payment service. New fields will be merged with any existing fields already stored before they are verified.
+          examples:
+          - fffd152a-9532-4087-9a4f-de58754210f0
+        fields:
+          items:
+            $ref: '#/components/schemas/Field'
+          type: array
+          title: Fields
+          description: The fields and their values, or a set of updated fields to merge with existing values.
+      additionalProperties: false
+      type: object
+      required:
+      - payment_service_definition_id
+      - fields
+      title: VerifyCredentials
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    OAuth2PasswordBearer:
+      type: oauth2
+      flows:
+        password:
+          scopes:
+            embed: Shorthand for all gr4vy embed related scopes
+            sessions.refresh: Refresh access-token
+            anti-fraud-service-definitions.read: Read Anti Fraud Service Definitions
+            anti-fraud-services.read: Read Anti Fraud Services
+            api-key-pairs.read: Read API Key Pairs
+            api-logs.read: Read API Logs
+            apple-pay-certificates.read: Read Apple Pay Certificates
+            audit-logs.read: Read Audit Logs
+            bin-checker.read: Read BIN Checker
+            buyers.read: Read Buyers
+            buyers.billing-details.read: Read Billing Details
+            card-scheme-definitions.read: Read Card Scheme Definitions
+            checkout-sessions.read: Read Checkout Sessions
+            connections.read: Read Connections
+            digital-wallets.read: Read Digital Wallets
+            flows.read: Read Flows
+            gift-card-service-definitions.read: Read Gift Card Service Definitions
+            gift-card-services.read: Read Gift Card Services
+            gift-cards.read: Read Gift Cards
+            merchant-accounts.read: Read Merchant Accounts
+            payment-links.read: Read Payment Links
+            payment-method-definitions.read: Read Payment Method Definitions
+            payment-methods.read: Read Payment Methods
+            payment-options.read: Read Payment Options
+            payment-service-definitions.read: Read Payment Service Definitions
+            payment-services.read: Read Payment Service
+            payouts.read: Read Payouts
+            reports.read: Read Reports
+            roles.read: Read Roles
+            three-ds-scenarios.read: Read 3DS Scenarios
+            transactions.read: Read Transactions
+            users.me.read: Read User Profile
+            vault-forward.read: Read Vault Forward
+            vault-forward-authentications.read: Read Vault Forward Authentications
+            vault-forward-configs.read: Read Vault Forward Configurations
+            vault-forward-definitions.read: Read Vault Forward Definitions
+            webhook-subscriptions.read: Read Webhook Subscriptions
+            business-contexts.read: Read Business Contexts
+            health-dashboard.read: Read Health Dashboard
+            metrics-explorer.read: Read Metrics Explorer
+            monitoring.read: Read Monitoring
+            reset.read: Read Reset
+            sessions.read: Read Sessions
+            users.read: Read Users
+            anti-fraud-service-definitions.write: Write Anti Fraud Service Definitions
+            anti-fraud-services.write: Write Anti Fraud Services
+            api-key-pairs.write: Write API Key Pairs
+            api-logs.write: Write API Logs
+            apple-pay-certificates.write: Write Apple Pay Certificates
+            audit-logs.write: Write Audit Logs
+            bin-checker.write: Write BIN Checker
+            buyers.write: Write Buyers
+            buyers.billing-details.write: Write Billing Details
+            card-scheme-definitions.write: Write Card Scheme Definitions
+            checkout-sessions.write: Write Checkout Sessions
+            connections.write: Write Connections
+            digital-wallets.write: Write Digital Wallets
+            flows.write: Write Flows
+            gift-card-service-definitions.write: Write Gift Card Service Definitions
+            gift-card-services.write: Write Gift Card Services
+            gift-cards.write: Write Gift Cards
+            merchant-accounts.write: Write Merchant Accounts
+            payment-links.write: Write Payment Links
+            payment-method-definitions.write: Write Payment Method Definitions
+            payment-methods.write: Write Payment Methods
+            payment-options.write: Write Payment Options
+            payment-service-definitions.write: Write Payment Service Definitions
+            payment-services.write: Write Payment Service
+            payouts.write: Write Payouts
+            reports.write: Write Reports
+            roles.write: Write Roles
+            three-ds-scenarios.write: Write 3DS Scenarios
+            transactions.write: Write Transactions
+            users.me.write: Write User Profile
+            vault-forward.write: Write Vault Forward
+            vault-forward-authentications.write: Write Vault Forward Authentications
+            vault-forward-configs.write: Write Vault Forward Configurations
+            vault-forward-definitions.write: Write Vault Forward Definitions
+            webhook-subscriptions.write: Write Webhook Subscriptions
+            business-contexts.write: Write Business Contexts
+            health-dashboard.write: Write Health Dashboard
+            metrics-explorer.write: Write Metrics Explorer
+            monitoring.write: Write Monitoring
+            reset.write: Write Reset
+            sessions.write: Write Sessions
+            users.write: Write Users
+          tokenUrl: auth/token
+x-refined-from:
+- gr4vy-docs-v1-openapi.json
+- gr4vy-openapi.json

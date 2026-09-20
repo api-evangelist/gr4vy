@@ -1,0 +1,93 @@
+overlay: 1.0.0
+info:
+  title: Gr4vy OpenAPI enhancements (API Evangelist)
+  version: 1.0.0
+  x-generated: '2026-09-20'
+  x-method: generated
+  x-source: openapi/gr4vy-openapi.yml + https://docs.gr4vy.com/guides/api/
+extends: ../openapi/gr4vy-openapi.yml
+actions:
+- target: $.info
+  update:
+    x-api-evangelist:
+      source: https://github.com/gr4vy/gr4vy-openapi/blob/main/openapi.json
+      docs: https://docs.gr4vy.com/guides/api/openapi
+      captured: '2026-09-20'
+- target: $
+  update:
+    servers:
+    - url: https://api.sandbox.{id}.gr4vy.app
+      description: Sandbox
+      variables:
+        id:
+          default: example
+          description: The subdomain for your Gr4vy instance.
+    - url: https://api.{id}.gr4vy.app
+      description: Production
+      variables:
+        id:
+          default: example
+          description: The subdomain for your Gr4vy instance.
+  description: The GitHub-published spec omits servers[]; these are the templated servers Gr4vy publishes in its
+    docs-hosted variants (docs.gr4vy.com/openapi.v1.json, openapi.speakeasy.json) and on https://docs.gr4vy.com/guides/api/environments.
+- target: $
+  update:
+    externalDocs:
+      description: Gr4vy API reference
+      url: https://docs.gr4vy.com/reference
+- target: $.paths['/gift-cards/activations'].post
+  update:
+    x-idempotent: true
+    x-idempotency:
+      header: Idempotency-Key
+      retention: 24 hours
+      docs: https://docs.gr4vy.com/guides/api/idempotent-requests
+- target: $.paths['/gift-cards/issuances'].post
+  update:
+    x-idempotent: true
+    x-idempotency:
+      header: Idempotency-Key
+      retention: 24 hours
+      docs: https://docs.gr4vy.com/guides/api/idempotent-requests
+- target: $.paths['/transactions'].post
+  update:
+    x-idempotent: true
+    x-idempotency:
+      header: Idempotency-Key
+      retention: 24 hours
+      docs: https://docs.gr4vy.com/guides/api/idempotent-requests
+- target: $.paths['/transactions/{transaction_id}/capture'].post
+  update:
+    x-idempotent: true
+    x-idempotency:
+      header: Idempotency-Key
+      retention: 24 hours
+      docs: https://docs.gr4vy.com/guides/api/idempotent-requests
+- target: $.paths['/transactions/{transaction_id}/refunds'].post
+  update:
+    x-idempotent: true
+    x-idempotency:
+      header: Idempotency-Key
+      retention: 24 hours
+      docs: https://docs.gr4vy.com/guides/api/idempotent-requests
+- target: $.paths['/transactions/{transaction_id}/void'].post
+  update:
+    x-idempotent: true
+    x-idempotency:
+      header: Idempotency-Key
+      retention: 24 hours
+      docs: https://docs.gr4vy.com/guides/api/idempotent-requests
+- target: $.paths['/transactions/{transaction_id}/refunds/all'].post
+  update:
+    x-idempotent: true
+    x-idempotency:
+      header: Idempotency-Key
+      retention: 24 hours
+      docs: https://docs.gr4vy.com/guides/api/idempotent-requests
+- target: $.paths['/transactions/{transaction_id}/authorization/increment'].post
+  update:
+    x-idempotent: true
+    x-idempotency:
+      header: Idempotency-Key
+      retention: 24 hours
+      docs: https://docs.gr4vy.com/guides/api/idempotent-requests

@@ -1,0 +1,204 @@
+openapi: 3.2.0
+info:
+  title: Gr4vy Gift Card Service Definitions API
+  version: 1.1.0-beta
+  contact:
+    name: Gr4vy Support
+    email: code@gr4vy.com
+    url: https://gr4vy.com
+  termsOfService: https://gr4vy.com
+  license:
+    name: MIT
+    url: https://raw.githubusercontent.com/gr4vy/gr4vy-openapi/main/LICENSE
+  description: 'Welcome to the Gr4vy API reference documentation.
+
+    Our API is still very much a work in product and subject to change.'
+servers:
+- url: https://api.sandbox.{id}.gr4vy.app
+  x-speakeasy-server-id: sandbox
+  variables:
+    id:
+      default: example
+      description: The subdomain for your Gr4vy instance.
+- url: https://api.{id}.gr4vy.app
+  x-speakeasy-server-id: production
+  variables:
+    id:
+      default: example
+      description: The subdomain for your Gr4vy instance.
+security:
+- bearerAuth: []
+tags:
+- name: Gift Card Service Definitions
+  description: 'Gift card service definitions describe the fields required for a gift
+
+    card service to be configured.'
+paths:
+  /gift-card-service-definitions/{gift_card_service_definition_id}:
+    parameters:
+    - schema:
+        type: string
+        example: qwikcilver-gift-card
+      name: gift_card_service_definition_id
+      in: path
+      required: true
+      description: The unique ID of the gift card service definition.
+    get:
+      operationId: get-gift-card-service-definition
+      summary: Get gift card service definition
+      description: Gets the definition for a gift card service.
+      tags:
+      - Gift Card Service Definitions
+      responses:
+        '200':
+          description: Returns a gift card service definition.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GiftCardServiceDefinition'
+        '401':
+          description: Returns an error if no valid authentication was provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401Unauthorized'
+components:
+  schemas:
+    Error401Unauthorized:
+      title: Unauthorized Error
+      type: object
+      description: Unauthorized Error (HTTP 401).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`unauthorized`.'
+          example: unauthorized
+          enum:
+          - unauthorized
+        status:
+          type: integer
+          description: '`401`.'
+          example: 401
+          enum:
+          - 401
+        message:
+          type: string
+          description: No valid API authentication found.
+          example: No valid API authentication found
+          enum:
+          - No valid API authentication found
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    ErrorDetail:
+      title: Error details
+      description: Additional detail about the part of a request body that caused an issue.
+      type: object
+      x-tags:
+      - Errors
+      properties:
+        location:
+          type: string
+          example: body
+          description: The location where the error caused an issue.
+          enum:
+          - query
+          - body
+          - path
+          - header
+        type:
+          type: string
+          example: value_error.missing
+          description: A unique identifier for the type of error that occurred.
+        pointer:
+          type: string
+          example: /payment_method/number
+          description: 'The exact item for which the validation did not succeed. This is a JSON
+
+            pointer for request bodies, while for query, path, and header parameters
+
+            it is the name of the parameter.'
+        message:
+          type: string
+          example: field required
+          description: A human readable message for this error detail.
+    GiftCardServiceDefinition:
+      title: Gift Card Service Definition
+      type: object
+      description: An available gift card service that can be configured.
+      x-tags:
+      - Discovery
+      properties:
+        id:
+          type: string
+          description: The ID of the gift card service definition.
+          example: qwikcilver-gift-card
+        type:
+          type: string
+          description: '`gift-card-service-definition`.'
+          default: gift-card-service-definition
+          example: gift-card-service-definition
+          enum:
+          - gift-card-service-definition
+        display_name:
+          type: string
+          description: The display name of this service.
+          example: Stripe
+        fields:
+          type: array
+          description: A list of fields that need to be submitted when activating the payment. service.
+          minItems: 1
+          items:
+            type: object
+            description: 'A single field that needs to be submitted for a payment service when it
+
+              is created.'
+            properties:
+              key:
+                type: string
+                example: private_api_key
+                description: The key of a field that needs to be submitted.
+              display_name:
+                type: string
+                example: Private API key
+                description: The name to display for a field in the dashboard.
+              required:
+                type: boolean
+                example: true
+                description: Defines if this field is required when the service is created.
+              format:
+                type: string
+                example: text
+                description: Defines the type of input that needs to be rendered for this field.
+                enum:
+                - text
+                - multiline
+                - number
+              secret:
+                type: boolean
+                example: true
+                description: 'Defines if this field is secret. When `true` the field is not
+
+                  returned when querying the payment service.'
+        icon_url:
+          type: string
+          description: An icon to display for the payment service.
+          example: https://cdn.gr4vy.app/stripe.svg
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

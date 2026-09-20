@@ -1,0 +1,182 @@
+generated: '2026-09-20'
+method: derived
+source: mcp/gr4vy-mcp-tools-list.json x openapi/gr4vy-openapi.yml
+description: The only MCP server Gr4vy hosts is a documentation-search server, so none of its tools is backed by
+  a REST operation. Every one of the 149 REST operations is therefore rest_only. Recorded honestly rather than mapped
+  by loose semantics.
+surfaces:
+  openapi:
+    path: openapi/gr4vy-openapi.yml
+    gated: false
+  mcp:
+    url: https://docs.gr4vy.com/mcp
+    gated: false
+    kind: documentation
+  graphql: null
+crosswalk: []
+mcp_only:
+- tool: search_gr4vy
+  reason: Documentation search/retrieval/feedback tool over docs.gr4vy.com content; no Gr4vy REST operation backs
+    it.
+- tool: query_docs_filesystem_gr4vy
+  reason: Documentation search/retrieval/feedback tool over docs.gr4vy.com content; no Gr4vy REST operation backs
+    it.
+- tool: submit_feedback
+  reason: Documentation search/retrieval/feedback tool over docs.gr4vy.com content; no Gr4vy REST operation backs
+    it.
+rest_only:
+- activate_gift_card
+- add_buyer
+- add_buyer_shipping_details
+- add_payment_link
+- add_report
+- cancel_transaction
+- capture_transaction
+- complete_paze_mobile_session
+- configure_digital_wallet
+- create_account_updater_job
+- create_api_key_pair
+- create_apple_pay_digital_wallet_session
+- create_checkout_session
+- create_click_to_pay_digital_wallet_session
+- create_full_transaction_refund
+- create_gift_card
+- create_google_pay_digital_wallet_session
+- create_merchant_account
+- create_metrics_explorer_preset
+- create_monitoring_metric
+- create_payment_method
+- create_payment_method_network_token
+- create_payment_method_network_token_cryptogram
+- create_payment_method_payment_service_token
+- create_payment_service
+- create_payment_service_definition_session
+- create_payment_service_session
+- create_payout
+- create_paze_digital_wallet_session
+- create_paze_mobile_session
+- create_report_execution_url
+- create_three_ds_configuration
+- create_three_ds_scenario
+- create_transaction
+- create_transaction_refund
+- create_webhook_subscription
+- delete_api_key_pair
+- delete_buyer
+- delete_buyer_shipping_details
+- delete_checkout_session
+- delete_digital_wallet
+- delete_gift_card
+- delete_metrics_explorer_preset
+- delete_monitoring_metric
+- delete_payment_method
+- delete_payment_method_network_token
+- delete_payment_method_payment_service_token
+- delete_payment_service
+- delete_three_ds_configuration
+- delete_three_ds_scenario
+- delete_webhook_subscription
+- edit_three_ds_configuration
+- expire_payment_link
+- get_api_key_pair
+- get_buyer
+- get_buyer_shipping_details
+- get_card_details
+- get_checkout_session
+- get_checkout_session_acquirer
+- get_checkout_session_card_details
+- get_digital_wallet
+- get_gift_card
+- get_merchant_account
+- get_metrics_explorer_module
+- get_metrics_explorer_totals
+- get_monitoring_incident
+- get_monitoring_metric
+- get_payment_link
+- get_payment_method
+- get_payment_service
+- get_payment_service_definition
+- get_payout
+- get_refund
+- get_report
+- get_report_execution
+- get_three_ds_scenario
+- get_transaction
+- get_transaction_capture
+- get_transaction_refund
+- get_transaction_refund_settlement
+- get_transaction_settlement
+- increment_transaction_authorization
+- issue_gift_card
+- list_all_report_executions
+- list_api_key_pairs
+- list_audit_logs
+- list_buyer_gift_cards
+- list_buyer_payment_methods
+- list_buyer_shipping_details
+- list_buyers
+- list_card_scheme_definitions
+- list_digital_wallets
+- list_gift_card_balances
+- list_gift_cards
+- list_merchant_accounts
+- list_metrics_explorer_presets
+- list_monitoring_incidents
+- list_monitoring_metric_incidents
+- list_monitoring_metrics
+- list_payment_links
+- list_payment_method_definitions
+- list_payment_method_network_tokens
+- list_payment_method_payment_service_tokens
+- list_payment_methods
+- list_payment_options
+- list_payment_service_definitions
+- list_payment_services
+- list_payouts
+- list_report_executions
+- list_reports
+- list_roles
+- list_three_ds_configurations
+- list_transaction_actions
+- list_transaction_captures
+- list_transaction_chargeback_reversals
+- list_transaction_chargebacks
+- list_transaction_events
+- list_transaction_refund_settlements
+- list_transaction_refunds
+- list_transaction_settlements
+- list_transactions
+- list_webhook_subscription
+- read_webhook_subscription
+- register_digital_wallet_domain
+- resume_payment_method_network_token
+- review_paze_mobile_session
+- rotate_webhook_subscription_secret
+- suspend_payment_method_network_token
+- sync_transaction
+- unregister_digital_wallet_domain
+- update_api_key_pair
+- update_buyer
+- update_buyer_shipping_details
+- update_checkout_session
+- update_checkout_session_fields
+- update_digital_wallet
+- update_merchant_account
+- update_metrics_explorer_preset
+- update_monitoring_incident
+- update_monitoring_metric
+- update_payment_method
+- update_payment_service
+- update_report
+- update_session
+- update_three_ds_scenario
+- update_transaction
+- update_webhook_subscription
+- verify_payment_service_credentials
+- void_transaction
+coverage:
+  mcp_tools: 3
+  mapped_tools: 0
+  mcp_only: 3
+  rest_operations: 149
+  rest_operations_with_tool: 0

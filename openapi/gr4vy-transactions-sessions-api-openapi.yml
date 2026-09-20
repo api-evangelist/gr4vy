@@ -1,0 +1,813 @@
+openapi: 3.2.0
+info:
+  title: Gr4vy Transactions - Sessions API
+  description: The Gr4vy API.
+  version: 1.0.0
+tags:
+- name: Transactions - Sessions
+  description: Manage transaction session data.
+paths:
+  /transactions/{transaction_id}/session:
+    post:
+      tags:
+      - Transactions - Sessions
+      summary: Get or update session
+      description: Gets and/or updates a transaction's session, where the connector supports this feature. Updates are often optional or not supported. Please refer to connector documentation.
+      operationId: update_session
+      parameters:
+      - name: transaction_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          description: The ID of the transaction
+          examples:
+          - 7099948d-7286-47e4-aad8-b68f7eb44591
+          title: Transaction Id
+        description: The ID of the transaction
+      - name: token
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Transaction session token used to retrieve session data for direct client integrations.
+          examples:
+          - eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+          title: Token
+        description: Transaction session token used to retrieve session data for direct client integrations.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - $ref: '#/components/schemas/UpdateTransactionSessionRequest'
+              - type: 'null'
+              title: Body
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateTransactionSessionResponse'
+        '400':
+          description: The request was invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+        '401':
+          description: The request was unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401'
+        '403':
+          description: The credentials were invalid or the caller did not have permission to act on the resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error403'
+        '404':
+          description: The resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+        '405':
+          description: The request method was not allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error405'
+        '409':
+          description: A duplicate record was found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error409'
+        '425':
+          description: The request was too early.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error425'
+        '429':
+          description: Too many requests were made.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error429'
+        '500':
+          description: The server encountered an error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error500'
+        '502':
+          description: The server encountered an error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error502'
+        '504':
+          description: The server encountered an error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error504'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-speakeasy-ignore: true
+components:
+  schemas:
+    Error504:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `gateway_timeout`
+          default: gateway_timeout
+          examples:
+          - gateway_timeout
+        status:
+          type: integer
+          title: Status
+          default: 504
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error504
+    Error401:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `unauthorized`
+          default: unauthorized
+          examples:
+          - unauthorized
+        status:
+          type: integer
+          title: Status
+          description: Always `401`.
+          default: 401
+          examples:
+          - 401
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: No valid API authentication found
+          examples:
+          - No valid API authentication found
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error401
+    UpdateTransactionSessionResponse:
+      properties:
+        session_data:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Session Data
+          description: Session data required to launch a payment provider client SDK
+          examples:
+          - key: value
+        default_completion_url:
+          type: string
+          title: Default Completion Url
+          description: To be used by the merchant when the client SDK does not provide one at the end of the flow
+          examples:
+          - https://www.test.gr4vy.app/transactions/1234/complete
+        integration_client:
+          $ref: '#/components/schemas/IntegrationClient'
+          description: The integration clients
+          examples:
+          - redirect
+          - web
+          - android
+          - ios
+      additionalProperties: false
+      type: object
+      required:
+      - session_data
+      - default_completion_url
+      - integration_client
+      title: UpdateTransactionSessionResponse
+    Error502:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `bad_gateway`
+          default: bad_gateway
+          examples:
+          - bad_gateway
+        status:
+          type: integer
+          title: Status
+          description: Always `502`.
+          default: 502
+          examples:
+          - 502
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error502
+    Error403:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `forbidden`
+          default: forbidden
+          examples:
+          - forbidden
+        status:
+          type: integer
+          title: Status
+          description: Always `403`.
+          default: 403
+          examples:
+          - 403
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error403
+    Error429:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `too_many_requests`
+          default: too_many_requests
+          examples:
+          - too_many_requests
+        status:
+          type: integer
+          title: Status
+          description: Always `429`.
+          default: 429
+          examples:
+          - 429
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error429
+    Error404:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `not_found`
+          default: not_found
+          examples:
+          - not_found
+        status:
+          type: integer
+          title: Status
+          description: Always `404`.
+          default: 404
+          examples:
+          - 404
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: The resource could not be found
+          examples:
+          - The resource could not be found
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error404
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    IntegrationClient:
+      type: string
+      enum:
+      - redirect
+      - web
+      - android
+      - ios
+      title: IntegrationClient
+    ErrorLocation:
+      type: string
+      enum:
+      - query
+      - body
+      - path
+      - header
+      - unknown
+      title: ErrorLocation
+    Error500:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `server_error`
+          default: server_error
+          examples:
+          - server_error
+        status:
+          type: integer
+          title: Status
+          description: Always `500`.
+          default: 500
+          examples:
+          - 500
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error500
+    Error409:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `duplicate_record`
+          default: duplicate_record
+          examples:
+          - duplicate_record
+        status:
+          type: integer
+          title: Status
+          description: Always `409`.
+          default: 409
+          examples:
+          - 409
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+        resource_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Resource Id
+          description: The ID of the conflicting resource.
+          examples:
+          - cdc70639-cb9c-4222-a73f-b8ce39f7821b
+      additionalProperties: false
+      type: object
+      title: Error409
+    Error425:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `too_early`
+          default: too_early
+          examples:
+          - too_early
+        status:
+          type: integer
+          title: Status
+          description: Always `425`.
+          default: 425
+          examples:
+          - 425
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error425
+    Error405:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `method_not_allowed`
+          default: method_not_allowed
+          examples:
+          - method_not_allowed
+        status:
+          type: integer
+          title: Status
+          description: Always `405`.
+          default: 405
+          examples:
+          - 405
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Method Not Allowed
+          examples:
+          - Method Not Allowed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error405
+    ErrorDetail:
+      properties:
+        location:
+          $ref: '#/components/schemas/ErrorLocation'
+          description: The part of the request where the property can be found that caused the error.
+          examples:
+          - body
+        pointer:
+          anyOf:
+          - type: string
+            format: json-pointer
+          - type: string
+          title: Pointer
+          description: A JSON pointer for the particular property that caused the error.
+          examples:
+          - /currency
+        message:
+          type: string
+          title: Message
+          description: A human-readdable explanation of the error.
+          examples:
+          - 'Unknown ISO 4217 currency code: USX'
+        type:
+          type: string
+          title: Type
+          description: The type of error that was raised for this property.
+          examples:
+          - value_error
+      additionalProperties: false
+      type: object
+      required:
+      - location
+      - pointer
+      - message
+      - type
+      title: ErrorDetail
+    Error400:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `bad_request`
+          default: bad_request
+          examples:
+          - bad_request
+        status:
+          type: integer
+          title: Status
+          description: Always `400`.
+          default: 400
+          examples:
+          - 400
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error400
+    UpdateTransactionSessionRequest:
+      properties:
+        payload:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Payload
+          description: Payload that may be required to update a payment provider's client session, depending on the connector.
+          examples:
+          - key: value
+      additionalProperties: false
+      type: object
+      title: UpdateTransactionSessionRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+  securitySchemes:
+    OAuth2PasswordBearer:
+      type: oauth2
+      flows:
+        password:
+          scopes:
+            embed: Shorthand for all gr4vy embed related scopes
+            sessions.refresh: Refresh access-token
+            anti-fraud-service-definitions.read: Read Anti Fraud Service Definitions
+            anti-fraud-services.read: Read Anti Fraud Services
+            api-key-pairs.read: Read API Key Pairs
+            api-logs.read: Read API Logs
+            apple-pay-certificates.read: Read Apple Pay Certificates
+            audit-logs.read: Read Audit Logs
+            bin-checker.read: Read BIN Checker
+            buyers.read: Read Buyers
+            buyers.billing-details.read: Read Billing Details
+            card-scheme-definitions.read: Read Card Scheme Definitions
+            checkout-sessions.read: Read Checkout Sessions
+            connections.read: Read Connections
+            digital-wallets.read: Read Digital Wallets
+            flows.read: Read Flows
+            gift-card-service-definitions.read: Read Gift Card Service Definitions
+            gift-card-services.read: Read Gift Card Services
+            gift-cards.read: Read Gift Cards
+            merchant-accounts.read: Read Merchant Accounts
+            payment-links.read: Read Payment Links
+            payment-method-definitions.read: Read Payment Method Definitions
+            payment-methods.read: Read Payment Methods
+            payment-options.read: Read Payment Options
+            payment-service-definitions.read: Read Payment Service Definitions
+            payment-services.read: Read Payment Service
+            payouts.read: Read Payouts
+            reports.read: Read Reports
+            roles.read: Read Roles
+            three-ds-scenarios.read: Read 3DS Scenarios
+            transactions.read: Read Transactions
+            users.me.read: Read User Profile
+            vault-forward.read: Read Vault Forward
+            vault-forward-authentications.read: Read Vault Forward Authentications
+            vault-forward-configs.read: Read Vault Forward Configurations
+            vault-forward-definitions.read: Read Vault Forward Definitions
+            webhook-subscriptions.read: Read Webhook Subscriptions
+            business-contexts.read: Read Business Contexts
+            health-dashboard.read: Read Health Dashboard
+            metrics-explorer.read: Read Metrics Explorer
+            monitoring.read: Read Monitoring
+            reset.read: Read Reset
+            sessions.read: Read Sessions
+            users.read: Read Users
+            anti-fraud-service-definitions.write: Write Anti Fraud Service Definitions
+            anti-fraud-services.write: Write Anti Fraud Services
+            api-key-pairs.write: Write API Key Pairs
+            api-logs.write: Write API Logs
+            apple-pay-certificates.write: Write Apple Pay Certificates
+            audit-logs.write: Write Audit Logs
+            bin-checker.write: Write BIN Checker
+            buyers.write: Write Buyers
+            buyers.billing-details.write: Write Billing Details
+            card-scheme-definitions.write: Write Card Scheme Definitions
+            checkout-sessions.write: Write Checkout Sessions
+            connections.write: Write Connections
+            digital-wallets.write: Write Digital Wallets
+            flows.write: Write Flows
+            gift-card-service-definitions.write: Write Gift Card Service Definitions
+            gift-card-services.write: Write Gift Card Services
+            gift-cards.write: Write Gift Cards
+            merchant-accounts.write: Write Merchant Accounts
+            payment-links.write: Write Payment Links
+            payment-method-definitions.write: Write Payment Method Definitions
+            payment-methods.write: Write Payment Methods
+            payment-options.write: Write Payment Options
+            payment-service-definitions.write: Write Payment Service Definitions
+            payment-services.write: Write Payment Service
+            payouts.write: Write Payouts
+            reports.write: Write Reports
+            roles.write: Write Roles
+            three-ds-scenarios.write: Write 3DS Scenarios
+            transactions.write: Write Transactions
+            users.me.write: Write User Profile
+            vault-forward.write: Write Vault Forward
+            vault-forward-authentications.write: Write Vault Forward Authentications
+            vault-forward-configs.write: Write Vault Forward Configurations
+            vault-forward-definitions.write: Write Vault Forward Definitions
+            webhook-subscriptions.write: Write Webhook Subscriptions
+            business-contexts.write: Write Business Contexts
+            health-dashboard.write: Write Health Dashboard
+            metrics-explorer.write: Write Metrics Explorer
+            monitoring.write: Write Monitoring
+            reset.write: Write Reset
+            sessions.write: Write Sessions
+            users.write: Write Users
+          tokenUrl: auth/token

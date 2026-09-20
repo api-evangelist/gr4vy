@@ -1,0 +1,1085 @@
+openapi: 3.2.0
+info:
+  title: Gr4vy Buyers - Gift cards API
+  description: The Gr4vy API.
+  version: 1.0.0
+tags:
+- name: Buyers - Gift cards
+  description: Query gift cards for buyers.
+paths:
+  /gift-cards/{gift_card_id}:
+    delete:
+      tags:
+      - Buyers - Gift cards
+      summary: Delete a gift card
+      description: Removes a gift card from our system.
+      operationId: delete_gift_card
+      security:
+      - OAuth2PasswordBearer:
+        - gift-cards.write
+      parameters:
+      - name: gift_card_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          description: The ID of the gift card.
+          examples:
+          - 356d56e5-fe16-42ae-97ee-8d55d846ae2e
+          title: Gift Card Id
+        description: The ID of the gift card.
+      - name: x-gr4vy-merchant-account-id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The ID of the merchant account to use for this request.
+          examples:
+          - default
+          title: X-Gr4Vy-Merchant-Account-Id
+        description: The ID of the merchant account to use for this request.
+      responses:
+        '204':
+          description: Successful Response
+        '400':
+          description: The request was invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+        '401':
+          description: The request was unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401'
+        '403':
+          description: The credentials were invalid or the caller did not have permission to act on the resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error403'
+        '404':
+          description: The resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+        '405':
+          description: The request method was not allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error405'
+        '409':
+          description: A duplicate record was found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error409'
+        '425':
+          description: The request was too early.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error425'
+        '429':
+          description: Too many requests were made.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error429'
+        '500':
+          description: The server encountered an error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error500'
+        '502':
+          description: The server encountered an error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error502'
+        '504':
+          description: The server encountered an error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error504'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-speakeasy-name-override: delete
+      x-speakeasy-group: gift-cards
+  /buyers/gift-cards:
+    get:
+      tags:
+      - Buyers - Gift cards
+      summary: List gift cards for a buyer
+      description: List all the stored gift cards for a specific buyer.
+      operationId: list_buyer_gift_cards
+      security:
+      - OAuth2PasswordBearer:
+        - gift-cards.read
+      parameters:
+      - name: buyer_external_identifier
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Buyer External Identifier
+      - name: buyer_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Buyer Id
+      - name: sort_by
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - const: last_used_at
+            type: string
+          - const: usage_count
+            type: string
+          - const: cit_last_used_at
+            type: string
+          - const: cit_usage_count
+            type: string
+          - type: 'null'
+          description: The field to sort the gift cards by.
+          examples:
+          - last_used_at
+          title: Sort By
+        description: The field to sort the gift cards by.
+      - name: order_by
+        in: query
+        required: false
+        schema:
+          enum:
+          - asc
+          - desc
+          type: string
+          description: The direction to sort the gift cards in.
+          examples:
+          - desc
+          default: desc
+          title: Order By
+        description: The direction to sort the gift cards in.
+      - name: x-gr4vy-merchant-account-id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The ID of the merchant account to use for this request.
+          examples:
+          - default
+          title: X-Gr4Vy-Merchant-Account-Id
+        description: The ID of the merchant account to use for this request.
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GiftCardSummaries'
+        '400':
+          description: The request was invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+        '401':
+          description: The request was unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401'
+        '403':
+          description: The credentials were invalid or the caller did not have permission to act on the resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error403'
+        '404':
+          description: The resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+        '405':
+          description: The request method was not allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error405'
+        '409':
+          description: A duplicate record was found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error409'
+        '425':
+          description: The request was too early.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error425'
+        '429':
+          description: Too many requests were made.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error429'
+        '500':
+          description: The server encountered an error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error500'
+        '502':
+          description: The server encountered an error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error502'
+        '504':
+          description: The server encountered an error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error504'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-speakeasy-name-override: list
+      x-speakeasy-group: buyers.gift-cards
+components:
+  schemas:
+    Error504:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `gateway_timeout`
+          default: gateway_timeout
+          examples:
+          - gateway_timeout
+        status:
+          type: integer
+          title: Status
+          default: 504
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error504
+    GiftCardErrorCode:
+      type: string
+      enum:
+      - invalid_gift_card
+      - expired_card
+      - inactive_card
+      - invalid_service_credentials
+      - invalid_amount
+      - incorrect_currency
+      - insufficient_funds
+      - invalid_service_configuration
+      - operation_canceled
+      - service_error
+      - service_network_error
+      - unknown_error
+      - max_gift_cards_reached
+      - suspected_fraud
+      - canceled_payment_method
+      - duplicate_transaction
+      - unexpected_state
+      title: GiftCardErrorCode
+      description: 'Gift card error codes.
+
+
+        Gr4vy normalised gift card error codes. Keep the naming and style in line with
+
+        those in the connectors framework.
+
+
+        If new codes are added, append them at the end or amend public simulator
+
+        documentation: https://docs.gr4vy.com/guides/features/gift-cards/simulator'
+    Error401:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `unauthorized`
+          default: unauthorized
+          examples:
+          - unauthorized
+        status:
+          type: integer
+          title: Status
+          description: Always `401`.
+          default: 401
+          examples:
+          - 401
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: No valid API authentication found
+          examples:
+          - No valid API authentication found
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error401
+    Error502:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `bad_gateway`
+          default: bad_gateway
+          examples:
+          - bad_gateway
+        status:
+          type: integer
+          title: Status
+          description: Always `502`.
+          default: 502
+          examples:
+          - 502
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error502
+    Error403:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `forbidden`
+          default: forbidden
+          examples:
+          - forbidden
+        status:
+          type: integer
+          title: Status
+          description: Always `403`.
+          default: 403
+          examples:
+          - 403
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error403
+    Error429:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `too_many_requests`
+          default: too_many_requests
+          examples:
+          - too_many_requests
+        status:
+          type: integer
+          title: Status
+          description: Always `429`.
+          default: 429
+          examples:
+          - 429
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error429
+    Error404:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `not_found`
+          default: not_found
+          examples:
+          - not_found
+        status:
+          type: integer
+          title: Status
+          description: Always `404`.
+          default: 404
+          examples:
+          - 404
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: The resource could not be found
+          examples:
+          - The resource could not be found
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error404
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ErrorLocation:
+      type: string
+      enum:
+      - query
+      - body
+      - path
+      - header
+      - unknown
+      title: ErrorLocation
+    Error500:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `server_error`
+          default: server_error
+          examples:
+          - server_error
+        status:
+          type: integer
+          title: Status
+          description: Always `500`.
+          default: 500
+          examples:
+          - 500
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error500
+    GiftCardSummary:
+      properties:
+        type:
+          type: string
+          const: gift-card
+          title: Type
+          description: Always `gift-card`.
+          default: gift-card
+          examples:
+          - gift-card
+        id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Id
+          description: The ID for the gift card.
+          examples:
+          - 356d56e5-fe16-42ae-97ee-8d55d846ae2e
+        merchant_account_id:
+          type: string
+          title: Merchant Account Id
+          description: The ID of the merchant account this buyer belongs to.
+          examples:
+          - default
+        bin:
+          type: string
+          title: Bin
+          description: The first 6 digits of the full gift card number.
+          examples:
+          - '412345'
+        sub_bin:
+          type: string
+          title: Sub Bin
+          description: The 3 digits after the `bin` of the full gift card number.
+          examples:
+          - '554'
+        last4:
+          type: string
+          title: Last4
+          description: The last 4 digits for the gift card.
+          examples:
+          - '1234'
+        currency:
+          anyOf:
+          - type: string
+            pattern: ^[A-Z]{3}$
+            examples:
+            - EUR
+            - GBP
+            - USD
+          - type: 'null'
+          title: Currency
+          description: The ISO-4217 currency code that this gift card has a balance for.
+          examples:
+          - AUD
+        expiration_date:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Expiration Date
+          description: ' The date and time when this gift card expires. This is a full date/time and may be more accurate than the actual expiry date received by the gift card service.'
+          examples:
+          - '2013-07-16T19:23:00.000+00:00'
+        balance:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Balance
+          description: The amount remaining on the balance for this gift card according to the gift card service. This may be `null` if the balance could not be fetched.
+          examples:
+          - 1299
+        balance_error_code:
+          anyOf:
+          - $ref: '#/components/schemas/GiftCardErrorCode'
+          - type: 'null'
+          description: If the last balance update failed, this will contain the internal code for this error.
+          examples:
+          - incorrect_currency
+        balance_raw_error_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Balance Raw Error Code
+          description: If the last balance update failed, this will contain the the raw error code received from the gift card provider.
+          examples:
+          - '10363'
+        balance_raw_error_message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Balance Raw Error Message
+          description: If the last balance update failed, this will contain the the raw error message received from the gift card provider.
+          examples:
+          - This currency is not supported by the merchant.
+        last_used_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Used At
+          description: The timestamp when this gift card was last used in a transaction.
+          examples:
+          - '2013-07-16T19:23:00.000+00:00'
+        usage_count:
+          type: integer
+          title: Usage Count
+          description: The number of times this gift card has been used in transactions.
+          examples:
+          - 100
+        cit_last_used_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Cit Last Used At
+          description: The timestamp when this gift card was last used in a transaction for client initiated transactions.
+          examples:
+          - '2013-07-16T19:23:00.000+00:00'
+        cit_usage_count:
+          type: integer
+          title: Cit Usage Count
+          description: The number of times this gift card has been used in transactions for client initiated transactions.
+          examples:
+          - 50
+      additionalProperties: false
+      type: object
+      required:
+      - merchant_account_id
+      - bin
+      - sub_bin
+      - last4
+      - usage_count
+      - cit_usage_count
+      title: GiftCardSummary
+    Error409:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `duplicate_record`
+          default: duplicate_record
+          examples:
+          - duplicate_record
+        status:
+          type: integer
+          title: Status
+          description: Always `409`.
+          default: 409
+          examples:
+          - 409
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+        resource_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Resource Id
+          description: The ID of the conflicting resource.
+          examples:
+          - cdc70639-cb9c-4222-a73f-b8ce39f7821b
+      additionalProperties: false
+      type: object
+      title: Error409
+    Error425:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `too_early`
+          default: too_early
+          examples:
+          - too_early
+        status:
+          type: integer
+          title: Status
+          description: Always `425`.
+          default: 425
+          examples:
+          - 425
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error425
+    Error405:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `method_not_allowed`
+          default: method_not_allowed
+          examples:
+          - method_not_allowed
+        status:
+          type: integer
+          title: Status
+          description: Always `405`.
+          default: 405
+          examples:
+          - 405
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Method Not Allowed
+          examples:
+          - Method Not Allowed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error405
+    ErrorDetail:
+      properties:
+        location:
+          $ref: '#/components/schemas/ErrorLocation'
+          description: The part of the request where the property can be found that caused the error.
+          examples:
+          - body
+        pointer:
+          anyOf:
+          - type: string
+            format: json-pointer
+          - type: string
+          title: Pointer
+          description: A JSON pointer for the particular property that caused the error.
+          examples:
+          - /currency
+        message:
+          type: string
+          title: Message
+          description: A human-readdable explanation of the error.
+          examples:
+          - 'Unknown ISO 4217 currency code: USX'
+        type:
+          type: string
+          title: Type
+          description: The type of error that was raised for this property.
+          examples:
+          - value_error
+      additionalProperties: false
+      type: object
+      required:
+      - location
+      - pointer
+      - message
+      - type
+      title: ErrorDetail
+    Error400:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `bad_request`
+          default: bad_request
+          examples:
+          - bad_request
+        status:
+          type: integer
+          title: Status
+          description: Always `400`.
+          default: 400
+          examples:
+          - 400
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error400
+    GiftCardSummaries:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/GiftCardSummary'
+          type: array
+          title: Items
+          description: A list of items returned for this request.
+      type: object
+      required:
+      - items
+      title: GiftCardSummaries
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+  securitySchemes:
+    OAuth2PasswordBearer:
+      type: oauth2
+      flows:
+        password:
+          scopes:
+            embed: Shorthand for all gr4vy embed related scopes
+            sessions.refresh: Refresh access-token
+            anti-fraud-service-definitions.read: Read Anti Fraud Service Definitions
+            anti-fraud-services.read: Read Anti Fraud Services
+            api-key-pairs.read: Read API Key Pairs
+            api-logs.read: Read API Logs
+            apple-pay-certificates.read: Read Apple Pay Certificates
+            audit-logs.read: Read Audit Logs
+            bin-checker.read: Read BIN Checker
+            buyers.read: Read Buyers
+            buyers.billing-details.read: Read Billing Details
+            card-scheme-definitions.read: Read Card Scheme Definitions
+            checkout-sessions.read: Read Checkout Sessions
+            connections.read: Read Connections
+            digital-wallets.read: Read Digital Wallets
+            flows.read: Read Flows
+            gift-card-service-definitions.read: Read Gift Card Service Definitions
+            gift-card-services.read: Read Gift Card Services
+            gift-cards.read: Read Gift Cards
+            merchant-accounts.read: Read Merchant Accounts
+            payment-links.read: Read Payment Links
+            payment-method-definitions.read: Read Payment Method Definitions
+            payment-methods.read: Read Payment Methods
+            payment-options.read: Read Payment Options
+            payment-service-definitions.read: Read Payment Service Definitions
+            payment-services.read: Read Payment Service
+            payouts.read: Read Payouts
+            reports.read: Read Reports
+            roles.read: Read Roles
+            three-ds-scenarios.read: Read 3DS Scenarios
+            transactions.read: Read Transactions
+            users.me.read: Read User Profile
+            vault-forward.read: Read Vault Forward
+            vault-forward-authentications.read: Read Vault Forward Authentications
+            vault-forward-configs.read: Read Vault Forward Configurations
+            vault-forward-definitions.read: Read Vault Forward Definitions
+            webhook-subscriptions.read: Read Webhook Subscriptions
+            business-contexts.read: Read Business Contexts
+            health-dashboard.read: Read Health Dashboard
+            metrics-explorer.read: Read Metrics Explorer
+            monitoring.read: Read Monitoring
+            reset.read: Read Reset
+            sessions.read: Read Sessions
+            users.read: Read Users
+            anti-fraud-service-definitions.write: Write Anti Fraud Service Definitions
+            anti-fraud-services.write: Write Anti Fraud Services
+            api-key-pairs.write: Write API Key Pairs
+            api-logs.write: Write API Logs
+            apple-pay-certificates.write: Write Apple Pay Certificates
+            audit-logs.write: Write Audit Logs
+            bin-checker.write: Write BIN Checker
+            buyers.write: Write Buyers
+            buyers.billing-details.write: Write Billing Details
+            card-scheme-definitions.write: Write Card Scheme Definitions
+            checkout-sessions.write: Write Checkout Sessions
+            connections.write: Write Connections
+            digital-wallets.write: Write Digital Wallets
+            flows.write: Write Flows
+            gift-card-service-definitions.write: Write Gift Card Service Definitions
+            gift-card-services.write: Write Gift Card Services
+            gift-cards.write: Write Gift Cards
+            merchant-accounts.write: Write Merchant Accounts
+            payment-links.write: Write Payment Links
+            payment-method-definitions.write: Write Payment Method Definitions
+            payment-methods.write: Write Payment Methods
+            payment-options.write: Write Payment Options
+            payment-service-definitions.write: Write Payment Service Definitions
+            payment-services.write: Write Payment Service
+            payouts.write: Write Payouts
+            reports.write: Write Reports
+            roles.write: Write Roles
+            three-ds-scenarios.write: Write 3DS Scenarios
+            transactions.write: Write Transactions
+            users.me.write: Write User Profile
+            vault-forward.write: Write Vault Forward
+            vault-forward-authentications.write: Write Vault Forward Authentications
+            vault-forward-configs.write: Write Vault Forward Configurations
+            vault-forward-definitions.write: Write Vault Forward Definitions
+            webhook-subscriptions.write: Write Webhook Subscriptions
+            business-contexts.write: Write Business Contexts
+            health-dashboard.write: Write Health Dashboard
+            metrics-explorer.write: Write Metrics Explorer
+            monitoring.write: Write Monitoring
+            reset.write: Write Reset
+            sessions.write: Write Sessions
+            users.write: Write Users
+          tokenUrl: auth/token

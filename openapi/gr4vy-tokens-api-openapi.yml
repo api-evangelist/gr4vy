@@ -1,0 +1,1023 @@
+openapi: 3.2.0
+info:
+  title: Gr4vy Tokens API
+  version: 1.1.0-beta
+  contact:
+    name: Gr4vy Support
+    email: code@gr4vy.com
+    url: https://gr4vy.com
+  termsOfService: https://gr4vy.com
+  license:
+    name: MIT
+    url: https://raw.githubusercontent.com/gr4vy/gr4vy-openapi/main/LICENSE
+  description: 'Welcome to the Gr4vy API reference documentation.
+
+    Our API is still very much a work in product and subject to change.'
+servers:
+- url: https://api.sandbox.{id}.gr4vy.app
+  x-speakeasy-server-id: sandbox
+  variables:
+    id:
+      default: example
+      description: The subdomain for your Gr4vy instance.
+- url: https://api.{id}.gr4vy.app
+  x-speakeasy-server-id: production
+  variables:
+    id:
+      default: example
+      description: The subdomain for your Gr4vy instance.
+security:
+- bearerAuth: []
+tags:
+- name: Tokens
+  description: Endpoints related to the Gr4vy tokenization service.
+paths:
+  /payment-methods/{payment_method_id}/payment-service-tokens:
+    parameters:
+    - schema:
+        type: string
+        example: 46973e9d-88a7-44a6-abfe-be4ff0134ff4
+        format: uuid
+      name: payment_method_id
+      in: path
+      required: true
+      description: The ID of the payment method.
+    get:
+      operationId: get-payment-service-tokens
+      summary: Get payment service tokens
+      description: Get all payment service tokens for a given payment method and payment service.
+      tags:
+      - Tokens
+      parameters:
+      - schema:
+          type: string
+          example: 46973e9d-88a7-44a6-abfe-be4ff0134ff4
+          format: uuid
+        in: query
+        name: payment_method_id
+        description: Filters for transactions that have a payment method with an ID that matches exactly with the provided value.
+      responses:
+        '200':
+          description: 'Returns a list payment service tokens of the specified
+
+            payment method and payment service.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentServiceTokens'
+        '401':
+          description: Returns an error if no valid authentication was provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401Unauthorized'
+        '404':
+          description: Returns an error if the resource can not be found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404NotFound'
+    post:
+      operationId: provision-payment-service-token
+      summary: Provision payment service token
+      description: Tokenize stored card against a payment service.
+      tags:
+      - Tokens
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentServiceTokenRequest'
+      responses:
+        '201':
+          description: Returns the created payment service token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentServiceToken'
+        '400':
+          description: 'Returns if any of the validations below fails:
+
+            - payment method is not card.
+
+            - payment service doesn''t support `payment_method_tokenization`.
+
+            - active token already exists for the `payment_service_id`.
+
+            - invalid request payload.
+
+            - `payment_service_id` is not a `uuid` or is not set.
+
+            - `redirect_url` is not set.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400BadRequest'
+        '401':
+          description: Returns an error if no valid authentication was provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401Unauthorized'
+        '404':
+          description: Returns an error if the resource can not be found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404NotFound'
+  /payment-methods/{payment_method_id}/payment-service-tokens/{payment_service_token_id}:
+    parameters:
+    - schema:
+        type: string
+        example: 46973e9d-88a7-44a6-abfe-be4ff0134ff4
+        format: uuid
+      name: payment_method_id
+      in: path
+      required: true
+      description: The ID of the payment method.
+    - schema:
+        type: string
+        example: 7e7ede54-616a-422e-8f58-89a79ae2baea
+        format: uuid
+      name: payment_service_token_id
+      in: path
+      required: true
+      description: The ID of the payment service token.
+    delete:
+      operationId: delete-payment-service-token
+      summary: Delete payment service token
+      description: Deletes a specific payment service token.
+      tags:
+      - Tokens
+      responses:
+        '204':
+          description: Returns an empty response.
+        '401':
+          description: Returns an error if no valid authentication was provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401Unauthorized'
+        '404':
+          description: Returns an error if the resource can not be found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404NotFound'
+  /payment-methods/{payment_method_id}/payment-service-tokens/{payment_service_token_id}/approve:
+    parameters:
+    - schema:
+        type: string
+        example: 46973e9d-88a7-44a6-abfe-be4ff0134ff4
+        format: uuid
+      name: payment_method_id
+      in: path
+      required: true
+      description: The ID of the payment method.
+    - schema:
+        type: string
+        example: 7e7ede54-616a-422e-8f58-89a79ae2baea
+        format: uuid
+      name: payment_service_token_id
+      in: path
+      required: true
+      description: The ID of the payment service token.
+    get:
+      operationId: approve-payment-service-token-get
+      summary: Approve payment service token
+      description: Approves a specific payment service token.
+      tags:
+      - Tokens
+      x-internal: true
+      responses:
+        '307':
+          description: Redirects to `redirect_url` stored in the token.
+        '401':
+          description: Returns an error if no valid authentication was provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401Unauthorized'
+        '404':
+          description: Returns an error if the resource can not be found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404NotFound'
+    post:
+      operationId: approve-payment-service-token-post
+      summary: Approve payment service token
+      description: Approves a specific payment service token.
+      tags:
+      - Tokens
+      x-internal: true
+      responses:
+        '307':
+          description: Redirects to `redirect_url` stored in the token.
+        '401':
+          description: Returns an error if no valid authentication was provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401Unauthorized'
+        '404':
+          description: Returns an error if the resource can not be found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404NotFound'
+  /payment-methods/{payment_method_id}/network-tokens:
+    parameters:
+    - schema:
+        type: string
+        example: 46973e9d-88a7-44a6-abfe-be4ff0134ff4
+        format: uuid
+      name: payment_method_id
+      in: path
+      required: true
+      description: The ID of the payment method.
+    get:
+      operationId: get-network-tokens
+      summary: Get network tokens
+      description: Get stored network tokens for the given payment method.
+      tags:
+      - Tokens
+      parameters:
+      - schema:
+          type: string
+          example: 46973e9d-88a7-44a6-abfe-be4ff0134ff4
+          format: uuid
+        in: query
+        name: payment_method_id
+        description: Filters for transactions that have a payment method with an ID that matches exactly with the provided value.
+      responses:
+        '200':
+          description: Returns a list of network tokens (empty list if there aren't any).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NetworkTokens'
+        '401':
+          description: Returns an error if no valid authentication was provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401Unauthorized'
+        '404':
+          description: Returns an error if the resource can not be found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404NotFound'
+    post:
+      operationId: provision-network-token
+      summary: Provision network token
+      description: Provision a network token for a stored card.
+      tags:
+      - Tokens
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NetworkTokenRequest'
+      responses:
+        '201':
+          description: Returns the created network token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NetworkToken'
+        '400':
+          description: 'Returns if any of the validations below fails:
+
+            - network token already exists for the `payment_method_id`.
+
+            - `merchant_initiated` or `is_subsequent_payment` is not provided.
+
+            - `merchant_initiated` is set to `true` but `is_subsequent_payment` is set to `false`.
+
+            - payment method is not a card.
+
+            - Network token provider responds with an error.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400BadRequest'
+        '401':
+          description: Returns an error if no valid authentication was provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401Unauthorized'
+        '404':
+          description: Returns an error if the resource can not be found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404NotFound'
+  /payment-methods/{payment_method_id}/network-tokens/{network_token_id}:
+    parameters:
+    - schema:
+        type: string
+        example: 46973e9d-88a7-44a6-abfe-be4ff0134ff4
+        format: uuid
+      name: payment_method_id
+      in: path
+      required: true
+      description: The ID of the payment method.
+    - schema:
+        type: string
+        example: 454f6a32-a572-4dda-b885-3e8674086123
+        format: uuid
+      name: network_token_id
+      in: path
+      required: true
+      description: The ID of the network token.
+    delete:
+      operationId: delete-network-token
+      summary: Delete network token
+      description: Deletes a specific network token.
+      tags:
+      - Tokens
+      responses:
+        '204':
+          description: Returns an empty response.
+        '401':
+          description: Returns an error if no valid authentication was provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401Unauthorized'
+        '404':
+          description: Returns an error if the resource can not be found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404NotFound'
+  /payment-methods/{payment_method_id}/network-tokens/{network_token_id}/cryptogram:
+    parameters:
+    - schema:
+        type: string
+        example: 46973e9d-88a7-44a6-abfe-be4ff0134ff4
+        format: uuid
+      name: payment_method_id
+      in: path
+      required: true
+      description: The ID of the payment method.
+    - schema:
+        type: string
+        example: 454f6a32-a572-4dda-b885-3e8674086123
+        format: uuid
+      name: network_token_id
+      in: path
+      required: true
+      description: The ID of the network token.
+    post:
+      operationId: issue-cryptogram
+      summary: Issue cryptogram
+      description: Issue a cryptogram for a stored network token of a stored card.
+      tags:
+      - Tokens
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IssueCryptogramRequest'
+      responses:
+        '201':
+          description: Returns the created network token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cryptogram'
+        '400':
+          description: Returns an error if the request was badly formatted or missing required fields. It also returns an error if the requested network token has a status other than `active`.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400BadRequest'
+        '401':
+          description: Returns an error if no valid authentication was provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401Unauthorized'
+        '403':
+          description: Returns an error if the access to the requested resource is forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error403Forbidden'
+        '404':
+          description: Returns an error if the resource can not be found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404NotFound'
+  /payment-methods/{payment_method_id}/network-tokens/{network_token_id}/suspend:
+    parameters:
+    - schema:
+        type: string
+        example: 46973e9d-88a7-44a6-abfe-be4ff0134ff4
+        format: uuid
+      name: payment_method_id
+      in: path
+      required: true
+      description: The ID of the payment method.
+    - schema:
+        type: string
+        example: 454f6a32-a572-4dda-b885-3e8674086123
+        format: uuid
+      name: network_token_id
+      in: path
+      required: true
+      description: The ID of the network token.
+    post:
+      operationId: suspend-network-token
+      summary: Suspend network token
+      description: Suspends a specific network token.
+      tags:
+      - Tokens
+      responses:
+        '200':
+          description: Returns suspended network token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NetworkToken'
+        '400':
+          description: 'Returns an error if:
+
+            - network token''s status is not `active`.
+
+            - network tokens feature is not enabled.
+
+            - if payment method''s scheme is not `Visa`.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400BadRequest'
+        '401':
+          description: Returns an error if no valid authentication was provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401Unauthorized'
+        '404':
+          description: Returns an error if the resource can not be found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404NotFound'
+  /payment-methods/{payment_method_id}/network-tokens/{network_token_id}/resume:
+    parameters:
+    - schema:
+        type: string
+        example: 46973e9d-88a7-44a6-abfe-be4ff0134ff4
+        format: uuid
+      name: payment_method_id
+      in: path
+      required: true
+      description: The ID of the payment method.
+    - schema:
+        type: string
+        example: 454f6a32-a572-4dda-b885-3e8674086123
+        format: uuid
+      name: network_token_id
+      in: path
+      required: true
+      description: The ID of the network token.
+    post:
+      operationId: resume-network-token
+      summary: Resume network token
+      description: Resumes a specific network token.
+      tags:
+      - Tokens
+      responses:
+        '200':
+          description: Returns resumed network token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NetworkToken'
+        '400':
+          description: 'Returns an error if:
+
+            - network token''s status is not `suspended`.
+
+            - network tokens feature is not enabled.
+
+            - if payment method''s scheme is not `Visa`.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400BadRequest'
+        '401':
+          description: Returns an error if no valid authentication was provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401Unauthorized'
+        '404':
+          description: Returns an error if the resource can not be found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404NotFound'
+components:
+  schemas:
+    Error404NotFound:
+      title: Not Found Error
+      type: object
+      description: Not Found Error (HTTP 404).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: The reason code for the error.
+          example: not_found
+          enum:
+          - not_found
+          - pending_creation
+        status:
+          type: integer
+          description: '`404`.'
+          example: 404
+          enum:
+          - 404
+        message:
+          type: string
+          description: The human readable reason for the error.
+          example: The resource could not be found
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    Error400BadRequest:
+      title: Bad Request
+      type: object
+      description: Bad Request (HTTP 400).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: A short code that describes the reason for the error.
+          example: bad_request
+          enum:
+          - bad_request
+          - incorrect_json
+          - invalid_credentials
+        status:
+          type: integer
+          description: '`400`.'
+          example: 400
+          enum:
+          - 400
+        message:
+          type: string
+          description: A human-readable reason for the error.
+          example: Missing '****' field
+        details:
+          type: array
+          description: A list of detail objects that further clarify the reason for the error.
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    PaymentServiceTokens:
+      title: Payment Service Tokens
+      type: object
+      description: A list of payment service tokens.
+      x-tags:
+      - Tokens
+      properties:
+        items:
+          type: array
+          description: A list of payment service tokens.
+          items:
+            $ref: '#/components/schemas/PaymentServiceToken'
+        limit:
+          type: integer
+          description: 'The limit applied to request. This represents the number of items that are at
+
+            maximum returned by this request.'
+          format: int32
+          minimum: 1
+          maximum: 100
+          example: 1
+          default: 20
+        next_cursor:
+          type:
+          - string
+          - 'null'
+          description: 'The cursor that represents the next page of results. Use the `cursor` query
+
+            parameter to fetch this page of items.'
+          example: ZXhhbXBsZTE
+          minLength: 1
+          maxLength: 1000
+        previous_cursor:
+          type:
+          - string
+          - 'null'
+          description: 'The cursor that represents the next page of results. Use the `cursor` query
+
+            parameter to fetch this page of items.'
+          example: null
+          minLength: 1
+          maxLength: 1000
+    IssueCryptogramRequest:
+      title: Issue cryptogram
+      type: object
+      description: Request body for issue a cryptogram for a network token.
+      x-tags:
+      - Request Bodies
+      required:
+      - merchant_initiated
+      properties:
+        merchant_initiated:
+          type: boolean
+          example: false
+          default: false
+          description: Defines if the request is merchant initiated or not.
+    Error403Forbidden:
+      title: Forbidden Error
+      type: object
+      description: Forbidden Error (HTTP 403).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`forbidden`.'
+          example: forbidden
+          enum:
+          - forbidden
+        status:
+          type: integer
+          description: '`403`.'
+          example: 403
+          enum:
+          - 403
+        message:
+          type: string
+          description: Invalid credentials.
+          example: Invalid credentials
+          enum:
+          - Invalid credentials
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    PaymentServiceToken:
+      title: Payment Service Token
+      type: object
+      description: A payment service token.
+      x-tags:
+      - Tokens
+      properties:
+        type:
+          type: string
+          description: The type of this resource.
+          example: payment-service-token
+          enum:
+          - payment-service-token
+        id:
+          type: string
+          description: The unique ID of the token.
+          format: uuid
+          example: d6ad71d5-6908-45d6-ab65-39c55475dd08
+        payment_method_id:
+          type: string
+          description: The unique ID of the payment method.
+          format: uuid
+          example: 9bdc4bc4-005e-4658-8eee-a309fc43cd4d
+        payment_service_id:
+          type: string
+          description: The unique ID of the payment service.
+          format: uuid
+          example: 50f2e61f-caac-4e12-8d79-30eaf8250423
+        status:
+          type: string
+          description: "The state of the token.\n\n- `processing` - The payment method is still being stored.\n- `buyer_approval_required` - Storing the payment method requires\n  the buyer to provide approval. Follow the `approval_url` for next steps.\n- `succeeded` - The payment method is approved and stored with all\n  relevant payment services.\n- `failed` - Storing the payment method did not succeed."
+          example: succeeded
+          enum:
+          - processing
+          - buyer_approval_required
+          - succeeded
+          - failed
+        approval_url:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: https://api.example.app.gr4vy.com/payment-methods/f4fb0dd1-4ff9-46fb-965e-11de34aa6806/approve
+          description: The optional URL that the buyer needs to be redirected to to further authorize their payment.
+        token:
+          type:
+          - string
+          - 'null'
+          description: The token value. Will be present if succeeded.
+        created_at:
+          type: string
+          description: 'The date and time when this token was first created in our
+
+            system.'
+          format: date-time
+          example: '2021-01-01T12:34:00.000+00:00'
+        updated_at:
+          type: string
+          description: The date and time when this token was last updated in our system.
+          format: date-time
+          example: '2021-01-01T12:34:00.000+00:00'
+    Cryptogram:
+      title: Cryptogram
+      type: object
+      description: A network token cryptogram.
+      x-tags:
+      - Tokens
+      properties:
+        cryptogram:
+          type: string
+          description: The cryptogram of the network token.
+    NetworkTokens:
+      title: Network Tokens
+      type: object
+      description: A list of network tokens.
+      x-tags:
+      - Tokens
+      properties:
+        items:
+          type: array
+          description: A list of network tokens.
+          items:
+            $ref: '#/components/schemas/NetworkToken'
+        limit:
+          type: integer
+          description: 'The limit applied to request. This represents the number of items that are at
+
+            maximum returned by this request.'
+          format: int32
+          minimum: 1
+          maximum: 100
+          example: 1
+          default: 20
+        next_cursor:
+          type:
+          - string
+          - 'null'
+          description: 'The cursor that represents the next page of results. Use the `cursor` query
+
+            parameter to fetch this page of items.'
+          example: ZXhhbXBsZTE
+          minLength: 1
+          maxLength: 1000
+        previous_cursor:
+          type:
+          - string
+          - 'null'
+          description: 'The cursor that represents the next page of results. Use the `cursor` query
+
+            parameter to fetch this page of items.'
+          example: null
+          minLength: 1
+          maxLength: 1000
+    ErrorDetail:
+      title: Error details
+      description: Additional detail about the part of a request body that caused an issue.
+      type: object
+      x-tags:
+      - Errors
+      properties:
+        location:
+          type: string
+          example: body
+          description: The location where the error caused an issue.
+          enum:
+          - query
+          - body
+          - path
+          - header
+        type:
+          type: string
+          example: value_error.missing
+          description: A unique identifier for the type of error that occurred.
+        pointer:
+          type: string
+          example: /payment_method/number
+          description: 'The exact item for which the validation did not succeed. This is a JSON
+
+            pointer for request bodies, while for query, path, and header parameters
+
+            it is the name of the parameter.'
+        message:
+          type: string
+          example: field required
+          description: A human readable message for this error detail.
+    PaymentServiceTokenRequest:
+      title: Payment Service Token (Provision)
+      type: object
+      description: Request body for provision a payment service token.
+      x-tags:
+      - Request Bodies
+      required:
+      - payment_service_id
+      - redirect_url
+      properties:
+        security_code:
+          type:
+          - string
+          - 'null'
+          description: 'The 3 or 4 digit security code often found on the card. This often
+
+            referred to as the CVV or CVD.
+
+
+            The security code can only be set if the stored payment method
+
+            represents a card.'
+          pattern: ^\d{3,4}$
+          minLength: 3
+          maxLength: 4
+          example: '123'
+        payment_service_id:
+          type: string
+          format: uuid
+          example: a7d6b829-aea5-407d-ab7f-138784b5ad2c
+          description: The ID of the payment service.
+        redirect_url:
+          type: string
+          format: uri
+          description: 'The redirect URL to redirect a buyer to after they have authorized their
+
+            payment method. This only applies to payment methods that require buyer approval.'
+          example: https://example.com/callback
+    Error401Unauthorized:
+      title: Unauthorized Error
+      type: object
+      description: Unauthorized Error (HTTP 401).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`unauthorized`.'
+          example: unauthorized
+          enum:
+          - unauthorized
+        status:
+          type: integer
+          description: '`401`.'
+          example: 401
+          enum:
+          - 401
+        message:
+          type: string
+          description: No valid API authentication found.
+          example: No valid API authentication found
+          enum:
+          - No valid API authentication found
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    NetworkTokenRequest:
+      title: Network Token (Provision)
+      type: object
+      description: Request body for provision a network token.
+      x-tags:
+      - Request Bodies
+      required:
+      - merchant_initiated
+      - is_subsequent_payment
+      properties:
+        security_code:
+          type:
+          - string
+          - 'null'
+          description: 'The 3 or 4 digit security code often found on the card. This often
+
+            referred to as the CVV or CVD.
+
+
+            The security code can only be set if the stored payment method
+
+            represents a card.'
+          pattern: ^\d{3,4}$
+          minLength: 3
+          maxLength: 4
+          example: '123'
+        merchant_initiated:
+          type: boolean
+          example: false
+          description: Defines if the request is merchant initiated or not.
+        is_subsequent_payment:
+          type: boolean
+          example: true
+          description: Defines if the request is a subsequent of another request or not.
+    NetworkToken:
+      title: Network Token
+      type: object
+      description: A network token generated by an open-loop PSP.
+      x-tags:
+      - Tokens
+      properties:
+        type:
+          type: string
+          description: The type of this resource.
+          example: network-token
+          enum:
+          - network-token
+        id:
+          type: string
+          description: The unique ID of the token.
+          format: uuid
+          example: d6ad71d5-6908-45d6-ab65-39c55475dd08
+        payment_method_id:
+          type: string
+          description: The unique ID of the payment method.
+          format: uuid
+          example: 9bdc4bc4-005e-4658-8eee-a309fc43cd4d
+        status:
+          type: string
+          description: 'The state of the network token.
+
+
+            - `active` - The network token is active and ready to be used.
+
+            - `inactive` - The network token is being deactivated.
+
+            - `suspended` - The network token is suspended.
+
+            - `deleted` - The network token is deleted.'
+          example: active
+          enum:
+          - active
+          - inactive
+          - suspended
+          - deleted
+        token:
+          type: string
+          description: The value of the network token.
+        expiration_date:
+          type:
+          - string
+          - 'null'
+          description: The expiration date for the network token.
+          example: 01/30
+          pattern: ^\d{2}/\d{2}$
+          minLength: 5
+          maxLength: 5
+        created_at:
+          type: string
+          description: 'The date and time when this network token was first created in our
+
+            system.'
+          format: date-time
+          example: '2021-01-01T12:34:00.000+00:00'
+        updated_at:
+          type: string
+          description: The date and time when this network token was last updated in our system.
+          format: date-time
+          example: '2021-01-01T12:34:00.000+00:00'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

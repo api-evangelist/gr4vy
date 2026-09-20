@@ -1,0 +1,530 @@
+generated: '2026-09-20'
+method: searched
+source: openapi/gr4vy-openapi.yml + https://docs.gr4vy.com/guides/api/jwts
+schemes:
+- name: OAuth2PasswordBearer
+  source: openapi/gr4vy-openapi.yml
+  flows:
+  - flow: password
+    tokenUrl: auth/token
+scopes:
+- scope: anti-fraud-service-definitions.read
+  description: Read Anti Fraud Service Definitions
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: anti-fraud-service-definitions.write
+  description: Write Anti Fraud Service Definitions
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: anti-fraud-services.read
+  description: Read Anti Fraud Services
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: anti-fraud-services.write
+  description: Write Anti Fraud Services
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: api-key-pairs.read
+  description: Read API Key Pairs
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: api-key-pairs.write
+  description: Write API Key Pairs
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: api-logs.read
+  description: Read API Logs
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: api-logs.write
+  description: Write API Logs
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: apple-pay-certificates.read
+  description: Read Apple Pay Certificates
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: apple-pay-certificates.write
+  description: Write Apple Pay Certificates
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: audit-logs.read
+  description: Read Audit Logs
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: audit-logs.write
+  description: Write Audit Logs
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: bin-checker.read
+  description: Read BIN Checker
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: bin-checker.write
+  description: Write BIN Checker
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: business-contexts.read
+  description: Read Business Contexts
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: business-contexts.write
+  description: Write Business Contexts
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: buyers.billing-details.read
+  description: Read Billing Details
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: buyers.billing-details.write
+  description: Write Billing Details
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: buyers.read
+  description: Read Buyers
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: buyers.write
+  description: Write Buyers
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: card-scheme-definitions.read
+  description: Read Card Scheme Definitions
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: card-scheme-definitions.write
+  description: Write Card Scheme Definitions
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: checkout-sessions.read
+  description: Read Checkout Sessions
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: checkout-sessions.write
+  description: Write Checkout Sessions
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: connections.read
+  description: Read Connections
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: connections.write
+  description: Write Connections
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: digital-wallets.read
+  description: Read Digital Wallets
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: digital-wallets.write
+  description: Write Digital Wallets
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: embed
+  description: Shorthand for all gr4vy embed related scopes
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: flows.read
+  description: Read Flows
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: flows.write
+  description: Write Flows
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: gift-card-service-definitions.read
+  description: Read Gift Card Service Definitions
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: gift-card-service-definitions.write
+  description: Write Gift Card Service Definitions
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: gift-card-services.read
+  description: Read Gift Card Services
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: gift-card-services.write
+  description: Write Gift Card Services
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: gift-cards.read
+  description: Read Gift Cards
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: gift-cards.write
+  description: Write Gift Cards
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: health-dashboard.read
+  description: Read Health Dashboard
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: health-dashboard.write
+  description: Write Health Dashboard
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: merchant-accounts.read
+  description: Read Merchant Accounts
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: merchant-accounts.write
+  description: Write Merchant Accounts
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: metrics-explorer.read
+  description: Read Metrics Explorer
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: metrics-explorer.write
+  description: Write Metrics Explorer
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: monitoring.read
+  description: Read Monitoring
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: monitoring.write
+  description: Write Monitoring
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: payment-links.read
+  description: Read Payment Links
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: payment-links.write
+  description: Write Payment Links
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: payment-method-definitions.read
+  description: Read Payment Method Definitions
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: payment-method-definitions.write
+  description: Write Payment Method Definitions
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: payment-methods.read
+  description: Read Payment Methods
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: payment-methods.write
+  description: Write Payment Methods
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: payment-options.read
+  description: Read Payment Options
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: payment-options.write
+  description: Write Payment Options
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: payment-service-definitions.read
+  description: Read Payment Service Definitions
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: payment-service-definitions.write
+  description: Write Payment Service Definitions
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: payment-services.read
+  description: Read Payment Service
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: payment-services.write
+  description: Write Payment Service
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: payouts.read
+  description: Read Payouts
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: payouts.write
+  description: Write Payouts
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: reports.read
+  description: Read Reports
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: reports.write
+  description: Write Reports
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: reset.read
+  description: Read Reset
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: reset.write
+  description: Write Reset
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: roles.read
+  description: Read Roles
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: roles.write
+  description: Write Roles
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: sessions.read
+  description: Read Sessions
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: sessions.refresh
+  description: Refresh access-token
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: sessions.write
+  description: Write Sessions
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: three-ds-scenarios.read
+  description: Read 3DS Scenarios
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: three-ds-scenarios.write
+  description: Write 3DS Scenarios
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: transactions.read
+  description: Read Transactions
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: transactions.write
+  description: Write Transactions
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: users.me.read
+  description: Read User Profile
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: users.me.write
+  description: Write User Profile
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: users.read
+  description: Read Users
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: users.write
+  description: Write Users
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: vault-forward-authentications.read
+  description: Read Vault Forward Authentications
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: vault-forward-authentications.write
+  description: Write Vault Forward Authentications
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: vault-forward-configs.read
+  description: Read Vault Forward Configurations
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: vault-forward-configs.write
+  description: Write Vault Forward Configurations
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: vault-forward-definitions.read
+  description: Read Vault Forward Definitions
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: vault-forward-definitions.write
+  description: Write Vault Forward Definitions
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: vault-forward.read
+  description: Read Vault Forward
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: vault-forward.write
+  description: Write Vault Forward
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: webhook-subscriptions.read
+  description: Read Webhook Subscriptions
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+- scope: webhook-subscriptions.write
+  description: Write Webhook Subscriptions
+  flows:
+  - password
+  sources:
+  - openapi/gr4vy-openapi.yml
+docs: https://docs.gr4vy.com/guides/api/jwts
+notes: Scopes are carried in the JWT `scopes` claim as <resource>.read / <resource>.write, with wildcards *.read
+  and *.write (the CLI default) and the shorthand `embed` scope for frontend tokens. `gr4vy token --list-scopes`
+  prints every valid scope.

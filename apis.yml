@@ -1,23 +1,2708 @@
 aid: gr4vy
 name: Gr4vy
-description: 'Gr4vy is a company surfaced via the API Evangelist harvest backlog (source: payments) and
-  added to the network as a stub for full-pipeline profiling.'
+description: Gr4vy is a cloud-native payment orchestration platform delivered as dedicated, per-merchant infrastructure.
+  A single REST API and a PCI DSS Level 1 vault connect merchants and platforms to hundreds of payment services,
+  payment methods, anti-fraud providers, digital wallets and gift-card services, with no-code Flow routing rules,
+  network tokens, 3-D Secure, payouts, payment links, reporting and webhooks. Gr4vy publishes an OpenAPI 3.1 contract,
+  Speakeasy-generated server SDKs in six languages, mobile and web checkout components (Embed, Secure Fields), a
+  native CLI, a Postman collection, a docs MCP server, an A2A agent card and an Agent Skill.
 url: https://raw.githubusercontent.com/api-evangelist/gr4vy/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:payments
-x-tier: stub
-x-tier-reason: harvest
+x-tier: profiled
+x-tier-reason: enrichment pass 2026-09-20 (local-v3; was harvest)
 specificationVersion: '0.20'
 created: '2026-09-20'
 modified: '2026-09-20'
 tags:
-- Company
-apis: []
+- Payments
+- Payment Orchestration
+- Fintech
+- Checkout
+- Tokenization
+- Vault
+- Fraud
+- 3D Secure
+- Webhooks
+- Commerce
+apis:
+- aid: gr4vy:gr4vy-docs-mcp
+  name: Gr4vy Docs MCP Server
+  description: >-
+    Hosted, unauthenticated Model Context Protocol server over the Gr4vy documentation: search, read-only
+    docs filesystem queries and a docs-feedback tool. It does not execute payment operations.
+  humanURL: https://docs.gr4vy.com/guides/get-started
+  baseURL: https://docs.gr4vy.com/mcp
+  tags:
+  - MCP
+  - Documentation
+  - Agents
+  properties:
+  - type: MCPServer
+    url: mcp/gr4vy-mcp.yml
+  - type: ToolCrosswalk
+    url: mcp/gr4vy-tool-crosswalk.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  image: https://avatars.githubusercontent.com/u/17150969
+- aid: gr4vy:gr4vy-3ds-scenarios-api
+  name: Gr4vy 3DS scenarios API
+  description: Manage and create 3DS scenarios in sandbox.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - 3DS scenarios
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-3ds-scenarios-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-account-updater-api
+  name: Gr4vy Account Updater API
+  description: >-
+    An Account Updater is a service provided by credit card issuers
+
+    (such as banks and financial institutions) to merchants who accept
+
+    recurring payments from customers. Its primary purpose is to help
+
+    merchants maintain accurate and up-to-date payment information for
+
+    their customers' credit or debit card accounts.
+
+
+    In Gr4vy, the Account Updater service is provided in an on-demand
+
+    and asynchronous fashion:
+
+
+    1. A merchant requests an update for a set of stored cards.
+
+    2. A request is submitted to a third-party service.
+
+    3. When results are ready, new card details are stored and left in standby.
+
+    4. Card details are updated when it gets determined that the original card
+       is no longer valid (e.g. has expired).
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Account Updater
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-account-updater-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-anti-fraud-service-definitions-api
+  name: Gr4vy Anti Fraud Service Definitions API
+  description: >-
+    Anti fraud service definitions describe the fields required for a anti fraud
+
+    service to be configured.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Anti Fraud Service Definitions
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-anti-fraud-service-definitions-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-anti-fraud-services-api
+  name: Gr4vy Anti-Fraud Services API
+  description: >-
+    In Gr4vy, an anti-fraud service represents a configured anti-fraud service
+
+    provider (`Sift`, `CyberSource`, etc). This third-party services will be
+
+    used to screen transactions to determine the risk and prevents chargebacks
+
+    and fraudulent transactions.
+
+
+    The anti-fraud services API can be used to:
+
+
+    * Provide Gr4vy with the API credentials for an anti-fraud service provider.
+
+    * Set a display name for a anti-fraud provider.
+
+    * Map anti-fraud service decisions to Gr4vy internal decisions.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Anti-Fraud Services
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-anti-fraud-services-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-api-key-pairs-api
+  name: Gr4vy API Key Pairs API
+  description: >-
+    In Gr4vy, an API key pair is used to sign and validate JSON Web Tokens (JWT).
+
+    JWTs are used as a HTTP `bearer` token to authenticate to the API. For more
+
+    information please visit our [in-depth authentication](/guides/authentication)
+
+    guide.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - API Key Pairs
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-api-key-pairs-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-api-logs-api
+  name: Gr4vy API Logs API
+  description: >-
+    API Logs provide an historic of 4XX and 5XX errors that happened in the API
+
+    in the last 24 hours with a 250 result limit.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - API Logs
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-api-logs-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-apple-pay-certificates-api
+  name: Gr4vy Apple Pay Certificates API
+  description: >-
+    Apple Pay payment processing certificates are used by Apple to encrypt Apple
+
+    Pay tokens. You must register and upload an Apple Pay payment processing
+
+    certificate if you wish to use Apple Pay with Gr4vy's mobile SDKs.
+
+
+    The Apple Pay certificates API can be used to:
+
+
+    * Start a new Apple Pay certificate registration, providing you with a
+
+    Certificate Signing Request (CSR).
+
+    * Update the Apple Pay certificate record with the certificate received from
+
+    Apple after creating a new payment processing certificate on your Apple
+
+    Developer console and uploading a CSR.
+
+    * List all Apple Pay certificates.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Apple Pay Certificates
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-apple-pay-certificates-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-audit-logs-api
+  name: Gr4vy Audit Logs API
+  description: Audit Logs provide an historic record of changes made to your Gr4vy instance.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Audit Logs
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-audit-logs-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-buyers-api
+  name: Gr4vy Buyers API
+  description: >-
+    In Gr4vy, a buyer represents your customer, the shopper who's performing
+
+    a checkout and making a purchase.
+
+
+    A buyer can be used by you to:
+
+
+    * Display a human readable name (`display_name`) for a buyer in the Gr4vy
+
+    admin panel
+
+    * Associate multiple stored payment methods with a single user
+
+    * Initialize **Gr4vy Embed** with the buyer ID, automatically displaying the
+      buyer's previously stored payment methods, allowing for faster checkout.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Buyers
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-buyers-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-buyers-gift-cards-api
+  name: Gr4vy Buyers - Gift cards API
+  description: Query gift cards for buyers.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Buyers - Gift cards
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-buyers-gift-cards-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-buyers-payment-methods-api
+  name: Gr4vy Buyers - Payment methods API
+  description: Query payment methods for buyers.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Buyers - Payment methods
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-buyers-payment-methods-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-buyers-shipping-details-api
+  name: Gr4vy Buyers - Shipping details API
+  description: Manage shipping details for buyers.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Buyers - Shipping details
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-buyers-shipping-details-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-card-details-api
+  name: Gr4vy Card Details API
+  description: Endpoints to retrieve details of a card by utilising a BIN lookup table.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Card Details
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-card-details-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-card-scheme-definitions-api
+  name: Gr4vy Card Scheme Definitions API
+  description: Card Scheme definitions provide display information to a card scheme.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Card Scheme Definitions
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-card-scheme-definitions-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-checkout-sessions-api
+  name: Gr4vy Checkout Sessions API
+  description: >-
+    A Checkout Session represents the session of a user as they progress
+
+    through an online checkout.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Checkout Sessions
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-checkout-sessions-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-connection-definitions-api
+  name: Gr4vy Connection Definitions API
+  description: >-
+    Endpoints to retrieve details of various connections such as payment
+
+    services, digital wallets, and anti-fraud services.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Connection Definitions
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-connection-definitions-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-connections-api
+  name: Gr4vy Connections API
+  description: >-
+    Endpoints to retrieve details of configured connections such as payment
+
+    services, digital wallets, and anti-fraud services.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Connections
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-connections-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-digital-wallets-api
+  name: Gr4vy Digital Wallets API
+  description: >-
+    In Gr4vy, a digital wallet represents a way for a buyer to pay using
+
+    card details already stored on their device via a digital wallet service
+
+    such as Apple Pay or Google Pay. The buyer will not have to fill in their
+
+    card details on checkout.
+
+
+    The digital wallets API can be used to:
+
+
+    * Register with a digital wallet provider.
+
+    * List digital wallets currently registered.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Digital Wallets
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-digital-wallets-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-digital-wallets-sessions-api
+  name: Gr4vy Digital wallets - Sessions API
+  description: Create sessions for digital wallets like Apple Pay and Google Pay.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Digital wallets - Sessions
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-digital-wallets-sessions-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-digital-wallets-setup-api
+  name: Gr4vy Digital wallets - Setup API
+  description: Manage digital wallets like Apple Pay and Google Pay.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Digital wallets - Setup
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-digital-wallets-setup-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-flow-api
+  name: Gr4vy Flow API
+  description: In Gr4vy, a rule can be created that triggers actions anywhere in the payment flow.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Flow
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-flow-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-gift-card-service-definitions-api
+  name: Gr4vy Gift Card Service Definitions API
+  description: >-
+    Gift card service definitions describe the fields required for a gift
+
+    card service to be configured.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Gift Card Service Definitions
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-gift-card-service-definitions-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-gift-card-services-api
+  name: Gr4vy Gift Card Services API
+  description: >-
+    In Gr4vy, a gift card service represents a configured provider for processing
+
+    gift cards.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Gift Card Services
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-gift-card-services-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-gift-cards-api
+  name: Gr4vy Gift Cards API
+  description: >-
+    In Gr4vy, a gift card represents a stored value card that can be used to pay for
+
+    a transaction.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Gift Cards
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-gift-cards-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-health-dashboard-api
+  name: Gr4vy Health Dashboard API
+  description: Endpoints to retrieve the data used for the Health Dashboard.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Health Dashboard
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-health-dashboard-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-insights-api
+  name: Gr4vy Insights API
+  description: Retrieve Insights data.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Insights
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-insights-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-insights-presets-api
+  name: Gr4vy Insights - Presets API
+  description: Manage presets for Insights.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Insights - Presets
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-insights-presets-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-merchant-accounts-3ds-configuration-api
+  name: Gr4vy Merchant accounts - 3DS configuration API
+  description: Manage 3DS profiles for merchant accounts.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Merchant accounts - 3DS configuration
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-merchant-accounts-3ds-configuration-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-merchant-accounts-api
+  name: Gr4vy Merchant Accounts API
+  description: >-
+    In Gr4vy, a merchant account represents an individual merchant in an
+
+    instance. Each instance has one or more merchant accounts, and each
+
+    merchant account has its own connections, Flow rules, transactions, and
+
+    more.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Merchant Accounts
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-merchant-accounts-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-metrics-explorer-api
+  name: Gr4vy Metrics Explorer API
+  description: Endpoints to retrieve the data used for the Metrics Explorer.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Metrics Explorer
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-metrics-explorer-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-monitoring-api
+  name: Gr4vy Monitoring API
+  description: Manage monitoring and alerting.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Monitoring
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-monitoring-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-payment-links-api
+  name: Gr4vy Payment Links API
+  description: >-
+    In Gr4vy, payment links allow a merchant to generate a link, send it to a
+
+    customer via email, SMS, etc, and then have the customer pay without the need
+
+    for the merchant hosting their own checkout.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Payment Links
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-payment-links-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-payment-method-definitions-api
+  name: Gr4vy Payment Method Definitions API
+  description: Payment Method definitions provide display information to a payment method.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Payment Method Definitions
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-payment-method-definitions-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-payment-methods-api
+  name: Gr4vy Payment Methods API
+  description: >-
+    In Gr4vy, a payment method represents a way in which a payment can be
+
+    processed, for example a card, a PayPal account, or a bank account.
+
+
+    The payment method API can be used to:
+
+
+    * List all the available payment methods
+
+    * Filter the available payment method for a buyer in a specific currency
+
+    and country.
+
+    * Store (also known as vault) a payment method for a buyer.
+
+    * Fetch all previously stored payment methods for a buyer.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Payment Methods
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-payment-methods-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-payment-methods-definitions-api
+  name: Gr4vy Payment methods - Definitions API
+  description: Manage payment method definitions.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Payment methods - Definitions
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-payment-methods-definitions-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-payment-methods-network-tokens-api
+  name: Gr4vy Payment methods - Network tokens API
+  description: Manage network tokens for stored payment methods.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Payment methods - Network tokens
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-payment-methods-network-tokens-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-payment-methods-payment-service-tokens-api
+  name: Gr4vy Payment methods - Payment service tokens API
+  description: Manage payment service tokens for stored payment methods.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Payment methods - Payment service tokens
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-payment-methods-payment-service-tokens-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-payment-options-api
+  name: Gr4vy Payment Options API
+  description: >-
+    In Gr4vy, a payment option represents a list of methods (card, PayPal,
+
+    etc) that are available for a given locale.
+
+
+    The payment options API can be used to:
+
+
+    * Determine what types of payments can be processed in a specific locale.
+
+    * Display a list options to a buyer to choose from.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Payment Options
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-payment-options-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-payment-service-definitions-api
+  name: Gr4vy Payment Service Definitions API
+  description: >-
+    Payment service definitions describe the fields required for a payment
+
+    service to be configured.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Payment Service Definitions
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-payment-service-definitions-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-payment-services-api
+  name: Gr4vy Payment Services API
+  description: >-
+    In Gr4vy, a payment service represents a configured payment provider
+
+    (Stripe, PayPal, Adyen, etc) for a specific payment type (card, bitcoin,
+
+    etc)
+
+
+    The payment services API can be used to:
+
+
+    * Provide Gr4vy with the payment credentials for a payment provider.
+
+    * Set a display name for a payment provider.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Payment Services
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-payment-services-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-payouts-api
+  name: Gr4vy Payouts API
+  description: >-
+    Payouts allow a merchant to send money from one of their own accounts to a
+
+    third party.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Payouts
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-payouts-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-refunds-api
+  name: Gr4vy Refunds API
+  description: Manage transaction refunds.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Refunds
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-refunds-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-reports-api
+  name: Gr4vy Reports API
+  description: >-
+    In Gr4vy, a report represents the configuration details to extract or
+
+    dump a set of data into a downloadable CSV file. The data extracted
+
+    by a report is configured via the reports API where you can specify:
+
+
+    * Which fields should be in the dataset.
+
+    * How the dataset should be sorted.
+
+    * How the dataset should be filtered.
+
+
+    Once a report is created, it may be executed on a one-off or recurring
+
+    basis. One-off reports are executed only once shortly after the report
+
+    is created, while recurring reports are executed periodically based on
+
+    its configured frequency, e.g. weekly or monthly.
+
+
+    During a report execution, the data is extracted and loaded into
+
+    a CSV file according to the report's configuration. The resulting file
+
+    may then be downloaded.
+
+
+    The reports API can be used to:
+
+
+    * Create and configure new reports.
+
+    * List all reports.
+
+    * View the configuration details of a report.
+
+    * List a report's executions.
+
+    * Reconfigure an existing report.
+
+    * Generate a temporary URL to download the result of a report execution
+
+    in CSV format.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Reports
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-reports-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-reports-executions-api
+  name: Gr4vy Reports - Executions API
+  description: Manage executions of reports.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Reports - Executions
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-reports-executions-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-roles-api
+  name: Gr4vy Roles API
+  description: >-
+    In Gr4vy, users can be granted access to specific types of resources and permissions
+
+    to perform certain actions by being assigned one or more roles.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Roles
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-roles-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-sessions-api
+  name: Gr4vy Sessions API
+  description: >-
+    The sessions APIs are used to facilitate user authentication for the Gr4vy
+
+    dashboard.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Sessions
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-sessions-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-tokens-api
+  name: Gr4vy Tokens API
+  description: Endpoints related to the Gr4vy tokenization service.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Tokens
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-tokens-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-transactions-actions-api
+  name: Gr4vy Transactions - Actions API
+  description: Read Flow actions triggered for a transaction.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Transactions - Actions
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-transactions-actions-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-transactions-api
+  name: Gr4vy Transactions API
+  description: >-
+    In Gr4vy, a transaction represents a payment in any state, either before it
+
+    is authorized, once it is captured, or after it has been refunded.
+
+
+    The transactions API can be used to:
+
+
+    - Authorize, capture, and store cards.
+
+    - Authorize, capture, and store alternative payment methods like PayPal.
+
+    - Refund, void, and otherwise cancel existing transactions.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Transactions
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-transactions-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-transactions-captures-api
+  name: Gr4vy Transactions - Captures API
+  description: Read transaction capture data.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Transactions - Captures
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-transactions-captures-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-transactions-chargeback-reversals-api
+  name: Gr4vy Transactions - Chargeback reversals API
+  description: Read transaction chargeback reversal data.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Transactions - Chargeback reversals
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-transactions-chargeback-reversals-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-transactions-chargebacks-api
+  name: Gr4vy Transactions - Chargebacks API
+  description: Read transaction chargeback data.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Transactions - Chargebacks
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-transactions-chargebacks-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-transactions-refund-settlements-api
+  name: Gr4vy Transactions - Refund settlements API
+  description: Read transaction refund settlement data.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Transactions - Refund settlements
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-transactions-refund-settlements-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-transactions-sessions-api
+  name: Gr4vy Transactions - Sessions API
+  description: Manage transaction session data.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Transactions - Sessions
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-transactions-sessions-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-transactions-settlements-api
+  name: Gr4vy Transactions - Settlements API
+  description: Read transaction settlement data.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Transactions - Settlements
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-transactions-settlements-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-users-api
+  name: Gr4vy Users API
+  description: >-
+    In Gr4vy, a user represents an employee of the merchant with access to the
+
+    dashboard.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Users
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-users-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-vault-forward-api
+  name: Gr4vy Vault Forward API
+  description: >-
+    Vault Forwarding is a way to perform requests where, provided a template,
+
+    Gr4vy will evaluate it to inject PCI data and forward it to third party
+
+    services that have been vetted to receive such data.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Vault Forward
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-vault-forward-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-vault-forward-configurations-api
+  name: Gr4vy Vault Forward Configurations API
+  description: >-
+    A Vault Forward Configuration represents a third party service that is
+
+    currently enabled to send requests containing PCI data.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Vault Forward Configurations
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-vault-forward-configurations-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-vault-forward-definitions-api
+  name: Gr4vy Vault Forward Definitions API
+  description: >-
+    Vault Forward definitions describe a third party service that has been vetted
+
+    to receive requests containing PCI data.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Vault Forward Definitions
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-vault-forward-definitions-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-webhook-subscriptions-api
+  name: Gr4vy Webhook subscriptions API
+  description: Endpoints related to the management of subscriptions for endpoints to receive webhooks.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Webhook subscriptions
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-webhook-subscriptions-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
+- aid: gr4vy:gr4vy-webhooks-api
+  name: Gr4vy Webhooks API
+  description: >-
+    Endpoints related to webhooks to integrate Gr4vy with payment services
+
+    webhooks functionality.
+  humanURL: https://docs.gr4vy.com/reference
+  baseURL: https://api.{id}.gr4vy.app
+  tags:
+  - Webhooks
+  properties:
+  - type: OpenAPI
+    url: openapi/gr4vy-webhooks-api-openapi.yml
+  - type: Documentation
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: APIReference
+    url: https://docs.gr4vy.com/reference
+  - type: GettingStarted
+    url: https://docs.gr4vy.com/guides/get-started
+  - type: Authentication
+    url: authentication/gr4vy-authentication.yml
+  - type: OAuthScopes
+    url: scopes/gr4vy-scopes.yml
+  - type: ErrorCatalog
+    url: errors/gr4vy-problem-types.yml
+  - type: DeclineCodes
+    url: errors/gr4vy-decline-codes.yml
+  - type: Conventions
+    url: conventions/gr4vy-conventions.yml
+  - type: Idempotency
+    url: conventions/gr4vy-conventions.yml
+  - type: DataModel
+    url: data-model/gr4vy-data-model.yml
+  - type: Sandbox
+    url: sandbox/gr4vy-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/gr4vy-rate-limits.yml
+  - type: Webhooks
+    url: asyncapi/gr4vy-webhooks.yml
+  - type: Postman
+    url: https://github.com/gr4vy/gr4vy-postman
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: Overlay
+  url: overlays/gr4vy-openapi-overlay.yaml
+- type: DomainSecurity
+  url: security/gr4vy-domain-security.yml
 - type: Website
   url: https://gr4vy.com/
+- type: DeveloperPortal
+  url: https://docs.gr4vy.com/
+- type: Documentation
+  url: https://docs.gr4vy.com/guides/get-started
+- type: APIReference
+  url: https://docs.gr4vy.com/reference
+- type: GettingStarted
+  url: https://docs.gr4vy.com/guides/get-started
+- type: Authentication
+  url: authentication/gr4vy-authentication.yml
+- type: OAuthScopes
+  url: scopes/gr4vy-scopes.yml
+- type: Packages
+  url: packages/gr4vy-packages.yml
+- type: SDKs
+  url: packages/gr4vy-packages.yml
+- type: CLI
+  url: cli/gr4vy-cli.yml
+- type: Components
+  url: components/gr4vy-components.yml
+- type: WellKnown
+  url: well-known/gr4vy-well-known.yml
+- type: AgentCard
+  url: a2a/gr4vy-a2a.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: LLMsTxt
+  url: llms/gr4vy-llms.txt
+- type: LLMsTxt
+  url: https://docs.gr4vy.com/llms.txt
+- type: Conformance
+  url: conformance/gr4vy-conformance.yml
+- type: Compliance
+  url: https://gr4vy.com/regulation-and-compliance/
+- type: Lifecycle
+  url: lifecycle/gr4vy-lifecycle.yml
+- type: Deprecation
+  url: lifecycle/gr4vy-lifecycle.yml
+- type: StatusPage
+  url: https://status.gr4vy.com/
+- type: ChangeLog
+  url: changelog/gr4vy-changelog.yml
+- type: ChangeLog
+  url: https://docs.gr4vy.com/updates
+- type: Plans
+  url: plans/gr4vy-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/gr4vy-rate-limits.yml
+- type: Blog
+  url: https://gr4vy.com/blog/
+- type: Support
+  url: https://gr4vy.com/contact/
+- type: GitHubOrganization
+  url: https://github.com/gr4vy
+- type: TermsOfService
+  url: https://gr4vy.com/terms-of-service/
+- type: PrivacyPolicy
+  url: https://gr4vy.com/privacy-policy/
+- type: LinkedIn
+  url: https://www.linkedin.com/company/gr4vy
+image: https://avatars.githubusercontent.com/u/17150969
+x-enrichment:
+  date: '2026-09-20'
+  status: enriched
+  artifacts_added: 39
+  pass: local-v3

@@ -1,0 +1,204 @@
+generated: '2026-09-20'
+method: derived
+source: openapi/gr4vy-openapi.yml components.schemas ($ref links + *_id fields)
+docs: https://docs.gr4vy.com/reference
+notation: has_one/has_many from $ref properties; belongs_to from <entity>_id fields. Embedded summary schemas (TransactionBuyer,
+  TransactionPaymentMethod, ...) are folded into their parent entity.
+id_format: UUID (no id prefixes); every resource carries a type discriminator string (e.g. "transaction", "buyer")
+entities:
+- name: Transaction
+  type_discriminator: transaction
+  description: A full transaction resource.
+- name: Buyer
+  type_discriminator: buyer
+  description: null
+- name: PaymentMethod
+  type_discriminator: payment-method
+  description: 'Payment Method
+
+
+    A stored payment method.'
+- name: Refund
+  type_discriminator: refund
+  description: null
+- name: CheckoutSession
+  type_discriminator: checkout-session
+  description: null
+- name: PaymentService
+  type_discriminator: payment-service
+  description: null
+- name: MerchantAccount
+  type_discriminator: merchant-account
+  description: null
+- name: PaymentLink
+  type_discriminator: payment-link
+  description: null
+- name: GiftCard
+  type_discriminator: gift-card
+  description: null
+- name: Report
+  type_discriminator: report
+  description: null
+- name: ReportExecution
+  type_discriminator: report-execution
+  description: null
+- name: WebhookSubscription
+  type_discriminator: webhook-subscription
+  description: null
+- name: ShippingDetails
+  type_discriminator: shipping-details
+  description: null
+- name: BillingDetails
+  type_discriminator: null
+  description: null
+- name: NetworkToken
+  type_discriminator: network-token
+  description: null
+- name: PaymentServiceToken
+  type_discriminator: payment-service-token
+  description: null
+- name: DigitalWallet
+  type_discriminator: digital-wallet
+  description: null
+- name: TransactionCapture
+  type_discriminator: transaction-capture
+  description: null
+- name: Settlement
+  type_discriminator: settlement
+  description: A settlement record for a transaction.
+- name: Role
+  type_discriminator: role
+  description: null
+- name: ThreeDSecureScenario
+  type_discriminator: three-d-secure-scenario
+  description: null
+relationships:
+- from: Transaction
+  to: PaymentMethod
+  kind: has_one
+  via: payment_method
+- from: Transaction
+  to: PaymentService
+  kind: has_one
+  via: payment_service
+- from: Transaction
+  to: Buyer
+  kind: has_one
+  via: buyer
+- from: Transaction
+  to: ShippingDetails
+  kind: has_one
+  via: shipping_details
+- from: Transaction
+  to: MerchantAccount
+  kind: belongs_to
+  via: merchant_account_id
+- from: Transaction
+  to: CheckoutSession
+  kind: belongs_to
+  via: checkout_session_id
+- from: Buyer
+  to: BillingDetails
+  kind: has_one
+  via: billing_details
+- from: Buyer
+  to: MerchantAccount
+  kind: belongs_to
+  via: merchant_account_id
+- from: PaymentMethod
+  to: Buyer
+  kind: has_one
+  via: buyer
+- from: PaymentMethod
+  to: MerchantAccount
+  kind: belongs_to
+  via: merchant_account_id
+- from: Refund
+  to: Transaction
+  kind: belongs_to
+  via: transaction_id
+- from: CheckoutSession
+  to: PaymentService
+  kind: belongs_to
+  via: payment_service_id
+- from: PaymentService
+  to: MerchantAccount
+  kind: belongs_to
+  via: merchant_account_id
+- from: PaymentLink
+  to: Buyer
+  kind: has_one
+  via: buyer
+- from: PaymentLink
+  to: ShippingDetails
+  kind: has_one
+  via: shipping_details
+- from: PaymentLink
+  to: Buyer
+  kind: belongs_to
+  via: buyer_id
+- from: GiftCard
+  to: Buyer
+  kind: has_one
+  via: buyer
+- from: GiftCard
+  to: MerchantAccount
+  kind: belongs_to
+  via: merchant_account_id
+- from: Report
+  to: MerchantAccount
+  kind: belongs_to
+  via: merchant_account_id
+- from: WebhookSubscription
+  to: MerchantAccount
+  kind: belongs_to
+  via: merchant_account_id
+- from: ShippingDetails
+  to: Buyer
+  kind: belongs_to
+  via: buyer_id
+- from: NetworkToken
+  to: PaymentMethod
+  kind: belongs_to
+  via: payment_method_id
+- from: PaymentServiceToken
+  to: PaymentMethod
+  kind: belongs_to
+  via: payment_method_id
+- from: PaymentServiceToken
+  to: PaymentService
+  kind: belongs_to
+  via: payment_service_id
+- from: DigitalWallet
+  to: MerchantAccount
+  kind: belongs_to
+  via: merchant_account_id
+- from: TransactionCapture
+  to: Transaction
+  kind: has_one
+  via: transaction
+- from: TransactionCapture
+  to: BillingDetails
+  kind: has_one
+  via: billing_details
+- from: TransactionCapture
+  to: ShippingDetails
+  kind: has_one
+  via: shipping_details
+- from: Settlement
+  to: MerchantAccount
+  kind: belongs_to
+  via: merchant_account_id
+- from: Settlement
+  to: Transaction
+  kind: belongs_to
+  via: transaction_id
+- from: ThreeDSecureScenario
+  to: MerchantAccount
+  kind: belongs_to
+  via: merchant_account_id
+interchange_hubs:
+- Transaction
+- Buyer
+- PaymentMethod
+- MerchantAccount

@@ -1,0 +1,202 @@
+openapi: 3.2.0
+info:
+  title: Gr4vy Connection Definitions API
+  version: 1.1.0-beta
+  contact:
+    name: Gr4vy Support
+    email: code@gr4vy.com
+    url: https://gr4vy.com
+  termsOfService: https://gr4vy.com
+  license:
+    name: MIT
+    url: https://raw.githubusercontent.com/gr4vy/gr4vy-openapi/main/LICENSE
+  description: 'Welcome to the Gr4vy API reference documentation.
+
+    Our API is still very much a work in product and subject to change.'
+servers:
+- url: https://api.sandbox.{id}.gr4vy.app
+  x-speakeasy-server-id: sandbox
+  variables:
+    id:
+      default: example
+      description: The subdomain for your Gr4vy instance.
+- url: https://api.{id}.gr4vy.app
+  x-speakeasy-server-id: production
+  variables:
+    id:
+      default: example
+      description: The subdomain for your Gr4vy instance.
+security:
+- bearerAuth: []
+tags:
+- name: Connection Definitions
+  description: 'Endpoints to retrieve details of various connections such as payment
+
+    services, digital wallets, and anti-fraud services.'
+  x-internal: true
+paths:
+  /connection-definitions:
+    get:
+      operationId: list-connection-definitions
+      summary: List connection definitions
+      description: Returns a list of all available connection definitions.
+      tags:
+      - Connection Definitions
+      x-internal: true
+      responses:
+        '200':
+          description: Returns a list of connection definitions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConnectionDefinitions'
+        '401':
+          description: Returns an error if no valid authentication was provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401Unauthorized'
+components:
+  schemas:
+    Error401Unauthorized:
+      title: Unauthorized Error
+      type: object
+      description: Unauthorized Error (HTTP 401).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`unauthorized`.'
+          example: unauthorized
+          enum:
+          - unauthorized
+        status:
+          type: integer
+          description: '`401`.'
+          example: 401
+          enum:
+          - 401
+        message:
+          type: string
+          description: No valid API authentication found.
+          example: No valid API authentication found
+          enum:
+          - No valid API authentication found
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    ConnectionDefinition:
+      title: Connection Definition
+      type: object
+      description: A connection that can be configured.
+      x-tags:
+      - Discovery
+      properties:
+        id:
+          type: string
+          description: The ID of the connection.
+          example: stripe-card
+        type:
+          type: string
+          description: '`connection-definition`.'
+          default: connection-definition
+          example: connection-definition
+        name:
+          type: string
+          description: The name of this connection.
+          example: Stripe
+        count:
+          type: number
+          description: The number of configured connections.
+          example: 1
+        group:
+          type: string
+          example: payment-service
+          enum:
+          - anti-fraud-service
+          - digital-wallet
+          - gift-card-service
+          - payment-service
+        category:
+          type: string
+          example: card
+          enum:
+          - anti-fraud
+          - bank
+          - bnpl
+          - card
+          - cash
+          - stored-credit
+          - wallet
+        icon_url:
+          type:
+          - string
+          - 'null'
+          description: An icon to display for the connection.
+          example: https://cdn.gr4vy.app/stripe.svg
+        provider:
+          type:
+          - string
+          - 'null'
+          description: The provider for this connection.
+          example: Stripe
+    ErrorDetail:
+      title: Error details
+      description: Additional detail about the part of a request body that caused an issue.
+      type: object
+      x-tags:
+      - Errors
+      properties:
+        location:
+          type: string
+          example: body
+          description: The location where the error caused an issue.
+          enum:
+          - query
+          - body
+          - path
+          - header
+        type:
+          type: string
+          example: value_error.missing
+          description: A unique identifier for the type of error that occurred.
+        pointer:
+          type: string
+          example: /payment_method/number
+          description: 'The exact item for which the validation did not succeed. This is a JSON
+
+            pointer for request bodies, while for query, path, and header parameters
+
+            it is the name of the parameter.'
+        message:
+          type: string
+          example: field required
+          description: A human readable message for this error detail.
+    ConnectionDefinitions:
+      title: Connection definitions
+      type: object
+      description: A list of available connection definitions.
+      x-tags:
+      - Discovery
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConnectionDefinition'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

@@ -1,0 +1,605 @@
+openapi: 3.2.0
+info:
+  title: Gr4vy Anti-Fraud Services API
+  version: 1.1.0-beta
+  contact:
+    name: Gr4vy Support
+    email: code@gr4vy.com
+    url: https://gr4vy.com
+  termsOfService: https://gr4vy.com
+  license:
+    name: MIT
+    url: https://raw.githubusercontent.com/gr4vy/gr4vy-openapi/main/LICENSE
+  description: 'Welcome to the Gr4vy API reference documentation.
+
+    Our API is still very much a work in product and subject to change.'
+servers:
+- url: https://api.sandbox.{id}.gr4vy.app
+  x-speakeasy-server-id: sandbox
+  variables:
+    id:
+      default: example
+      description: The subdomain for your Gr4vy instance.
+- url: https://api.{id}.gr4vy.app
+  x-speakeasy-server-id: production
+  variables:
+    id:
+      default: example
+      description: The subdomain for your Gr4vy instance.
+security:
+- bearerAuth: []
+tags:
+- name: Anti-Fraud Services
+  description: 'In Gr4vy, an anti-fraud service represents a configured anti-fraud service
+
+    provider (`Sift`, `CyberSource`, etc). This third-party services will be
+
+    used to screen transactions to determine the risk and prevents chargebacks
+
+    and fraudulent transactions.
+
+
+    The anti-fraud services API can be used to:
+
+
+    * Provide Gr4vy with the API credentials for an anti-fraud service provider.
+
+    * Set a display name for a anti-fraud provider.
+
+    * Map anti-fraud service decisions to Gr4vy internal decisions.'
+  x-internal: true
+paths:
+  /anti-fraud-services:
+    post:
+      operationId: new-anti-fraud-service
+      summary: New anti-fraud service
+      description: 'Adds an anti-fraud service, enabling merchants to determine risky transactions
+
+        and prevent chargebacks.'
+      tags:
+      - Anti-Fraud Services
+      x-internal: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AntiFraudServiceCreate'
+            examples:
+              Create an anti-fraud service:
+                value:
+                  anti_fraud_service_definition_id: sift-anti-fraud
+                  display_name: Sift Anti-Fraud Service.
+                  active: true
+                  fields:
+                  - key: api_key
+                    value: REDACTED_STRIPE_KEY
+                  - key: account_id
+                    value: 26PHem9AhJZvU623DfE1x4sd
+      responses:
+        '201':
+          description: Returns the anti-fraud service that was added.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AntiFraudService'
+        '400':
+          description: Returns an error if the request was badly formatted or missing required fields.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400BadRequest'
+        '401':
+          description: Returns an error if no valid authentication was provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401Unauthorized'
+        '409':
+          description: Returns an error if duplicate resource has been found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error409DuplicateRecord'
+  /anti-fraud-services/{anti_fraud_service_id}:
+    parameters:
+    - schema:
+        type: string
+        format: uuid
+        example: 8724fd24-5489-4a5d-90fd-0604df7d3b83
+      name: anti_fraud_service_id
+      in: path
+      required: true
+      description: The unique ID for an anti-fraud service.
+    get:
+      operationId: get-anti-fraud-service
+      summary: Get anti-fraud service
+      description: Gets information about an anti-fraud service.
+      tags:
+      - Anti-Fraud Services
+      x-internal: true
+      responses:
+        '200':
+          description: Returns the information about a anti-fraud service.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AntiFraudService'
+        '401':
+          description: Returns an error if no valid authentication was provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401Unauthorized'
+        '404':
+          description: Returns an error if the resource can not be found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404NotFound'
+    put:
+      operationId: update-anti-fraud-service
+      summary: Update anti-fraud service
+      description: 'Update an anti-fraud service, enabling merchants to determine
+
+        risky transactions and prevent chargebacks.'
+      tags:
+      - Anti-Fraud Services
+      x-internal: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AntiFraudServiceUpdate'
+            examples:
+              Update an anti-fraud service:
+                value:
+                  anti_fraud_service_definition_id: sift-anti-fraud
+                  display_name: Sift Anti-Fraud Service.
+                  active: true
+                  fields:
+                  - key: api_key
+                    value: REDACTED_STRIPE_KEY
+                  - key: account_id
+                    value: 26PHem9AhJZvU623DfE1x4sd
+      responses:
+        '200':
+          description: Returns the anti-fraud service that was updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AntiFraudService'
+        '400':
+          description: Returns an error if the request was badly formatted or missing required fields.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400BadRequest'
+        '401':
+          description: Returns an error if no valid authentication was provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401Unauthorized'
+        '409':
+          description: Returns an error if there is an attempt to activate multiple anti-fraud services simultaneously.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error409DuplicateRecord'
+    delete:
+      operationId: delete-anti-fraud-service
+      summary: Delete anti-fraud service
+      description: 'Removes an anti-fraud service. Any associated credentials
+
+        will also be deleted.'
+      tags:
+      - Anti-Fraud Services
+      x-internal: true
+      responses:
+        '204':
+          description: Returns an empty response.
+        '401':
+          description: Returns an error if no valid authentication was provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401Unauthorized'
+        '404':
+          description: Returns an error if the resource can not be found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404NotFound'
+components:
+  schemas:
+    Error404NotFound:
+      title: Not Found Error
+      type: object
+      description: Not Found Error (HTTP 404).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: The reason code for the error.
+          example: not_found
+          enum:
+          - not_found
+          - pending_creation
+        status:
+          type: integer
+          description: '`404`.'
+          example: 404
+          enum:
+          - 404
+        message:
+          type: string
+          description: The human readable reason for the error.
+          example: The resource could not be found
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    Error400BadRequest:
+      title: Bad Request
+      type: object
+      description: Bad Request (HTTP 400).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: A short code that describes the reason for the error.
+          example: bad_request
+          enum:
+          - bad_request
+          - incorrect_json
+          - invalid_credentials
+        status:
+          type: integer
+          description: '`400`.'
+          example: 400
+          enum:
+          - 400
+        message:
+          type: string
+          description: A human-readable reason for the error.
+          example: Missing '****' field
+        details:
+          type: array
+          description: A list of detail objects that further clarify the reason for the error.
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    AntiFraudService:
+      title: Anti-Fraud Service
+      type: object
+      x-tags:
+      - Anti-Fraud Services
+      x-internal: true
+      properties:
+        type:
+          type: string
+          description: The type of this resource. Is always `anti-fraud-service`.
+          example: anti-fraud-service
+          enum:
+          - anti-fraud-service
+        id:
+          type: string
+          example: fe26475d-ec3e-4884-9553-f7356683f7f9
+          description: The unique Gr4vy ID for this anti-fraud service.
+          format: uuid
+        merchant_account_id:
+          type: string
+          description: The unique ID for a merchant account.
+          example: default
+        anti_fraud_service_definition_id:
+          type: string
+          description: 'The name of the Anti-Fraud service provider.
+
+            During update request, this value is used for validation only but
+
+            the underlying service can not be changed for an existing service.'
+          example: sift-anti-fraud
+          enum:
+          - cybersource-anti-fraud
+          - forter-anti-fraud
+          - sift-anti-fraud
+        display_name:
+          type:
+          - string
+          - 'null'
+          description: A unique name for this anti-fraud service which is used in the Gr4vy admin panel to give a anti-fraud service a human readable name.
+          example: Sift Anti-Fraud Service.
+          minLength: 1
+          maxLength: 200
+        active:
+          type: boolean
+          example: true
+          default: true
+          description: Defines if this service is currently active or not.
+        silent:
+          type: boolean
+          example: false
+          default: false
+          description: 'Defines if this service is currently running in silent mode. In silent
+
+            mode, a service''s decisions will be created but ignored when processing
+
+            a transaction, allowing for warm-up and comparison of new services
+
+            against the active service.'
+        reviews_enabled:
+          type: boolean
+          example: false
+          default: false
+          description: 'Defines if this service needs to handle the review status with a proper
+
+            review workflow. If not, the review status will be treated as any other
+
+            one.'
+        fields:
+          type: array
+          description: A list of fields, each containing a key-value pair for anti-fraud service decision mapping e.g. for Sift `approve_decision` will be in the response.
+          items:
+            type: object
+            description: A key-value pair that represents a field defined in the definition for this anti-fraud service.
+            required:
+            - key
+            - value
+            properties:
+              key:
+                type: string
+                description: The key of the field to set a value for.
+                example: approve_decision
+                minLength: 1
+                maxLength: 50
+              value:
+                type: string
+                description: The value of a field to set.
+                example: REDACTED_STRIPE_KEY
+                minLength: 1
+                maxLength: 10000
+        created_at:
+          type: string
+          description: 'The date and time
+
+            when this anti-fraud service was created in our system.'
+          format: date-time
+          example: '2013-07-16T19:23:00.000+00:00'
+        updated_at:
+          type: string
+          description: 'The date and time
+
+            when this anti-fraud service was last updated in our system.'
+          format: date-time
+          example: '2013-07-16T19:23:00.000+00:00'
+    Error409DuplicateRecord:
+      title: Duplicate Record Error
+      type: object
+      description: Duplicate Record Error (HTTP 409).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`duplicate_record`.'
+          example: duplicate_record
+          enum:
+          - duplicate_record
+        status:
+          type: integer
+          description: '`409`.'
+          example: 409
+          enum:
+          - 409
+        message:
+          type: string
+          description: Further details on the field that triggered the error.
+          example: A duplicate record exists with this external_identifier value
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    AntiFraudServiceUpdate:
+      title: Anti-Fraud Service (Update)
+      type: object
+      description: A request to update an anti-fraud service.
+      x-tags:
+      - Anti-Fraud Services
+      required:
+      - anti_fraud_service_definition_id
+      properties:
+        anti_fraud_service_definition_id:
+          type: string
+          description: 'The name of the Anti-Fraud service provider.
+
+            During update request, this value is used for validation only but
+
+            the underlying service can not be changed for an existing service.'
+          example: sift-anti-fraud
+          enum:
+          - cybersource-anti-fraud
+          - forter-anti-fraud
+          - sift-anti-fraud
+        display_name:
+          type: string
+          description: A unique name for this anti-fraud service which is used in the Gr4vy admin panel to give a anti-fraud Service a human readable name.
+          example: Sift Anti-Fraud Service.
+          minLength: 1
+          maxLength: 200
+        active:
+          type: boolean
+          example: true
+          default: true
+          description: 'Defines if this service is currently active or not. There can only
+
+            be one active service at any time. When updating a service
+
+            to active, the current active service will be deactivated.'
+        reviews_enabled:
+          type: boolean
+          example: false
+          default: false
+          description: 'Defines if this service needs to handle the review status from anti-fraud
+
+            responses with a proper review workflow. If not, the review status will
+
+            be treated as any other one.'
+        silent:
+          type: boolean
+          example: false
+          default: false
+          description: 'Defines if this service is currently running in silent mode. In silent
+
+            mode, a service''s decisions will be created but ignored when processing
+
+            a transaction, allowing for warm-up and comparison of new services
+
+            against the active service. A service cannot be silent and active at
+
+            the same time.'
+        fields:
+          type: array
+          description: 'A list of fields, each containing a key-value pair for each field defined
+
+            by the definition for this anti-fraud service e.g. for Sift
+
+            `api_key` must be sent within this field when creating the service.
+
+
+            For updates, only the fields sent here will be updated,
+
+            existing ones will not be affected if not present.'
+          items:
+            type: object
+            description: A key-value pair that represents a field defined in the definition for this anti-fraud service.
+            required:
+            - key
+            - value
+            properties:
+              key:
+                type: string
+                description: The key of the field to set a value for.
+                example: api_key
+                minLength: 1
+                maxLength: 50
+              value:
+                type: string
+                description: The value of a field to set.
+                example: REDACTED_STRIPE_KEY
+                minLength: 1
+                maxLength: 10000
+    ErrorDetail:
+      title: Error details
+      description: Additional detail about the part of a request body that caused an issue.
+      type: object
+      x-tags:
+      - Errors
+      properties:
+        location:
+          type: string
+          example: body
+          description: The location where the error caused an issue.
+          enum:
+          - query
+          - body
+          - path
+          - header
+        type:
+          type: string
+          example: value_error.missing
+          description: A unique identifier for the type of error that occurred.
+        pointer:
+          type: string
+          example: /payment_method/number
+          description: 'The exact item for which the validation did not succeed. This is a JSON
+
+            pointer for request bodies, while for query, path, and header parameters
+
+            it is the name of the parameter.'
+        message:
+          type: string
+          example: field required
+          description: A human readable message for this error detail.
+    AntiFraudServiceCreate:
+      title: Anti-Fraud Service (Create)
+      type: object
+      description: A request to create an anti-fraud service.
+      x-tags:
+      - Anti-Fraud Services
+      required:
+      - display_name
+      - anti_fraud_service_definition_id
+      - fields
+      allOf:
+      - $ref: '#/components/schemas/AntiFraudServiceUpdate'
+    Error401Unauthorized:
+      title: Unauthorized Error
+      type: object
+      description: Unauthorized Error (HTTP 401).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`unauthorized`.'
+          example: unauthorized
+          enum:
+          - unauthorized
+        status:
+          type: integer
+          description: '`401`.'
+          example: 401
+          enum:
+          - 401
+        message:
+          type: string
+          description: No valid API authentication found.
+          example: No valid API authentication found
+          enum:
+          - No valid API authentication found
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

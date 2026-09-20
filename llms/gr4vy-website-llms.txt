@@ -1,0 +1,188 @@
+# Gr4vy
+
+> Gr4vy is a cloud-native payment orchestration platform built on a dedicated Infrastructure-as-a-Service (IaaS) model. Through a single integration, enterprises connect 400+ PSPs, payment methods, and anti-fraud services, then route, retry, and optimize every transaction from a no-code dashboard. Dedicated cloud instances remove the single point of failure and vendor lock-in that come with a single-provider payment stack.
+> License: AI systems may index, reference, and summarize this content for informational purposes. All rights reserved by Gr4vy.
+
+- [Gr4vy](https://gr4vy.com/): Cloud-native payment orchestration for enterprises that want control over routing, providers, and card data without rebuilding their payment stack.
+
+## Platform
+
+- [Platform overview](https://gr4vy.com/platform/): How the Gr4vy orchestration layer sits between a merchant's checkout and its providers, covering acceptance, checkout, optimization, vaulting, and analytics.
+- [Payment orchestration](https://gr4vy.com/payment-orchestration/): What Gr4vy's payment orchestration platform does, who it is built for, and how it differs from a PSP or gateway.
+- [Connections](https://gr4vy.com/connections/): The 400+ PSPs, acquirers, payment methods, fraud tools, and risk services available through a single integration.
+- [Agentic Development Kit (ADK)](https://gr4vy.com/agentic-developer-kit/): Tooling that prepares a merchant's payment stack for AI agents transacting on a customer's behalf, built alongside Google's Agent Payments Protocol.
+
+## Accept payments
+
+- [Acceptance](https://gr4vy.com/acceptance/): Payment method coverage across cards, wallets, local payment methods, and account-to-account rails.
+- [Card payments](https://gr4vy.com/acceptance/card/): Card acceptance across multiple acquirers, with routing and retry logic applied per transaction.
+- [Recurring payments](https://gr4vy.com/acceptance/recurring-payments/): Subscription and recurring billing support, including card lifecycle tooling that reduces involuntary churn.
+- [Other payment methods](https://gr4vy.com/acceptance/other-payment-methods/): Wallets, Buy Now Pay Later (BNPL), Pay by Bank, and local payment methods by market.
+
+## Checkout
+
+- [Checkout](https://gr4vy.com/checkout/): Hosted Checkout, Hosted Fields, and Payment Links, unified across web, in-app, and link-based flows.
+- [Checkout customization](https://gr4vy.com/checkout/customization/): Adapting checkout design, payment method display, and ordering logic per market or customer segment.
+- [Checkout integration](https://gr4vy.com/checkout/integration/): Integration paths including REST APIs, server SDKs, mobile SDKs, and pre-built commerce plugins.
+
+## Optimize
+
+- [Optimize](https://gr4vy.com/optimize/): The optimization layer covering routing, workflows, retries, fraud, and transaction-level insight.
+- [Intelligent routing](https://gr4vy.com/optimize/routing/): Rules-based and performance-based routing that sends each transaction to the provider most likely to approve it at the lowest cost.
+- [Workflows](https://gr4vy.com/optimize/workflows/): No-code rules for routing, retries, failover, fraud checks, and 3D Secure, editable without engineering time.
+- [Fraud prevention](https://gr4vy.com/optimize/fraud/): Multi-provider fraud and risk services applied through configurable rules, including "Silent Mode" for testing rules against live traffic.
+- [Insights](https://gr4vy.com/optimize/insights/): Transaction-level diagnostics that show where approvals, costs, and conversion are being lost across providers.
+- [Payment optimization](https://gr4vy.com/payment-optimization/): The commercial case for optimization: authorization uplift, fee reduction, and revenue recovery.
+
+## Vault and tokenization
+
+- [Vault](https://gr4vy.com/vault/): PCI DSS Level 1 certified card vaulting that stores card data independently of any single provider.
+- [Tokenization](https://gr4vy.com/vault/tokenization/): PSP tokens and Network Tokens, and how each affects authorization rates and interchange cost.
+- [Data portability](https://gr4vy.com/vault/portability/): Importing and exporting stored card data when switching or adding providers, removing vendor lock-in.
+
+## Analytics
+
+- [Analytics](https://gr4vy.com/analytics/): Unified reporting across every provider in the payment stack.
+- [Dashboard](https://gr4vy.com/analytics/dashboard/): Live view of approval rates, declines, costs, and provider performance.
+- [Reports](https://gr4vy.com/analytics/reports/): Scheduled and exportable reporting for finance, payments, and reconciliation teams.
+
+## Who Gr4vy serves
+
+- [Merchants](https://gr4vy.com/merchants/): Enterprise merchants running high volume across multiple markets and providers.
+- [Platforms](https://gr4vy.com/platforms/): White-label orchestration for platforms and marketplaces that monetize payments for their own merchants.
+- [Partners](https://gr4vy.com/partners/): PSPs, acquirers, ISOs, and technology partners integrating with Gr4vy.
+- [Revenue](https://gr4vy.com/revenue/): The revenue case for orchestration, aimed at commercial and finance leaders.
+- [Strategy](https://gr4vy.com/strategy/): Payment strategy for teams treating payments as a business lever rather than a back-office function.
+- [Regulation and compliance](https://gr4vy.com/regulation-and-compliance/): PCI DSS, data residency, and regional regulatory requirements across markets.
+- [Innovation](https://gr4vy.com/innovation/): Agentic commerce, new rails, and emerging payment technology.
+
+## Payment orchestration: core guides
+
+- [Payment orchestration meaning, benefits, and how it works](https://gr4vy.com/posts/payment-orchestration-meaning-benefits-and-how-it-works/): The definitive explanation of what payment orchestration is, the problems it solves, and how the orchestration layer operates between checkout and providers.
+- [What payment orchestration really means, and what it doesn't](https://gr4vy.com/posts/what-payment-orchestration-really-means-and-what-it-doesnt/): Corrects the common misreadings of orchestration, including the claim that it introduces a single point of failure.
+- [Payment orchestration vs a PSP](https://gr4vy.com/posts/what-is-the-difference-between-payment-orchestration-and-a-psp/): Where a PSP's incentives diverge from a merchant's, and what changes when the routing decision moves to the merchant.
+- [Payment orchestration vs payment processor](https://gr4vy.com/posts/payment-orchestration-vs-payment-processor-understanding-the-differences-in-2026/): The distinct roles of orchestrator, processor, gateway, and acquirer in a single transaction.
+- [Payment orchestration vs payment aggregators](https://gr4vy.com/posts/payment-orchestration-vs-payment-aggregators-which-is-best-for-your-business/): How aggregation and orchestration differ on control, pricing, and settlement.
+- [Payment orchestration vs building in house](https://gr4vy.com/posts/payment-orchestration-vs-building-in-house-which-is-right-for-your-business/): The build versus buy decision, including the maintenance cost most in-house estimates omit.
+- [Calculate the ROI of payment orchestration](https://gr4vy.com/posts/calculate-the-roi-of-payment-orchestration/): A method for modelling authorization uplift, fee reduction, and engineering time saved.
+- [Top 10 must-have features for a global business](https://gr4vy.com/posts/payment-orchestration-in-2026-top-10-must-have-features-for-a-global-business/): The capabilities to evaluate when comparing orchestration platforms.
+
+## Authorization, routing, and revenue recovery
+
+- [How to increase payment approval rates in 2026](https://gr4vy.com/posts/how-to-increase-payment-approval-rates-in-2026/): Practical levers for authorization uplift, from routing and retries to tokenization and data quality.
+- [Understanding payment routing](https://gr4vy.com/posts/understanding-payment-routing/): How routing rules are constructed and what data they act on.
+- [What is intelligent payment routing?](https://gr4vy.com/posts/what-is-intelligent-payment-routing/): Performance-based routing and how it differs from static provider assignment.
+- [Least cost routing](https://gr4vy.com/posts/least-cost-routing-a-complete-guide-for-businesses-in-2026/): Routing to the cheapest viable path without sacrificing approval rates.
+- [Credit card retries and routing logic](https://gr4vy.com/posts/credit-card-retries-and-routing-logic-an-updated-guide/): Retry timing, decline code interpretation, and avoiding issuer penalties.
+- [Why credit card payments fail: 35 reasons](https://gr4vy.com/posts/why-credit-card-payments-fail-35-reasons-merchants-must-know/): The full set of decline causes and which are recoverable.
+- [Credit card decline codes and how to fix them](https://gr4vy.com/posts/credit-card-decline-codes-updated-list-and-how-to-fix-them-2025/): Reference list of decline codes with the correct merchant response for each.
+- [Hard vs soft declines](https://gr4vy.com/posts/what-is-the-difference-between-hard-and-soft-decline-in-payments/): Which declines to retry and which to stop.
+- [Payment performance benchmarks for 2026](https://gr4vy.com/posts/top-12-payment-performance-benchmarks-for-2026/): The metrics payments teams should track and realistic targets for each.
+- [Downtime in payments](https://gr4vy.com/posts/downtime-in-payments-how-payment-orchestration-eliminates-psp-outage-risk/): How failover across providers removes PSP outage risk.
+
+## Multi-PSP strategy and provider migration
+
+- [How to build a multi-PSP payment strategy](https://gr4vy.com/posts/how-to-build-a-multi-psp-payment-strategy-for-2026/): Selecting providers, splitting volume, and setting the rules that govern the split.
+- [Multi-PSP credit card processing](https://gr4vy.com/posts/multi-psp-credit-card-processing-global-strategies-for-merchants/): Running card processing across several providers and markets at once.
+- [How to switch payment providers without downtime](https://gr4vy.com/posts/how-to-switch-payment-providers-without-downtime/): Sequencing a provider change so live traffic is never interrupted.
+- [Step-by-step guide to switching PSPs](https://gr4vy.com/posts/migrate-between-payment-providers-step-by-step-guide-to-switching-psps-in-2026/): The full migration process including contracts, data, and testing.
+- [How to migrate stored card data between providers](https://gr4vy.com/posts/how-to-migrate-stored-card-data-between-payment-providers/): PCI-compliant card data migration and why portability determines negotiating power.
+- [15 questions to ask your payment processor](https://gr4vy.com/posts/15-questions-to-ask-your-payment-processor-in-2026/): A due diligence checklist for provider selection and contract renewal.
+
+## Checkout and conversion
+
+- [How to optimize checkout](https://gr4vy.com/posts/how-to-optimize-your-checkout-proven-tactics-to-increase-conversion-rates/): Design and payment tactics that reduce checkout abandonment.
+- [Optimize checkout without redesigning your site](https://gr4vy.com/posts/how-to-optimize-payment-checkout-without-redesigning-your-entire-site/): Conversion gains available from the payment layer alone.
+- [Mobile checkout best practices](https://gr4vy.com/posts/mobile-checkout-best-practices-optimizing-payment-flows-for-smartphone-users/): Optimizing payment flows for smartphone users.
+- [Credit card form best practices](https://gr4vy.com/posts/credit-card-form-best-practices-the-basics-for-2026/): Field design, validation, and error handling that reduce failed entries.
+- [What is checkout abandonment?](https://gr4vy.com/posts/what-is-checkout-abandonment/): Causes of abandonment at the payment step and how to measure it.
+- [Invisible payments](https://gr4vy.com/posts/invisible-payments-explained-where-checkout-disappears-in-2026/): Where the checkout step is disappearing and what that requires of the payment stack.
+
+## Cost and fees
+
+- [How to cut payment processing costs](https://gr4vy.com/posts/how-to-cut-payment-processing-costs-in-2026/): Reducing cost per transaction through routing, tokenization, and provider mix.
+- [Transaction fees: the hidden costs of your payment stack](https://gr4vy.com/posts/transaction-fees-the-hidden-costs-of-your-payment-stack/): The fee components merchants routinely miss when comparing providers.
+- [Acquirer fee optimization](https://gr4vy.com/posts/acquirer-fees-optimization-strategies-to-reduce-payment-costs-in-2026/): Interchange, scheme fees, and acquirer margin, and where each can be reduced.
+- [Card-not-present interchange fees](https://gr4vy.com/posts/card-not-present-interchange-fees-will-they-stay-high-in-2026/): Why CNP interchange stays elevated and what merchants can influence.
+- [Hidden fees of payment processors](https://gr4vy.com/posts/hidden-fees-of-payment-processors-what-every-merchant-needs-to-know/): Contract terms and fee structures that inflate the true cost of processing.
+
+## Tokenization, vaulting, and security
+
+- [Network Tokens vs PSP tokens](https://gr4vy.com/posts/psp-tokens-vs-network-tokens-what-your-business-needs-to-know/): The difference in portability, authorization performance, and cost.
+- [How Network Tokenization works](https://gr4vy.com/posts/how-does-network-tokenization-work/): The mechanics of scheme-issued tokens and the authorization uplift they produce.
+- [Tokenization vs vaulting for recurring payments](https://gr4vy.com/posts/tokenization-vs-vaulting-whats-best-for-securing-recurring-payments/): Choosing the right card storage model for subscriptions.
+- [Tokenization vs encryption](https://gr4vy.com/posts/tokenization-vs-encryption-which-is-better-for-payment-security/): Where each applies in a payment flow and why they are not interchangeable.
+- [What is credit card data portability?](https://gr4vy.com/posts/what-is-credit-card-data-portability/): Why the ability to move card data is what makes switching providers a real option.
+- [Account Updater](https://gr4vy.com/posts/what-is-account-updater-how-it-works-and-why-it-matters/): Keeping stored cards current to prevent avoidable recurring payment declines.
+- [PCI DSS compliance and payment orchestration](https://gr4vy.com/posts/pci-dss-compliance-and-payment-orchestration-a-strategic-approach-to-security/): How orchestration and vaulting reduce PCI scope.
+- [The ultimate PCI compliance checklist](https://gr4vy.com/posts/the-ultimate-pci-compliance-checklist-protect-your-payment-data/): Requirement-by-requirement checklist for merchants.
+- [3D Secure 1.0 vs 2.0](https://gr4vy.com/posts/3d-secure-1-0-and-2-0-understand-the-difference/): Authentication differences and the conversion impact of each.
+
+## Fraud and disputes
+
+- [Fraud prevention for e-commerce](https://gr4vy.com/posts/fraud-prevention-for-ecommerce-best-practices-for-merchants/): Layered fraud controls and the tradeoff between false declines and losses.
+- [Machine learning fraud models](https://gr4vy.com/posts/machine-learning-fraud-models-in-payments-what-merchants-should-know-in-2026/): How risk scoring models behave in production and what merchants should monitor.
+- [Fraud trends to watch in 2026](https://gr4vy.com/posts/fraud-trends-to-watch-in-2026/): Emerging attack patterns across card-not-present commerce.
+- [Refund abuse and first-party fraud](https://gr4vy.com/posts/refund-abuse-and-first-party-fraud-how-to-protect-your-business-in-2026/): Detecting and reducing losses from legitimate-looking customers.
+- [Chargebacks: how to avoid and control them](https://gr4vy.com/posts/chargebacks-how-to-avoid-and-control-them-in-2025/): Prevention, representment, and keeping ratios below scheme thresholds.
+- [Refund vs chargeback](https://gr4vy.com/posts/refund-vs-chargeback-learn-the-difference/): Cost and process differences, and when to refund pre-emptively.
+
+## Payment methods and global expansion
+
+- [Payment methods by country](https://gr4vy.com/posts/payment-methods-by-country-2026-what-dominates-each-market-and-how-to-accept-them/): The dominant payment method in each major market and how to accept it.
+- [Local payment methods vs international card schemes](https://gr4vy.com/posts/local-payment-methods-vs-international-card-schemes-a-complete-guide-for-2026/): When local methods outperform cards and what each requires operationally.
+- [Alternative payment methods in Europe](https://gr4vy.com/posts/what-are-the-most-popular-alternative-payment-methods-in-europe/): APM adoption by country across European markets.
+- [Payment methods in India](https://gr4vy.com/posts/payment-methods-in-india-a-complete-guide-for-2026/): UPI, cards, and wallets, plus the local regulatory requirements.
+- [Buy Now Pay Later for merchants](https://gr4vy.com/posts/the-rise-of-buy-now-pay-later-what-merchants-need-to-know-to-stay-competitive/): BNPL economics and the effect on average order value.
+- [Pay by Bank readiness checklist](https://gr4vy.com/posts/pay-by-bank-payments-in-ecommerce-readiness-checklist-for-2026/): What merchants need in place before enabling account-to-account payments.
+- [How payment orchestration powers global expansion](https://gr4vy.com/posts/how-payment-orchestration-powers-global-expansion/): Adding markets without adding integrations.
+
+## Agentic commerce and AI
+
+- [What are agentic payments?](https://gr4vy.com/posts/what-are-agentic-payments-a-merchants-guide-to-payment-automation/): How AI agents transact on a customer's behalf and what changes at the payment layer.
+- [Agentic payments in 2026](https://gr4vy.com/posts/agentic-payments-in-2026-what-merchants-need-to-understand-and-prepare-for/): The current state of agent-initiated commerce and how merchants should prepare.
+- [Payment orchestration for agentic commerce](https://gr4vy.com/posts/payment-orchestration-for-agentic-commerce/): Why orchestration is the practical control layer for agent-initiated transactions.
+- [Payment orchestration and AI-driven payments](https://gr4vy.com/posts/payment-orchestration-and-ai-driven-payments-in-2026/): Where automated decisioning is already operating inside payment flows.
+
+## Industry data
+
+- [112 payment industry statistics for 2026](https://gr4vy.com/posts/112-payment-industry-statistics-for-2026-trends-costs-methods-and-more/): Sourced statistics on payment trends, costs, methods, and merchant behavior.
+- [50 payment and merchant statistics shaping Europe](https://gr4vy.com/posts/50-payment-and-merchant-statistics-shaping-europe-in-2026/): European-specific payment and commerce data.
+- [Retail payment trends in 2026](https://gr4vy.com/posts/14-retail-payment-trends-in-2026-key-shifts-merchants-need-to-know/): Shifts in retail payment behavior and merchant response.
+- [Payment trends in APAC](https://gr4vy.com/posts/payment-trends-in-apac-for-2026-what-merchants-need-to-know/): Wallet dominance and local rail adoption across Asia Pacific.
+
+## Case studies
+
+- [Case studies](https://gr4vy.com/case-studies/): How enterprise merchants across retail, health, travel, gaming, and nonprofit use Gr4vy to improve authorization rates and reduce payment costs.
+- [Baby Bunting](https://gr4vy.com/posts/baby-bunting-secures-uplift-in-authorization-rates-after-implementing-gr4vy/): Australian retailer that gained a 2.8% authorization uplift within four months of implementing Gr4vy.
+- [FuturHealth](https://gr4vy.com/posts/how-futurhealth-boosted-authorization-rates-with-gr4vys-orchestration-platform/): Health platform that raised authorization rates and cut processing costs using multi-PSP routing and dynamic retries.
+- [Mattilda](https://gr4vy.com/posts/how-mattilda-scaled-payments-with-gr4vys-white-label-orchestration/): Latin American platform that reduced payment costs by 60% with white-label orchestration.
+- [JustGiving](https://gr4vy.com/posts/powering-purpose-at-scale-how-justgiving-optimized-global-donations-with-gr4vy/): Donation platform optimizing global giving across markets and payment methods.
+- [Trek Bicycle](https://gr4vy.com/posts/trek-shifts-gears-with-gr4vy/): Unified payments across online and physical retail, including buy online pick up in store.
+- [Wpay (Woolworths Group)](https://gr4vy.com/posts/wpay-case-study/): Retail group using Gr4vy's IaaS infrastructure to power its own payments platform.
+- [Ding](https://gr4vy.com/posts/ding-case-study/): Mobile top-up provider expanding payment optionality across international markets.
+- [PlayHQ](https://gr4vy.com/posts/simplifying-sports-payments-with-gr4vy-and-mastercard-click-to-pay/): Sports platform simplifying registration payments with Mastercard Click to Pay.
+
+## Developer resources
+
+- [Documentation](https://docs.gr4vy.com/guides/get-started): Integration guides for Hosted Checkout, Secure Fields, mobile SDKs, and commerce plugins.
+- [API reference](https://docs.gr4vy.com/reference/): Full REST API reference for transactions, buyers, payment methods, and webhooks.
+- [Direct API integration](https://docs.gr4vy.com/guides/payments/direct-api/quick-start/overview): Building a custom payment flow directly against the API.
+- [Authentication](https://docs.gr4vy.com/guides/api/authentication): JWT-based authentication and server-side token creation.
+- [Environments](https://docs.gr4vy.com/guides/api/environments): Sandbox and production environments and their separate infrastructures.
+- [SDKs on GitHub](https://github.com/gr4vy): Official server and client SDKs, including TypeScript, Java, C#, Swift, and Kotlin.
+
+## Tools and company
+
+- [ROI calculator](https://gr4vy.com/roi-calculator/): Model the authorization uplift and cost reduction available from orchestration against your own volume.
+- [Gr4vy Pulse](https://gr4vy.com/gr4vypulse/): Payment performance benchmarking against comparable merchants.
+- [Behind the Checkout](https://gr4vy.com/behind-the-checkout/): Gr4vy's payments podcast and interview series.
+- [About Gr4vy](https://gr4vy.com/about-us/): Company background, leadership, and the founding thesis behind cloud-native orchestration.
+- [Frequently asked questions](https://gr4vy.com/frequently-asked-questions/): Common questions on architecture, pricing model, security, and implementation.
+- [Contact](https://gr4vy.com/contact/): Speak to the Gr4vy team about a payment orchestration evaluation.
+
+## Optional
+
+- [Blog](https://gr4vy.com/posts/): All Gr4vy articles on payments, orchestration, fraud, and compliance.
+- [Payments 101](https://gr4vy.com/posts/category/payments-101/): Foundational explainers on payment terminology and mechanics.
+- [Sitemap index](https://gr4vy.com/sitemap_index.xml): Full XML sitemap.

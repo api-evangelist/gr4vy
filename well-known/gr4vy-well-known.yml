@@ -1,0 +1,59 @@
+generated: '2026-09-20'
+method: probed
+source: live probes of /.well-known/* on gr4vy.com, www.gr4vy.com and docs.gr4vy.com
+note: docs.gr4vy.com (Mintlify) serves a real A2A agent card and an Agent Skills discovery index. No security.txt,
+  OIDC/OAuth metadata, api-catalog or ai-plugin.json is served on any host. The API host is per-tenant (api.{id}.gr4vy.app)
+  so there is no shared API host to probe; www.gr4vy.com 301s to the apex.
+hosts:
+- host: docs.gr4vy.com
+  documents:
+  - path: /.well-known/agent-card.json
+    status: 200
+    file: well-known/gr4vy-agent-card.json
+  - path: /.well-known/agent-skills/index.json
+    status: 200
+    file: well-known/gr4vy-agent-skills-index.json
+    note: Agent Skills discovery 0.2.0 index
+  - path: /.well-known/agent.json
+    status: 404
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+- host: gr4vy.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+- host: www.gr4vy.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 301
+    note: redirects to gr4vy.com, which 404s
+  - path: /.well-known/openid-configuration
+    status: 301
+    note: redirects to gr4vy.com, which 404s
+  - path: /.well-known/oauth-authorization-server
+    status: 301
+    note: redirects to gr4vy.com, which 404s
+  - path: /.well-known/api-catalog
+    status: 301
+    note: redirects to gr4vy.com, which 404s
+  - path: /.well-known/ai-plugin.json
+    status: 301
+    note: redirects to gr4vy.com, which 404s

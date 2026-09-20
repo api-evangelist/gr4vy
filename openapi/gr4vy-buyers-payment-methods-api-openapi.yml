@@ -1,0 +1,1257 @@
+openapi: 3.2.0
+info:
+  title: Gr4vy Buyers - Payment methods API
+  description: The Gr4vy API.
+  version: 1.0.0
+tags:
+- name: Buyers - Payment methods
+  description: Query payment methods for buyers.
+paths:
+  /buyers/payment-methods:
+    get:
+      tags:
+      - Buyers - Payment methods
+      summary: List payment methods for a buyer
+      description: List all the stored payment methods for a specific buyer.
+      operationId: list_buyer_payment_methods
+      security:
+      - OAuth2PasswordBearer:
+        - payment-methods.read
+        - embed
+      parameters:
+      - name: buyer_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          description: The ID of the buyer to query payment methods for.
+          examples:
+          - fe26475d-ec3e-4884-9553-f7356683f7f9
+          title: Buyer Id
+        description: The ID of the buyer to query payment methods for.
+      - name: buyer_external_identifier
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The external identifier of the buyer to query payment methods for.
+          examples:
+          - buyer-12345
+          title: Buyer External Identifier
+        description: The external identifier of the buyer to query payment methods for.
+      - name: sort_by
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - const: last_used_at
+            type: string
+          - const: usage_count
+            type: string
+          - const: cit_last_used_at
+            type: string
+          - const: cit_usage_count
+            type: string
+          - type: 'null'
+          description: The field to sort the payment methods by.
+          examples:
+          - last_used_at
+          title: Sort By
+        description: The field to sort the payment methods by.
+      - name: order_by
+        in: query
+        required: false
+        schema:
+          enum:
+          - asc
+          - desc
+          type: string
+          description: The direction to sort the payment methods in.
+          examples:
+          - desc
+          default: desc
+          title: Order By
+        description: The direction to sort the payment methods in.
+      - name: country
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            pattern: ^[A-Z]{2}$
+            examples:
+            - DE
+            - GB
+            - US
+          - type: 'null'
+          description: The country code to filter payment methods by. This only applies to payment methods with a `country` value.
+          examples:
+          - US
+          title: Country
+        description: The country code to filter payment methods by. This only applies to payment methods with a `country` value.
+      - name: currency
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            pattern: ^[A-Z]{3}$
+            examples:
+            - EUR
+            - GBP
+            - USD
+          - type: 'null'
+          description: The currency code to filter payment methods by. This only applies to payment methods with a `currency` value.
+          examples:
+          - USD
+          title: Currency
+        description: The currency code to filter payment methods by. This only applies to payment methods with a `currency` value.
+      - name: x-gr4vy-merchant-account-id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The ID of the merchant account to use for this request.
+          examples:
+          - default
+          title: X-Gr4Vy-Merchant-Account-Id
+        description: The ID of the merchant account to use for this request.
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentMethodSummaries'
+        '400':
+          description: The request was invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+        '401':
+          description: The request was unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401'
+        '403':
+          description: The credentials were invalid or the caller did not have permission to act on the resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error403'
+        '404':
+          description: The resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+        '405':
+          description: The request method was not allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error405'
+        '409':
+          description: A duplicate record was found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error409'
+        '425':
+          description: The request was too early.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error425'
+        '429':
+          description: Too many requests were made.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error429'
+        '500':
+          description: The server encountered an error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error500'
+        '502':
+          description: The server encountered an error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error502'
+        '504':
+          description: The server encountered an error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error504'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-speakeasy-name-override: list
+      x-speakeasy-group: buyers.payment-methods
+components:
+  schemas:
+    Error401:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `unauthorized`
+          default: unauthorized
+          examples:
+          - unauthorized
+        status:
+          type: integer
+          title: Status
+          description: Always `401`.
+          default: 401
+          examples:
+          - 401
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: No valid API authentication found
+          examples:
+          - No valid API authentication found
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error401
+    Mode:
+      type: string
+      enum:
+      - card
+      - redirect
+      - applepay
+      - googlepay
+      - checkout-session
+      - click-to-pay
+      - gift-card
+      - bank
+      - paze
+      title: Mode
+    Error403:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `forbidden`
+          default: forbidden
+          examples:
+          - forbidden
+        status:
+          type: integer
+          title: Status
+          description: Always `403`.
+          default: 403
+          examples:
+          - 403
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error403
+    ErrorLocation:
+      type: string
+      enum:
+      - query
+      - body
+      - path
+      - header
+      - unknown
+      title: ErrorLocation
+    Error500:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `server_error`
+          default: server_error
+          examples:
+          - server_error
+        status:
+          type: integer
+          title: Status
+          description: Always `500`.
+          default: 500
+          examples:
+          - 500
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error500
+    Error405:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `method_not_allowed`
+          default: method_not_allowed
+          examples:
+          - method_not_allowed
+        status:
+          type: integer
+          title: Status
+          description: Always `405`.
+          default: 405
+          examples:
+          - 405
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Method Not Allowed
+          examples:
+          - Method Not Allowed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error405
+    PaymentMethodSummary:
+      properties:
+        type:
+          type: string
+          const: payment-method
+          title: Type
+          description: Always `payment-method`.
+          default: payment-method
+          examples:
+          - payment-method
+        approval_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Approval Url
+          description: The optional URL that the buyer needs to be redirected to to further authorize their payment.
+          examples:
+          - https://gr4vy.app/redirect/12345
+        country:
+          anyOf:
+          - type: string
+            pattern: ^[A-Z]{2}$
+            examples:
+            - DE
+            - GB
+            - US
+          - type: 'null'
+          title: Country
+          description: The 2-letter ISO code of the country this payment method can be used for. If this value is null the payment method may be used in multiple countries.
+          examples:
+          - US
+        currency:
+          anyOf:
+          - type: string
+            pattern: ^[A-Z]{3}$
+            examples:
+            - EUR
+            - GBP
+            - USD
+          - type: 'null'
+          title: Currency
+          description: The ISO-4217 currency code that this payment method can be used for. If this value is null the payment method may be used for multiple currencies.
+          examples:
+          - USD
+        details:
+          anyOf:
+          - $ref: '#/components/schemas/PaymentMethodDetailsCard'
+          - type: 'null'
+          description: Details for credit or debit card payment method.
+        expiration_date:
+          anyOf:
+          - type: string
+            maxLength: 5
+            minLength: 5
+            pattern: ^\d{2}/\d{2}$
+          - type: 'null'
+          title: Expiration Date
+          description: The expiration date for the payment method.
+          examples:
+          - 12/30
+        fingerprint:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Fingerprint
+          description: The unique hash derived from the payment method identifier (e.g. card number).
+          examples:
+          - a50b85c200ee0795d6fd33a5c66f37a4564f554355c5b46a756aac485dd168a4
+        label:
+          anyOf:
+          - type: string
+            maxLength: 320
+            minLength: 0
+          - type: 'null'
+          title: Label
+          description: A label for the card or the account. For a paypal payment method this is the user's email address. For a card it is the last 4 digits of the card.
+          examples:
+          - '1234'
+        last_replaced_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Replaced At
+          description: The date and time when this card was last replaced by the account updater.
+          examples:
+          - '2013-07-16T19:23:00.000+00:00'
+        method:
+          $ref: '#/components/schemas/Method'
+          description: The type of this payment method.
+          examples:
+          - card
+        mode:
+          anyOf:
+          - $ref: '#/components/schemas/Mode'
+          - type: 'null'
+          description: The mode to use with this payment method.
+          examples:
+          - card
+        scheme:
+          anyOf:
+          - $ref: '#/components/schemas/CardScheme'
+          - type: 'null'
+          description: The scheme of the card. Only applies to card payments.
+          examples:
+          - visa
+        id:
+          type: string
+          format: uuid
+          title: Id
+          description: The ID for the payment method.
+          examples:
+          - ef9496d8-53a5-4aad-8ca2-00eb68334389
+        merchant_account_id:
+          type: string
+          title: Merchant Account Id
+          description: The ID of the merchant account this buyer belongs to.
+          examples:
+          - default
+        additional_schemes:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/CardScheme'
+            type: array
+          - type: 'null'
+          title: Additional Schemes
+          description: Additional schemes of the card besides the primary scheme. Only applies to card payment methods.
+          examples:
+          - - eftpos-australia
+        cit_last_used_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Cit Last Used At
+          description: The timestamp when this payment method was last used in a transaction for client initiated transactions.
+          examples:
+          - '2013-07-16T19:23:00.000+00:00'
+        cit_usage_count:
+          type: integer
+          title: Cit Usage Count
+          description: The number of times this payment method has been used in transactions for client initiated transactions.
+          examples:
+          - 50
+        has_replacement:
+          type: boolean
+          title: Has Replacement
+          description: Whether this card has a pending replacement that hasn't been applied yet.
+          examples:
+          - false
+        last_used_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Used At
+          description: The timestamp when this payment method was last used in a transaction.
+          examples:
+          - '2013-07-16T19:23:00.000+00:00'
+        usage_count:
+          type: integer
+          title: Usage Count
+          description: The number of times this payment method has been used in transactions.
+          examples:
+          - 100
+        scheme_transaction_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scheme Transaction Id
+          description: The scheme transaction identifier stored against this payment method.
+          examples:
+          - '123456789012345'
+        scheme_transaction_id_scheme:
+          anyOf:
+          - $ref: '#/components/schemas/CardScheme'
+          - type: 'null'
+          description: The scheme associated with scheme_transaction_id. Only applies to card payments.
+          examples:
+          - visa
+        transaction_link_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Transaction Link Id
+          description: The transaction link identifier stored against this payment method.
+          examples:
+          - '123456789012345'
+      additionalProperties: false
+      type: object
+      required:
+      - method
+      - id
+      - merchant_account_id
+      - cit_usage_count
+      - has_replacement
+      - usage_count
+      - scheme_transaction_id
+      - scheme_transaction_id_scheme
+      title: PaymentMethodSummary
+      description: 'Payment Method
+
+
+        A summary of a payment method.'
+    PaymentMethodDetailsCard:
+      properties:
+        bin:
+          anyOf:
+          - type: string
+            maxLength: 8
+            minLength: 6
+            pattern: ^\d+$
+          - type: 'null'
+          title: Bin
+        card_type:
+          anyOf:
+          - $ref: '#/components/schemas/CardType'
+          - type: 'null'
+        card_issuer_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Card Issuer Name
+      additionalProperties: false
+      type: object
+      title: PaymentMethodDetailsCard
+    Error404:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `not_found`
+          default: not_found
+          examples:
+          - not_found
+        status:
+          type: integer
+          title: Status
+          description: Always `404`.
+          default: 404
+          examples:
+          - 404
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: The resource could not be found
+          examples:
+          - The resource could not be found
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error404
+    Error425:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `too_early`
+          default: too_early
+          examples:
+          - too_early
+        status:
+          type: integer
+          title: Status
+          description: Always `425`.
+          default: 425
+          examples:
+          - 425
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error425
+    ErrorDetail:
+      properties:
+        location:
+          $ref: '#/components/schemas/ErrorLocation'
+          description: The part of the request where the property can be found that caused the error.
+          examples:
+          - body
+        pointer:
+          anyOf:
+          - type: string
+            format: json-pointer
+          - type: string
+          title: Pointer
+          description: A JSON pointer for the particular property that caused the error.
+          examples:
+          - /currency
+        message:
+          type: string
+          title: Message
+          description: A human-readdable explanation of the error.
+          examples:
+          - 'Unknown ISO 4217 currency code: USX'
+        type:
+          type: string
+          title: Type
+          description: The type of error that was raised for this property.
+          examples:
+          - value_error
+      additionalProperties: false
+      type: object
+      required:
+      - location
+      - pointer
+      - message
+      - type
+      title: ErrorDetail
+    Method:
+      type: string
+      enum:
+      - abitab
+      - affirm
+      - afterpay
+      - alipay
+      - alipayhk
+      - applepay
+      - arcuspaynetwork
+      - bacs
+      - bancontact
+      - bank
+      - bcp
+      - becs
+      - bitpay
+      - blik
+      - ach
+      - boleto
+      - boost
+      - breb
+      - capitec
+      - card
+      - cashapp
+      - cashappafterpay
+      - chaseorbital
+      - clearpay
+      - click-to-pay
+      - custom_push
+      - custom_redirect
+      - custom_tokenize
+      - dana
+      - dcb
+      - dlocal
+      - duitnow
+      - ebanx
+      - eckoh
+      - efecty
+      - eps
+      - everydaypay
+      - gcash
+      - gem
+      - gemds
+      - gift-card
+      - giropay
+      - givingblock
+      - gocardless
+      - googlepay
+      - googlepay_pan_only
+      - gopay
+      - grabpay
+      - ideal
+      - interac
+      - kakaopay
+      - kcp
+      - khipu
+      - klarna
+      - konbini
+      - latitude
+      - latitudeds
+      - laybuy
+      - linepay
+      - linkaja
+      - maybankqrpay
+      - mercadopago
+      - multibanco
+      - multipago
+      - nequi
+      - netbanking
+      - network-token
+      - nupay
+      - oney_10x
+      - oney_12x
+      - oney_3x
+      - oney_4x
+      - oney_6x
+      - onlinebankingcz
+      - onelink
+      - ovo
+      - oxxo
+      - p24
+      - pagoefectivo
+      - paybybank
+      - payid
+      - paymaya
+      - paysquad
+      - paypal
+      - paypaldirectorder
+      - paypalpaylater
+      - paypay
+      - payto
+      - payvalida
+      - paze
+      - picpay
+      - pix
+      - plaid
+      - pse
+      - rabbitlinepay
+      - razorpay
+      - rapipago
+      - redpagos
+      - scalapay
+      - sepa
+      - servipag
+      - seveneleven
+      - sezzle
+      - shopeepay
+      - singteldash
+      - smartpay
+      - sofort
+      - spei
+      - stitch
+      - swish
+      - stripe
+      - stripedd
+      - stripetoken
+      - tapi
+      - tapifintechs
+      - thaiqr
+      - touchngo
+      - truemoney
+      - trustly
+      - trustlyeurope
+      - upi
+      - venmo
+      - vipps
+      - waave
+      - webpay
+      - wechat
+      - wero
+      - yape
+      - zippay
+      title: Method
+    CardType:
+      type: string
+      enum:
+      - credit
+      - debit
+      - prepaid
+      title: CardType
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    PaymentMethodSummaries:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/PaymentMethodSummary'
+          type: array
+          title: Items
+          description: A list of items returned for this request.
+      type: object
+      required:
+      - items
+      title: PaymentMethodSummaries
+    CardScheme:
+      type: string
+      enum:
+      - accel
+      - amex
+      - bancontact
+      - carte-bancaire
+      - cirrus
+      - culiance
+      - dankort
+      - diners-club
+      - discover
+      - eftpos-australia
+      - elo
+      - hipercard
+      - jcb
+      - maestro
+      - mastercard
+      - mir
+      - nyce
+      - other
+      - pulse
+      - qcard
+      - rupay
+      - star
+      - uatp
+      - unionpay
+      - visa
+      title: CardScheme
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    Error409:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `duplicate_record`
+          default: duplicate_record
+          examples:
+          - duplicate_record
+        status:
+          type: integer
+          title: Status
+          description: Always `409`.
+          default: 409
+          examples:
+          - 409
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+        resource_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Resource Id
+          description: The ID of the conflicting resource.
+          examples:
+          - cdc70639-cb9c-4222-a73f-b8ce39f7821b
+      additionalProperties: false
+      type: object
+      title: Error409
+    Error504:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `gateway_timeout`
+          default: gateway_timeout
+          examples:
+          - gateway_timeout
+        status:
+          type: integer
+          title: Status
+          default: 504
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error504
+    Error502:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `bad_gateway`
+          default: bad_gateway
+          examples:
+          - bad_gateway
+        status:
+          type: integer
+          title: Status
+          description: Always `502`.
+          default: 502
+          examples:
+          - 502
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error502
+    Error429:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `too_many_requests`
+          default: too_many_requests
+          examples:
+          - too_many_requests
+        status:
+          type: integer
+          title: Status
+          description: Always `429`.
+          default: 429
+          examples:
+          - 429
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error429
+    Error400:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `bad_request`
+          default: bad_request
+          examples:
+          - bad_request
+        status:
+          type: integer
+          title: Status
+          description: Always `400`.
+          default: 400
+          examples:
+          - 400
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error400
+  securitySchemes:
+    OAuth2PasswordBearer:
+      type: oauth2
+      flows:
+        password:
+          scopes:
+            embed: Shorthand for all gr4vy embed related scopes
+            sessions.refresh: Refresh access-token
+            anti-fraud-service-definitions.read: Read Anti Fraud Service Definitions
+            anti-fraud-services.read: Read Anti Fraud Services
+            api-key-pairs.read: Read API Key Pairs
+            api-logs.read: Read API Logs
+            apple-pay-certificates.read: Read Apple Pay Certificates
+            audit-logs.read: Read Audit Logs
+            bin-checker.read: Read BIN Checker
+            buyers.read: Read Buyers
+            buyers.billing-details.read: Read Billing Details
+            card-scheme-definitions.read: Read Card Scheme Definitions
+            checkout-sessions.read: Read Checkout Sessions
+            connections.read: Read Connections
+            digital-wallets.read: Read Digital Wallets
+            flows.read: Read Flows
+            gift-card-service-definitions.read: Read Gift Card Service Definitions
+            gift-card-services.read: Read Gift Card Services
+            gift-cards.read: Read Gift Cards
+            merchant-accounts.read: Read Merchant Accounts
+            payment-links.read: Read Payment Links
+            payment-method-definitions.read: Read Payment Method Definitions
+            payment-methods.read: Read Payment Methods
+            payment-options.read: Read Payment Options
+            payment-service-definitions.read: Read Payment Service Definitions
+            payment-services.read: Read Payment Service
+            payouts.read: Read Payouts
+            reports.read: Read Reports
+            roles.read: Read Roles
+            three-ds-scenarios.read: Read 3DS Scenarios
+            transactions.read: Read Transactions
+            users.me.read: Read User Profile
+            vault-forward.read: Read Vault Forward
+            vault-forward-authentications.read: Read Vault Forward Authentications
+            vault-forward-configs.read: Read Vault Forward Configurations
+            vault-forward-definitions.read: Read Vault Forward Definitions
+            webhook-subscriptions.read: Read Webhook Subscriptions
+            business-contexts.read: Read Business Contexts
+            health-dashboard.read: Read Health Dashboard
+            metrics-explorer.read: Read Metrics Explorer
+            monitoring.read: Read Monitoring
+            reset.read: Read Reset
+            sessions.read: Read Sessions
+            users.read: Read Users
+            anti-fraud-service-definitions.write: Write Anti Fraud Service Definitions
+            anti-fraud-services.write: Write Anti Fraud Services
+            api-key-pairs.write: Write API Key Pairs
+            api-logs.write: Write API Logs
+            apple-pay-certificates.write: Write Apple Pay Certificates
+            audit-logs.write: Write Audit Logs
+            bin-checker.write: Write BIN Checker
+            buyers.write: Write Buyers
+            buyers.billing-details.write: Write Billing Details
+            card-scheme-definitions.write: Write Card Scheme Definitions
+            checkout-sessions.write: Write Checkout Sessions
+            connections.write: Write Connections
+            digital-wallets.write: Write Digital Wallets
+            flows.write: Write Flows
+            gift-card-service-definitions.write: Write Gift Card Service Definitions
+            gift-card-services.write: Write Gift Card Services
+            gift-cards.write: Write Gift Cards
+            merchant-accounts.write: Write Merchant Accounts
+            payment-links.write: Write Payment Links
+            payment-method-definitions.write: Write Payment Method Definitions
+            payment-methods.write: Write Payment Methods
+            payment-options.write: Write Payment Options
+            payment-service-definitions.write: Write Payment Service Definitions
+            payment-services.write: Write Payment Service
+            payouts.write: Write Payouts
+            reports.write: Write Reports
+            roles.write: Write Roles
+            three-ds-scenarios.write: Write 3DS Scenarios
+            transactions.write: Write Transactions
+            users.me.write: Write User Profile
+            vault-forward.write: Write Vault Forward
+            vault-forward-authentications.write: Write Vault Forward Authentications
+            vault-forward-configs.write: Write Vault Forward Configurations
+            vault-forward-definitions.write: Write Vault Forward Definitions
+            webhook-subscriptions.write: Write Webhook Subscriptions
+            business-contexts.write: Write Business Contexts
+            health-dashboard.write: Write Health Dashboard
+            metrics-explorer.write: Write Metrics Explorer
+            monitoring.write: Write Monitoring
+            reset.write: Write Reset
+            sessions.write: Write Sessions
+            users.write: Write Users
+          tokenUrl: auth/token

@@ -1,0 +1,329 @@
+generated: '2026-09-20'
+method: searched
+source: https://docs.gr4vy.com/guides/api/error-codes
+docs: https://docs.gr4vy.com/guides/api/error-codes
+description: Gr4vy normalises every connector (PSP) response into one error_code vocabulary on the transaction,
+  grouped as core failures, connector declines and connector failures. The meaning column is the provider text and
+  embeds the recommended action. simulator_amount is the amount that reproduces the code against the Gr4vy transaction
+  simulator in sandbox.
+envelope_field: transaction.error_code (with raw_response_code / raw_response_description carrying the untranslated
+  connector values)
+mask_as_generic: []
+mask_note: The docs publish no list of codes to mask from buyers.
+decline_code_count: 70
+decline_codes:
+- code: incomplete_buyer_approval
+  category: Core failures
+  meaning: Occurs when a buyer approval redirection times out, this normally means the buyer has closed the redirect
+    page/popup without authenticating. This error code can take up to 10 minutes from the time the buyer closes
+    the redirect page / popup to appear
+- code: failed_buyer_approval
+  category: Core failures
+  meaning: Occurs when a buyer fails to authenticate through 3DS. This transaction can be attempted again
+- code: missing_redirect_url
+  category: Core failures
+  meaning: Occurs when a transaction requires a redirect but was created without `payment_method.redirect_url`.
+    Add the `payment_method.redirect_url` and retry
+- code: flow_decline
+  category: Core failures
+  meaning: Occurs when a transaction is declined by a Flow rule. This could be due to fraud or an alternate system
+    configuration declining the transaction
+- code: all_attempts_skipped
+  category: Core failures
+  meaning: Occurs when a transaction fails because no outcome in the matched Flow rule can be used to process the
+    transaction reliably. To avoid this, make sure to define there is a default suitable outcome for each possible
+    transaction scenario
+- code: canceled
+  category: Core failures
+  meaning: Occurs when a transaction is canceled, this means a previously triggered cancel action has finished successfully
+- code: canceled_payment_method
+  category: Connector declines
+  meaning: The payment method reported lost, stolen, or otherwise canceled, request another payment method
+  simulator_amount: '200001'
+- code: expired_authorization
+  category: Connector declines
+  meaning: The authorization has expired, create a new authorization and use the new one
+  simulator_amount: '200004'
+- code: expired_payment_method
+  category: Connector declines
+  meaning: The payment method has expired, use another payment method
+  simulator_amount: '200005'
+- code: incorrect_billing_address
+  category: Connector declines
+  meaning: The billing address does not match the account. Prompt the customer to correct the billing address and
+    retry
+  simulator_amount: '200006'
+- code: incorrect_country
+  category: Connector declines
+  meaning: The country code was rejected by the service or issuer, request another payment method
+  simulator_amount: '200007'
+  retriable: 'Yes'
+- code: incorrect_currency
+  category: Connector declines
+  meaning: The currency code was rejected by the service or issuer, request another payment method
+  simulator_amount: '200008'
+  retriable: 'Yes'
+- code: incorrect_cvv
+  category: Connector declines
+  meaning: The CVV was incorrect. Prompt the customer to correct the CVV and retry
+  simulator_amount: '200009'
+- code: incorrect_expiry_date
+  category: Connector declines
+  meaning: The expiry date is incorrect or the payment method has expired. Prompt the customer to correct the expiry
+    date and retry or request another payment method
+  simulator_amount: '200010'
+- code: insufficient_funds
+  category: Connector declines
+  meaning: The amount exceeds the available balance on the payment method. Prompt the customer to check their balance
+  simulator_amount: '200011'
+- code: issuer_decline
+  category: Connector declines
+  meaning: The payment was declined by the issuer. Prompt the customer to check with their issuer
+  simulator_amount: '200012'
+  retriable: 'Yes'
+- code: other_decline
+  category: Connector declines
+  meaning: The transaction failed for an unknown reason, may succeed if retried
+  simulator_amount: '200013'
+  retriable: 'Yes'
+- code: refused_transaction
+  category: Connector declines
+  meaning: The transaction was refused due to legal reasons (for example watch list, embargo, sanctions), request
+    another payment method
+  simulator_amount: '200015'
+- code: service_decline
+  category: Connector declines
+  meaning: The payment was declined by service, request another payment method
+  simulator_amount: '200016'
+  retriable: 'Yes'
+- code: suspected_fraud
+  category: Connector declines
+  meaning: The service flagged the transaction as suspected fraud. Prompt the customer to check with their issuer
+  simulator_amount: '200017'
+- code: cancelled_buyer_approval
+  category: Connector failures
+  meaning: The transaction was canceled by the customer
+  simulator_amount: '200022'
+- code: disputed_transaction
+  category: Connector failures
+  meaning: The transaction cannot be refunded as a chargeback has been initiated
+  simulator_amount: '200002'
+- code: duplicate_transaction
+  category: Connector failures
+  meaning: The transaction is a duplicate of a previous transaction. Check to ensure the transaction was submitted
+    only once
+  simulator_amount: '200003'
+- code: insufficient_service_permissions
+  category: Connector failures
+  meaning: The service credentials lack permission to perform the requested action, check relevant configuration
+  simulator_amount: '300001'
+  retriable: 'Yes'
+- code: invalid_amount
+  category: Connector failures
+  meaning: The amount not supported by service, check relevant configuration
+  simulator_amount: '300002'
+  retriable: 'Yes'
+- code: invalid_payment_method
+  category: Connector failures
+  meaning: The payment method is not supported by the service (for example card scheme is not supported), request
+    another payment method
+  simulator_amount: '300003'
+  retriable: 'Yes'
+- code: invalid_service_configuration
+  category: Connector failures
+  meaning: The service is incorrectly configured, check relevant configuration
+  simulator_amount: '300004'
+- code: invalid_service_credentials
+  category: Connector failures
+  meaning: The service credentials are not valid, check relevant configuration
+  simulator_amount: '300005'
+  retriable: 'Yes'
+- code: invalid_service_response
+  category: Connector failures
+  meaning: The service response could not be parsed , check relevant configuration
+  simulator_amount: '300006'
+  retriable: 'Yes'
+- code: invalid_tax_identifier
+  category: Connector failures
+  meaning: The tax identifier is invalid (for example GB VAT number is in an invalid format, or is of the wrong
+    kind), correct identifier
+  simulator_amount: '300007'
+- code: missing_billing_address
+  category: Connector failures
+  meaning: The billing address is required. Add billing address and retry
+  simulator_amount: '300008'
+  retriable: 'Yes'
+- code: missing_cvv
+  category: Connector failures
+  meaning: The CVV is required. Add CVV and retry
+  simulator_amount: '300009'
+  retriable: 'Yes'
+- code: missing_shipping_address
+  category: Connector failures
+  meaning: The shipping address is required. Add shipping address and retry
+  simulator_amount: '300010'
+  retriable: 'Yes'
+- code: missing_tax_identifier
+  category: Connector failures
+  meaning: The tax identifier is required. Add tax identifier and retry
+  simulator_amount: '300011'
+  retriable: 'Yes'
+- code: refund_period_expired
+  category: Connector failures
+  meaning: The refund can not be performed due to the refund period expiring, credit the customer in another way
+  simulator_amount: '300012'
+- code: requires_buyer_authentication
+  category: Connector failures
+  meaning: Additional credentials were requested by the issuer, for example, the security code (CVV). Add these
+    credentials and retry
+  simulator_amount: '200014'
+- code: service_error
+  category: Connector failures
+  meaning: The service reported an internal server error or upstream processing error, check relevant configuration
+  simulator_amount: '300013'
+  retriable: 'Yes'
+- code: service_network_error
+  category: Connector failures
+  meaning: The service was unreachable or experienced a timeout, wait before retrying
+  simulator_amount: '300014'
+  retriable: 'Yes'
+- code: service_rate_limit
+  category: Connector failures
+  meaning: The service responded with a rate-limiting error, wait before retrying
+  simulator_amount: '300015'
+  retriable: 'Yes'
+- code: internal_error
+  category: Connector failures
+  meaning: An internal error has occurred, check relevant configuration
+  simulator_amount: '400001'
+- code: invalid_billing_address
+  category: Connector failures
+  meaning: The billing address is invalid. Correct billing address and retry
+  simulator_amount: '400002'
+- code: invalid_operation
+  category: Connector failures
+  meaning: The service/method is not implemented, and operation is not supported for this request, check relevant
+    configuration
+  simulator_amount: '400003'
+  retriable: 'Yes'
+- code: invalid_request_parameters
+  category: Connector failures
+  meaning: The one or more request parameters are invalid, check payload and retry
+  simulator_amount: '400004'
+- code: invalid_service_request
+  category: Connector failures
+  meaning: The service request could not be parsed, check payload and retry
+  simulator_amount: '400005'
+  retriable: 'Yes'
+- code: invalid_shipping_address
+  category: Connector failures
+  meaning: The shipping address is invalid. Correct shipping address and retry
+  simulator_amount: '400006'
+- code: service_resource_conflict
+  category: Connector failures
+  meaning: The service could not create a resource due to a conflict, check relevant configuration
+  simulator_amount: '400007'
+  retriable: 'Yes'
+- code: unavailable_payment_method
+  category: Connector failures
+  meaning: The payment method is temporarily frozen or otherwise unavailable. Prompt the customer to check with
+    their issuer or request another payment method
+  simulator_amount: '200018'
+- code: unexpected_state
+  category: Connector failures
+  meaning: The service is configured in an unexpected state, check relevant configuration
+  simulator_amount: '400008'
+- code: unknown_error
+  category: Connector failures
+  meaning: An unknown error occurred, check relevant configuration
+  simulator_amount: '400009'
+- code: unknown_payment_method
+  category: Connector failures
+  meaning: The account is unknown, request another payment method
+  simulator_amount: '200019'
+  retriable: 'Yes'
+- code: unknown_service_resource
+  category: Connector failures
+  meaning: The resource could not be found by the service, check relevant configuration
+  simulator_amount: '400010'
+  retriable: 'Yes'
+- code: unrecognised_country
+  category: Connector failures
+  meaning: The country is not valid, correct the country and retry
+  simulator_amount: '400013'
+- code: unrecognised_currency
+  category: Connector failures
+  meaning: The currency is not valid, correct the currency and retry
+  simulator_amount: '400014'
+- code: unrecognised_payment_method
+  category: Connector failures
+  meaning: The payment method is not valid, request another payment method
+  simulator_amount: '400015'
+- code: unrecognised_scheme
+  category: Connector failures
+  meaning: The payment scheme is not valid, request another payment method
+  simulator_amount: '400016'
+- code: unsupported_country
+  category: Connector failures
+  meaning: The country is not supported by the service, correct country and retry
+  simulator_amount: '400011'
+  retriable: 'Yes'
+- code: unsupported_currency
+  category: Connector failures
+  meaning: The currency is not supported by the service, correct currency and retry
+  simulator_amount: '400012'
+  retriable: 'Yes'
+- code: unsupported_payment_method
+  category: Connector failures
+  meaning: The payment method is not supported by the service (for example card scheme is not supported), request
+    another payment method
+  simulator_amount: '200021'
+- code: unsupported_scheme
+  category: Connector failures
+  meaning: The payment scheme is not supported by the service, request another payment method
+  simulator_amount: '400017'
+- code: unsupported_transaction
+  category: Connector failures
+  meaning: The payment method does not support this type of purchase (for example gambling is restricted), request
+    another payment method
+  simulator_amount: '200020'
+- code: service_network_error
+  category: Connector capture / void / refund / payout tests
+  meaning: '[Capture] The service was unreachable or experienced a timeout, wait before retrying'
+  simulator_amount: '500001'
+- code: refused_transaction
+  category: Connector capture / void / refund / payout tests
+  meaning: '[Capture] The transaction was refused'
+  simulator_amount: '500002'
+- code: service_network_error
+  category: Connector capture / void / refund / payout tests
+  meaning: '[Void] The service was unreachable or experienced a timeout, wait before retrying'
+  simulator_amount: '510001'
+- code: issuer_decline
+  category: Connector capture / void / refund / payout tests
+  meaning: '[Void] The payment was declined by the issuer. Prompt the customer to check with their issuer'
+  simulator_amount: '510002'
+- code: disputed_transaction
+  category: Connector capture / void / refund / payout tests
+  meaning: '[Refund] The transaction cannot be refunded as a chargeback has been initiated'
+  simulator_amount: '520001'
+- code: issuer_decline
+  category: Connector capture / void / refund / payout tests
+  meaning: '[Refund] The payment was declined by the issuer. Prompt the customer to check with their issuer'
+  simulator_amount: '520002'
+- code: service_error
+  category: Connector capture / void / refund / payout tests
+  meaning: '[Refund] The service reported an internal server error or upstream processing error'
+  simulator_amount: '520003'
+- code: refund_already_satisfied
+  category: Connector capture / void / refund / payout tests
+  meaning: '[Refund] The service reported that the transaction has already been fully refunded'
+  simulator_amount: '520004'
+- code: service_decline
+  category: Connector capture / void / refund / payout tests
+  meaning: '[Payout] The service declined the transaction'
+  simulator_amount: '530001'
+- code: service_error
+  category: Connector capture / void / refund / payout tests
+  meaning: '[Payout] The service reported an internal server error or upstream processing error'
+  simulator_amount: '530002'

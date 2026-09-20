@@ -1,0 +1,33 @@
+generated: '2026-09-20'
+method: searched
+probe: true
+source: https://gr4vy.com/ conventional paths + docs.gr4vy.com
+signals: {}
+probes:
+- url: https://gr4vy.com/accessibility
+  http_status: 404
+- url: https://gr4vy.com/accessibility/vpat
+  http_status: 404
+- url: https://gr4vy.com/legal/subprocessors
+  http_status: 404
+- url: https://gr4vy.com/subprocessors
+  http_status: 404
+- url: https://gr4vy.com/legal/dpa
+  http_status: 404
+- url: https://gr4vy.com/dpa
+  http_status: 404
+- url: https://gr4vy.com/privacy/requests
+  http_status: 404
+- url: https://gr4vy.com/transparency
+  http_status: 404
+- url: https://gr4vy.com/security/sbom
+  http_status: 404
+- url: https://gr4vy.com/ai/transparency
+  http_status: 404
+- url: https://gr4vy.com/legal/report-content
+  http_status: 404
+note: No horizontal-regime signal carried real substance. https://gr4vy.com/regulation-and-compliance/ (200) claims
+  PCI DSS Level 1 and says instances can be deployed in chosen regions to meet regional data-privacy laws (GDPR,
+  CCPA, Australian Privacy) - a marketing statement without a region list, so data_residency is NOT asserted. Privacy
+  policies exist (https://gr4vy.com/privacy-policy/ and the data-controller / end-user variants) but no dated subprocessor
+  table, DSR SLA or GPC statement was found.

@@ -1,0 +1,107 @@
+generated: '2026-09-20'
+method: searched
+kind: webhook-catalog
+asyncapi_published: false
+source: https://docs.gr4vy.com/guides/features/webhooks/events
+docs:
+- https://docs.gr4vy.com/guides/features/webhooks/overview
+- https://docs.gr4vy.com/guides/features/webhooks/events
+- https://docs.gr4vy.com/guides/features/webhooks/payload
+- https://docs.gr4vy.com/guides/features/webhooks/signatures
+- https://docs.gr4vy.com/guides/features/webhooks/technical-considerations
+description: Gr4vy documents a webhook surface but publishes no AsyncAPI document and the OpenAPI carries no webhooks{}
+  section. This is a catalog of the documented event types, not an AsyncAPI contract.
+management_operations:
+- create_webhook_subscription
+- list_webhook_subscription
+- read_webhook_subscription
+- update_webhook_subscription
+- delete_webhook_subscription
+- rotate_webhook_subscription_secret
+delivery:
+  ack: HTTP 2xx within 5000 milliseconds
+  retry: exponential delay for a maximum of 7 days from creation
+  ordering: not guaranteed; unacknowledged webhooks are retried and may delay further delivery
+signing:
+  headers:
+  - X-Gr4vy-Webhook-Timestamp
+  - X-Gr4vy-Webhook-Signatures
+  algorithm: HMAC SHA256 over "{timestamp}.{payload}"
+  rotation: signatures header is a comma-separated list, one per active secret
+event_count: 51
+events:
+- resource: api-key-pair
+  types:
+  - api-key-pair.created
+  - api-key-pair.deleted
+  - api-key-pair.updated
+- resource: buyer
+  types:
+  - buyer.created
+  - buyer.deleted
+  - buyer.updated
+- resource: capture
+  types:
+  - capture.declined
+  - capture.failed
+  - capture.pending
+  - capture.succeeded
+- resource: gift-card
+  types:
+  - gift-card.created
+  - gift-card.deleted
+- resource: monitoring
+  types:
+  - monitoring.incident.closed
+  - monitoring.incident.created
+- resource: payment-link
+  types:
+  - payment-link.created
+  - payment-link.updated
+- resource: payment-method
+  types:
+  - payment-method.authorization-expiring
+  - payment-method.authorization-update-required
+  - payment-method.authorization-updated
+  - payment-method.deleted
+  - payment-method.paused
+  - payment-method.resumed
+  - payment-method.updated
+- resource: payout
+  types:
+  - payout.declined
+  - payout.failed
+  - payout.pending
+  - payout.succeeded
+- resource: refund
+  types:
+  - refund.declined
+  - refund.failed
+  - refund.pending
+  - refund.succeeded
+- resource: report-execution
+  types:
+  - report-execution.failed
+  - report-execution.succeeded
+- resource: shipping-details
+  types:
+  - shipping-details.created
+  - shipping-details.deleted
+  - shipping-details.updated
+- resource: transaction
+  types:
+  - transaction.authenticated
+  - transaction.authentication-pending
+  - transaction.authorized
+  - transaction.capture-failed
+  - transaction.capture-pending
+  - transaction.captured
+  - transaction.declined
+  - transaction.failed
+  - transaction.modified
+  - transaction.review-accepted
+  - transaction.settled
+  - transaction.void-declined
+  - transaction.void-failed
+  - transaction.void-pending
+  - transaction.voided

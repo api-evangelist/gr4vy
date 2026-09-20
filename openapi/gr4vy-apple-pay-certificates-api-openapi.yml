@@ -1,0 +1,728 @@
+openapi: 3.2.0
+info:
+  title: Gr4vy Apple Pay Certificates API
+  version: 1.1.0-beta
+  contact:
+    name: Gr4vy Support
+    email: code@gr4vy.com
+    url: https://gr4vy.com
+  termsOfService: https://gr4vy.com
+  license:
+    name: MIT
+    url: https://raw.githubusercontent.com/gr4vy/gr4vy-openapi/main/LICENSE
+  description: 'Welcome to the Gr4vy API reference documentation.
+
+    Our API is still very much a work in product and subject to change.'
+servers:
+- url: https://api.sandbox.{id}.gr4vy.app
+  x-speakeasy-server-id: sandbox
+  variables:
+    id:
+      default: example
+      description: The subdomain for your Gr4vy instance.
+- url: https://api.{id}.gr4vy.app
+  x-speakeasy-server-id: production
+  variables:
+    id:
+      default: example
+      description: The subdomain for your Gr4vy instance.
+security:
+- bearerAuth: []
+tags:
+- name: Apple Pay Certificates
+  description: 'Apple Pay payment processing certificates are used by Apple to encrypt Apple
+
+    Pay tokens.'
+  x-internal: true
+paths:
+  /apple-pay-certificates:
+    get:
+      operationId: list-apple-pay-certificates
+      summary: List Apple Pay certificates
+      description: Returns a list of Apple Pay certificate records.
+      tags:
+      - Apple Pay Certificates
+      x-internal: true
+      x-speakeasy-ignore: true
+      parameters:
+      - schema:
+          type: integer
+          default: 20
+          example: 1
+          minimum: 1
+          maximum: 100
+          format: int32
+        in: query
+        name: limit
+        description: Defines the maximum number of items to return for this request.
+      - schema:
+          type: string
+          format: ''
+          example: ZXhhbXBsZTE
+        in: query
+        name: cursor
+        description: 'A cursor that identifies the page of results to return. This is used to
+
+          paginate the results of this API.
+
+
+          For the first page of results, this parameter can be left out.
+
+          For additional pages, use the value returned by the API in
+
+          the `next_cursor` field. Similarly the `previous_cursor` can be used to
+
+          reverse backwards in the list.'
+      responses:
+        '200':
+          description: Returns a list of Apple Pay certificate records.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplePayCertificates'
+              examples:
+                A list of Apple Pay certificate records:
+                  value:
+                    items:
+                    - type: apple-pay-certificate
+                      id: fe26475d-ec3e-4884-9553-f7356683f7f9
+                      display_name: iPad App v2
+                      status: active
+                      apple_merchant_id: merchant.com.gr4vy.demo
+                      public_key_hash: WSOIlV70592m1ah1sm0mcmhJPQsAIWGSg7FSe+uzHtc=
+                      certificate_signing_request: null
+                      expires_at: '2024-12-12T10:53:43+00:00'
+                      created_at: '2022-12-12T10:53:43+00:00'
+                      updated_at: '2022-12-12T10:53:43+00:00'
+                    - type: apple-pay-certificate
+                      id: c81bdcfd-00c2-4897-b220-06ff0e95685a
+                      display_name: iPhone App v2
+                      status: incomplete
+                      apple_merchant_id: null
+                      public_key_hash: null
+                      certificate_signing_request: '-----BEGIN CERTIFICATE REQUEST-----\nMIHTMHsCAQAwGTEXMBUG
+
+                        A1UEAwwOc3BpZGVyLnNhbmRib3gwWTATBgcqhkjOPQIB\nBggqhkjOPQM
+
+                        BBwNCAAQZgRE56Evtf6f9fD4Hn1zOMwyrgXU4CQXuyPXoIjiMwKXE\nV/
+
+                        Hx9NX7vZbOSXhyzPaU/b6HdLMfx2+UP/GZ48jYoAAwCgYIKoZIzj0EAwI
+
+                        DSAAw\nRQIgPhcfepIaX9s8E8WI/T+GEUqwuYIoVUQV+F8KlaYGukACIQ
+
+                        CLeLocEFWFYPHN\n+QsLoyXvbbqmEjSPB4vQKmXQZ8I2DA==\n-----EN
+
+                        D CERTIFICATE REQUEST-----\n'
+                      expires_at: null
+                      created_at: '2022-12-12T10:53:43+00:00'
+                      updated_at: '2022-12-12T10:53:43+00:00'
+        '401':
+          description: Returns an error if no valid authentication was provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401Unauthorized'
+    post:
+      operationId: new-apple-pay-certificate
+      summary: New Apple Pay certificate
+      description: 'Starts a new Apple Pay payment processing certificate registration. The
+
+        Apple digital wallet must be registered before you can register an Apple
+
+        Pay certificate.
+
+
+        You will be given a Certificate Signing Request (CSR) value in the response
+
+        to upload to Apple when creating a new payment processing certificate on
+
+        the Apple Developer console.'
+      tags:
+      - Apple Pay Certificates
+      x-internal: true
+      x-speakeasy-ignore: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApplePayCertificateRequest'
+      responses:
+        '201':
+          description: Returns the Apple Pay certificate record that was added.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplePayCertificate'
+              examples:
+                An Apple Pay certificate record:
+                  value:
+                    type: apple-pay-certificate
+                    id: c81bdcfd-00c2-4897-b220-06ff0e95685a
+                    display_name: iPad App v2
+                    status: incomplete
+                    apple_merchant_id: null
+                    public_key_hash: null
+                    certificate_signing_request: '-----BEGIN CERTIFICATE REQUEST-----\nMIHTMHsCAQAwGTEXMBUG
+
+                      A1UEAwwOc3BpZGVyLnNhbmRib3gwWTATBgcqhkjOPQIB\nBggqhkjOPQM
+
+                      BBwNCAAQZgRE56Evtf6f9fD4Hn1zOMwyrgXU4CQXuyPXoIjiMwKXE\nV/
+
+                      Hx9NX7vZbOSXhyzPaU/b6HdLMfx2+UP/GZ48jYoAAwCgYIKoZIzj0EAwI
+
+                      DSAAw\nRQIgPhcfepIaX9s8E8WI/T+GEUqwuYIoVUQV+F8KlaYGukACIQ
+
+                      CLeLocEFWFYPHN\n+QsLoyXvbbqmEjSPB4vQKmXQZ8I2DA==\n-----EN
+
+                      D CERTIFICATE REQUEST-----\n'
+                    expires_at: null
+                    created_at: '2022-12-12T10:53:43+00:00'
+                    updated_at: '2022-12-12T10:53:43+00:00'
+        '401':
+          description: Returns an error if no valid authentication was provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401Unauthorized'
+        '409':
+          description: Returns an error if duplicate resource has been found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error409DuplicateRecord'
+  /apple-pay-certificates/{apple_pay_certificate_id}:
+    parameters:
+    - schema:
+        type: string
+        format: uuid
+        example: 8724fd24-5489-4a5d-90fd-0604df7d3b83
+      name: apple_pay_certificate_id
+      in: path
+      required: true
+      description: The unique ID for an Apple Pay certificate record.
+    put:
+      operationId: update-apple-pay-certificate
+      summary: Update Apple Pay certificate
+      description: 'Update the Apple Pay certificate record with the payment processing
+
+        certificate received from Apple.'
+      tags:
+      - Apple Pay Certificates
+      x-internal: true
+      x-speakeasy-ignore: true
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: 'The payment processing certificate received from Apple.
+
+                    This file should be associated with the Certificate
+
+                    Signing Request of this record, have a valid expiration
+
+                    date, and be DER encoded.'
+      responses:
+        '200':
+          description: Returns the Apple Pay certificate record that was updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AntiFraudService'
+        '400':
+          description: Returns an error if the request was badly formatted or missing required fields.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400BadRequest'
+        '401':
+          description: Returns an error if no valid authentication was provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401Unauthorized'
+        '404':
+          description: Returns an error if the resource can not be found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404NotFound'
+    delete:
+      operationId: delete-apple-pay-certificate
+      summary: Remove Apple Pay certificate
+      description: Deletes an Apple Pay certificate record.
+      tags:
+      - Apple Pay Certificates
+      x-internal: true
+      x-speakeasy-ignore: true
+      responses:
+        '204':
+          description: Returns an empty response.
+        '401':
+          description: Returns an error if no valid authentication was provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401Unauthorized'
+        '404':
+          description: Returns an error if the resource can not be found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404NotFound'
+components:
+  schemas:
+    Error404NotFound:
+      title: Not Found Error
+      type: object
+      description: Not Found Error (HTTP 404).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: The reason code for the error.
+          example: not_found
+          enum:
+          - not_found
+          - pending_creation
+        status:
+          type: integer
+          description: '`404`.'
+          example: 404
+          enum:
+          - 404
+        message:
+          type: string
+          description: The human readable reason for the error.
+          example: The resource could not be found
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    Error400BadRequest:
+      title: Bad Request
+      type: object
+      description: Bad Request (HTTP 400).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: A short code that describes the reason for the error.
+          example: bad_request
+          enum:
+          - bad_request
+          - incorrect_json
+          - invalid_credentials
+        status:
+          type: integer
+          description: '`400`.'
+          example: 400
+          enum:
+          - 400
+        message:
+          type: string
+          description: A human-readable reason for the error.
+          example: Missing '****' field
+        details:
+          type: array
+          description: A list of detail objects that further clarify the reason for the error.
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    AntiFraudService:
+      title: Anti-Fraud Service
+      type: object
+      x-tags:
+      - Anti-Fraud Services
+      x-internal: true
+      properties:
+        type:
+          type: string
+          description: The type of this resource. Is always `anti-fraud-service`.
+          example: anti-fraud-service
+          enum:
+          - anti-fraud-service
+        id:
+          type: string
+          example: fe26475d-ec3e-4884-9553-f7356683f7f9
+          description: The unique Gr4vy ID for this anti-fraud service.
+          format: uuid
+        merchant_account_id:
+          type: string
+          description: The unique ID for a merchant account.
+          example: default
+        anti_fraud_service_definition_id:
+          type: string
+          description: 'The name of the Anti-Fraud service provider.
+
+            During update request, this value is used for validation only but
+
+            the underlying service can not be changed for an existing service.'
+          example: sift-anti-fraud
+          enum:
+          - cybersource-anti-fraud
+          - forter-anti-fraud
+          - sift-anti-fraud
+        display_name:
+          type:
+          - string
+          - 'null'
+          description: A unique name for this anti-fraud service which is used in the Gr4vy admin panel to give a anti-fraud service a human readable name.
+          example: Sift Anti-Fraud Service.
+          minLength: 1
+          maxLength: 200
+        active:
+          type: boolean
+          example: true
+          default: true
+          description: Defines if this service is currently active or not.
+        silent:
+          type: boolean
+          example: false
+          default: false
+          description: 'Defines if this service is currently running in silent mode. In silent
+
+            mode, a service''s decisions will be created but ignored when processing
+
+            a transaction, allowing for warm-up and comparison of new services
+
+            against the active service.'
+        reviews_enabled:
+          type: boolean
+          example: false
+          default: false
+          description: 'Defines if this service needs to handle the review status with a proper
+
+            review workflow. If not, the review status will be treated as any other
+
+            one.'
+        fields:
+          type: array
+          description: A list of fields, each containing a key-value pair for anti-fraud service decision mapping e.g. for Sift `approve_decision` will be in the response.
+          items:
+            type: object
+            description: A key-value pair that represents a field defined in the definition for this anti-fraud service.
+            required:
+            - key
+            - value
+            properties:
+              key:
+                type: string
+                description: The key of the field to set a value for.
+                example: approve_decision
+                minLength: 1
+                maxLength: 50
+              value:
+                type: string
+                description: The value of a field to set.
+                example: REDACTED_STRIPE_KEY
+                minLength: 1
+                maxLength: 10000
+        created_at:
+          type: string
+          description: 'The date and time
+
+            when this anti-fraud service was created in our system.'
+          format: date-time
+          example: '2013-07-16T19:23:00.000+00:00'
+        updated_at:
+          type: string
+          description: 'The date and time
+
+            when this anti-fraud service was last updated in our system.'
+          format: date-time
+          example: '2013-07-16T19:23:00.000+00:00'
+    Error409DuplicateRecord:
+      title: Duplicate Record Error
+      type: object
+      description: Duplicate Record Error (HTTP 409).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`duplicate_record`.'
+          example: duplicate_record
+          enum:
+          - duplicate_record
+        status:
+          type: integer
+          description: '`409`.'
+          example: 409
+          enum:
+          - 409
+        message:
+          type: string
+          description: Further details on the field that triggered the error.
+          example: A duplicate record exists with this external_identifier value
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    ApplePayCertificates:
+      title: A list of Apple Pay certificates
+      type: object
+      description: A list of Apple Pay certificate records.
+      x-tags:
+      - Apple Pay Certificates
+      x-internal: true
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApplePayCertificate'
+        limit:
+          type: integer
+          description: 'The limit applied to request. This represents the number of items that are at
+
+            maximum returned by this request.'
+          format: int32
+          minimum: 1
+          maximum: 100
+          example: 1
+          default: 20
+        next_cursor:
+          type:
+          - string
+          - 'null'
+          description: 'The cursor that represents the next page of results. Use the `cursor` query
+
+            parameter to fetch this page of items.'
+          example: ZXhhbXBsZTE
+          minLength: 1
+          maxLength: 1000
+        previous_cursor:
+          type:
+          - string
+          - 'null'
+          description: 'The cursor that represents the next page of results. Use the `cursor` query
+
+            parameter to fetch this page of items.'
+          example: null
+          minLength: 1
+          maxLength: 1000
+    ErrorDetail:
+      title: Error details
+      description: Additional detail about the part of a request body that caused an issue.
+      type: object
+      x-tags:
+      - Errors
+      properties:
+        location:
+          type: string
+          example: body
+          description: The location where the error caused an issue.
+          enum:
+          - query
+          - body
+          - path
+          - header
+        type:
+          type: string
+          example: value_error.missing
+          description: A unique identifier for the type of error that occurred.
+        pointer:
+          type: string
+          example: /payment_method/number
+          description: 'The exact item for which the validation did not succeed. This is a JSON
+
+            pointer for request bodies, while for query, path, and header parameters
+
+            it is the name of the parameter.'
+        message:
+          type: string
+          example: field required
+          description: A human readable message for this error detail.
+    Error401Unauthorized:
+      title: Unauthorized Error
+      type: object
+      description: Unauthorized Error (HTTP 401).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`unauthorized`.'
+          example: unauthorized
+          enum:
+          - unauthorized
+        status:
+          type: integer
+          description: '`401`.'
+          example: 401
+          enum:
+          - 401
+        message:
+          type: string
+          description: No valid API authentication found.
+          example: No valid API authentication found
+          enum:
+          - No valid API authentication found
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    ApplePayCertificate:
+      title: Apple Pay Certificate
+      type: object
+      description: An Apple Pay certificate record.
+      x-tags:
+      - Apple Pay Certificates
+      x-internal: true
+      properties:
+        type:
+          type: string
+          description: The type of this resource. Is always `apple-pay-certificate`.
+          example: apple-pay-certificate
+          enum:
+          - apple-pay-certificate
+        id:
+          type: string
+          example: fe26475d-ec3e-4884-9553-f7356683f7f9
+          description: The unique identifier for this Apple Pay certificate record.
+          format: uuid
+        display_name:
+          type: string
+          example: iPad App v2
+          description: 'The name for this Apple Pay certificate which is used in the Gr4vy admin
+
+            panel to give the Apple Pay certificate a human readable name.'
+        status:
+          type: string
+          description: The status of this Apple Pay certificate.
+          example: active
+          enum:
+          - active
+          - expired
+          - incomplete
+        apple_merchant_id:
+          type:
+          - string
+          - 'null'
+          description: 'The unique identifier representing a merchant for Apple Pay. This value is
+
+            populated after the Apple Pay certificate record has been updated with
+
+            the payment processing certificate received from Apple.'
+          example: merchant.com.gr4vy.demo
+        public_key_hash:
+          type:
+          - string
+          - 'null'
+          description: 'The hash value of the public key associated with this Apple Pay
+
+            certificate. This value is populated after the Apple Pay certificate
+
+            record has been updated with the payment processing certificate
+
+            received from Apple.'
+          example: WSOIlV70592m1ah1sm0mcmhJPQsAIWGSg7FSe+uzHtc=
+        certificate_signing_request:
+          type:
+          - string
+          - 'null'
+          description: 'The Certificate Signing Request to upload to the Apple Developer console
+
+            when creating a new payment processing certificate.'
+          example: '-----BEGIN CERTIFICATE REQUEST-----\nMIHTMHsCAQAwGTEXMBUG
+
+            A1UEAwwOc3BpZGVyLnNhbmRib3gwWTATBgcqhkjOPQIB\nBggqhkjOPQM
+
+            BBwNCAAQZgRE56Evtf6f9fD4Hn1zOMwyrgXU4CQXuyPXoIjiMwKXE\nV/
+
+            Hx9NX7vZbOSXhyzPaU/b6HdLMfx2+UP/GZ48jYoAAwCgYIKoZIzj0EAwI
+
+            DSAAw\nRQIgPhcfepIaX9s8E8WI/T+GEUqwuYIoVUQV+F8KlaYGukACIQ
+
+            CLeLocEFWFYPHN\n+QsLoyXvbbqmEjSPB4vQKmXQZ8I2DA==\n-----EN
+
+            D CERTIFICATE REQUEST-----\n'
+        expires_at:
+          type:
+          - string
+          - 'null'
+          description: 'The date and time this Apple Pay certificate expires. This value is
+
+            populated after the Apple Pay certificate record has been updated
+
+            with the payment processing certificate received from Apple.'
+          format: date-time
+          example: '2013-07-16T19:23:00.000+00:00'
+        created_at:
+          type: string
+          description: 'The date and time this Apple Pay certificate record was created in our
+
+            system.'
+          format: date-time
+          example: '2013-07-16T19:23:00.000+00:00'
+        updated_at:
+          type: string
+          format: date-time
+          description: The date and time this Apple Pay certificate record was last updated.
+          example: '2013-07-16T19:23:00.000+00:00'
+    ApplePayCertificateRequest:
+      title: Apple Pay certificate (Create)
+      type: object
+      description: 'A request to start the registration of a new Apple Pay payment
+
+        processing certificate.'
+      x-tags:
+      - Apple Pay Certificates
+      x-internal: true
+      required:
+      - display_name
+      properties:
+        display_name:
+          type: string
+          description: 'A name for this Apple Pay certificate which is used in the Gr4vy
+
+            admin panel to give the Apple Pay certificate a human readable name.'
+          example: iPad App v2
+          minLength: 1
+          maxLength: 200
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

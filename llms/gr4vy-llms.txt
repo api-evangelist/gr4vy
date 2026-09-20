@@ -1,0 +1,595 @@
+# Gr4vy
+
+- [Build with Gr4vy](https://docs.gr4vy.com/guides/get-started.md): Connect, build, and scale payments using the Gr4vy payment orchestration platform.
+- [Accept payments on the web](https://docs.gr4vy.com/guides/payments/web.md): Choose the right web integration for your checkout: Embed or Secure Fields.
+- [Accept payments on mobile](https://docs.gr4vy.com/guides/payments/mobile.md): Choose the right mobile integration for your app: Embed SDKs or Native SDKs.
+- [Embed](https://docs.gr4vy.com/guides/payments/embed/quick-start/overview.md): Get set up with Embed as your web checkout experience.
+- [Creating an API key for use with Embed](https://docs.gr4vy.com/guides/payments/embed/quick-start/key.md)
+- [Generating tokens for authentication](https://docs.gr4vy.com/guides/payments/embed/quick-start/sdks.md)
+- [Adding Embed](https://docs.gr4vy.com/guides/payments/embed/quick-start/embed.md)
+- [Inspecting transactions](https://docs.gr4vy.com/guides/payments/embed/quick-start/inspect.md)
+- [Going live](https://docs.gr4vy.com/guides/payments/embed/quick-start/live.md)
+- [Digital wallets in Embed](https://docs.gr4vy.com/guides/payments/embed/digital-wallets.md)
+- [Embed events](https://docs.gr4vy.com/guides/payments/embed/events.md)
+- [Embed localization](https://docs.gr4vy.com/guides/payments/embed/locale.md)
+- [Embed Theming](https://docs.gr4vy.com/guides/payments/embed/theming.md)
+- [Embed options](https://docs.gr4vy.com/guides/payments/embed/options.md)
+- [In-app browsers with Embed](https://docs.gr4vy.com/guides/payments/embed/in-app-browsers.md)
+- [Common issues with Embed](https://docs.gr4vy.com/guides/payments/embed/common-issues.md)
+- [Android SDK](https://docs.gr4vy.com/guides/payments/android/quick-start/overview.md): Get set up with the Android SDK for your checkout experience.
+- [Creating an API key for use with Android](https://docs.gr4vy.com/guides/payments/android/quick-start/key.md)
+- [Generating tokens for authentication](https://docs.gr4vy.com/guides/payments/android/quick-start/sdks.md)
+- [Installing the Android SDK](https://docs.gr4vy.com/guides/payments/android/quick-start/android.md)
+- [Creating transactions](https://docs.gr4vy.com/guides/payments/android/quick-start/transact.md)
+- [Google Pay on Android](https://docs.gr4vy.com/guides/payments/android/google-pay.md)
+- [Android events](https://docs.gr4vy.com/guides/payments/android/events.md)
+- [Android options](https://docs.gr4vy.com/guides/payments/android/options.md)
+- [iOS SDK](https://docs.gr4vy.com/guides/payments/ios/quick-start/overview.md): Get set up with the iOS SDK for your checkout experience.
+- [Creating an API key for use with iOS](https://docs.gr4vy.com/guides/payments/ios/quick-start/key.md)
+- [Generating tokens for authentication](https://docs.gr4vy.com/guides/payments/ios/quick-start/sdks.md)
+- [Installing the iOS SDK](https://docs.gr4vy.com/guides/payments/ios/quick-start/ios.md)
+- [Creating transactions](https://docs.gr4vy.com/guides/payments/ios/quick-start/transact.md)
+- [Apple Pay on iOS](https://docs.gr4vy.com/guides/payments/ios/apple-pay.md)
+- [iOS events](https://docs.gr4vy.com/guides/payments/ios/events.md)
+- [iOS options](https://docs.gr4vy.com/guides/payments/ios/options.md)
+- [React Native SDK](https://docs.gr4vy.com/guides/payments/react-native/quick-start/overview.md): Get set up with the React Native mobile SDK for your checkout experience.
+- [Creating an API key for use with React Native](https://docs.gr4vy.com/guides/payments/react-native/quick-start/key.md)
+- [Generating tokens for authentication](https://docs.gr4vy.com/guides/payments/react-native/quick-start/sdks.md)
+- [Installing the React Native SDK](https://docs.gr4vy.com/guides/payments/react-native/quick-start/embed.md)
+- [Creating transactions](https://docs.gr4vy.com/guides/payments/react-native/quick-start/transact.md)
+- [Apple Pay on React Native](https://docs.gr4vy.com/guides/payments/react-native/apple-pay.md)
+- [Google Pay on React Native](https://docs.gr4vy.com/guides/payments/react-native/google-pay.md)
+- [React Native events](https://docs.gr4vy.com/guides/payments/react-native/events.md)
+- [React Native options](https://docs.gr4vy.com/guides/payments/react-native/options.md)
+- [Secure Fields](https://docs.gr4vy.com/guides/payments/secure-fields/quick-start/overview.md): Get set up with Secure Fields to vault and process cards.
+- [Creating an API key for use with Secure Fields](https://docs.gr4vy.com/guides/payments/secure-fields/quick-start/key.md)
+- [Creating checkout sessions](https://docs.gr4vy.com/guides/payments/secure-fields/quick-start/sdks.md)
+- [Adding secure fields](https://docs.gr4vy.com/guides/payments/secure-fields/quick-start/embed.md)
+- [Creating transactions](https://docs.gr4vy.com/guides/payments/secure-fields/quick-start/transact.md)
+- [Secure Fields and 3DS](https://docs.gr4vy.com/guides/payments/secure-fields/three-d-secure.md): Handling 3DS in Secure Fields.
+- [Secure Fields with stored cards](https://docs.gr4vy.com/guides/payments/secure-fields/stored-cards.md): Use Secure Fields to collect the CVV for cards previously stored.
+- [Secure Fields theming](https://docs.gr4vy.com/guides/payments/secure-fields/theming.md): Each field can be customized to match the brand using the `styles` property when adding the field.
+- [Secure Fields events](https://docs.gr4vy.com/guides/payments/secure-fields/events.md)
+- [Secure Fields UX options](https://docs.gr4vy.com/guides/payments/secure-fields/ux-options.md): Learn how to configure opt-in user experience (UX) enhancements in Secure Fields, including auto focus, auto advance, input masking, scheme icons, and field reset.
+- [Direct API](https://docs.gr4vy.com/guides/payments/direct-api/quick-start/overview.md): Get set up with a direct API integration.
+- [Authentication](https://docs.gr4vy.com/guides/payments/direct-api/quick-start/key.md)
+- [Listing payment options](https://docs.gr4vy.com/guides/payments/direct-api/quick-start/payment-options.md)
+- [Creating transactions](https://docs.gr4vy.com/guides/payments/direct-api/quick-start/transaction.md)
+- [Handling redirects](https://docs.gr4vy.com/guides/payments/direct-api/quick-start/handle-redirect.md)
+- [Getting transaction results](https://docs.gr4vy.com/guides/payments/direct-api/quick-start/status.md)
+- [PayPal via the API](https://docs.gr4vy.com/guides/payments/direct-api/paypal.md)
+- [Native Mobile SDKs](https://docs.gr4vy.com/guides/payments/native/overview.md)
+- [Create an API key](https://docs.gr4vy.com/guides/payments/native/key.md)
+- [Generating tokens for authentication](https://docs.gr4vy.com/guides/payments/native/sdks.md)
+- [Vaulting card data](https://docs.gr4vy.com/guides/payments/native/vault.md)
+- [Adding 3DS authentication](https://docs.gr4vy.com/guides/payments/native/3ds.md)
+- [Card details](https://docs.gr4vy.com/guides/payments/native/get-card-details.md)
+- [List payment options](https://docs.gr4vy.com/guides/payments/native/list-payment-options.md)
+- [List buyer payment methods](https://docs.gr4vy.com/guides/payments/native/list-buyer-payment-methods.md)
+- [SDK Response Reference](https://docs.gr4vy.com/guides/payments/native/responses.md)
+- [Agentic Development Kit (ADK)](https://docs.gr4vy.com/guides/payments/adk/overview.md): Build AI-native storefronts within conversational AI platforms using Gr4vy.
+- [ChatGPT ADK](https://docs.gr4vy.com/guides/payments/chatgpt-app/overview.md): Build an e-commerce ChatGPT app with product browsing, cart, and Gr4vy Embed checkout.
+- [Architecture](https://docs.gr4vy.com/guides/payments/chatgpt-app/architecture.md): How MCP, tools, resources, and widgets fit together in a ChatGPT app.
+- [Set up the project](https://docs.gr4vy.com/guides/payments/chatgpt-app/setup.md): Scaffold a ChatGPT app project with dependencies and Gr4vy configuration.
+- [Build the MCP server](https://docs.gr4vy.com/guides/payments/chatgpt-app/mcp-server.md): Define data types, product catalog, HTTP transport, and MCP tools and resources.
+- [Build the widgets](https://docs.gr4vy.com/guides/payments/chatgpt-app/widgets.md): Build the widget bridge, self-contained HTML widgets, and the build pipeline.
+- [Integrate Gr4vy Embed](https://docs.gr4vy.com/guides/payments/chatgpt-app/gr4vy-embed.md): Generate embed tokens, load Gr4vy Embed in the checkout widget, and verify webhooks.
+- [Deploy to ChatGPT](https://docs.gr4vy.com/guides/payments/chatgpt-app/deployment.md): Expose your MCP server over HTTPS, connect to ChatGPT, and go live.
+- [Vaulting](https://docs.gr4vy.com/guides/features/vault-forwarding/overview.md)
+- [Tokenize a card](https://docs.gr4vy.com/guides/features/vault-forwarding/tokenize.md)
+- [Provision a PSP token](https://docs.gr4vy.com/guides/features/vault-forwarding/psp-tokens.md)
+- [Vault Forward card data to API endpoint](https://docs.gr4vy.com/guides/features/vault-forwarding/forward.md)
+- [commercetools Integration](https://docs.gr4vy.com/guides/payments/commercetools/overview.md): Bring Embed right into your commercetools ecommerce experience.
+- [commercetools Installation](https://docs.gr4vy.com/guides/payments/commercetools/installation.md)
+- [commercetools Configuration](https://docs.gr4vy.com/guides/payments/commercetools/configuration.md)
+- [commercetools Administration](https://docs.gr4vy.com/guides/payments/commercetools/backend.md)
+- [commercetools Frontend](https://docs.gr4vy.com/guides/payments/commercetools/frontend.md)
+- [Magento Plugin](https://docs.gr4vy.com/guides/payments/magento/overview.md): Bring Embed right into your Magento ecommerce experience.
+- [Magento Installation](https://docs.gr4vy.com/guides/payments/magento/installation.md)
+- [Magento Configuration](https://docs.gr4vy.com/guides/payments/magento/configuration.md)
+- [Magento Administration](https://docs.gr4vy.com/guides/payments/magento/backend.md)
+- [Magento Frontend](https://docs.gr4vy.com/guides/payments/magento/frontend.md)
+- [Salesforce Commerce Cloud Cartridge](https://docs.gr4vy.com/guides/payments/sfcc/overview.md): Bring Embed right into your Salesforce Commerce Cloud ecommerce experience.
+- [Salesforce Commerce Cloud Installation](https://docs.gr4vy.com/guides/payments/sfcc/installation.md)
+- [Salesforce Commerce Cloud Configuration](https://docs.gr4vy.com/guides/payments/sfcc/configuration.md)
+- [Salesforce Commerce Cloud Administration](https://docs.gr4vy.com/guides/payments/sfcc/backend.md)
+- [Salesforce Commerce Cloud Frontend](https://docs.gr4vy.com/guides/payments/sfcc/frontend.md)
+- [Best practices](https://docs.gr4vy.com/guides/best-practices/overview.md): A list of best practices for integrating.
+- [Identifiers & reconciliation](https://docs.gr4vy.com/guides/ids.md)
+- [Idempotent requests](https://docs.gr4vy.com/guides/api/idempotent-requests.md): Best practices on handling retries in an idempotent way.
+- [Handling transaction timeout](https://docs.gr4vy.com/guides/timeouts.md)
+- [Command Line Interface (CLI)](https://docs.gr4vy.com/guides/tools/cli.md)
+- [Postman Collection](https://docs.gr4vy.com/guides/tools/postman.md)
+- [OpenAPI 3.1.0 Specification](https://docs.gr4vy.com/guides/api/openapi.md)
+- [3-D Secure](https://docs.gr4vy.com/guides/features/3ds/overview.md)
+- [3-D Secure Setup](https://docs.gr4vy.com/guides/features/3ds/setup.md)
+- [Setup 3DS card schemes](https://docs.gr4vy.com/guides/features/3ds/schemes.md)
+- [3-D Secure in Embed](https://docs.gr4vy.com/guides/features/3ds/embed.md)
+- [Hosted 3-D Secure](https://docs.gr4vy.com/guides/features/3ds/hosted.md)
+- [Native 3-D Secure](https://docs.gr4vy.com/guides/features/3ds/native.md)
+- [Pass-through External 3-D Secure data](https://docs.gr4vy.com/guides/features/3ds/external.md)
+- [3DS authentication results](https://docs.gr4vy.com/guides/features/3ds/statuses.md): Look up the 3-D Secure transaction status values returned across every integration path.
+- [3-D Secure testing](https://docs.gr4vy.com/guides/features/3ds/testing.md)
+- [3DS Scenarios](https://docs.gr4vy.com/guides/features/3ds/scenarios.md)
+- [Account Updater](https://docs.gr4vy.com/guides/features/account-updater/overview.md)
+- [Manual account updates](https://docs.gr4vy.com/guides/features/account-updater/integration.md)
+- [Scheduled account updates](https://docs.gr4vy.com/guides/features/account-updater/scheduler.md)
+- [Real time account updates](https://docs.gr4vy.com/guides/features/account-updater/real-time.md)
+- [Account funding transactions](https://docs.gr4vy.com/guides/features/account-funding-transactions/overview.md)
+- [Anti-fraud](https://docs.gr4vy.com/guides/features/anti-fraud/overview.md): Managing risk in your transaction flow
+- [Anti-fraud setup](https://docs.gr4vy.com/guides/features/anti-fraud/setup.md): Setting up an anti-fraud service
+- [Silent mode](https://docs.gr4vy.com/guides/features/anti-fraud/silent-mode.md): Run additional anti-fraud services in Silent mode alongside your Primary service to compare and migrate without enforcing their decisions
+- [Automatic anti-fraud device fingerprinting](https://docs.gr4vy.com/guides/features/anti-fraud/fingerprint.md): Enabling automatic device fingerprinting
+- [Anti-fraud reviews](https://docs.gr4vy.com/guides/features/anti-fraud/reviews.md): Manually reviewing anti-fraud decisions
+- [Anti-fraud simulator](https://docs.gr4vy.com/guides/features/anti-fraud/simulator.md)
+- [Apple Pay](https://docs.gr4vy.com/guides/features/apple-pay/overview.md)
+- [Apple Pay on web with Embed](https://docs.gr4vy.com/guides/features/apple-pay/web.md)
+- [Apple Pay on web without Embed](https://docs.gr4vy.com/guides/features/apple-pay/web-without-sdk.md)
+- [Apple Pay on iOS with the SDK](https://docs.gr4vy.com/guides/features/apple-pay/ios.md)
+- [Apple Pay on iOS without the SDK](https://docs.gr4vy.com/guides/features/apple-pay/ios-without-sdk.md)
+- [Decrypted Apple Pay tokens](https://docs.gr4vy.com/guides/features/apple-pay/decrypted-tokens.md)
+- [Click to Pay](https://docs.gr4vy.com/guides/features/click-to-pay/overview.md)
+- [Click to Pay Setup](https://docs.gr4vy.com/guides/features/click-to-pay/setup.md)
+- [Customer Authentication Module (CAM)](https://docs.gr4vy.com/guides/features/click-to-pay/cam.md)
+- [Token Authentication Service (TAS)](https://docs.gr4vy.com/guides/features/click-to-pay/tas.md)
+- [Gift Cards](https://docs.gr4vy.com/guides/features/gift-cards/overview.md)
+- [Gift card simulator](https://docs.gr4vy.com/guides/features/gift-cards/simulator.md)
+- [Google Pay](https://docs.gr4vy.com/guides/features/google-pay/overview.md)
+- [Google Pay on web with Embed](https://docs.gr4vy.com/guides/features/google-pay/web.md)
+- [Google Pay on web without Embed](https://docs.gr4vy.com/guides/features/google-pay/web-without-sdk.md)
+- [Google Pay on Android with the SDK](https://docs.gr4vy.com/guides/features/google-pay/mobile.md)
+- [Google Pay on Android without the SDK](https://docs.gr4vy.com/guides/features/google-pay/mobile-without-sdk.md)
+- [Decrypted Google Pay tokens](https://docs.gr4vy.com/guides/features/google-pay/decrypted-tokens.md)
+- [Guest checkout](https://docs.gr4vy.com/guides/features/guest-checkout/overview.md): Create transactions without a creating a buyer first
+- [Linking guests buyer details](https://docs.gr4vy.com/guides/features/guest-checkout/linking.md): Use guest buyer details in combination with stored buyer records and their payment methods
+- [Vault token import](https://docs.gr4vy.com/guides/features/token-import/overview.md)
+- [Token import file creation](https://docs.gr4vy.com/guides/features/token-import/token-import-file.md)
+- [Token import file upload](https://docs.gr4vy.com/guides/features/token-import/token-file-transmission.md)
+- [Creating buyers & payment methods on import](https://docs.gr4vy.com/guides/features/token-import/buyer-payment-creation.md)
+- [Merchant accounts](https://docs.gr4vy.com/guides/features/merchant-accounts/overview.md): Manage multiple accounts in one instance
+- [Managing merchant accounts](https://docs.gr4vy.com/guides/features/merchant-accounts/accounts.md)
+- [Users & merchant accounts](https://docs.gr4vy.com/guides/features/merchant-accounts/users.md)
+- [API & merchant accounts](https://docs.gr4vy.com/guides/features/merchant-accounts/api.md)
+- [Embed & merchant accounts](https://docs.gr4vy.com/guides/features/merchant-accounts/embed.md)
+- [Multi captures](https://docs.gr4vy.com/guides/features/multi-captures/overview.md): Capture a single authorization in more than one step, drawing down the balance as you fulfill an order over time.
+- [Network tokens](https://docs.gr4vy.com/guides/features/network-tokens/overview.md): Using scheme tokens with payment orchestration
+- [Network token implementation](https://docs.gr4vy.com/guides/features/network-tokens/implementation.md): How to use scheme tokens with or without payment orchestration
+- [Network token lifecycle management](https://docs.gr4vy.com/guides/features/network-tokens/lifecycle.md): Managing the full lifecycle of network tokens
+- [Network Token Testing](https://docs.gr4vy.com/guides/features/network-tokens/testing.md)
+- [Network token pass through](https://docs.gr4vy.com/guides/features/network-tokens/passthrough.md)
+- [Partial authorization](https://docs.gr4vy.com/guides/features/partial-authentication/overview.md)
+- [Pay by Bank](https://docs.gr4vy.com/guides/features/pay-by-bank/overview.md): Understand Pay by Bank options and choose the right connector pages.
+- [Payment links](https://docs.gr4vy.com/guides/features/payment-links/overview.md): Set up payment links to accept payments from your customers.
+- [Sharing the payment link](https://docs.gr4vy.com/guides/features/payment-links/sharing.md)
+- [Payment link expiration and statuses](https://docs.gr4vy.com/guides/features/payment-links/statuses.md)
+- [Payouts](https://docs.gr4vy.com/guides/features/payouts/overview.md)
+- [Paze](https://docs.gr4vy.com/guides/features/paze/overview.md): Understand how Paze works and how to add the bank-led US digital wallet to your checkout with Gr4vy.
+- [Set up Paze](https://docs.gr4vy.com/guides/features/paze/setup.md): Activate Paze in the Gr4vy dashboard and configure your merchant details and domains.
+- [Paze on web](https://docs.gr4vy.com/guides/features/paze/web.md): Add Paze to a web checkout using the Paze JavaScript SDK and the Gr4vy server SDK.
+- [Paze on mobile](https://docs.gr4vy.com/guides/features/paze/mobile.md): Add Paze to native iOS and Android apps using the Paze mobile SDK and the Gr4vy server SDK.
+- [PSP Tokenization](https://docs.gr4vy.com/guides/features/psp-tokenization/overview.md)
+- [Push payments](https://docs.gr4vy.com/guides/features/push-payments/overview.md)
+- [Push payments and Embed](https://docs.gr4vy.com/guides/features/push-payments/embed.md)
+- [Reauthorization](https://docs.gr4vy.com/guides/features/reauthorization/overview.md): Automatically reauthorize an expired authorization in a capture request.
+- [Recurring payments](https://docs.gr4vy.com/guides/features/recurring-payments/overview.md)
+- [Common scenarios](https://docs.gr4vy.com/guides/features/recurring-payments/scenarios.md)
+- [Recurring transactions with Embed](https://docs.gr4vy.com/guides/features/recurring-payments/embed.md)
+- [Open-loop versus closed-loop](https://docs.gr4vy.com/guides/features/recurring-payments/open-loop.md)
+- [Recurring payments with network tokens](https://docs.gr4vy.com/guides/features/recurring-payments/network-tokens.md)
+- [Card fingerprints](https://docs.gr4vy.com/guides/features/cards/fingerprints.md): A unique hash for every card in the vault
+- [Payment account references](https://docs.gr4vy.com/guides/features/cards/payment-account-reference.md): A unique ID for the account behind the card
+- [Transaction simulators](https://docs.gr4vy.com/guides/features/simulators/overview.md)
+- [Transaction simulator webhooks](https://docs.gr4vy.com/guides/features/simulators/webhooks.md): Post webhook payloads to move simulated transactions, payouts, and refunds to their next state.
+- [Enable a Vault Forward endpoint](https://docs.gr4vy.com/guides/features/vault-forwarding/enable.md)
+- [Vault Forward card data from a checkout session](https://docs.gr4vy.com/guides/features/vault-forwarding/checkout-sessions.md)
+- [Forward 3DS authentication data via Vault Forward](https://docs.gr4vy.com/guides/features/vault-forwarding/3ds.md)
+- [Forward network tokens via Vault Forward](https://docs.gr4vy.com/guides/features/vault-forwarding/network-tokens.md)
+- [Advanced authentication for Vault Forward](https://docs.gr4vy.com/guides/features/vault-forwarding/authentication.md)
+- [Advanced authentication for Visa](https://docs.gr4vy.com/guides/features/vault-forwarding/visa.md)
+- [Webhooks](https://docs.gr4vy.com/guides/features/webhooks/overview.md)
+- [Webhook payload](https://docs.gr4vy.com/guides/features/webhooks/payload.md)
+- [Webhook events](https://docs.gr4vy.com/guides/features/webhooks/events.md)
+- [Technical webhook considerations](https://docs.gr4vy.com/guides/features/webhooks/technical-considerations.md)
+- [Webhook signatures](https://docs.gr4vy.com/guides/features/webhooks/signatures.md)
+- [Transaction statuses](https://docs.gr4vy.com/guides/api/statuses/transactions.md): A list of all statuses for transactions.
+- [Payment method statuses](https://docs.gr4vy.com/guides/api/statuses/payment-methods.md): A list of all statuses for payment methods.
+- [Dashboard overview](https://docs.gr4vy.com/guides/dashboard/overview.md): Monitor payment performance, configure controls, and manage operations in the Gr4vy Dashboard.
+- [API keys](https://docs.gr4vy.com/guides/dashboard/integrations/api-keys.md): Create and manage API key pairs from the dashboard, including the role, algorithm, and merchant accounts each key can access.
+- [Insights](https://docs.gr4vy.com/guides/dashboard/insights/homepage.md): Transaction insights with a daily, weekly, or monthly view.
+- [Authentication Insights](https://docs.gr4vy.com/guides/dashboard/insights/authentications.md): A data dashboard that allows deep dives into payments authentication data
+- [Authorization Insights](https://docs.gr4vy.com/guides/dashboard/insights/authorizations.md): A data dashboard that allows deep dives into payments authorization data
+- [Monitoring & Alerting](https://docs.gr4vy.com/guides/dashboard/monitoring-and-alerting/overview.md): Use monitors, thresholds, and alerts to quickly detect payment issues.
+- [Set Up a Monitor](https://docs.gr4vy.com/guides/dashboard/monitoring-and-alerting/setup.md): Learn how to set up a monitor to track authorization rates.
+- [Alerts](https://docs.gr4vy.com/guides/dashboard/monitoring-and-alerting/alerts.md): View and investigate alerts fired by your monitors from the Alerts log.
+- [Flow](https://docs.gr4vy.com/guides/dashboard/flow/overview.md): Control payment options presented at checkout, and the flow of card and non-card payments all the way through to the payment service.
+- [Checkout Flow](https://docs.gr4vy.com/guides/dashboard/flow/checkout.md): Control what payment options are displayed at checkout.
+- [Card Transactions Flow](https://docs.gr4vy.com/guides/dashboard/flow/card-transactions.md): Control how card payments are routed, retried, and rejected.
+- [Other Transactions Flow](https://docs.gr4vy.com/guides/dashboard/flow/other-transactions.md): Control how non-card payments are routed, retried, and rejected.
+- [Roles & Permissions](https://docs.gr4vy.com/guides/dashboard/roles-and-permissions/overview.md): Securing user access with fine-grained controls
+- [User roles](https://docs.gr4vy.com/guides/dashboard/roles-and-permissions/roles.md): Securing user access with fine-grained controls
+- [Additional user permissions](https://docs.gr4vy.com/guides/dashboard/roles-and-permissions/additional-permissions.md): Securing user access with fine-grained controls
+- [Reports](https://docs.gr4vy.com/guides/dashboard/reports/overview.md): Generate and schedule transactions via the dashboard.
+- [Report specification](https://docs.gr4vy.com/guides/dashboard/reports/spec.md): The specification of a report as defined by the API.
+- [Setup a report](https://docs.gr4vy.com/guides/dashboard/reports/how-to.md): Learn how to create a report via the dashboard.
+- [Available report models](https://docs.gr4vy.com/guides/dashboard/reports/models.md): The list of available models for which reports can be generated.
+- [Receivable transactions](https://docs.gr4vy.com/guides/dashboard/reports/models-accounts-receivables.md): Learn how to report on receivable transactions via the dashboard.
+- [Transactions](https://docs.gr4vy.com/guides/dashboard/reports/models-transactions.md): The list of available fields that can be included in a report for transactions.
+- [Transactions retries](https://docs.gr4vy.com/guides/dashboard/reports/models-transaction-retries.md): Learn how to report on transaction retries via the dashboard.
+- [Settlement reports](https://docs.gr4vy.com/guides/dashboard/reports/settlement/overview.md)
+- [Settlement report ingestion](https://docs.gr4vy.com/guides/dashboard/reports/settlement/ingestion.md)
+- [Settlement report scheduling](https://docs.gr4vy.com/guides/dashboard/reports/settlement/scheduling.md)
+- [Settlement reconciliation](https://docs.gr4vy.com/guides/dashboard/reports/settlement/reconciliation.md)
+- [Reconciling settlement records](https://docs.gr4vy.com/guides/dashboard/reports/settlement/settlement-records.md): Reconciling settlement records against the system
+- [Settlement report specification](https://docs.gr4vy.com/guides/dashboard/reports/settlement/specification.md)
+- [Settlement report Adyen mapping](https://docs.gr4vy.com/guides/dashboard/reports/settlement/adyen.md)
+- [Settlement report BlueSnap mapping](https://docs.gr4vy.com/guides/dashboard/reports/settlement/bluesnap.md)
+- [Settlement report Braintree mapping](https://docs.gr4vy.com/guides/dashboard/reports/settlement/braintree.md)
+- [Settlement report Chase Orbital mapping](https://docs.gr4vy.com/guides/dashboard/reports/settlement/chaseorbital.md)
+- [Settlement report Cybersource mapping](https://docs.gr4vy.com/guides/dashboard/reports/settlement/cybersource.md)
+- [Settlement report dLocal mapping](https://docs.gr4vy.com/guides/dashboard/reports/settlement/dlocal.md)
+- [Settlement report Nuvei mapping](https://docs.gr4vy.com/guides/dashboard/reports/settlement/nuvei.md)
+- [Settlement report PayPal mapping](https://docs.gr4vy.com/guides/dashboard/reports/settlement/paypal.md)
+- [Settlement report Stripe mapping](https://docs.gr4vy.com/guides/dashboard/reports/settlement/stripe.md)
+- [Settlement report Trustly (US) mapping](https://docs.gr4vy.com/guides/dashboard/reports/settlement/trustly.md)
+- [Single Sign-On](https://docs.gr4vy.com/guides/dashboard/sso/overview.md)
+- [Single Sign-On with Okta](https://docs.gr4vy.com/guides/dashboard/sso/okta.md): Configure Okta as a SAML identity provider for the Gr4vy dashboard.
+- [Single Sign-On with Azure AD](https://docs.gr4vy.com/guides/dashboard/sso/azure.md): Configure Azure AD (Microsoft Entra ID) as a SAML identity provider for the Gr4vy dashboard.
+- [Single Sign-On with OneLogin](https://docs.gr4vy.com/guides/dashboard/sso/onelogin.md): Configure OneLogin as a SAML identity provider for the Gr4vy dashboard.
+- [Common SSO issues](https://docs.gr4vy.com/guides/dashboard/sso/common-issues.md)
+- [Connections](https://docs.gr4vy.com/connections/payments/overview.md): Connect to payment processors, payment methods, anti-fraud services, and digital wallets.
+- [Adyen](https://docs.gr4vy.com/connections/payments/adyen.md): Connect to Adyen to accept card payments and local payment methods.
+- [Braintree](https://docs.gr4vy.com/connections/payments/braintree.md): Connect to Braintree to accept card payments and digital wallets.
+- [Buckaroo](https://docs.gr4vy.com/connections/payments/buckaroo.md): Connect to Buckaroo to accept card payments and local payment methods.
+- [Chase](https://docs.gr4vy.com/connections/payments/chase.md): Connect to Chase to accept card and bank payments through Chase Orbital.
+- [Checkout.com](https://docs.gr4vy.com/connections/payments/checkout.md): Connect to Checkout.com to accept card payments.
+- [CyberSource](https://docs.gr4vy.com/connections/payments/cybersource.md): Connect to CyberSource to accept card payments and local payment methods.
+- [dLocal](https://docs.gr4vy.com/connections/payments/dlocal.md): Connect to dLocal to accept local payment methods across emerging markets.
+- [Fiserv](https://docs.gr4vy.com/connections/payments/fiserv.md): Connect to Fiserv to accept card payments with IPG or CardPointe.
+- [Nuvei](https://docs.gr4vy.com/connections/payments/nuvei.md): Connect to Nuvei to accept card payments and local payment methods.
+- [PayPal](https://docs.gr4vy.com/connections/payments/paypal.md): Connect to PayPal to accept PayPal, PayPal Pay Later, and card payments.
+- [Stripe](https://docs.gr4vy.com/connections/payments/stripe.md): Connect to Stripe to accept cards, BNPL, and bank transfer methods.
+- [Worldline](https://docs.gr4vy.com/connections/payments/worldline.md): Connect to Worldline to accept card payments and local payment methods.
+- [Worldpay](https://docs.gr4vy.com/connections/payments/worldpay.md): Connect to Worldpay to accept card payments with VAP or WPG.
+- [Direct bank payments](https://docs.gr4vy.com/connections/payments/bank.md): Accept bank payments using raw bank account details.
+- [Adyen - ACH Direct Debit](https://docs.gr4vy.com/connections/payments/adyen-ach.md): Configure ACH Direct Debit via Adyen as a payment method in Gr4vy.
+- [Adyen - Pay by Bank (Plaid)](https://docs.gr4vy.com/connections/payments/adyen-paybybank.md): Configure Pay by Bank (Plaid) via Adyen as a payment method in Gr4vy.
+- [Adyen - Bank](https://docs.gr4vy.com/connections/payments/adyen-bank.md): Configure ACH, SEPA, and BACS via Adyen as payment methods in Gr4vy.
+- [BlueSnap - ACH Direct Debit](https://docs.gr4vy.com/connections/payments/bluesnap-ach.md): Connect to BlueSnap to accept ACH Direct Debit bank payments in the US.
+- [Chase Orbital - Bank](https://docs.gr4vy.com/connections/payments/chaseorbital-bank.md): Connect to Chase Orbital to accept ACH bank payments.
+- [Nuvei - Bank](https://docs.gr4vy.com/connections/payments/nuvei-bank.md): Configure ACH bank payments via Nuvei as a payment method in Gr4vy.
+- [dLocal - BCP](https://docs.gr4vy.com/connections/payments/dlocal-bcp.md): Configure BCP via dLocal as a payment method in Gr4vy.
+- [Adyen - BLIK](https://docs.gr4vy.com/connections/payments/adyen-blik.md): Configure BLIK via Adyen as a payment method in Gr4vy.
+- [dLocal - Bre-B](https://docs.gr4vy.com/connections/payments/dlocal-breb.md): Configure Bre-B via dLocal as a payment method in Gr4vy.
+- [dLocal - Capitec](https://docs.gr4vy.com/connections/payments/dlocal-capitec.md): Configure Capitec via dLocal as a payment method in Gr4vy.
+- [GoCardless](https://docs.gr4vy.com/connections/payments/gocardless-gocardless.md): Connect to GoCardless to accept bank payments through a redirect flow.
+- [Adyen - iDEAL](https://docs.gr4vy.com/connections/payments/adyen-ideal.md): Configure iDEAL via Adyen as a payment method in Gr4vy.
+- [Buckaroo - iDEAL](https://docs.gr4vy.com/connections/payments/buckaroo-ideal.md): Configure iDEAL via Buckaroo as a payment method in Gr4vy.
+- [Cybersource - iDEAL](https://docs.gr4vy.com/connections/payments/cybersource-ideal.md): Configure iDEAL via CyberSource as a payment method in Gr4vy.
+- [Nuvei - iDEAL](https://docs.gr4vy.com/connections/payments/nuvei-ideal.md): Configure iDEAL via Nuvei as a payment method in Gr4vy.
+- [Worldline TravelHub - iDEAL](https://docs.gr4vy.com/connections/payments/travelhub-ideal.md): Configure iDEAL via Worldline TravelHub.
+- [Nuvei - Interac](https://docs.gr4vy.com/connections/payments/nuvei-interac.md): Configure Interac via Nuvei as a payment method in Gr4vy.
+- [Cybersource - KCP](https://docs.gr4vy.com/connections/payments/cybersource-kcp.md): Configure KCP via CyberSource as a payment method in Gr4vy.
+- [dLocal - Khipu](https://docs.gr4vy.com/connections/payments/dlocal-khipu.md): Configure Khipu via dLocal as a payment method in Gr4vy.
+- [dLocal - Netbanking](https://docs.gr4vy.com/connections/payments/dlocal-netbanking.md): Configure Netbanking via dLocal as a payment method in Gr4vy.
+- [dLocal - NuPay](https://docs.gr4vy.com/connections/payments/dlocal-nupay.md): Configure NuPay via dLocal as a payment method in Gr4vy.
+- [Adyen - Online Banking Czech Republic](https://docs.gr4vy.com/connections/payments/adyen-onlinebankingcz.md): Configure Online Banking Czech Republic via Adyen as a payment method in Gr4vy.
+- [Azupay - PayID](https://docs.gr4vy.com/connections/payments/azupay-payid.md): Connect to Azupay to accept PayID bank payments in Australia.
+- [Azupay - PayTo](https://docs.gr4vy.com/connections/payments/azupay-payto.md): Connect to Azupay to accept PayTo bank payments in Australia.
+- [Plaid](https://docs.gr4vy.com/connections/payments/plaid-bank.md): Connect to Plaid to accept bank payments.
+- [Plaid Integration](https://docs.gr4vy.com/connections/payments/plaid-bank-integration.md): Integrate Plaid payments into your app.
+- [Plaid Recurring Payments](https://docs.gr4vy.com/connections/payments/plaid-bank-recurring.md): Set up recurring payments with Plaid.
+- [Plaid Signal setup](https://docs.gr4vy.com/connections/payments/plaid-bank-signal.md): Configure Plaid Signal rulesets for risk assessment.
+- [Adyen - PIX](https://docs.gr4vy.com/connections/payments/adyen-pix.md): Configure PIX via Adyen as a payment method in Gr4vy.
+- [dLocal - PIX](https://docs.gr4vy.com/connections/payments/dlocal-pix.md): Configure PIX via dLocal as a payment method in Gr4vy.
+- [Nuvei - Przelewy24](https://docs.gr4vy.com/connections/payments/nuvei-p24.md): Configure Przelewy24 via Nuvei as a payment method in Gr4vy.
+- [dLocal - PSE](https://docs.gr4vy.com/connections/payments/dlocal-pse.md): Configure PSE via dLocal as a payment method in Gr4vy.
+- [Nuvei - PSE](https://docs.gr4vy.com/connections/payments/nuvei-pse.md): Configure PSE via Nuvei as a payment method in Gr4vy.
+- [Adyen - SEPA](https://docs.gr4vy.com/connections/payments/adyen-sepa.md): Configure SEPA via Adyen as a payment method in Gr4vy.
+- [Adyen - Sofort](https://docs.gr4vy.com/connections/payments/adyen-sofort.md): Configure Sofort via Adyen as a payment method in Gr4vy.
+- [Worldline TravelHub - Sofort](https://docs.gr4vy.com/connections/payments/travelhub-sofort.md): Configure Sofort via Worldline TravelHub.
+- [Arcus - SPEI](https://docs.gr4vy.com/connections/payments/arcusfi-spei.md): Connect to Arcus to accept SPEI bank transfer payments in Mexico.
+- [dLocal - SPEI](https://docs.gr4vy.com/connections/payments/dlocal-spei.md): Configure SPEI via dLocal as a payment method in Gr4vy.
+- [Monato - SPEI](https://docs.gr4vy.com/connections/payments/monato-spei.md): Configure SPEI via Monato as a payment method in Gr4vy.
+- [Stripe - SPEI](https://docs.gr4vy.com/connections/payments/stripe-spei.md): Configure SPEI via Stripe as a bank transfer payment method in Gr4vy.
+- [dLocal - Stitch](https://docs.gr4vy.com/connections/payments/dlocal-stitch.md): Configure Stitch via dLocal as a payment method in Gr4vy.
+- [Trustly (Europe)](https://docs.gr4vy.com/connections/payments/trustlyeurope-trustlyeurope.md): Connect to Trustly Europe to accept redirect bank payments in Europe.
+- [Trustly (United States)](https://docs.gr4vy.com/connections/payments/trustly-trustly.md): Connect to Trustly to accept bank payments in the United States.
+- [dLocal - UPI](https://docs.gr4vy.com/connections/payments/dlocal-upi.md): Configure UPI via dLocal as a payment method in Gr4vy.
+- [dLocal - WebPay](https://docs.gr4vy.com/connections/payments/dlocal-webpay.md): Configure WebPay via dLocal as a payment method in Gr4vy.
+- [Affirm](https://docs.gr4vy.com/connections/payments/affirm-affirm.md): Connect to Affirm to accept buy now, pay later payments.
+- [Stripe - Affirm](https://docs.gr4vy.com/connections/payments/stripe-affirm.md): Configure Affirm via Stripe as a payment method in Gr4vy.
+- [Afterpay](https://docs.gr4vy.com/connections/payments/afterpay-afterpay.md): Connect to Afterpay to accept buy now, pay later payments.
+- [Adyen - Cash App Afterpay](https://docs.gr4vy.com/connections/payments/adyen-cashappafterpay.md): Configure Cash App Afterpay via Adyen as a payment method in Gr4vy.
+- [Klarna](https://docs.gr4vy.com/connections/payments/klarna-klarna.md): Set up Klarna and charge recurring subscriptions using merchant-initiated transactions (MIT) with a saved payment method.
+- [Nuvei - Klarna](https://docs.gr4vy.com/connections/payments/nuvei-klarna.md): Configure Klarna via Nuvei as a payment method in Gr4vy.
+- [Stripe - Klarna](https://docs.gr4vy.com/connections/payments/stripe-klarna.md): Configure Klarna via Stripe as a payment method in Gr4vy.
+- [Latitude / Gem](https://docs.gr4vy.com/connections/payments/latitude.md): Connect to Latitude or Gem to accept buy now, pay later payments in Australia and New Zealand.
+- [Laybuy](https://docs.gr4vy.com/connections/payments/laybuy-laybuy.md): Connect to Laybuy to accept buy now, pay later payments.
+- [PayPal Pay Later](https://docs.gr4vy.com/connections/payments/paypal-paypalpaylater.md): Configure PayPal Pay Later as a payment method in Gr4vy.
+- [Sezzle](https://docs.gr4vy.com/connections/payments/sezzle-sezzle.md): Connect to Sezzle to accept buy now, pay later payments in the United States and Canada.
+- [Zip](https://docs.gr4vy.com/connections/payments/zippay-zippay.md): Connect to Zip to accept buy now, pay later payments.
+- [ACI Worldwide - Card](https://docs.gr4vy.com/connections/payments/aci-card.md): Connect to ACI Worldwide to accept credit and debit card payments.
+- [Adyen - Card](https://docs.gr4vy.com/connections/payments/adyen-card.md): Connect to Adyen to accept credit and debit card payments.
+- [Airwallex - Card](https://docs.gr4vy.com/connections/payments/airwallex-card.md): Connect to Airwallex to accept credit and debit card payments.
+- [Authorize.net - Card](https://docs.gr4vy.com/connections/payments/authorizenet-card.md): Connect to Authorize.net to accept credit and debit card payments.
+- [BlueSnap - Card](https://docs.gr4vy.com/connections/payments/bluesnap-card.md): Connect to BlueSnap to accept credit and debit card payments.
+- [Braintree - Card](https://docs.gr4vy.com/connections/payments/braintree-card.md): Connect to Braintree to accept credit and debit card payments.
+- [Buckaroo - Card](https://docs.gr4vy.com/connections/payments/buckaroo-card.md): Connect to Buckaroo to accept credit and debit card payments.
+- [Chase Orbital - Card](https://docs.gr4vy.com/connections/payments/chaseorbital-card.md): Connect to Chase Orbital to accept card payments.
+- [Checkout.com - Card](https://docs.gr4vy.com/connections/payments/checkoutcom-card.md): Connect to Checkout.com to accept card payments.
+- [Cybersource - Card](https://docs.gr4vy.com/connections/payments/cybersource-card.md): Connect to CyberSource to accept credit and debit card payments.
+- [dLocal - Card](https://docs.gr4vy.com/connections/payments/dlocal-card.md): Connect to dLocal to accept credit and debit card payments.
+- [Ecommpay - Card](https://docs.gr4vy.com/connections/payments/ecommpay-card.md): Connect to Ecommpay to accept card payments.
+- [Fiserv CardPointe - Card](https://docs.gr4vy.com/connections/payments/cardpointe-card.md): Connect to CardPointe to accept credit and debit card payments.
+- [Finix - Card](https://docs.gr4vy.com/connections/payments/finix-card.md): Connect to Finix to accept Apple Pay payments.
+- [Fiserv IPG - Card](https://docs.gr4vy.com/connections/payments/fiserv-card.md): Connect to Fiserv IPG to accept card payments.
+- [Mastercard Gateway - Card](https://docs.gr4vy.com/connections/payments/mastercard-card.md): Connect to Mastercard Gateway to accept card payments.
+- [Merchant Warrior - Card](https://docs.gr4vy.com/connections/payments/merchantwarrior-card.md): Connect to Merchant Warrior to accept card payments.
+- [Moneris - Card](https://docs.gr4vy.com/connections/payments/moneris-card.md): Connect to Moneris to accept card payments.
+- [NMI - Card](https://docs.gr4vy.com/connections/payments/nmi-card.md): Connect to NMI to accept card payments.
+- [Nuvei - Card](https://docs.gr4vy.com/connections/payments/nuvei-card.md): Connect to Nuvei to accept credit and debit card payments.
+- [PayPal - Card](https://docs.gr4vy.com/connections/payments/paypal-card.md): Connect to PayPal to accept credit and debit card payments.
+- [Planet - Card](https://docs.gr4vy.com/connections/payments/planet-card.md): Connect to Planet to accept card payments.
+- [Repay - Card](https://docs.gr4vy.com/connections/payments/repay-card.md): Connect to Repay to accept credit and debit card payments.
+- [Shift4 - Card](https://docs.gr4vy.com/connections/payments/shift4-card.md): Connect to Shift4 to accept credit and debit card payments.
+- [Stripe - Card](https://docs.gr4vy.com/connections/payments/stripe-card.md): Connect to Stripe to accept credit and debit card payments.
+- [Worldline Connect - Card](https://docs.gr4vy.com/connections/payments/worldlineconnect-card.md): Connect to Worldline Connect to accept card payments.
+- [Worldline TravelHub - Card](https://docs.gr4vy.com/connections/payments/travelhub-card.md): Configure card payments via Worldline TravelHub.
+- [Trust Payments - Card](https://docs.gr4vy.com/connections/payments/trustpayments-card.md): Connect to Trust Payments to accept card payments.
+- [Unlimit - Card](https://docs.gr4vy.com/connections/payments/unlimit-card.md): Connect to Unlimit to accept credit and debit card payments.
+- [USAePay - Card](https://docs.gr4vy.com/connections/payments/usaepay-card.md): Connect to USAePay to accept credit and debit card payments.
+- [Windcave - Card](https://docs.gr4vy.com/connections/payments/windcave-card.md): Connect to Windcave to accept card payments.
+- [Worldpay (VAP) - Card](https://docs.gr4vy.com/connections/payments/worldpayvap-card.md): Connect to Worldpay (VAP) to accept card payments.
+- [Worldpay (WPG) - Card](https://docs.gr4vy.com/connections/payments/worldpaywpg-card.md): Connect to Worldpay WPG to accept card payments.
+- [dLocal - Abitab](https://docs.gr4vy.com/connections/payments/dlocal-abitab.md): Configure Abitab via dLocal as a payment method in Gr4vy.
+- [dLocal - Boleto](https://docs.gr4vy.com/connections/payments/dlocal-boleto.md): Configure Boleto via dLocal as a payment method in Gr4vy.
+- [dLocal - Efecty](https://docs.gr4vy.com/connections/payments/dlocal-efecty.md): Configure Efecty via dLocal as a payment method in Gr4vy.
+- [Adyen - Konbini](https://docs.gr4vy.com/connections/payments/adyen-konbini.md): Configure Konbini convenience store payments via Adyen as a payment method in Gr4vy.
+- [Adyen - Konbini (7-Eleven)](https://docs.gr4vy.com/connections/payments/adyen-seveneleven.md): Configure Konbini (7-Eleven) cash payments via Adyen as a payment method in Gr4vy.
+- [Multipago](https://docs.gr4vy.com/connections/payments/multipago-multipago.md): Connect to Multipago to accept wallet payments in Bolivia.
+- [OXXO](https://docs.gr4vy.com/connections/payments/oxxo-oxxo.md): Connect to OXXO to accept cash payments at convenience stores in Mexico.
+- [dLocal - OXXO](https://docs.gr4vy.com/connections/payments/dlocal-oxxo.md): Configure OXXO via dLocal as a payment method in Gr4vy.
+- [Stripe - OXXO](https://docs.gr4vy.com/connections/payments/stripe-oxxo.md): Configure OXXO payments via Stripe in Gr4vy, including webhooks and redirect integration.
+- [dLocal - Pago Efectivo](https://docs.gr4vy.com/connections/payments/dlocal-pagoefectivo.md): Configure Pago Efectivo via dLocal as a payment method in Gr4vy.
+- [dLocal - Payvalida](https://docs.gr4vy.com/connections/payments/dlocal-payvalida.md): Configure Payvalida via dLocal as a payment method in Gr4vy.
+- [dLocal - Rapipago](https://docs.gr4vy.com/connections/payments/dlocal-rapipago.md): Configure Rapipago via dLocal as a payment method in Gr4vy.
+- [dLocal - Redpagos](https://docs.gr4vy.com/connections/payments/dlocal-redpagos.md): Configure Redpagos via dLocal as a payment method in Gr4vy.
+- [dLocal - Servipag](https://docs.gr4vy.com/connections/payments/dlocal-servipag.md): Configure Servipag via dLocal as a payment method in Gr4vy.
+- [The Giving Block](https://docs.gr4vy.com/connections/payments/givingblock-givingblock.md): Connect to The Giving Block to accept cryptocurrency payments.
+- [Qwikcilver (Gift Cards)](https://docs.gr4vy.com/connections/payments/qwikcilver-gift-card.md): Configure Qwikcilver gift card payments in Gr4vy to accept gift cards at checkout, including balance checks and split tender.
+- [Value Link (Gift Cards)](https://docs.gr4vy.com/connections/payments/valuelink-gift-card.md): Configure Value Link (by Fiserv) gift card payments in Gr4vy to accept gift cards at checkout, including balance checks and split tender.
+- [Adyen - Alipay](https://docs.gr4vy.com/connections/payments/adyen-alipay.md): Configure Alipay via Adyen as a payment method in Gr4vy.
+- [dLocal - Alipay](https://docs.gr4vy.com/connections/payments/dlocal-alipay.md): Configure Alipay via dLocal as a payment method in Gr4vy.
+- [dLocal - Boost](https://docs.gr4vy.com/connections/payments/dlocal-boost.md): Configure Boost via dLocal as a payment method in Gr4vy.
+- [Adyen - Cash App Pay](https://docs.gr4vy.com/connections/payments/adyen-cashapp.md): Configure Cash App Pay via Adyen as a payment method in Gr4vy.
+- [dLocal - Dana](https://docs.gr4vy.com/connections/payments/dlocal-dana.md): Configure DANA via dLocal as a payment method in Gr4vy.
+- [Adyen - DuitNow](https://docs.gr4vy.com/connections/payments/adyen-duitnow.md): Configure DuitNow via Adyen as a payment method in Gr4vy.
+- [Adyen - GCash](https://docs.gr4vy.com/connections/payments/adyen-gcash.md): Configure GCash via Adyen as a payment method in Gr4vy.
+- [dLocal - GCash](https://docs.gr4vy.com/connections/payments/dlocal-gcash.md): Configure GCash via dLocal as a payment method in Gr4vy.
+- [dLocal - GrabPay](https://docs.gr4vy.com/connections/payments/dlocal-grabpay.md): Configure GrabPay via dLocal as a payment method in Gr4vy.
+- [Stripe - Onelink](https://docs.gr4vy.com/connections/payments/stripe-onelink.md): Configure Onelink via Stripe as a payment method in Gr4vy.
+- [dLocal - LinkAja](https://docs.gr4vy.com/connections/payments/dlocal-linkaja.md): Configure LinkAja via dLocal as a payment method in Gr4vy.
+- [dLocal - Maybank QR Pay](https://docs.gr4vy.com/connections/payments/dlocal-maybankqrpay.md): Configure Maybank QR Pay via dLocal as a payment method in Gr4vy.
+- [dLocal - Mercado Pago](https://docs.gr4vy.com/connections/payments/dlocal-mercadopago.md): Configure Mercado Pago via dLocal as a payment method in Gr4vy.
+- [dLocal - Nequi](https://docs.gr4vy.com/connections/payments/dlocal-nequi.md): Configure Nequi via dLocal as a payment method in Gr4vy.
+- [dLocal - OVO](https://docs.gr4vy.com/connections/payments/dlocal-ovo.md): Configure OVO via dLocal as a payment method in Gr4vy.
+- [PayPal](https://docs.gr4vy.com/connections/payments/paypal-paypal.md): Configure PayPal as a payment method in Gr4vy.
+- [dLocal - Paymaya](https://docs.gr4vy.com/connections/payments/dlocal-paymaya.md): Configure Paymaya via dLocal as a payment method in Gr4vy.
+- [Adyen - PayPay](https://docs.gr4vy.com/connections/payments/adyen-paypay.md): Configure PayPay via Adyen as a payment method in Gr4vy.
+- [Paysquad](https://docs.gr4vy.com/connections/payments/paysquad-paysquad.md): Connect to Paysquad to accept push payments through the Paysquad hosted page.
+- [dLocal - PicPay](https://docs.gr4vy.com/connections/payments/dlocal-picpay.md): Configure PicPay via dLocal as a payment method in Gr4vy.
+- [dLocal - Rabbit LINE Pay](https://docs.gr4vy.com/connections/payments/dlocal-rabbitlinepay.md): Configure Rabbit LINE Pay via dLocal as a payment method in Gr4vy.
+- [dLocal - ShopeePay](https://docs.gr4vy.com/connections/payments/dlocal-shopeepay.md): Configure ShopeePay via dLocal as a payment method in Gr4vy.
+- [Smartpay](https://docs.gr4vy.com/connections/payments/smartpay-smartpay.md): Connect to Smartpay to accept bank payments in Japan.
+- [Adyen - Swish](https://docs.gr4vy.com/connections/payments/adyen-swish.md): Configure Swish via Adyen as a payment method in Gr4vy.
+- [dLocal - Thai QR Payment](https://docs.gr4vy.com/connections/payments/dlocal-thaiqr.md): Configure Thai QR Payment via dLocal as a payment method in Gr4vy.
+- [dLocal - Touch 'n Go](https://docs.gr4vy.com/connections/payments/dlocal-touchngo.md): Configure Touch 'n Go via dLocal as a payment method in Gr4vy.
+- [dLocal - TrueMoney](https://docs.gr4vy.com/connections/payments/dlocal-truemoney.md): Configure TrueMoney via dLocal as a payment method in Gr4vy.
+- [Braintree - Venmo](https://docs.gr4vy.com/connections/payments/braintree-venmo.md): Configure Venmo via Braintree as a payment method in Gr4vy.
+- [PayPal - Venmo](https://docs.gr4vy.com/connections/payments/paypal-venmo.md): Configure Venmo via PayPal as a payment method in Gr4vy.
+- [Adyen - Vipps](https://docs.gr4vy.com/connections/payments/adyen-vipps.md): Configure Vipps via Adyen as a payment method in Gr4vy.
+- [dLocal - WeChat Pay](https://docs.gr4vy.com/connections/payments/dlocal-wechat.md): Configure WeChat Pay via dLocal as a payment method in Gr4vy.
+- [Nuvei - Wero](https://docs.gr4vy.com/connections/payments/nuvei-wero.md): Configure Wero via Nuvei as a payment method in Gr4vy.
+- [dLocal - Yape](https://docs.gr4vy.com/connections/payments/dlocal-yape.md): Configure Yape via dLocal as a payment method in Gr4vy.
+- [Apple Pay](https://docs.gr4vy.com/connections/digital-wallets/apple-pay.md): Set up Apple Pay as a digital wallet payment method in Gr4vy.
+- [Click to Pay](https://docs.gr4vy.com/connections/digital-wallets/click-to-pay.md): Set up Click to Pay as a digital wallet payment method in Gr4vy.
+- [Google Pay](https://docs.gr4vy.com/connections/digital-wallets/google-pay.md): Set up Google Pay as a digital wallet payment method in Gr4vy.
+- [Paze](https://docs.gr4vy.com/connections/digital-wallets/paze.md): Accept Paze, the US bank-led digital wallet from Early Warning Services, through Gr4vy.
+- [Cybersource Decision Manager](https://docs.gr4vy.com/connections/anti-fraud/cybersource.md): Connect to Cybersource Decision Manager for anti-fraud screening and risk assessment.
+- [Forter](https://docs.gr4vy.com/connections/anti-fraud/forter.md): Connect to Forter for real-time anti-fraud decisions and risk assessment.
+- [Riskified](https://docs.gr4vy.com/connections/anti-fraud/riskified.md): Connect to Riskified for e-commerce fraud prevention and risk assessment.
+- [Sardine](https://docs.gr4vy.com/connections/anti-fraud/sardine.md): Connect to Sardine for AI-powered fraud prevention and risk assessment.
+- [Sift](https://docs.gr4vy.com/connections/anti-fraud/sift.md): Connect to Sift for machine learning-based fraud detection and prevention.
+- [Connectors by country](https://docs.gr4vy.com/connections/payments/by-country.md): Find available payment connectors and methods for each country.
+- [Connectors by currency](https://docs.gr4vy.com/connections/payments/by-currency.md): Find available payment connectors for each supported currency.
+- [Card schemes](https://docs.gr4vy.com/connections/payments/card-schemes.md): Explore the card schemes and networks supported by Gr4vy.
+- [Authentication](https://docs.gr4vy.com/guides/api/authentication.md): API authentication basics and best practices.
+- [Managing API keys](https://docs.gr4vy.com/guides/api/api-keys.md): Provision and manage API key pairs over the API, including multi-account keys, your own public keys, and enabling or disabling keys.
+- [API Compatibility](https://docs.gr4vy.com/guides/api/compatibility.md)
+- [Connectivity and TLS](https://docs.gr4vy.com/guides/api/connectivity.md): Review the TLS and security requirements for integrating with the Gr4vy API.
+- [Authentication with JWTs](https://docs.gr4vy.com/guides/api/jwts.md)
+- [Environments](https://docs.gr4vy.com/guides/api/environments.md): Sandbox and Production environments within an instance.
+- [Error handling](https://docs.gr4vy.com/guides/api/errors.md): Best practices on handling errors and other exceptions.
+- [Idempotent requests](https://docs.gr4vy.com/guides/api/idempotent-requests.md): Best practices on handling retries in an idempotent way.
+- [IP address forwarding](https://docs.gr4vy.com/guides/api/ip-address-forwarding.md): Best practices on handling the original IP address for a transaction.
+- [OpenAPI 3.1.0 Specification](https://docs.gr4vy.com/guides/api/openapi.md)
+- [Pagination](https://docs.gr4vy.com/guides/api/pagination.md): Best practices on handling pagination in the API.
+- [Prefer header](https://docs.gr4vy.com/guides/api/prefer-header.md)
+- [Rate limiting](https://docs.gr4vy.com/guides/api/rate-limiting.md): Rate limits and enumeration prevention
+- [Handling transaction timeout](https://docs.gr4vy.com/guides/timeouts.md)
+- [Transaction error codes](https://docs.gr4vy.com/guides/api/error-codes.md): A list of all error codes for transactions.
+- [List transactions](https://docs.gr4vy.com/reference/transactions/list-transactions.md): Returns a paginated list of transactions for the merchant account, sorted by most recently updated. You can filter, sort, and search transactions using query parameters.
+- [Create transaction](https://docs.gr4vy.com/reference/transactions/new-transaction.md): Create a new transaction using a supported payment method. If additional buyer authorization is required, an approval URL will be returned. Duplicated gift card numbers are not supported.
+- [Get transaction](https://docs.gr4vy.com/reference/transactions/get-transaction.md): Retrieve the details of a transaction by its unique identifier.
+- [Capture transaction](https://docs.gr4vy.com/reference/transactions/capture-transaction.md): Captures a previously authorized transaction. You can capture the full or a partial amount, as long as it does not exceed the authorized amount (unless over-capture is enabled).
+- [Void transaction](https://docs.gr4vy.com/reference/transactions/void-transaction.md): Voids a previously authorized transaction. If the transaction was not yet successfully authorized, or was already captured, the void will not be processed. This operation releases the hold on the buyer's funds. Captured transactions can be refunded instead.
+- [List transaction captures](https://docs.gr4vy.com/reference/transactions/list-transaction-captures.md): List all captures for a specific transaction.
+- [Get capture](https://docs.gr4vy.com/reference/transactions/get-transaction-capture.md): Retrieve a specific capture for a transaction by its unique identifier.
+- [List transaction events](https://docs.gr4vy.com/reference/transactions/list-transaction-events.md): Retrieve a paginated list of events related to processing a transaction, including status changes, API requests, and webhook delivery attempts. Events are listed in chronological order, with the most recent events first.
+- [List transaction Flow rules](https://docs.gr4vy.com/reference/transactions/list-transaction-actions.md): Retrieve the list of Flow rule actions that have been triggered for a transaction.
+- [Sync transaction](https://docs.gr4vy.com/reference/transactions/sync-transaction.md): Synchronizes the status of a transaction with the underlying payment service provider. This is useful for transactions in a pending state to check if they've been completed or failed. Only available for some payment service providers.
+- [Update a transaction](https://docs.gr4vy.com/reference/transactions/update-transaction.md): Manually updates a transaction.
+- [Cancel a transaction](https://docs.gr4vy.com/reference/transactions/cancel-transaction.md): Cancels a pending transaction. If the transaction was successfully authorized, or was already captured, the cancel will not be processed.
+- [Get or update transaction session](https://docs.gr4vy.com/reference/transactions/get-transaction-session.md): Gets and/or updates a transaction's session, where the connector supports this feature. Updates are often optional or not supported. Please refer to connector documentation.
+- [List all buyers](https://docs.gr4vy.com/reference/buyers/list-buyers.md): List all buyers or search for a specific buyer.
+- [Add a buyer](https://docs.gr4vy.com/reference/buyers/new-buyer.md): Create a new buyer record.
+- [Get a buyer](https://docs.gr4vy.com/reference/buyers/get-buyer.md): Fetches a buyer by its ID.
+- [Update a buyer](https://docs.gr4vy.com/reference/buyers/update-buyer.md): Updates a buyer record.
+- [Delete a buyer](https://docs.gr4vy.com/reference/buyers/delete-buyer.md): Permanently removes a buyer record.
+- [List a buyer's shipping details](https://docs.gr4vy.com/reference/buyers/get-buyer-shipping-details.md): List all the shipping details associated to a specific buyer.
+- [Add buyer shipping details](https://docs.gr4vy.com/reference/buyers/new-buyer-shipping-detail.md): Associate shipping details to a buyer.
+- [Update a buyer's shipping details](https://docs.gr4vy.com/reference/buyers/update-buyer-shipping-detail.md): Update the shipping details associated to a specific buyer.
+- [Delete a buyer's shipping details](https://docs.gr4vy.com/reference/buyers/delete-buyer-shipping-detail.md): Delete the shipping details associated to a specific buyer.
+- [Create checkout session](https://docs.gr4vy.com/reference/checkout-sessions/new-checkout-session.md): Create a new checkout session.
+- [Get checkout session](https://docs.gr4vy.com/reference/checkout-sessions/get-checkout-session.md)
+- [Update checkout session](https://docs.gr4vy.com/reference/checkout-sessions/update-checkout-session.md)
+- [Delete checkout session](https://docs.gr4vy.com/reference/checkout-sessions/delete-checkout-session.md)
+- [Update checkout session fields](https://docs.gr4vy.com/reference/checkout-sessions/update-checkout-session-fields.md)
+- [List all payment links](https://docs.gr4vy.com/reference/payment-links/list-payment-links.md): List all created payment links.
+- [Add a payment link](https://docs.gr4vy.com/reference/payment-links/new-payment-link.md): Create a new payment link.
+- [Get payment link](https://docs.gr4vy.com/reference/payment-links/get-payment-link.md): Fetch the details for a payment link.
+- [Expire a payment link](https://docs.gr4vy.com/reference/payment-links/expire-payment-link.md): Expire an existing payment link.
+- [List payment options](https://docs.gr4vy.com/reference/payment-options/list-payment-options.md): List the payment options available at checkout. filtering by country, currency, and additional fields passed to Flow rules.
+- [List payouts created](https://docs.gr4vy.com/reference/payouts/list-payouts.md): Returns a list of payouts made.
+- [Create a payout](https://docs.gr4vy.com/reference/payouts/new-payout.md): Creates a new payout.
+- [Get a payout](https://docs.gr4vy.com/reference/payouts/get-payout.md): Retrieves a payout.
+- [List transaction refunds](https://docs.gr4vy.com/reference/transactions/list-transaction-refunds.md): List refunds for a transaction.
+- [Create transaction refund](https://docs.gr4vy.com/reference/transactions/refund-transaction.md): Create a refund for a transaction.
+- [Create batch transaction refund](https://docs.gr4vy.com/reference/transactions/refund-all.md): Create a refund for all instruments on a transaction.
+- [Get refund](https://docs.gr4vy.com/reference/transactions/get-refund.md): Fetch a refund.
+- [Create a session for a payment service definition](https://docs.gr4vy.com/reference/payment-service-sessions/create-payment-service-session.md): Creates a session for a payment service that supports sessions.
+- [Create a session for a payment service definition](https://docs.gr4vy.com/reference/payment-service-sessions/create-payment-service-session-by-id.md): Creates a session for a payment service that supports sessions.
+- [List transaction settlements](https://docs.gr4vy.com/reference/settlements/list-settlements.md): List all settlements for a specific transaction.
+- [Get transaction settlement](https://docs.gr4vy.com/reference/settlements/get-settlement.md): Retrieve a specific settlement for a transaction by its unique identifier.
+- [List transaction refund settlements](https://docs.gr4vy.com/reference/settlements/list-refund-settlements.md): List all refund settlements for a specific transaction.
+- [Get transaction refund settlement](https://docs.gr4vy.com/reference/settlements/get-refund-settlement.md): Retrieve a specific refund settlement for a transaction by its unique identifier.
+- [List transaction chargebacks](https://docs.gr4vy.com/reference/disputes/list-chargebacks.md): List all chargebacks for a specific transaction.
+- [List transaction chargeback reversals](https://docs.gr4vy.com/reference/disputes/list-chargeback-reversals.md): List all chargeback reversals for a specific transaction.
+- [List card scheme definitions](https://docs.gr4vy.com/reference/card-schemes/list-card-scheme-definitions.md): Fetch a list of the definitions of each card scheme.
+- [Get card details](https://docs.gr4vy.com/reference/card-details/get-card-details.md): Gets details about a particular card based on the BIN. Use the currency, amount, and other fields to apply any Flow rules that may put requirements on the card.
+- [Create a Apple Pay session](https://docs.gr4vy.com/reference/digital-wallets/get-apple-pay-session.md): Create a session for use with Apple Pay.
+- [Create a Google Pay session](https://docs.gr4vy.com/reference/digital-wallets/get-google-pay-session.md): Create a session for use with Google Pay.
+- [Create a Click to Pay session](https://docs.gr4vy.com/reference/digital-wallets/get-click-to-pay-session.md): Create a session for use with Click to Pay.
+- [List gift cards for a buyer](https://docs.gr4vy.com/reference/gift-cards/list-buyer-gift-cards.md): List all the stored gift cards for a specific buyer.
+- [List gift cards](https://docs.gr4vy.com/reference/gift-cards/list-gift-cards.md): Browser all gift cards.
+- [Verify and get gift card balances](https://docs.gr4vy.com/reference/gift-cards/list-gift-card-balances.md): Fetch the balances for one or more gift cards.
+- [Create gift card](https://docs.gr4vy.com/reference/gift-cards/new-gift-card.md): Store a new gift card in the vault.
+- [Get gift card](https://docs.gr4vy.com/reference/gift-cards/get-gift-card.md): Fetch details about a gift card.
+- [Delete a gift card](https://docs.gr4vy.com/reference/gift-cards/delete-gift-card.md): Removes a gift card from our system.
+- [Issue a gift card](https://docs.gr4vy.com/reference/gift-cards/issue-gift-card.md): Issue a new virtual gift card through the primary gift card service.
+- [Activate a gift card](https://docs.gr4vy.com/reference/gift-cards/activate-gift-card.md): Activate a physical gift card through the primary gift card service. Set `store` to `true` to also store the activated gift card.
+- [List payment methods for a buyer](https://docs.gr4vy.com/reference/payment-methods/list-buyer-payment-methods.md): List all the stored payment methods for a specific buyer.
+- [List all payment methods](https://docs.gr4vy.com/reference/payment-methods/list-payment-methods.md): List all stored payment method.
+- [Create payment method](https://docs.gr4vy.com/reference/payment-methods/new-payment-method.md): Store a new payment method.
+- [Get payment method](https://docs.gr4vy.com/reference/payment-methods/get-payment-method.md): Retrieve a payment method.
+- [Update payment method](https://docs.gr4vy.com/reference/payment-methods/update-payment-method.md): Update the details of a stored payment method.
+- [Delete payment method](https://docs.gr4vy.com/reference/payment-methods/delete-payment-method.md): Delete a payment method.
+- [List payment method definitions](https://docs.gr4vy.com/reference/payment-method-definitions/list-payment-method-definitions.md): Returns a list of all available payment method definitions.
+- [Create account updater job](https://docs.gr4vy.com/reference/account-updater/new-account-updater-job.md): Schedule one or more stored cards for an account update.
+- [List network tokens](https://docs.gr4vy.com/reference/network-tokens/list-network-tokens.md): List all network tokens stored for a payment method.
+- [Provision network token](https://docs.gr4vy.com/reference/network-tokens/provision-network-token.md): Provision a network token for a payment method.
+- [Provision network token cryptogram](https://docs.gr4vy.com/reference/network-tokens/get-network-token-cryptogram.md): Provision a cryptogram for a network token.
+- [Suspend network token](https://docs.gr4vy.com/reference/network-tokens/suspend-network-token.md): Suspend a network token for a payment method.
+- [Resume network token](https://docs.gr4vy.com/reference/network-tokens/resume-network-token.md): Resume a suspended network token for a payment method.
+- [Delete network token](https://docs.gr4vy.com/reference/network-tokens/delete-network-token.md): Delete a network token for a payment method.
+- [List payment service tokens](https://docs.gr4vy.com/reference/payment-service-tokens/list-payment-service-tokens.md): List all gateway tokens stored for a payment method.
+- [Create payment service token](https://docs.gr4vy.com/reference/payment-service-tokens/provision-payment-service-token.md): Create a gateway tokens for a payment method.
+- [Delete payment service token](https://docs.gr4vy.com/reference/payment-service-tokens/delete-payment-service-token.md): Delete a gateway tokens for a payment method.
+- [Forward PCI data](https://docs.gr4vy.com/reference/vault-forwarding/make-vault-forward.md): Forward an API call to a PCI endpoint. The request body is evaluated and any template fields are replaced by the card data before the request is sent to the given destination.
+- [List configured Vault Forward endpoints](https://docs.gr4vy.com/reference/vault-forwarding/list-vault-forward-configs.md): Lists the currently configured Vault Forward endpoints that can be used to forward PCI data to.
+- [Get configured Vault Forward endpoints](https://docs.gr4vy.com/reference/vault-forwarding/get-vault-forward-config.md): Gets a configured Vault Forward endpoints that can be used to forward PCI data to.
+- [List configured Vault Forward authentication methods](https://docs.gr4vy.com/reference/vault-forwarding/list-vault-forward-authentications.md): Lists the configured Vault Forward authentication methods that can be applied in Vault Forward requests for the given configuration.
+- [Get Vault Forward authentication method](https://docs.gr4vy.com/reference/vault-forwarding/get-vault-forward-authentication.md): Gets a configured Vault Forward authentication method.
+- [Adds new Vault Forward authentication method](https://docs.gr4vy.com/reference/vault-forwarding/add-vault-forward-authentication.md): Configures a new Vault Forward authentication method. This allows the authentication method to be be applied in Vault Forward requests.
+- [Update Vault Forward authentication method](https://docs.gr4vy.com/reference/vault-forwarding/update-vault-forward-authentication.md): Updates an existing Vault Forward authentication method.
+- [Remove a Vault Forward authentication method](https://docs.gr4vy.com/reference/vault-forwarding/delete-vault-forward-authentication.md): Removes a configured Vault Forward authentication method, disallowing it from being applied in Vault Forward requests.
+- [List connections](https://docs.gr4vy.com/reference/connections/list-connections.md): Returns a list of all configured connections.
+- [List connection definitions](https://docs.gr4vy.com/reference/connections/list-connection-definitions.md)
+- [Get a payment service definition](https://docs.gr4vy.com/reference/payment-service-definitions/get-payment-service-definition.md): Get the definition of a payment service that can be configured.
+- [List payment services](https://docs.gr4vy.com/reference/payment-services/list-payment-services.md): List the configured payment services.
+- [Configure a payment service](https://docs.gr4vy.com/reference/payment-services/new-payment-service.md): Configures a new payment service for use by merchants.
+- [Get payment service](https://docs.gr4vy.com/reference/payment-services/get-payment-service.md): Get the details of a configured payment service.
+- [Update a configured payment service](https://docs.gr4vy.com/reference/payment-services/update-payment-service.md): Updates the configuration of a payment service.
+- [Delete a configured payment service](https://docs.gr4vy.com/reference/payment-services/delete-payment-service.md): Deletes all the configuration of a payment service.
+- [Verify payment service credentials](https://docs.gr4vy.com/reference/payment-services/verify-payment-service.md): Verify the credentials of a configured payment service
+- [List digital wallets](https://docs.gr4vy.com/reference/digital-wallets/list-digital-wallets.md): List configured digital wallets.
+- [Get digital wallet](https://docs.gr4vy.com/reference/digital-wallets/get-digital-wallet.md): Fetch the details a digital wallet.
+- [Register digital wallet](https://docs.gr4vy.com/reference/digital-wallets/register-digital-wallet.md): Register a digital wallet like Apple Pay, Google Pay, or Click to Pay.
+- [Update digital wallet](https://docs.gr4vy.com/reference/digital-wallets/update-digital-wallet.md): Update a digital wallet.
+- [Delete digital wallet](https://docs.gr4vy.com/reference/digital-wallets/deregister-digital-wallet.md): Delete a configured digital wallet.
+- [Register a digital wallet domain](https://docs.gr4vy.com/reference/digital-wallets/new-digital-wallet-domain.md): Register a digital wallet domain (Apple Pay only).
+- [Remove a digital wallet domain](https://docs.gr4vy.com/reference/digital-wallets/delete-digital-wallet-domain.md): Remove a digital wallet domain (Apple Pay only).
+- [List Apple Pay certificates](https://docs.gr4vy.com/reference/digital-wallets/list-apple-pay-certificates.md): Returns a list of Apple Pay certificate records.
+- [New Apple Pay certificate](https://docs.gr4vy.com/reference/digital-wallets/create-apple-pay-certificate.md): Starts a new Apple Pay payment processing certificate registration. The Apple digital wallet must be registered before you can register an Apple Pay certificate.
+- [Update Apple Pay certificate](https://docs.gr4vy.com/reference/digital-wallets/update-apple-pay-certificate.md): Update the Apple Pay certificate record with the payment processing certificate received from Apple.
+- [Remove Apple Pay certificate](https://docs.gr4vy.com/reference/digital-wallets/delete-apple-pay-certificate.md): Deletes an Apple Pay certificate record.
+- [Get anti fraud service definition](https://docs.gr4vy.com/reference/anti-fraud-services/get-anti-fraud-service-definition.md): Gets the definition for an anti fraud service.
+- [New anti-fraud service](https://docs.gr4vy.com/reference/anti-fraud-services/new-anti-fraud-service.md): Adds an anti-fraud service, enabling merchants to determine risky transactions and prevent chargebacks.
+- [Get anti-fraud service](https://docs.gr4vy.com/reference/anti-fraud-services/get-anti-fraud-service.md): Gets information about an anti-fraud service.
+- [Update anti-fraud service](https://docs.gr4vy.com/reference/anti-fraud-services/update-anti-fraud-service.md): Update an anti-fraud service, enabling merchants to determine risky transactions and prevent chargebacks.
+- [Delete anti-fraud service](https://docs.gr4vy.com/reference/anti-fraud-services/delete-anti-fraud-service.md): Removes an anti-fraud service. Any associated credentials will also be deleted.
+- [Get gift card service definition](https://docs.gr4vy.com/reference/gift-card-services/get-gift-card-service-definition.md): Gets the definition for a gift card service.
+- [New gift card service](https://docs.gr4vy.com/reference/gift-card-services/new-gift-card-service.md): Adds a new gift card service by providing a custom name and a value for each of the required fields.
+- [Get gift card service](https://docs.gr4vy.com/reference/gift-card-services/get-gift-card-service.md): Retrieves the details of a single configured gift card service.
+- [Update gift card service](https://docs.gr4vy.com/reference/gift-card-services/update-gift-card-service.md): Updates an existing gift card service. Allows all fields to be changed except for the service ID.
+- [Delete gift card service](https://docs.gr4vy.com/reference/gift-card-services/delete-gift-card-service.md): Deletes a specific gift card service.
+- [Client-side errors (4XX)](https://docs.gr4vy.com/reference/errors/client-errors.md)
+- [Server-side errors (5XX)](https://docs.gr4vy.com/reference/errors/server-errors.md)
+- [List 4XX errors](https://docs.gr4vy.com/reference/logs/list-api-error-logs.md): Returns a list of API 4XX and 5XX logs.
+- [List all API key pairs](https://docs.gr4vy.com/reference/api-key-pairs/list-api-key-pairs.md): List all API key pairs.
+- [Create an API key pair](https://docs.gr4vy.com/reference/api-key-pairs/new-api-key-pair.md): Create a new API key pair.
+- [Get an API key pair](https://docs.gr4vy.com/reference/api-key-pairs/get-api-key-pair.md): Fetches an API key pair by its ID.
+- [Update an API key pair](https://docs.gr4vy.com/reference/api-key-pairs/update-api-key-pair.md): Updates an API key pair.
+- [Delete an API key pair](https://docs.gr4vy.com/reference/api-key-pairs/delete-api-key-pair.md): Permanently removes an API key pair.
+- [List 3DS configuration](https://docs.gr4vy.com/reference/merchant-accounts/three-ds-configurations/list-three-ds-configurations.md): List all 3DS configurations for a merchant account.
+- [Add 3DS configuration](https://docs.gr4vy.com/reference/merchant-accounts/three-ds-configurations/new-three-ds-configuration.md): Create a new 3DS configuration for a merchant account.
+- [Update 3DS configuration](https://docs.gr4vy.com/reference/merchant-accounts/three-ds-configurations/update-three-ds-configuration.md): Update the 3DS configuration for a merchant account.
+- [Delete 3DS configuration](https://docs.gr4vy.com/reference/merchant-accounts/three-ds-configurations/delete-three-ds-configuration.md): Delete a 3DS configuration for a merchant account.
+- [List 3DS scenario](https://docs.gr4vy.com/reference/three-ds-scenarios/list-three-ds-scenarios.md): List all 3DS scenarios for a merchant account. Only available in sandbox environments.
+- [Create a 3DS scenario](https://docs.gr4vy.com/reference/three-ds-scenarios/new-three-ds-scenario.md): Create a new 3DS scenario for a merchant account. Only available in sandbox environments.
+- [Update a 3DS scenario](https://docs.gr4vy.com/reference/three-ds-scenarios/update-three-ds-scenario.md): Update a 3DS scenario. Only available in sandbox environments.
+- [Delete a 3DS scenario](https://docs.gr4vy.com/reference/three-ds-scenarios/delete-three-ds-scenario.md): Removes a 3DS scenario from our system. Only available in sandbox environments.
+- [List flow rules](https://docs.gr4vy.com/reference/flow/list-rules.md): Returns a list of rules for a given flow. Each rule has an associated action, conditions, and outcome.
+- [Get rule](https://docs.gr4vy.com/reference/flow/get-rule.md): Returns a configured rule that triggers an action in a flow.
+- [Create flow rule](https://docs.gr4vy.com/reference/flow/new-rule.md): Adds a rule for a given flow and action.
+- [Update flow rule](https://docs.gr4vy.com/reference/flow/update-rule.md): Updates a given flow rule.
+- [Delete flow rule](https://docs.gr4vy.com/reference/flow/delete-rule.md): Deletes a given rule from the system.
+- [List flow outcomes](https://docs.gr4vy.com/reference/flow/list-outcomes.md): Returns a list of possible outcomes for a given flow action.
+- [List all merchant accounts](https://docs.gr4vy.com/reference/merchant-accounts/list-merchant-accounts.md): List all merchant accounts in an instance.
+- [Create a merchant account](https://docs.gr4vy.com/reference/merchant-accounts/new-merchant-account.md): Create a new merchant account in an instance.
+- [Update a merchant account](https://docs.gr4vy.com/reference/merchant-accounts/update-merchant-account.md): Update info for a merchant account in an instance.
+- [List configured reports](https://docs.gr4vy.com/reference/reports/list-reports.md): List all configured reports that can be generated.
+- [Get a report](https://docs.gr4vy.com/reference/reports/get-report.md): Fetches a report by its ID.
+- [Add a report](https://docs.gr4vy.com/reference/reports/new-report.md): Create a new report.
+- [Update a report](https://docs.gr4vy.com/reference/reports/update-report.md): Updates the configuration of a report.
+- [List executed reports](https://docs.gr4vy.com/reference/reports/list-all-report-executions.md): List all executed reports that have been generated.
+- [List executions for report](https://docs.gr4vy.com/reference/reports/list-executions-for-report.md): List all executions of a specific report.
+- [Get executed report](https://docs.gr4vy.com/reference/reports/get-report-execution.md): Fetch a specific executed report.
+- [Create URL for executed report](https://docs.gr4vy.com/reference/reports/generate-download-url.md): Creates a download URL for a specific execution of a report.
+- [List all roles](https://docs.gr4vy.com/reference/roles/list-roles.md): List all roles available in the instance.
+- [List audit log entries](https://docs.gr4vy.com/reference/audit-logs/list-audit-logs.md): Returns a list of activity by dashboard users.
+- [List webhook subscriptions](https://docs.gr4vy.com/reference/webhook-subscriptions/list-webhook-subscriptions.md): Retrieve a paginated list of all webhook subscriptions for your account. This endpoint returns subscription details including URLs, authentication methods, and active status. Use pagination parameters to navigate through large collections of subscriptions. Results are sorted by creation date, with t…
+- [Create webhook subscription](https://docs.gr4vy.com/reference/webhook-subscriptions/new-webhook-subscription.md): Create a new webhook subscription to receive event notifications. Subscriptions allow you to specify a URL where webhook events will be delivered and configure authentication credentials to secure the webhook communication.
+- [Get webhook subscription](https://docs.gr4vy.com/reference/webhook-subscriptions/get-webhook-subscription.md): Retrieve detailed information about a specific webhook subscription. This endpoint returns the full configuration of a subscription including its URL, authentication details, active status, and signing secret information. Use this to verify your webhook subscription settings or retrieve details need…
+- [Update webhook subscription](https://docs.gr4vy.com/reference/webhook-subscriptions/update-webhook-subscription.md): Update an existing webhook subscription's properties. You can modify the subscription URL, authentication details, or toggle the active status. Only the fields you include in your request will be updated, and all other properties will remain unchanged.
+- [Delete webhook subscription](https://docs.gr4vy.com/reference/webhook-subscriptions/delete-webhook-subscription.md): Permanently removes a webhook subscription from your account. Once deleted, you will no longer receive event notifications at the subscription's URL. This action cannot be undone, and you'll need to create a new subscription if you want to receive webhooks at this endpoint again in the future.
+- [The Changelog](https://docs.gr4vy.com/updates.md): The latest product news, changes, and other announcements
+- [2025](https://docs.gr4vy.com/updates/2025.md)
+- [C#](https://docs.gr4vy.com/updates/csharp.md)
+- [Go](https://docs.gr4vy.com/updates/go.md)
+- [Java](https://docs.gr4vy.com/updates/java.md)
+- [PHP](https://docs.gr4vy.com/updates/php.md)
+- [Python](https://docs.gr4vy.com/updates/python.md)
+- [TypeScript](https://docs.gr4vy.com/updates/typescript.md)
+- [Swift](https://docs.gr4vy.com/updates/swift.md)
+- [Kotlin](https://docs.gr4vy.com/updates/kotlin.md)
+- [iOS](https://docs.gr4vy.com/updates/ios.md)
+- [Android](https://docs.gr4vy.com/updates/android.md)
+
+## OpenAPI Specs
+
+- [.alexrc](/.alexrc.yml)
+- [openapi.custom-connectors](/openapi.custom-connectors.json)
+- [openapi.speakeasy](/openapi.speakeasy.json)
+- [openapi.v1](/openapi.v1.json)
+- [package](/package.json)

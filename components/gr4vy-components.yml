@@ -1,0 +1,67 @@
+generated: '2026-09-20'
+method: searched
+source: https://docs.gr4vy.com/guides/get-started
+docs:
+- https://docs.gr4vy.com/guides/get-started
+- https://docs.gr4vy.com/guides/api/authentication
+description: Client-side checkout surfaces. Embed is the drop-in hosted-fields checkout UI; Secure Fields are individually
+  styled PCI-scoped card inputs bound to a checkout session; the Swift/Kotlin SDKs are low-level client libraries
+  for custom UIs.
+libraries:
+- name: '@gr4vy/embed'
+  purpose: Drop-in web checkout (vanilla JS)
+  version: 2.43.0
+- name: '@gr4vy/embed-react'
+  purpose: React wrapper for Embed
+  version: 2.43.0
+- name: '@gr4vy/embed-react-native'
+  purpose: Embed for React Native
+  version: 2.6.0
+- name: '@gr4vy/secure-fields'
+  purpose: Secure Fields card inputs (web)
+  version: 2.11.0
+- name: '@gr4vy/secure-fields-react'
+  purpose: React wrapper for Secure Fields
+  version: 2.11.0
+- name: gr4vy-ios (CocoaPods)
+  purpose: Embed for iOS drop-in UI
+  version: 2.9.0
+- name: com.github.gr4vy:gr4vy-android (JitPack)
+  purpose: Embed for Android drop-in UI
+  version: v2.1.0
+- name: gr4vy-swift
+  purpose: Low-level client-side Swift SDK
+  version: 1.1.0
+- name: com.gr4vy:gr4vy-kotlin
+  purpose: Low-level client-side Kotlin SDK
+  version: 1.2.0
+families:
+  embed:
+    platforms:
+    - web
+    - react
+    - react-native
+    - ios
+    - android
+    auth: JWT with the embed scope pinning amount/currency/buyer
+  secure_fields:
+    platforms:
+    - web
+    - react
+    auth: Checkout Session ID
+    backing_operations:
+    - create_checkout_session
+    - update_checkout_session
+    - get_checkout_session
+    - delete_checkout_session
+  hosted_prebuilt:
+    payment_links:
+      backing_operations:
+      - add_payment_link
+      - list_payment_links
+      - get_payment_link
+      - expire_payment_link
+  commerce_plugins:
+  - https://github.com/gr4vy/gr4vy-magento
+  - https://github.com/gr4vy/gr4vy-salesforce-commercecloud
+  - https://github.com/gr4vy/gr4vy-commercetools

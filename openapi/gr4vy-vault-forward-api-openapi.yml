@@ -1,0 +1,255 @@
+openapi: 3.2.0
+info:
+  title: Gr4vy Vault Forward API
+  version: 1.1.0-beta
+  contact:
+    name: Gr4vy Support
+    email: code@gr4vy.com
+    url: https://gr4vy.com
+  termsOfService: https://gr4vy.com
+  license:
+    name: MIT
+    url: https://raw.githubusercontent.com/gr4vy/gr4vy-openapi/main/LICENSE
+  description: 'Welcome to the Gr4vy API reference documentation.
+
+    Our API is still very much a work in product and subject to change.'
+servers:
+- url: https://api.sandbox.{id}.gr4vy.app
+  x-speakeasy-server-id: sandbox
+  variables:
+    id:
+      default: example
+      description: The subdomain for your Gr4vy instance.
+- url: https://api.{id}.gr4vy.app
+  x-speakeasy-server-id: production
+  variables:
+    id:
+      default: example
+      description: The subdomain for your Gr4vy instance.
+security:
+- bearerAuth: []
+tags:
+- name: Vault Forward
+  description: 'Vault Forwarding is a way to perform requests where, provided a template,
+
+    Gr4vy will evaluate it to inject PCI data and forward it to third party
+
+    services that have been vetted to receive such data.'
+paths:
+  /vault-forward:
+    post:
+      summary: Forward PCI data
+      operationId: make-vault-forward
+      description: Forward an API call to a PCI endpoint. The request body is evaluated and any template fields are replaced by the card data before the request is sent to the given destination.
+      tags:
+      - Vault Forward
+      parameters:
+      - schema:
+          type: string
+          example: faaad066-30b4-4997-a438-242b0752d7e1,faaad066-30b4-4997-a438-242b0752d7e2
+        in: header
+        name: x-vault-forward-payment-methods
+        required: false
+        description: A comma-separated list of Payment Method IDs that can be used to fill in the request template. If a Checkout Session is provided this field is optional and only 1 can be provided. Otherwise, at least 1 must be given, and a maximum of 100 are accepted.
+      - schema:
+          type: string
+          example: faaad066-30b4-4997-a438-242b0752d7e2
+        in: header
+        name: x-vault-forward-checkout-session
+        required: false
+        description: A Checkout Session ID that can be used to fill in the request template. At most 1 can be provided. Mandatory if no Payment Methods are provided.
+      - schema:
+          type: string
+          example: faaad066-30b4-4997-a438-242b0752d7e1,faaad066-30b4-4997-a438-242b0752d7e2
+        in: header
+        name: x-vault-forward-authentications
+        required: false
+        description: 'A comma-separated list of IDs for the authentication methods that will be applied
+
+          to a Vault Forward request.'
+      - schema:
+          type: string
+          example: https://api.amadeus.com/booking
+        in: header
+        name: x-vault-forward-url
+        required: true
+        description: The URL to forward card data to.
+      - schema:
+          type: string
+          enum:
+          - POST
+          - PUT
+          - PATCH
+          example: POST
+        in: header
+        name: x-vault-forward-http-method
+        required: true
+        description: The HTTP method that is used when forwarding the request to the `x-vault-forward-url`.
+      - schema:
+          type: string
+          example: x-vault-forward-header-x-frame-options
+        in: header
+        name: x-vault-forward-header-{HEADER_NAME}
+        description: 'A header that is forwarded to the `x-vault-forward-url`. The header will be
+
+          forwarded without the `x-vault-forward-header` part. For example,
+
+          `x-vault-forward-header-x-frame-options: SAMEORIGIN` is forwarded as
+
+          `x-frame-options: SAMEORIGIN`.'
+      - schema:
+          type: integer
+          minimum: 1
+          default: 30
+          example: 10
+        in: header
+        name: x-vault-forward-timeout
+        description: 'The number of seconds to wait before timing out when forwarding the
+
+          request.'
+      requestBody:
+        description: Payload to forward in the request.
+        content:
+          '*/*':
+            schema:
+              type: string
+            examples:
+              Make a JSON request:
+                value: "{\n  \"number\":\"{{CARD_NUMBER_1}}\",\n  \"expiry\":\"{{CARD_EXPIRATION_DATE_1}}\"\n}\n"
+              Make an XML request:
+                value: "<card>\n  <number>{{CARD_NUMBER_1}}</number>\n  <expiry>{{CARD_EXPIRATION_DATE_1}}</expiry>\n</card>\n"
+      responses:
+        '200':
+          description: 'Returns the payload received from the forwarded request. If the request timed
+
+            out or there was a network error, the payload will be empty instead.'
+          content:
+            '*/*':
+              schema:
+                type: string
+        '400':
+          description: Returns an error if the request was badly formatted or missing required fields.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400BadRequest'
+        '401':
+          description: Returns an error if no valid authentication was provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401Unauthorized'
+components:
+  schemas:
+    Error401Unauthorized:
+      title: Unauthorized Error
+      type: object
+      description: Unauthorized Error (HTTP 401).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`unauthorized`.'
+          example: unauthorized
+          enum:
+          - unauthorized
+        status:
+          type: integer
+          description: '`401`.'
+          example: 401
+          enum:
+          - 401
+        message:
+          type: string
+          description: No valid API authentication found.
+          example: No valid API authentication found
+          enum:
+          - No valid API authentication found
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    Error400BadRequest:
+      title: Bad Request
+      type: object
+      description: Bad Request (HTTP 400).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: A short code that describes the reason for the error.
+          example: bad_request
+          enum:
+          - bad_request
+          - incorrect_json
+          - invalid_credentials
+        status:
+          type: integer
+          description: '`400`.'
+          example: 400
+          enum:
+          - 400
+        message:
+          type: string
+          description: A human-readable reason for the error.
+          example: Missing '****' field
+        details:
+          type: array
+          description: A list of detail objects that further clarify the reason for the error.
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    ErrorDetail:
+      title: Error details
+      description: Additional detail about the part of a request body that caused an issue.
+      type: object
+      x-tags:
+      - Errors
+      properties:
+        location:
+          type: string
+          example: body
+          description: The location where the error caused an issue.
+          enum:
+          - query
+          - body
+          - path
+          - header
+        type:
+          type: string
+          example: value_error.missing
+          description: A unique identifier for the type of error that occurred.
+        pointer:
+          type: string
+          example: /payment_method/number
+          description: 'The exact item for which the validation did not succeed. This is a JSON
+
+            pointer for request bodies, while for query, path, and header parameters
+
+            it is the name of the parameter.'
+        message:
+          type: string
+          example: field required
+          description: A human readable message for this error detail.
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

@@ -1,0 +1,607 @@
+openapi: 3.2.0
+info:
+  title: Gr4vy Gift Card Services API
+  version: 1.1.0-beta
+  contact:
+    name: Gr4vy Support
+    email: code@gr4vy.com
+    url: https://gr4vy.com
+  termsOfService: https://gr4vy.com
+  license:
+    name: MIT
+    url: https://raw.githubusercontent.com/gr4vy/gr4vy-openapi/main/LICENSE
+  description: 'Welcome to the Gr4vy API reference documentation.
+
+    Our API is still very much a work in product and subject to change.'
+servers:
+- url: https://api.sandbox.{id}.gr4vy.app
+  x-speakeasy-server-id: sandbox
+  variables:
+    id:
+      default: example
+      description: The subdomain for your Gr4vy instance.
+- url: https://api.{id}.gr4vy.app
+  x-speakeasy-server-id: production
+  variables:
+    id:
+      default: example
+      description: The subdomain for your Gr4vy instance.
+security:
+- bearerAuth: []
+tags:
+- name: Gift Card Services
+  description: 'In Gr4vy, a gift card service represents a configured provider for processing
+
+    gift cards.'
+paths:
+  /gift-card-services:
+    post:
+      summary: New gift card service
+      operationId: new-gift-card-service
+      description: Adds a new gift card service by providing a custom name and a value for each of the required fields.
+      tags:
+      - Gift Card Services
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GiftCardServiceCreateRequest'
+      responses:
+        '201':
+          description: Returns the created gift card service.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GiftCardService'
+        '400':
+          description: Returns an error if the request was badly formatted or missing required fields.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400BadRequest'
+        '401':
+          description: Returns an error if no valid authentication was provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401Unauthorized'
+        '409':
+          description: Returns an error if there is an attempt to activate multiple gift card services simultaneously.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error409DuplicateRecord'
+  /gift-card-services/{gift_card_service_id}:
+    parameters:
+    - schema:
+        type: string
+        format: uuid
+        example: 541b126f-44c5-4c5e-a06b-d0e0d54c7d3f
+      name: gift_card_service_id
+      in: path
+      required: true
+      description: The unique ID of the gift card service.
+    get:
+      operationId: get-gift-card-service
+      summary: Get gift card service
+      description: Retrieves the details of a single configured gift card service.
+      tags:
+      - Gift Card Services
+      responses:
+        '200':
+          description: Returns a gift card service.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GiftCardService'
+        '401':
+          description: Returns an error if no valid authentication was provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401Unauthorized'
+        '404':
+          description: Returns an error if the resource can not be found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404NotFound'
+    put:
+      operationId: update-gift-card-service
+      summary: Update gift card service
+      description: Updates an existing gift card service. Allows all fields to be changed except for the service ID.
+      tags:
+      - Gift Card Services
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GiftCardServiceUpdateRequest'
+      responses:
+        '201':
+          description: Returns the updated gift card service.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GiftCardService'
+        '400':
+          description: Returns an error if the request was badly formatted or missing required fields.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400BadRequest'
+        '401':
+          description: Returns an error if no valid authentication was provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401Unauthorized'
+        '404':
+          description: Returns an error if the resource can not be found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404NotFound'
+        '409':
+          description: Returns an error if there is an attempt to activate multiple gift card services simultaneously.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error409DuplicateRecord'
+    delete:
+      operationId: delete-gift-card-service
+      summary: Delete gift card service
+      description: Deletes a specific gift card service.
+      tags:
+      - Gift Card Services
+      responses:
+        '204':
+          description: Returns an empty response.
+        '401':
+          description: Returns an error if no valid authentication was provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401Unauthorized'
+        '404':
+          description: Returns an error if the resource can not be found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404NotFound'
+  /gift-card-services/verify:
+    post:
+      operationId: verify-gift-card-service
+      summary: Verify gift card service credentials
+      description: Verifies a set of credentials against a gift card service.
+      tags:
+      - Gift Card Services
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GiftCardServiceVerifyRequest'
+      responses:
+        '200':
+          description: Returns 200 OK if credentials successfully verified.
+        '400':
+          description: Returns an error if the request was badly formatted, missing required fields, or if the provided credentials are invalid and failed verification against the gift card service.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400BadRequest'
+        '401':
+          description: Returns an error if no valid authentication was provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401Unauthorized'
+        '404':
+          description: Returns an error if the resource can not be found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404NotFound'
+components:
+  schemas:
+    Error404NotFound:
+      title: Not Found Error
+      type: object
+      description: Not Found Error (HTTP 404).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: The reason code for the error.
+          example: not_found
+          enum:
+          - not_found
+          - pending_creation
+        status:
+          type: integer
+          description: '`404`.'
+          example: 404
+          enum:
+          - 404
+        message:
+          type: string
+          description: The human readable reason for the error.
+          example: The resource could not be found
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    Error400BadRequest:
+      title: Bad Request
+      type: object
+      description: Bad Request (HTTP 400).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: A short code that describes the reason for the error.
+          example: bad_request
+          enum:
+          - bad_request
+          - incorrect_json
+          - invalid_credentials
+        status:
+          type: integer
+          description: '`400`.'
+          example: 400
+          enum:
+          - 400
+        message:
+          type: string
+          description: A human-readable reason for the error.
+          example: Missing '****' field
+        details:
+          type: array
+          description: A list of detail objects that further clarify the reason for the error.
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    GiftCardServiceVerifyRequest:
+      title: Gift Card Service (Verify)
+      type: object
+      description: Request body for verifying credentials against a gift card service.
+      x-tags:
+      - Request Bodies
+      required:
+      - gift_card_service_definition_id
+      - fields
+      properties:
+        gift_card_service_definition_id:
+          type: string
+          description: The ID of the gift card service to use.
+          example: qwikcilver-gift-card
+          minLength: 1
+          maxLength: 50
+        gift_card_service_id:
+          type: string
+          format: uuid
+          example: 46973e9d-88a7-44a6-abfe-be4ff0134ff4
+          description: 'The ID of the gift card service. Required if sending a partial set of
+
+            credentials in the `fields` property. This will merge the provided
+
+            fields with those already on the service.'
+        fields:
+          type: array
+          description: 'A list of fields where each field is a key-value pair that represents a defined field in the definition of the service. You are not required to send the full list of fields if the credentials for the service are already stored.
+
+            For example, if your credentials for `qwikcilver-gift-card` are stored and you only provide a `secret_key` in the request, it will override the stored `secret_key` and verify the resulting set of credentials against the service.'
+          items:
+            type: object
+            description: A key-value pair that represents a field defined in the definition for this service.
+            required:
+            - key
+            - value
+            properties:
+              key:
+                type: string
+                description: The key of the field to set a value for.
+                example: private_key
+                minLength: 1
+                maxLength: 50
+              value:
+                type: string
+                description: The value of a field to set.
+                example: pk_26PHem9AhJZvU623DfE1x4sd
+                minLength: 1
+                maxLength: 5000
+    Error409DuplicateRecord:
+      title: Duplicate Record Error
+      type: object
+      description: Duplicate Record Error (HTTP 409).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`duplicate_record`.'
+          example: duplicate_record
+          enum:
+          - duplicate_record
+        status:
+          type: integer
+          description: '`409`.'
+          example: 409
+          enum:
+          - 409
+        message:
+          type: string
+          description: Further details on the field that triggered the error.
+          example: A duplicate record exists with this external_identifier value
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    GiftCardService:
+      title: A gift card service
+      type: object
+      description: An configured gift card service.
+      x-tags:
+      - Gift Card Services
+      properties:
+        type:
+          type: string
+          description: The type of this resource.
+          example: gift-card-service
+          enum:
+          - gift-card-service
+        id:
+          type: string
+          format: uuid
+          description: The ID of this gift card service.
+          example: 6c020bf3-179b-4f4f-858d-84e39e196e0f
+        merchant_account_id:
+          type: string
+          description: The unique ID for a merchant account.
+          example: default
+        gift_card_service_definition_id:
+          type: string
+          description: 'The ID of the gift card service definition used to create this service.
+
+            '
+          example: qwikcilver-gift-card
+          minLength: 1
+          maxLength: 50
+        display_name:
+          type: string
+          description: The custom name set for this service.
+          example: Qwikcilver UK
+          minLength: 1
+          maxLength: 200
+        active:
+          type: boolean
+          example: true
+          description: Defines if this service is currently active or not.
+        fields:
+          type: array
+          description: 'A list of fields, each containing a key-value pair for each field
+
+            configured for this gift card service. Fields marked as `secret`
+
+            are not returned.'
+          items:
+            type: object
+            properties:
+              key:
+                type: string
+                minLength: 1
+                maxLength: 50
+                description: The key of the field.
+                example: secret_key
+              value:
+                type: string
+                minLength: 1
+                maxLength: 5000
+                description: The value of the field.
+                example: REDACTED_STRIPE_KEY
+        created_at:
+          type: string
+          format: date-time
+          example: '2012-12-12T10:53:43+00:00'
+          description: The date and time when this service was created.
+        updated_at:
+          type: string
+          format: date-time
+          example: '2012-12-12T10:53:43+00:00'
+          description: The date and time when this service was last updated.
+    ErrorDetail:
+      title: Error details
+      description: Additional detail about the part of a request body that caused an issue.
+      type: object
+      x-tags:
+      - Errors
+      properties:
+        location:
+          type: string
+          example: body
+          description: The location where the error caused an issue.
+          enum:
+          - query
+          - body
+          - path
+          - header
+        type:
+          type: string
+          example: value_error.missing
+          description: A unique identifier for the type of error that occurred.
+        pointer:
+          type: string
+          example: /payment_method/number
+          description: 'The exact item for which the validation did not succeed. This is a JSON
+
+            pointer for request bodies, while for query, path, and header parameters
+
+            it is the name of the parameter.'
+        message:
+          type: string
+          example: field required
+          description: A human readable message for this error detail.
+    GiftCardServiceCreateRequest:
+      title: Gift Card Service (Create)
+      type: object
+      description: Request body for activating a gift card service.
+      x-tags:
+      - Request Bodies
+      required:
+      - display_name
+      - gift_card_service_definition_id
+      - fields
+      properties:
+        gift_card_service_definition_id:
+          type: string
+          description: The ID of the gift card service to use.
+          example: qwikcilver-gift-card
+          minLength: 1
+          maxLength: 50
+        display_name:
+          type: string
+          description: A custom name for the service. This will be shown in the Admin UI.
+          example: Qwikcilver UK
+          minLength: 1
+          maxLength: 50
+        fields:
+          type: array
+          description: 'A list of fields, each containing a key-value pair for each field defined
+
+            by the definition for this gift card service.'
+          items:
+            type: object
+            description: A key-value pair that represents a field defined in the definition for this gift card service.
+            required:
+            - key
+            - value
+            properties:
+              key:
+                type: string
+                description: The key of the field to set a value for.
+                example: private_key
+                minLength: 1
+                maxLength: 50
+              value:
+                type: string
+                description: The value of a field to set.
+                example: pk_26PHem9AhJZvU623DfE1x4sd
+                minLength: 0
+                maxLength: 5000
+        active:
+          type: boolean
+          example: true
+          default: true
+          description: Defines if this service is currently active or not.
+    Error401Unauthorized:
+      title: Unauthorized Error
+      type: object
+      description: Unauthorized Error (HTTP 401).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`unauthorized`.'
+          example: unauthorized
+          enum:
+          - unauthorized
+        status:
+          type: integer
+          description: '`401`.'
+          example: 401
+          enum:
+          - 401
+        message:
+          type: string
+          description: No valid API authentication found.
+          example: No valid API authentication found
+          enum:
+          - No valid API authentication found
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    GiftCardServiceUpdateRequest:
+      title: Gift Card Service (Update)
+      type: object
+      description: Request body for updating a gift card service.
+      x-tags:
+      - Request Bodies
+      properties:
+        display_name:
+          type: string
+          description: A custom name for the gift card service. This will be shown in the Admin UI.
+          example: Qwikcilver UK
+          minLength: 1
+          maxLength: 50
+        fields:
+          type: array
+          description: 'A list of fields, each containing a key-value pair for each field defined
+
+            by the definition for this gift card service.'
+          items:
+            type: object
+            description: A key-value pair that represents a field defined in the definition for this gift card service.
+            required:
+            - key
+            - value
+            properties:
+              key:
+                type: string
+                description: The key of the field to set a value for.
+                example: private_key
+                minLength: 1
+                maxLength: 50
+              value:
+                type: string
+                description: The value of a field to set; you can unset optional fields by setting this to an empty string `""`.
+                example: pk_26PHem9AhJZvU623DfE1x4sd
+                minLength: 0
+                maxLength: 5000
+        active:
+          type: boolean
+          example: true
+          description: Defines if this service is currently active or not.
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

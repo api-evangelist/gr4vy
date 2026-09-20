@@ -1,0 +1,50 @@
+generated: '2026-09-20'
+method: searched
+source: https://docs.gr4vy.com/.well-known/agent-skills/index.json
+description: One provider-published Agent Skill (verbatim) plus generated flow skills grounded in real operationIds.
+skills:
+- name: gr4vy
+  file: skills/gr4vy-gr4vy.md
+  method: searched
+  source: https://docs.gr4vy.com/.well-known/agent-skills/gr4vy/skill.md
+  note: Provider-published Agent Skill, saved verbatim; discovered via https://docs.gr4vy.com/.well-known/agent-skills/index.json
+    and the A2A agent card.
+- name: gr4vy-take-a-payment
+  file: skills/gr4vy-take-a-payment.md
+  operations:
+  - create_checkout_session
+  - create_transaction
+  - get_transaction
+  - capture_transaction
+  - list_transaction_events
+  method: generated
+- name: gr4vy-reverse-a-payment
+  file: skills/gr4vy-reverse-a-payment.md
+  operations:
+  - get_transaction
+  - cancel_transaction
+  - void_transaction
+  - create_transaction_refund
+  - create_full_transaction_refund
+  - list_transaction_refunds
+  method: generated
+- name: gr4vy-vault-a-buyer-payment-method
+  file: skills/gr4vy-vault-a-buyer-payment-method.md
+  operations:
+  - add_buyer
+  - add_buyer_shipping_details
+  - create_payment_method
+  - list_buyer_payment_methods
+  - get_payment_method
+  - delete_payment_method
+  method: generated
+- name: gr4vy-subscribe-to-webhooks
+  file: skills/gr4vy-subscribe-to-webhooks.md
+  operations:
+  - create_webhook_subscription
+  - list_webhook_subscription
+  - read_webhook_subscription
+  - update_webhook_subscription
+  - rotate_webhook_subscription_secret
+  - delete_webhook_subscription
+  method: generated

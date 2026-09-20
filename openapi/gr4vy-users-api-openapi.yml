@@ -1,0 +1,1120 @@
+openapi: 3.2.0
+info:
+  title: Gr4vy Users API
+  version: 1.1.0-beta
+  contact:
+    name: Gr4vy Support
+    email: code@gr4vy.com
+    url: https://gr4vy.com
+  termsOfService: https://gr4vy.com
+  license:
+    name: MIT
+    url: https://raw.githubusercontent.com/gr4vy/gr4vy-openapi/main/LICENSE
+  description: 'Welcome to the Gr4vy API reference documentation.
+
+    Our API is still very much a work in product and subject to change.'
+servers:
+- url: https://api.sandbox.{id}.gr4vy.app
+  x-speakeasy-server-id: sandbox
+  variables:
+    id:
+      default: example
+      description: The subdomain for your Gr4vy instance.
+- url: https://api.{id}.gr4vy.app
+  x-speakeasy-server-id: production
+  variables:
+    id:
+      default: example
+      description: The subdomain for your Gr4vy instance.
+security:
+- bearerAuth: []
+tags:
+- name: Users
+  description: 'In Gr4vy, a user represents an employee of the merchant with access to the
+
+    dashboard.'
+  x-internal: true
+paths:
+  /users/me:
+    get:
+      operationId: get-current-user
+      summary: Get current user
+      description: Get current user information.
+      tags:
+      - Users
+      x-internal: true
+      x-speakeasy-ignore: true
+      responses:
+        '200':
+          description: Returns the currently authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Returns an error if no valid authentication was provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401Unauthorized'
+    put:
+      operationId: update-current-user
+      summary: Update current user
+      description: Update current user information.
+      tags:
+      - Users
+      x-internal: true
+      x-speakeasy-ignore: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCurrentUpdate'
+            examples:
+              Update a user:
+                value:
+                  name: John D.
+      responses:
+        '200':
+          description: Returns the currently authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Returns an error if no valid authentication was provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401Unauthorized'
+  /users/{user_id}:
+    parameters:
+    - schema:
+        type: string
+        format: uuid
+        example: 8724fd24-5489-4a5d-90fd-0604df7d3b83
+      name: user_id
+      in: path
+      required: true
+      description: The unique ID for a user.
+    get:
+      operationId: get-user
+      summary: Get user
+      description: Gets the information about a user.
+      tags:
+      - Users
+      x-internal: true
+      x-speakeasy-ignore: true
+      responses:
+        '200':
+          description: Returns the user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Returns an error if no valid authentication was provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401Unauthorized'
+        '404':
+          description: Returns an error if the resource can not be found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404NotFound'
+    put:
+      operationId: update-user
+      summary: Update user
+      description: Updates a user's details.
+      tags:
+      - Users
+      x-internal: true
+      x-speakeasy-ignore: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdate'
+            examples:
+              Update a user:
+                value:
+                  name: John D.
+                  role_ids:
+                  - 462ab2e2-3e29-44bd-b39f-e4d1293affbb
+                  merchant_account_ids:
+                  - default
+                  - plantly-uk
+              Update a user with merchant account:
+                value:
+                  name: John D.
+                  role_ids:
+                  - 462ab2e2-3e29-44bd-b39f-e4d1293affbb
+                  merchant_account_ids:
+                  - default
+                  - plantly-uk
+      responses:
+        '200':
+          description: Returns the updated user record.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Returns an error if the request was badly formatted or missing required fields.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400BadRequest'
+        '401':
+          description: Returns an error if no valid authentication was provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401Unauthorized'
+        '404':
+          description: Returns an error if the resource can not be found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404NotFound'
+    delete:
+      operationId: delete-user
+      summary: Delete user
+      description: Deletes a user record. Any associated sessions will also be deleted.
+      tags:
+      - Users
+      x-internal: true
+      x-speakeasy-ignore: true
+      responses:
+        '204':
+          description: Returns an empty response.
+        '401':
+          description: Returns an error if no valid authentication was provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401Unauthorized'
+        '404':
+          description: Returns an error if the resource can not be found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404NotFound'
+  /users:
+    get:
+      operationId: list-users
+      summary: List users
+      description: Returns a list of users.
+      tags:
+      - Users
+      x-internal: true
+      x-speakeasy-ignore: true
+      parameters:
+      - schema:
+          type: string
+          example: John
+        in: query
+        name: search
+        description: 'Filters the results to only the users for which the `name` or
+
+          `email_address` matches this value. This field allows for a partial
+
+          match, matching any user for which either of the fields partially or
+
+          completely matches.'
+      - schema:
+          type: string
+          example: active
+          enum:
+          - active
+          - pending
+        in: query
+        name: status
+        description: 'Filters the results to only the users for which the `status`
+
+          matches this value.'
+      - schema:
+          type: integer
+          default: 20
+          example: 1
+          minimum: 1
+          maximum: 100
+          format: int32
+        in: query
+        name: limit
+        description: Defines the maximum number of items to return for this request.
+      - schema:
+          type: string
+          format: ''
+          example: ZXhhbXBsZTE
+        in: query
+        name: cursor
+        description: 'A cursor that identifies the page of results to return. This is used to
+
+          paginate the results of this API.
+
+
+          For the first page of results, this parameter can be left out.
+
+          For additional pages, use the value returned by the API in
+
+          the `next_cursor` field. Similarly the `previous_cursor` can be used to
+
+          reverse backwards in the list.'
+      - schema:
+          type: array
+          items:
+            type: string
+          example:
+          - 8724fd24-5489-4a5d-90fd-0604df7d3b83
+        in: query
+        name: roles
+        description: 'Filters the results to only match the users that have any `roles`
+
+          that matches with any of the provided role IDs.'
+      responses:
+        '200':
+          description: Returns a list of users.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Users'
+        '401':
+          description: Returns an error if no valid authentication was provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401Unauthorized'
+    post:
+      operationId: new-user
+      summary: New user
+      description: Adds a new user.
+      tags:
+      - Users
+      x-internal: true
+      x-speakeasy-ignore: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+            examples:
+              Create a user:
+                value:
+                  display_name: John L.
+                  email_address: john@example.com
+                  role_ids:
+                  - 462ab2e2-3e29-44bd-b39f-e4d1293affbb
+                  merchant_account_ids:
+                  - default
+                  - plantly-uk
+      responses:
+        '200':
+          description: Returns new user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Returns an error if no valid authentication was provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401Unauthorized'
+        '409':
+          description: Returns an error if duplicate resource has been found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error409DuplicateRecord'
+  /users/set-password:
+    post:
+      operationId: set-password
+      summary: Set user password
+      description: Sets a user password to allow authentication with the dashboard.
+      tags:
+      - Users
+      x-internal: true
+      x-speakeasy-ignore: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetPasswordRequest'
+            examples:
+              Create a user:
+                value:
+                  reset_token: nXyWSHq2r5q_8F1_NXtppEStY7KbBHqwU9T8pdmOQa_LYJxpxxXcjOXL58xpHLy5gh1k6s0Myl3ygA6SnsxIjLXBKO3x1EZX3igq
+                  password: this-is-n0t-a-secure-passw0rd
+      responses:
+        '204':
+          description: Returns an empty response.
+        '401':
+          description: Returns an error if no valid authentication was provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401Unauthorized'
+  /users/reset-password:
+    post:
+      operationId: reset-password
+      summary: Reset user password
+      description: Generates a new reset token for a given user.
+      tags:
+      - Users
+      x-internal: true
+      x-speakeasy-ignore: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResetPasswordRequest'
+            examples:
+              Create a user:
+                value:
+                  email_address: john@example.com
+      responses:
+        '200':
+          description: Returns the user object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '204':
+          description: Returns an empty response.
+        '401':
+          description: Returns an error if no valid authentication was provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401Unauthorized'
+        '409':
+          description: Returns an error if duplicate resource has been found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error409DuplicateRecord'
+components:
+  schemas:
+    Error404NotFound:
+      title: Not Found Error
+      type: object
+      description: Not Found Error (HTTP 404).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: The reason code for the error.
+          example: not_found
+          enum:
+          - not_found
+          - pending_creation
+        status:
+          type: integer
+          description: '`404`.'
+          example: 404
+          enum:
+          - 404
+        message:
+          type: string
+          description: The human readable reason for the error.
+          example: The resource could not be found
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    Users:
+      title: User
+      type: object
+      x-tags:
+      - Users
+      x-internal: true
+      properties:
+        items:
+          type: array
+          description: A list of users.
+          items:
+            $ref: '#/components/schemas/User'
+        limit:
+          type: integer
+          description: 'The limit applied to request. This represents the number of items that are at
+
+            maximum returned by this request.'
+          format: int32
+          minimum: 1
+          maximum: 100
+          example: 1
+          default: 20
+        next_cursor:
+          type:
+          - string
+          - 'null'
+          description: 'The cursor that represents the next page of results. Use the `cursor` query
+
+            parameter to fetch this page of items.'
+          example: ZXhhbXBsZTE
+          minLength: 1
+          maxLength: 1000
+        previous_cursor:
+          type:
+          - string
+          - 'null'
+          description: 'The cursor that represents the next page of results. Use the `cursor` query
+
+            parameter to fetch this page of items.'
+          example: null
+          minLength: 1
+          maxLength: 1000
+    UserRole:
+      title: User Role
+      type: object
+      x-tags:
+      - Users
+      allOf:
+      - $ref: '#/components/schemas/Role'
+    ResetPasswordRequest:
+      title: Reset Password (Create)
+      type: object
+      description: A request to reset a password for a user.
+      x-tags:
+      - Users
+      properties:
+        email_address:
+          type: string
+          description: The email address of the user account to reset.
+          example: john@example.com
+    Error400BadRequest:
+      title: Bad Request
+      type: object
+      description: Bad Request (HTTP 400).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: A short code that describes the reason for the error.
+          example: bad_request
+          enum:
+          - bad_request
+          - incorrect_json
+          - invalid_credentials
+        status:
+          type: integer
+          description: '`400`.'
+          example: 400
+          enum:
+          - 400
+        message:
+          type: string
+          description: A human-readable reason for the error.
+          example: Missing '****' field
+        details:
+          type: array
+          description: A list of detail objects that further clarify the reason for the error.
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    Error409DuplicateRecord:
+      title: Duplicate Record Error
+      type: object
+      description: Duplicate Record Error (HTTP 409).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`duplicate_record`.'
+          example: duplicate_record
+          enum:
+          - duplicate_record
+        status:
+          type: integer
+          description: '`409`.'
+          example: 409
+          enum:
+          - 409
+        message:
+          type: string
+          description: Further details on the field that triggered the error.
+          example: A duplicate record exists with this external_identifier value
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    User:
+      title: User
+      type: object
+      x-tags:
+      - Users
+      x-internal: true
+      properties:
+        type:
+          type: string
+          description: '`user`.'
+          example: user
+          enum:
+          - user
+        id:
+          type: string
+          example: fe26475d-ec3e-4884-9553-f7356683f7f9
+          description: The unique Gr4vy ID for this user.
+        name:
+          type: string
+          description: The full name of this user.
+          example: John Gravy
+        email_address:
+          type: string
+          description: The email address for this user.
+          example: john@example.com
+        has_valid_password:
+          type: boolean
+          description: The user has set a valid password.
+          example: true
+        category:
+          type: string
+          enum:
+          - sso
+          - email
+          description: The method by which this user authenticates.
+          example: email
+        is_staff:
+          type: boolean
+          example: false
+          description: Denotes whether this user is a Gr4vy staff member.
+        reset_token:
+          type:
+          - string
+          - 'null'
+          description: The token required when setting a password.
+          example: abc
+        reset_token_expires_at:
+          type:
+          - string
+          - 'null'
+          description: The expiration date for the reset token.
+          format: date-time
+          example: '2013-07-16T19:23:00.000+00:00'
+        last_logged_in_at:
+          type:
+          - string
+          - 'null'
+          description: The date that the user last logged in at.
+          format: date-time
+          example: '2013-07-16T19:23:00.000+00:00'
+        status:
+          type: string
+          description: The current status of this user.
+          example: active
+          enum:
+          - active
+          - pending
+        roles:
+          type: array
+          description: The roles this user has been assigned.
+          items:
+            $ref: '#/components/schemas/UserRole'
+        merchant_accounts:
+          type: array
+          description: A list of merchant accounts that the user is assigned to.
+          items:
+            $ref: '#/components/schemas/MerchantAccount'
+    MerchantAccount:
+      title: Merchant Account
+      type: object
+      x-tags:
+      - Merchant Account
+      properties:
+        type:
+          type: string
+          description: '`merchant-account`.'
+          example: merchant-account
+          enum:
+          - merchant-account
+        id:
+          type: string
+          description: The ID for this merchant account.
+          example: plantly-uk
+        display_name:
+          type: string
+          description: The display name of this merchant account.
+          example: Plantly UK
+        outbound_webhook_url:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: The optional URL where webhooks will be received.
+          example: https://www.example.com/webhook
+        outbound_webhook_username:
+          type:
+          - string
+          - 'null'
+          description: 'The optional username to use when `outbound_webhook_url` is configured and
+
+            requires basic authentication.'
+          example: gr4vy
+        outbound_webhook_password:
+          type:
+          - string
+          - 'null'
+          description: 'The optional password to use when `outbound_webhook_url` is configured and
+
+            requires basic authentication.
+
+
+            If the field is not `null`, the value is masked to avoid exposing sensitive information.'
+          example: '********'
+        visa_network_tokens_requestor_id:
+          type:
+          - string
+          - 'null'
+          description: Requestor ID provided for Visa after onboarding to use Network Tokens.
+          example: e50fa0da-903d-4d54-aacc-4cac57d48df2
+        visa_network_tokens_app_id:
+          type:
+          - string
+          - 'null'
+          description: 'Application ID provided for Visa after onboarding to use Network
+
+            Tokens.'
+          example: e50fa0da-903d-4d54-aacc-4cac57d48df2
+        amex_network_tokens_requestor_id:
+          type:
+          - string
+          - 'null'
+          description: Requestor ID provided for Amex after onboarding to use Network Tokens.
+          example: e50fa0da-903d-4d54-aacc-4cac57d48df2
+        amex_network_tokens_app_id:
+          type:
+          - string
+          - 'null'
+          description: Application ID provided for Amex after onboarding to use Network Tokens.
+          example: e50fa0da-903d-4d54-aacc-4cac57d48df2
+        mastercard_network_tokens_requestor_id:
+          type:
+          - string
+          - 'null'
+          description: 'Requestor ID provided for Mastercard after onboarding to use Network
+
+            Tokens.'
+          example: e50fa0da-903d-4d54-aacc-4cac57d48df2
+        mastercard_network_tokens_app_id:
+          type:
+          - string
+          - 'null'
+          description: 'Application ID provided for Mastercard after onboarding to use
+
+            Network Tokens.'
+          example: e50fa0da-903d-4d54-aacc-4cac57d48df2
+        loon_client_key:
+          type:
+          - string
+          - 'null'
+          description: 'Client key provided by Pagos to authenticate to the Loon API.
+
+            Loon is the Account Updater service used by Gr4vy.'
+          example: 7DD771287D0024BA418F8F7ECC7DF1CD
+        loon_secret_key:
+          type:
+          - string
+          - 'null'
+          description: 'Secret key provided by Pagos to authenticate to the Loon API.
+
+            Loon is the Account Updater service used by Gr4vy.
+
+
+            If the field is not `null`, the value is masked to avoid exposing sensitive information.'
+          example: '********'
+        loon_accepted_schemes:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+            example: visa
+            enum:
+            - accel
+            - amex
+            - bancontact
+            - carte-bancaire
+            - cirrus
+            - culiance
+            - dankort
+            - diners-club
+            - discover
+            - eftpos-australia
+            - elo
+            - hipercard
+            - jcb
+            - maestro
+            - mastercard
+            - mir
+            - nyce
+            - other
+            - pulse
+            - rupay
+            - star
+            - uatp
+            - unionpay
+            - visa
+            - null
+          description: 'Card schemes accepted when creating jobs using this set of Loon API keys.
+
+            Loon is the Account Updater service used by Gr4vy.'
+          example:
+          - mastercard
+          - visa
+        account_updater_enabled:
+          type: boolean
+          example: true
+          default: false
+          description: 'Whether the Realtime Account Updater service is enabled for this merchant account.
+
+            The Account Updater service is used to update card details when cards are
+
+            lost, stolen or expired.
+
+
+            * If the field is not set or if it''s set to `false`, the Account Updater service
+
+            doesn''t get called if a payment fails with expired or invalid card details.
+
+            * If the field is set to `true`, the service is called. Please note that for this to work
+
+            the other `account_updater_*` fields must be set as well.'
+        account_updater_request_encryption_key:
+          type:
+          - string
+          - 'null'
+          example: example-encryption-key
+          description: 'The public key used to encrypt the request to the Realtime Account Updater service.
+
+            The Account Updater service is used to update card details when cards are
+
+            lost, stolen or expired.
+
+
+            * If the field is not set or if it''s set to `null`, the Account Updater service doesn''t get called.
+
+            * If the field is set, the other `account_updater_*` fields must be set as well.'
+        account_updater_request_encryption_key_id:
+          type:
+          - string
+          - 'null'
+          example: example-encryption-key-id
+          description: 'The public key ID used to encrypt the request to the Realtime Account Updater service.
+
+            The Account Updater service is used to update card details when cards are
+
+            lost, stolen or expired.
+
+
+            * If the field is not set or if it''s set to `null`, the Account Updater service doesn''t get called.
+
+            * If the field is set, the other `account_updater_*` fields must be set as well.'
+        account_updater_response_decryption_key:
+          type:
+          - string
+          - 'null'
+          example: example-decryption-key
+          description: 'The private key used to decrypt the response from the Realtime Account Updater service.
+
+            The Account Updater service is used to update card details when cards are
+
+            lost, stolen or expired.
+
+
+            * If the field is not set or if it''s set to `null`, the Account Updater service doesn''t get called.
+
+            * If the field is set, the other `account_updater_*` fields must be set as well.'
+        account_updater_response_decryption_key_id:
+          type:
+          - string
+          - 'null'
+          example: example-decryption-key-id
+          description: 'The private key ID used to decrypt the response from the Realtime Account Updater service.
+
+            The Account Updater service is used to update card details when cards are
+
+            lost, stolen or expired.
+
+
+            * If the field is not set or if it''s set to `null`, the Account Updater service doesn''t get called.
+
+            * If the field is set, the other `account_updater_*` fields must be set as well.'
+        created_at:
+          type: string
+          description: The date and time when this merchant account was created.
+          format: date-time
+          example: '2022-02-01T14:20:00.000+00:00'
+        updated_at:
+          type: string
+          description: The date and time when this merchant account was updated.
+          format: date-time
+          example: '2022-02-01T14:20:00.000+00:00'
+        over_capture_amount:
+          type:
+          - number
+          - 'null'
+          example: 1000
+          minimum: 1
+          maximum: 99999999
+          description: 'The maximum monetary amount allowed for over-capture, in the smallest
+
+            currency unit, for example `1299` cents to allow for an over-capture of `$12.99`.'
+        over_capture_percentage:
+          type:
+          - number
+          - 'null'
+          example: 20
+          minimum: 1
+          maximum: 99999999
+          description: 'The maximum percentage allowed for over-capture, for example `25` to allow for an
+
+            over-capture of 25% of the original transaction amount.'
+    SetPasswordRequest:
+      title: Set Password (Create)
+      type: object
+      description: A request to set a password for a user.
+      x-tags:
+      - Users
+      properties:
+        reset_token:
+          type: string
+          description: Unique reset token valid for 7 days.
+          example: nXyWSHq2r5q_8F1_NXtppEStY7KbBHqwU9T8pdmOQa_LYJxpxxXcjOXL58xpHLy5gh1k6s0Myl3ygA6SnsxIjLXBKO3x1EZX3igq
+          minLength: 100
+          maxLength: 100
+        password:
+          type: string
+          description: The password the user to log in with.
+          example: this-is-n0t-a-secure-passw0rd
+    ErrorDetail:
+      title: Error details
+      description: Additional detail about the part of a request body that caused an issue.
+      type: object
+      x-tags:
+      - Errors
+      properties:
+        location:
+          type: string
+          example: body
+          description: The location where the error caused an issue.
+          enum:
+          - query
+          - body
+          - path
+          - header
+        type:
+          type: string
+          example: value_error.missing
+          description: A unique identifier for the type of error that occurred.
+        pointer:
+          type: string
+          example: /payment_method/number
+          description: 'The exact item for which the validation did not succeed. This is a JSON
+
+            pointer for request bodies, while for query, path, and header parameters
+
+            it is the name of the parameter.'
+        message:
+          type: string
+          example: field required
+          description: A human readable message for this error detail.
+    UserCurrentUpdate:
+      title: User (Update Current)
+      type: object
+      description: A request to update the current user.
+      x-tags:
+      - Users
+      properties:
+        name:
+          type: string
+          description: The full name of the user which is used in the Gr4vy admin panel to give a user a human readable name.
+          example: John L.
+          minLength: 1
+          maxLength: 1000
+    UserUpdate:
+      title: User (Update)
+      type: object
+      description: A request to update a user.
+      x-tags:
+      - Users
+      properties:
+        name:
+          type: string
+          description: The full name of the user which is used in the Gr4vy admin panel to give a user a human readable name.
+          example: John L.
+          minLength: 1
+          maxLength: 1000
+        role_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+          example:
+          - 46973e9d-88a7-44a6-abfe-be4ff0134ff4
+          description: The IDs of the roles to assign to the user. Sending an empty list will remove all roles assigned to the user.
+        merchant_account_ids:
+          type:
+          - array
+          - 'null'
+          description: A list of merchant account IDs that the user is assigned to.
+          items:
+            type: string
+          example:
+          - default
+          - plantly-uk
+    UserRequest:
+      title: User (Create)
+      type: object
+      description: A request to create a user.
+      x-tags:
+      - Users
+      properties:
+        name:
+          type: string
+          description: The full name of the user which is used in the Gr4vy admin panel to give an user a human readable name.
+          example: John L.
+          minLength: 1
+          maxLength: 1000
+        email_address:
+          type: string
+          description: The email address for this user.
+          example: john@example.com
+          minLength: 1
+          maxLength: 200
+        role_ids:
+          type: array
+          minItems: 1
+          description: A list of role ids that will be assigned to the user being created. The creator must have `roles.write` or the role that is being assigned.
+          items:
+            type: string
+            format: uuid
+          example:
+          - 8d3fe99b-1422-42e6-bbb3-932d95ae5f79
+        merchant_account_ids:
+          type:
+          - array
+          - 'null'
+          description: A list of merchant account IDs that the user being created will be assigned to.
+          items:
+            type: string
+          example:
+          - default
+          - plantly-uk
+    Error401Unauthorized:
+      title: Unauthorized Error
+      type: object
+      description: Unauthorized Error (HTTP 401).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`unauthorized`.'
+          example: unauthorized
+          enum:
+          - unauthorized
+        status:
+          type: integer
+          description: '`401`.'
+          example: 401
+          enum:
+          - 401
+        message:
+          type: string
+          description: No valid API authentication found.
+          example: No valid API authentication found
+          enum:
+          - No valid API authentication found
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    Role:
+      title: Role
+      type: object
+      x-tags:
+      - Roles
+      properties:
+        type:
+          type: string
+          description: The type of this resource. Always `role`.
+          example: role
+          enum:
+          - role
+        id:
+          type: string
+          format: uuid
+          description: The unique ID for this role.
+          example: 462ab2e2-3e29-44bd-b39f-e4d1293affbb
+        name:
+          type: string
+          description: The unique name for this role.
+          example: Support
+        description:
+          type: string
+          description: The description for this role.
+          example: Customer support agents
+        permissions:
+          $ref: '#/components/schemas/RolePermissions'
+    RolePermissions:
+      type: object
+      title: Role permissions
+      description: The permissions associated with a role.
+      x-tags:
+      - Roles
+      properties:
+        allow:
+          type: array
+          description: The list of permissions to allow for a role.
+          items:
+            type: string
+          example:
+          - buyers.read
+          - payment-methods.read
+          - transactions.read
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

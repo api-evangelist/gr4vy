@@ -1,0 +1,34 @@
+generated: '2026-09-20'
+method: searched
+source: https://docs.gr4vy.com/guides/api/compatibility
+versioning:
+  scheme: unversioned, additive-only
+  mechanism: No version in path or header. Backward-compatible additive changes only (new endpoints, optional params,
+    new response properties, new enum values); clients must be forward-compatible. The Prefer header opts into newer
+    resource shapes.
+  docs: https://docs.gr4vy.com/guides/api/compatibility
+  spec_version: 1.0.0
+deprecation:
+  policy_url: https://docs.gr4vy.com/guides/api/compatibility
+  notice_period: at least 30 days
+  notice_verbatim: Any planned breaking changes are communicated at least 30 days in advance. This notice is sent
+    via email and Slack, and is posted on the developer changelog.
+  changelog: https://docs.gr4vy.com/updates
+  sunset_header: false
+  notes: Migration guide promised for each breaking change; window negotiable with support. No Sunset/Deprecation
+    response headers documented.
+sla:
+  url: null
+  public_uptime_target: null
+  notes: No public SLA document found.
+status_page: https://status.gr4vy.com/
+timeouts: https://docs.gr4vy.com/guides/timeouts
+deprecated_products:
+- name: '@gr4vy/cli (npm)'
+  superseded_by: gr4vy native CLI binary
+  evidence: https://docs.gr4vy.com/guides/tools/cli
+- name: '@gr4vy/node'
+  superseded_by: '@gr4vy/sdk'
+  evidence: https://github.com/gr4vy/gr4vy-node (archived)
+deprecated_operations: []
+deprecated_operations_note: '0 of 149 operations carry deprecated: true.'

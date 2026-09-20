@@ -1,0 +1,49 @@
+generated: '2026-09-20'
+method: searched
+source: openapi/gr4vy-docs-v1-openapi.yml, openapi/gr4vy-openapi.yml + https://docs.gr4vy.com/guides/api/authentication
+summary:
+  types:
+  - http
+  - oauth2
+  oauth2_flows:
+  - password
+schemes:
+- name: bearerAuth
+  type: http
+  scheme: bearer
+  bearerFormat: JWT
+  sources:
+  - openapi/gr4vy-docs-v1-openapi.yml
+- name: OAuth2PasswordBearer
+  type: oauth2
+  flows:
+  - flow: password
+    tokenUrl: auth/token
+    scopes: 86
+  sources:
+  - openapi/gr4vy-openapi.yml
+docs:
+- https://docs.gr4vy.com/guides/api/authentication
+- https://docs.gr4vy.com/guides/api/jwts
+- https://docs.gr4vy.com/guides/api/api-keys
+notes:
+  model: Bearer JWT created server-side and signed with an API key-pair private key from the dashboard Integrations
+    panel (or provisioned over the API-key-pairs API).
+  algorithms:
+  - ES512 (recommended)
+  - RS512
+  jwt_header: typ and alg are fixed; kid is the key thumbprint
+  required_claims:
+  - iss
+  - nbf
+  - exp
+  - jti
+  - scopes
+  optional_claims:
+  - iat
+  - embed
+  frontend: A JWT with the embed scope (pinning amount/currency/buyer) or a Checkout Session ID is used by Embed
+    / Secure Fields; those tokens are rate-limited for enumeration prevention.
+  spec_discrepancy: The GitHub OpenAPI labels the scheme OAuth2PasswordBearer (oauth2 password flow, tokenUrl auth/token
+    - the dashboard user login the CLI also supports); the docs-hosted v1 spec labels it http bearer JWT. The documented
+    integration path is the self-signed JWT.

@@ -1,0 +1,232 @@
+generated: '2026-09-20'
+method: searched
+source: https://docs.gr4vy.com/updates
+docs: https://docs.gr4vy.com/updates
+description: Dated developer changelog (Mintlify Update components, RSS-enabled). Entries are categorised Feature
+  or Connector. Per-SDK changelogs live at /updates/<language>. Recent window only.
+versioning:
+  scheme: date-labelled entries; API itself is unversioned/additive
+  current: '2026-09-16'
+  breaking_change_policy: https://docs.gr4vy.com/guides/api/compatibility
+sdk_changelogs:
+- https://docs.gr4vy.com/updates/typescript
+- https://docs.gr4vy.com/updates/python
+- https://docs.gr4vy.com/updates/php
+- https://docs.gr4vy.com/updates/java
+- https://docs.gr4vy.com/updates/kotlin
+- https://docs.gr4vy.com/updates/swift
+spec_history: https://github.com/gr4vy/gr4vy-openapi/commits/main/openapi.json
+total_entries_on_page: 76
+breaking_in_window: 0
+entries:
+- date: '2026-09-16'
+  category: Connector
+  title: Sezzle connector
+  tags:
+  - Sezzle
+  - BNPL
+  - United States
+  - Canada
+- date: '2026-09-16'
+  category: Connector
+  title: Venmo via PayPal connector
+  tags:
+  - PayPal
+  - Venmo
+  - United States
+- date: '2026-09-15'
+  category: Cart items
+  title: Brand and subcategories on cart items
+  tags:
+  - Cart items
+  - Anti-fraud
+  - Riskified
+  - API
+- date: '2026-09-10'
+  category: API keys
+  title: Multiple roles on an API key
+  tags:
+  - API keys
+  - Roles
+  - API
+  - SDKs
+- date: '2026-09-02'
+  category: Secure Fields
+  title: Card issuing country in Secure Fields
+  tags:
+  - Secure Fields
+  - Cards
+  - 3DS
+  - Web
+- date: '2026-09-01'
+  category: Connector
+  title: DuitNow via Adyen
+  tags:
+  - Adyen
+  - DuitNow
+  - Malaysia
+- date: '2026-08-26'
+  category: Connector
+  title: Repay (card) connector
+  tags:
+  - Repay
+  - Card
+  - United States
+- date: '2026-08-17'
+  category: Feature
+  title: No contradictory webhooks while a transaction is being created
+  tags:
+  - Webhooks
+  - Transactions
+  - API
+- date: '2026-08-13'
+  category: Feature
+  title: Settlement reporting for BlueSnap
+  tags:
+  - BlueSnap
+  - Settlement Reporting
+  - Reconciliation
+- date: '2026-08-06'
+  category: Feature
+  title: In-platform alert notifications
+  tags:
+  - Dashboard
+  - Navigation
+- date: '2026-08-05'
+  category: Feature
+  title: Track when an API key was last used
+  tags:
+  - API Keys
+  - API
+  - Security
+- date: '2026-08-04'
+  category: Connector
+  title: PayPal (card) connector
+  tags:
+  - PayPal
+  - Card
+  - Global
+- date: '2026-08-03'
+  category: Feature
+  title: Issue and activate gift cards through the API
+  tags:
+  - Gift Cards
+  - Value Link
+- date: '2026-07-29'
+  category: Connector
+  title: ACI Worldwide (card) connector
+  tags:
+  - ACI Worldwide
+  - Card
+  - Global
+- date: '2026-07-28'
+  category: Connector
+  title: PayPal connector now authenticates with OAuth 2.0
+  tags:
+  - PayPal
+  - Security
+  - Authentication
+  - OAuth
+- date: '2026-07-23'
+  category: Connector
+  title: PayPal Pay Later at checkout when storing a payment method
+  tags:
+  - PayPal
+  - Pay Later
+  - Tokenization
+  - Vaulting
+- date: '2026-07-23'
+  category: Connector
+  title: Cybersource JWT and MLE migration
+  tags:
+  - Cybersource
+  - Security
+  - Authentication
+  - MLE
+- date: '2026-07-23'
+  category: Connector
+  title: Recurring payments for Stripe Onelink
+  tags:
+  - Stripe
+  - Onelink
+  - Recurring
+  - Tokenization
+- date: '2026-07-21'
+  category: Feature
+  title: Refund reconciliation from settlement data
+  tags:
+  - Refunds
+  - Settlement
+  - Reconciliation
+- date: '2026-07-21'
+  category: Feature
+  title: New dashboard navigation and layout
+  tags:
+  - Dashboard
+  - Navigation
+  - Transactions
+- date: '2026-07-21'
+  category: Connector
+  title: Value Link gift card connector
+  tags:
+  - Value Link
+  - Fiserv
+  - Gift Cards
+- date: '2026-07-21'
+  category: Feature
+  title: Multi captures
+  tags:
+  - Transactions
+  - Capture
+  - Multi captures
+- date: '2026-07-06'
+  category: Feature
+  title: Manage API keys over the API
+  tags:
+  - API Keys
+  - API
+  - Webhooks
+- date: '2026-07-02'
+  category: Feature
+  title: Issuer-mandated 3-D Secure
+  tags:
+  - 3DS
+  - SCA
+  - PSD2
+- date: '2026-06-30'
+  category: Feature
+  title: Discover network tokens
+  tags:
+  - Network Tokens
+  - Discover
+- date: '2026-06-30'
+  category: Feature
+  title: Settlement reporting for Trustly (US)
+  tags:
+  - Trustly
+  - Settlement Reporting
+  - Reconciliation
+  - United States
+- date: '2026-06-24'
+  category: Connector
+  title: Stripe Onelink connector
+  tags:
+  - Stripe
+  - Onelink
+  - Digital Wallet
+  - United States
+- date: '2026-06-16'
+  category: Feature
+  title: Mastercard Transaction Link Identifier (TLID)
+  tags:
+  - Mastercard
+  - Recurring
+  - Subscriptions
+- date: '2026-06-16'
+  category: Connector
+  title: Paze digital wallet
+  tags:
+  - Paze
+  - Digital Wallet
+  - Network Tokens
+  - United States

@@ -1,0 +1,162 @@
+openapi: 3.2.0
+info:
+  title: Gr4vy Webhooks API
+  version: 1.1.0-beta
+  contact:
+    name: Gr4vy Support
+    email: code@gr4vy.com
+    url: https://gr4vy.com
+  termsOfService: https://gr4vy.com
+  license:
+    name: MIT
+    url: https://raw.githubusercontent.com/gr4vy/gr4vy-openapi/main/LICENSE
+  description: 'Welcome to the Gr4vy API reference documentation.
+
+    Our API is still very much a work in product and subject to change.'
+servers:
+- url: https://api.sandbox.{id}.gr4vy.app
+  x-speakeasy-server-id: sandbox
+  variables:
+    id:
+      default: example
+      description: The subdomain for your Gr4vy instance.
+- url: https://api.{id}.gr4vy.app
+  x-speakeasy-server-id: production
+  variables:
+    id:
+      default: example
+      description: The subdomain for your Gr4vy instance.
+security:
+- bearerAuth: []
+tags:
+- name: Webhooks
+  description: 'Endpoints related to webhooks to integrate Gr4vy with payment services
+
+    webhooks functionality.'
+  x-internal: true
+paths:
+  /inbound-webhooks/{hook}:
+    parameters:
+    - schema:
+        type: string
+        example: e4f7797af7cc56edb85cde7f94745a13
+      name: hook
+      in: path
+      required: true
+      description: 'Opaque token representing the payment service associated with
+
+        the webhook endpoint.'
+    post:
+      operationId: inbound-webhook-deprecated
+      summary: Inbound webhook
+      description: 'Inbound webhook endpoint to connect to payment services.
+
+
+        The response code and payload will depend on the payment
+
+        service definition.
+
+
+        **Warning**: this endpoint will be removed eventually, use
+
+        Inbound webhook.'
+      tags:
+      - Webhooks
+      security: []
+      x-internal: true
+      responses:
+        '200':
+          description: 'Returns the expected content by the payment service to
+
+            indicate that the webhook has been successfully received.'
+      deprecated: true
+  /i/{payload}/{signature}:
+    parameters:
+    - schema:
+        type: string
+        example: zian1_7ATUeO-gRKMrCbxmJyYWludHJlZS1jYXJk
+      name: payload
+      in: path
+      required: true
+      description: 'Opaque data representing the service information associated with
+
+        the webhook endpoint.'
+    - schema:
+        type: string
+        example: VKJw22zyhitK4UlofhFbktBT1esRVua1tN382mFDtrM
+      name: signature
+      in: path
+      required: true
+      description: 'Signature of the opaque data with the service information
+
+        used for the webhook endpoint.'
+    post:
+      operationId: inbound-webhook
+      summary: Inbound webhook
+      description: 'Inbound webhook endpoint to connect to payment services.
+
+
+        The response code and payload will depend on the payment
+
+        service definition.'
+      tags:
+      - Webhooks
+      security: []
+      x-internal: true
+      responses:
+        '200':
+          description: 'Returns the expected content by the payment service to
+
+            indicate that the webhook has been successfully received.'
+  /i/{resource}/{payload}/{signature}:
+    parameters:
+    - schema:
+        type: string
+        example: ps
+        enum:
+        - af
+        - ps
+      name: resource
+      in: path
+      required: true
+      description: Resource type identifier to which the webhook data is related.
+    - schema:
+        type: string
+        example: zian1_7ATUeO-gRKMrCbxmJyYWludHJlZS1jYXJk
+      name: payload
+      in: path
+      required: true
+      description: 'Opaque data representing the service information associated with
+
+        the webhook endpoint.'
+    - schema:
+        type: string
+        example: VKJw22zyhitK4UlofhFbktBT1esRVua1tN382mFDtrM
+      name: signature
+      in: path
+      required: true
+      description: 'Signature of the opaque data with the service information
+
+        used for the webhook endpoint.'
+    post:
+      operationId: inbound-webhooks
+      summary: Inbound webhook
+      description: 'Inbound webhook endpoint to receive data from external services.
+
+
+        The response code and payload depends on external service.'
+      tags:
+      - Webhooks
+      security: []
+      x-internal: true
+      responses:
+        '200':
+          description: 'Returns the expected content by the service to
+
+            indicate that the webhook has been successfully received.'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

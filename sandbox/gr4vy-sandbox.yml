@@ -1,0 +1,94 @@
+generated: '2026-09-20'
+method: searched
+source: https://docs.gr4vy.com/guides/api/environments
+docs:
+- https://docs.gr4vy.com/guides/api/environments
+- https://docs.gr4vy.com/guides/features/3ds/testing
+- https://docs.gr4vy.com/guides/features/network-tokens/testing
+- https://docs.gr4vy.com/guides/api/error-codes
+- https://docs.gr4vy.com/guides/features/simulators/webhooks
+description: Every Gr4vy instance has a separate sandbox environment on its own infrastructure and hostname. The
+  sandbox always connects to each payment service sandbox; production to the live API. Resources are not shared
+  between environments.
+modes:
+- name: sandbox
+  base_url: https://api.sandbox.{instance_id}.gr4vy.app
+  notes: Separate infrastructure; connectors hit PSP sandboxes.
+- name: production
+  base_url: https://api.{instance_id}.gr4vy.app
+  notes: Live.
+key_formats:
+  note: No key prefixes. Auth is a JWT signed with a per-environment API key-pair private key (.pem) created in
+    the dashboard Integrations panel or over the API.
+test_cards:
+  three_d_secure:
+  - number: '5200000000001203'
+    scheme: Mastercard
+    expiry: 03/30
+    security_code: '100'
+    outcome: Frictionless success
+  - number: '4111111111101203'
+    scheme: Visa
+    expiry: 03/30
+    security_code: '100'
+    outcome: Frictionless success
+  - number: '340000000022003'
+    scheme: American Express
+    expiry: 03/30
+    security_code: '1000'
+    outcome: Frictionless success
+  - number: '3558111111121203'
+    scheme: JCB
+    expiry: 03/30
+    security_code: '100'
+    outcome: Frictionless success
+  - number: '5240000000001072'
+    scheme: Mastercard
+    expiry: 03/30
+    security_code: '100'
+    outcome: Challenge required
+  - number: '4111111111181072'
+    scheme: Visa
+    expiry: 03/30
+    security_code: '100'
+    outcome: Challenge required
+  - number: '340000000082072'
+    scheme: American Express
+    expiry: 03/30
+    security_code: '1000'
+    outcome: Challenge required
+  - number: '3558111111121872'
+    scheme: JCB
+    expiry: 03/30
+    security_code: '100'
+    outcome: Challenge required
+  - number: '9000100111111111'
+    scheme: Visa
+    expiry: 03/30
+    security_code: '100'
+    outcome: Not enrolled
+  - number: '4111412911111172'
+    scheme: Visa
+    expiry: 03/30
+    security_code: '100'
+    outcome: Enrolled — challenge required even with a skip rule
+  - number: '9000100111111117'
+    scheme: Visa
+    expiry: 03/30
+    security_code: '100'
+    outcome: Not enrolled — 3-D Secure attempted, card not enrolled
+  source: https://docs.gr4vy.com/guides/features/3ds/testing
+simulator:
+  description: 'Transaction simulator: specific amounts reproduce specific error codes (see simulator_amount on
+    each entry in errors/gr4vy-decline-codes.yml); simulator webhooks move simulated transactions, payouts and refunds
+    between states.'
+  amounts_file: errors/gr4vy-decline-codes.yml
+  docs:
+  - https://docs.gr4vy.com/guides/api/error-codes
+  - https://docs.gr4vy.com/guides/features/simulators/webhooks
+test_clocks: null
+triggers:
+  tool: gr4vy CLI
+  docs: https://docs.gr4vy.com/guides/tools/cli
+  description: Generates access and Embed tokens and calls any API operation against a sandbox profile (--environment
+    sandbox).

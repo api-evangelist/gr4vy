@@ -1,0 +1,70 @@
+generated: '2026-09-20'
+method: searched
+format: custom-json
+source: openapi/gr4vy-openapi.yml responses + https://docs.gr4vy.com/guides/api/errors
+docs:
+- https://docs.gr4vy.com/guides/api/errors
+- https://docs.gr4vy.com/reference/errors/client-errors
+- https://docs.gr4vy.com/reference/errors/server-errors
+- https://docs.gr4vy.com/guides/api/error-codes
+envelope:
+  media_type: application/json
+  rfc9457: false
+  shape:
+    type: always "error"
+    code: machine-readable error code
+    status: HTTP status
+    message: human-readable context
+    details[]: '{type, pointer (JSON pointer into the request), message, location (body|query|path|header)}'
+note: All 149 operations declare the same 12 error responses. 401 causes can be inspected via the List 4XX errors
+  API (per the docs). 409 on an idempotent retry means the original request is still processing - retry with exponential
+  back-off. 422 is the FastAPI-style HTTPValidationError.
+problems:
+- status: 400
+  code: bad_request
+  title: The request was invalid.
+  schema: Error400
+- status: 401
+  code: unauthorized
+  title: The request was unauthorized.
+  schema: Error401
+- status: 403
+  code: forbidden
+  title: The credentials were invalid or the caller did not have permission to act on the resource.
+  schema: Error403
+- status: 404
+  code: not_found
+  title: The resource was not found.
+  schema: Error404
+- status: 405
+  code: method_not_allowed
+  title: The request method was not allowed.
+  schema: Error405
+- status: 409
+  code: duplicate_record
+  title: A duplicate record was found.
+  schema: Error409
+- status: 422
+  code: null
+  title: Validation Error
+  schema: HTTPValidationError
+- status: 425
+  code: too_early
+  title: The request was too early.
+  schema: Error425
+- status: 429
+  code: too_many_requests
+  title: Too many requests were made.
+  schema: Error429
+- status: 500
+  code: server_error
+  title: The server encountered an error.
+  schema: Error500
+- status: 502
+  code: bad_gateway
+  title: The server encountered an error.
+  schema: Error502
+- status: 504
+  code: gateway_timeout
+  title: The server encountered an error.
+  schema: Error504

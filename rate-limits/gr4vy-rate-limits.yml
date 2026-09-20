@@ -1,0 +1,30 @@
+generated: '2026-09-20'
+method: searched
+source: https://docs.gr4vy.com/guides/api/rate-limiting
+sources:
+- https://docs.gr4vy.com/guides/api/rate-limiting
+published: true
+note: '"The system does not apply any rate limits for server-to-server API calls." Limits exist only on browser/app-to-server
+  calls for card-enumeration prevention. No X-RateLimit-*/RateLimit-*/Retry-After headers are documented; the spec
+  declares a 429 on every operation.'
+limit_count: 1
+limits:
+- name: Enumeration prevention (frontend tokens)
+  limit_text: approximately 50 requests per minute across all endpoints, per token
+  limit: 50
+  window: 1 minute
+  scope: per token (JWT with the embed scope, or a Checkout Session ID)
+  endpoints:
+  - POST /gift-cards/balances
+  - POST /gift-cards
+  - POST /transactions
+  - POST /checkout/sessions/:id/fields
+  burst: null
+  note: Provider states the value "may be adjusted downward in time".
+- name: Server-to-server
+  limit_text: no rate limits applied
+  limit: null
+  window: null
+  scope: server-to-server API calls
+headers: []
+exceeded_status: 429

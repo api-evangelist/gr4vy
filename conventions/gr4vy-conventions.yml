@@ -1,0 +1,137 @@
+generated: '2026-09-20'
+method: searched
+source: https://docs.gr4vy.com/guides/api/
+description: Cross-cutting semantics of the Gr4vy payment orchestration API.
+base_url: 'https://api.{instance_id}.gr4vy.app (sandbox: https://api.sandbox.{instance_id}.gr4vy.app)'
+api_style: REST, JSON, per-tenant instance host
+authentication:
+  scheme: HTTP Bearer - merchant-signed JWT (ES512 recommended, RS512 supported)
+  claims_required:
+  - iss
+  - nbf
+  - exp
+  - jti
+  - scopes
+  claims_optional:
+  - iat
+  - embed
+  docs:
+  - https://docs.gr4vy.com/guides/api/authentication
+  - https://docs.gr4vy.com/guides/api/jwts
+  - https://docs.gr4vy.com/guides/api/api-keys
+  detail: authentication/gr4vy-authentication.yml
+  scopes: scopes/gr4vy-scopes.yml
+multi_tenancy:
+  header: x-gr4vy-merchant-account-id
+  detail: Declared on 127 of 149 operations; selects the merchant account within the instance.
+idempotency:
+  supported: true
+  coverage: partial
+  mechanism: Idempotency-Key request header
+  scope:
+  - activate_gift_card
+  - issue_gift_card
+  - create_transaction
+  - capture_transaction
+  - create_transaction_refund
+  - void_transaction
+  - create_full_transaction_refund
+  - increment_transaction_authorization
+  scope_verbatim: Currently, only the POST /transactions, POST /transactions/:id/void, POST /transactions/:id/capture
+    and POST /transactions/:id/refunds endpoints supports idempotent requests.
+  write_operations_total: 84
+  key_format: Up to 255 characters; V4 UUID recommended
+  retention: 24 hours
+  conflict_behavior: A retry while the original is still processing returns an error (409) that is safe to retry
+    with exponential back-off. Responses are stored (status + body) only once execution started; validation failures
+    are not stored.
+  docs: https://docs.gr4vy.com/guides/api/idempotent-requests
+  scope_source: openapi/gr4vy-openapi.yml - the 8 operations declaring the idempotency-key header. The docs page
+    names only 4 of them (see scope_verbatim); the spec, generated from the live API, is the wider and newer statement.
+reversibility:
+  grade: documented
+  note: Reversal operations exist for the money-moving surface, but the docs state no Gr4vy-level time window -
+    refund/void windows are set by the downstream payment service (the refund_period_expired error code reports
+    when a connector window has lapsed). No window is asserted here.
+  surfaces:
+  - write: create_transaction (authorization)
+    reversal: void_transaction
+    operationId: void_transaction
+    window: null
+    condition: before capture
+    docs: https://docs.gr4vy.com/reference/transactions/void-transaction
+  - write: create_transaction (pending)
+    reversal: cancel_transaction
+    operationId: cancel_transaction
+    window: null
+    condition: while the transaction is pending
+    docs: https://docs.gr4vy.com/reference/transactions/cancel-transaction
+  - write: capture_transaction
+    reversal: create_transaction_refund / create_full_transaction_refund
+    operationId: create_transaction_refund
+    window: null
+    docs: https://docs.gr4vy.com/reference/transactions/refund-transaction
+  - write: add_payment_link
+    reversal: expire_payment_link
+    operationId: expire_payment_link
+    window: null
+  - write: create_payout
+    reversal: null
+    note: No reversal operation in the spec.
+  - write: delete_* (buyers, payment methods, gift cards, etc.)
+    reversal: null
+    note: Deletes are permanent; no restore operation in the spec.
+dry_run:
+  supported: false
+  note: No dry-run flag; rehearsal is via the separate sandbox environment and transaction simulator.
+pagination:
+  style: cursor
+  request_params:
+  - cursor
+  - limit
+  response_fields:
+  - items
+  - limit
+  - next_cursor
+  - previous_cursor
+  auto_pagination: Built into all SDKs
+  docs: https://docs.gr4vy.com/guides/api/pagination
+field_expansion:
+  supported: false
+prefer_header:
+  supported: true
+  mechanism: 'Prefer: resource=transaction-void | transaction-capture'
+  applies_to:
+  - void_transaction
+  - capture_transaction
+  docs: https://docs.gr4vy.com/guides/api/prefer-header
+metadata:
+  supported: true
+  mechanism: metadata key-value object on transactions and related resources (per the OpenAPI schemas)
+versioning:
+  scheme: unversioned additive-only; 30-day notice for breaking changes
+  docs: https://docs.gr4vy.com/guides/api/compatibility
+  detail: lifecycle/gr4vy-lifecycle.yml
+error_envelope:
+  media_type: application/json
+  rfc9457: false
+  shape: '{type: error, code, status, message, details[{type,pointer,message,location}]}'
+  detail: errors/gr4vy-problem-types.yml
+  decline_codes: errors/gr4vy-decline-codes.yml
+  docs: https://docs.gr4vy.com/guides/api/errors
+rate_limits:
+  signal_status: 429
+  detail: rate-limits/gr4vy-rate-limits.yml
+  docs: https://docs.gr4vy.com/guides/api/rate-limiting
+timeouts:
+  docs: https://docs.gr4vy.com/guides/timeouts
+webhooks:
+  signing_headers:
+  - X-Gr4vy-Webhook-Timestamp
+  - X-Gr4vy-Webhook-Signatures
+  verification: HMAC SHA256 of "{timestamp}.{payload}" with the subscription secret; match any listed signature
+    (supports secret rotation)
+  ack: 2xx within 5000 ms
+  retry: exponential delay for up to 7 days
+  detail: asyncapi/gr4vy-webhooks.yml
+  docs: https://docs.gr4vy.com/guides/features/webhooks/overview

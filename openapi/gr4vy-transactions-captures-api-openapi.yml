@@ -1,0 +1,1379 @@
+openapi: 3.2.0
+info:
+  title: Gr4vy Transactions - Captures API
+  description: The Gr4vy API.
+  version: 1.0.0
+tags:
+- name: Transactions - Captures
+  description: Read transaction capture data.
+paths:
+  /transactions/{transaction_id}/captures:
+    get:
+      tags:
+      - Transactions - Captures
+      summary: List transaction captures
+      description: List all captures for a specific transaction.
+      operationId: list_transaction_captures
+      security:
+      - OAuth2PasswordBearer:
+        - transactions.read
+      parameters:
+      - name: transaction_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          description: The unique identifier of the transaction.
+          examples:
+          - 7099948d-7286-47e4-aad8-b68f7eb44591
+          title: Transaction Id
+        description: The unique identifier of the transaction.
+      - name: x-gr4vy-merchant-account-id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The ID of the merchant account to use for this request.
+          examples:
+          - default
+          title: X-Gr4Vy-Merchant-Account-Id
+        description: The ID of the merchant account to use for this request.
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaptureCollection'
+        '400':
+          description: The request was invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+        '401':
+          description: The request was unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401'
+        '403':
+          description: The credentials were invalid or the caller did not have permission to act on the resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error403'
+        '404':
+          description: The resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+        '405':
+          description: The request method was not allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error405'
+        '409':
+          description: A duplicate record was found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error409'
+        '425':
+          description: The request was too early.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error425'
+        '429':
+          description: Too many requests were made.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error429'
+        '500':
+          description: The server encountered an error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error500'
+        '502':
+          description: The server encountered an error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error502'
+        '504':
+          description: The server encountered an error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error504'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-speakeasy-name-override: list
+      x-speakeasy-group: transactions.captures
+  /transactions/{transaction_id}/captures/{capture_id}:
+    get:
+      tags:
+      - Transactions - Captures
+      summary: Get transaction capture
+      description: Retrieve a specific capture for a transaction by its unique identifier.
+      operationId: get_transaction_capture
+      security:
+      - OAuth2PasswordBearer:
+        - transactions.read
+      parameters:
+      - name: transaction_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          description: The unique identifier of the transaction.
+          examples:
+          - 7099948d-7286-47e4-aad8-b68f7eb44591
+          title: Transaction Id
+        description: The unique identifier of the transaction.
+      - name: capture_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          description: The unique identifier of the capture.
+          examples:
+          - b1e2c3d4-5678-1234-9abc-1234567890ab
+          title: Capture Id
+        description: The unique identifier of the capture.
+      - name: x-gr4vy-merchant-account-id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The ID of the merchant account to use for this request.
+          examples:
+          - default
+          title: X-Gr4Vy-Merchant-Account-Id
+        description: The ID of the merchant account to use for this request.
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Capture'
+        '400':
+          description: The request was invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+        '401':
+          description: The request was unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401'
+        '403':
+          description: The credentials were invalid or the caller did not have permission to act on the resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error403'
+        '404':
+          description: The resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+        '405':
+          description: The request method was not allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error405'
+        '409':
+          description: A duplicate record was found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error409'
+        '425':
+          description: The request was too early.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error425'
+        '429':
+          description: Too many requests were made.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error429'
+        '500':
+          description: The server encountered an error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error500'
+        '502':
+          description: The server encountered an error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error502'
+        '504':
+          description: The server encountered an error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error504'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-speakeasy-name-override: get
+      x-speakeasy-group: transactions.captures
+components:
+  schemas:
+    Tracking:
+      properties:
+        number:
+          type: string
+          maxLength: 255
+          minLength: 1
+          title: Number
+          description: The tracking number for the shipment.
+          examples:
+          - 1Z999AA10123456784
+        carrier:
+          $ref: '#/components/schemas/ShippingCarrier'
+          description: The carrier handling the shipment.
+          examples:
+          - ups
+        url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Url
+          description: The URL to track the shipment.
+          examples:
+          - https://www.ups.com/track?tracknum=1Z999AA10123456784
+      additionalProperties: false
+      type: object
+      required:
+      - number
+      - carrier
+      title: Tracking
+    Error401:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `unauthorized`
+          default: unauthorized
+          examples:
+          - unauthorized
+        status:
+          type: integer
+          title: Status
+          description: Always `401`.
+          default: 401
+          examples:
+          - 401
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: No valid API authentication found
+          examples:
+          - No valid API authentication found
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error401
+    Error403:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `forbidden`
+          default: forbidden
+          examples:
+          - forbidden
+        status:
+          type: integer
+          title: Status
+          description: Always `403`.
+          default: 403
+          examples:
+          - 403
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error403
+    CartItem:
+      properties:
+        name:
+          type: string
+          maxLength: 255
+          minLength: 1
+          title: Name
+          description: The name of the cart item. The value you set for this property may be truncated if the maximum length accepted by a payment service provider is less than 255 characters.
+          examples:
+          - GoPro HD
+        quantity:
+          type: integer
+          maximum: 99999999.0
+          exclusiveMinimum: 0.0
+          title: Quantity
+          description: The quantity of this item in the cart. This value cannot be negative or zero.
+          examples:
+          - 2
+        unit_amount:
+          type: integer
+          maximum: 99999999.0
+          minimum: 0.0
+          title: Unit Amount
+          description: The amount for an individual item represented as a monetary amount in the smallest currency unit for the given currency, for example `1299` USD cents represents `$12.99`. The amount sent through to the payment processor as unitary amount will be calculated to include the discount and tax values sent as part of this cart item.
+          examples:
+          - 1299
+        discount_amount:
+          anyOf:
+          - type: integer
+            maximum: 99999999.0
+            minimum: 0.0
+          - type: 'null'
+          title: Discount Amount
+          description: The amount discounted for this item represented as a monetary amount in the smallest currency unit for the given currency, for example `1299` USD cents represents `$12.99`.
+          default: 0
+          examples:
+          - 0
+        tax_amount:
+          anyOf:
+          - type: integer
+            maximum: 99999999.0
+            minimum: 0.0
+          - type: 'null'
+          title: Tax Amount
+          description: The tax amount for this item represented as a monetary amount in the smallest currency unit for the given currency, for example `1299` USD cents represents `$12.99`.
+          default: 0
+          examples:
+          - 0
+        external_identifier:
+          anyOf:
+          - type: string
+            maxLength: 200
+            minLength: 1
+          - type: 'null'
+          title: External Identifier
+          description: An external identifier for the cart item. This can be set to any value and is not sent to the payment service.
+          examples:
+          - goprohd
+        sku:
+          anyOf:
+          - type: string
+            maxLength: 200
+            minLength: 1
+          - type: 'null'
+          title: Sku
+          description: The SKU or product code for the item.
+          examples:
+          - GPHD1078
+        upc:
+          anyOf:
+          - type: string
+            maxLength: 50
+            minLength: 1
+          - type: 'null'
+          title: Upc
+          description: The UPC for the item.
+          examples:
+          - 012345678905
+        product_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Product Url
+          description: The product URL for the item.
+          examples:
+          - https://example.com/catalog/go-pro-hd
+        image_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Image Url
+          description: The URL for the image of the item.
+          examples:
+          - https://example.com/images/go-pro-hd.jpg
+        categories:
+          anyOf:
+          - items:
+              type: string
+              maxLength: 50
+              minLength: 1
+            type: array
+          - type: 'null'
+          title: Categories
+          description: A list of strings containing product categories for the item.
+          examples:
+          - - camera
+            - travel
+            - gear
+        subcategories:
+          anyOf:
+          - items:
+              type: string
+              maxLength: 50
+              minLength: 1
+            type: array
+          - type: 'null'
+          title: Subcategories
+          description: A list of strings containing product subcategories for the item.
+          examples:
+          - - action-cameras
+        brand:
+          anyOf:
+          - type: string
+            maxLength: 255
+            minLength: 1
+          - type: 'null'
+          title: Brand
+          description: The brand of the item.
+          examples:
+          - GoPro
+        product_type:
+          anyOf:
+          - $ref: '#/components/schemas/ProductType'
+          - type: 'null'
+          description: The product type of the cart item.
+          examples:
+          - physical
+        seller_country:
+          anyOf:
+          - type: string
+            pattern: ^[A-Z]{2}$
+            examples:
+            - DE
+            - GB
+            - US
+          - type: 'null'
+          title: Seller Country
+          description: The seller country of the cart item.
+          examples:
+          - US
+          - GB
+        tax_exempt:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Tax Exempt
+          description: Whether the item is exempt of tax.
+          examples:
+          - false
+        unit_of_measure:
+          anyOf:
+          - type: string
+            maxLength: 50
+            minLength: 1
+          - type: 'null'
+          title: Unit Of Measure
+          description: The unit of measure or the unit of measure code.
+          examples:
+          - feet
+          - kg
+        commodity_code:
+          anyOf:
+          - type: string
+            maxLength: 50
+            minLength: 1
+          - type: 'null'
+          title: Commodity Code
+          description: Item commodity code. Generally a UNSPSC code.
+          examples:
+          - '43211503'
+          - '84111502'
+        description:
+          anyOf:
+          - type: string
+            maxLength: 255
+            minLength: 1
+          - type: 'null'
+          title: Description
+          description: Brief item description.
+          examples:
+          - A brief description of an interesting item.
+        duty_amount:
+          anyOf:
+          - type: integer
+            maximum: 99999999.0
+            minimum: 0.0
+          - type: 'null'
+          title: Duty Amount
+          description: Item import or export duties represented as a monetary amount in the smallest currency unit for the given currency, for example `1299` cents to create an authorization for `$12.99`
+          examples:
+          - 1299
+        shipping_amount:
+          anyOf:
+          - type: integer
+            maximum: 99999999.0
+            minimum: 0.0
+          - type: 'null'
+          title: Shipping Amount
+          description: Freight/shipping amount represented as a monetary amount in the smallest currency unit for the given currency, for example `1299` cents to create an authorization for `$12.99`
+          examples:
+          - 1299
+      additionalProperties: false
+      type: object
+      required:
+      - name
+      - quantity
+      - unit_amount
+      title: CartItem
+    ErrorLocation:
+      type: string
+      enum:
+      - query
+      - body
+      - path
+      - header
+      - unknown
+      title: ErrorLocation
+    Error500:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `server_error`
+          default: server_error
+          examples:
+          - server_error
+        status:
+          type: integer
+          title: Status
+          description: Always `500`.
+          default: 500
+          examples:
+          - 500
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error500
+    ProductType:
+      type: string
+      enum:
+      - physical
+      - discount
+      - shipping_fee
+      - sales_tax
+      - digital
+      - gift_card
+      - store_credit
+      - surcharge
+      title: ProductType
+    Error405:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `method_not_allowed`
+          default: method_not_allowed
+          examples:
+          - method_not_allowed
+        status:
+          type: integer
+          title: Status
+          description: Always `405`.
+          default: 405
+          examples:
+          - 405
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Method Not Allowed
+          examples:
+          - Method Not Allowed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error405
+    ShippingCarrier:
+      type: string
+      enum:
+      - amazon
+      - bpost
+      - brt
+      - canada_post
+      - ceska_posta
+      - dhl
+      - doordash
+      - dpd
+      - evri
+      - fedex
+      - gls
+      - inpost
+      - jt_express
+      - landmark_global
+      - lasership
+      - packeta
+      - ppl
+      - purolator
+      - rr_donnelley
+      - sda
+      - ups
+      - usps
+      - veho
+      - other
+      title: ShippingCarrier
+    CaptureCollection:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/Capture'
+          type: array
+          title: Items
+          description: A list of items returned for this request.
+        limit:
+          type: integer
+          maximum: 100.0
+          minimum: 1.0
+          title: Limit
+          description: The number of items for this page.
+          default: 20
+          examples:
+          - 20
+        next_cursor:
+          anyOf:
+          - type: string
+            maxLength: 1000
+            minLength: 1
+          - type: 'null'
+          title: Next Cursor
+          description: The cursor pointing at the next page of items.
+          examples:
+          - ZXhhbXBsZTE
+        previous_cursor:
+          anyOf:
+          - type: string
+            maxLength: 1000
+            minLength: 1
+          - type: 'null'
+          title: Previous Cursor
+          description: The cursor pointing at the previous page of items.
+          examples:
+          - Xkjss7asS
+      additionalProperties: false
+      type: object
+      required:
+      - items
+      title: CaptureCollection
+    Error404:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `not_found`
+          default: not_found
+          examples:
+          - not_found
+        status:
+          type: integer
+          title: Status
+          description: Always `404`.
+          default: 404
+          examples:
+          - 404
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: The resource could not be found
+          examples:
+          - The resource could not be found
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error404
+    CaptureStatus:
+      type: string
+      enum:
+      - succeeded
+      - pending
+      - declined
+      - failed
+      title: CaptureStatus
+    ErrorDetail:
+      properties:
+        location:
+          $ref: '#/components/schemas/ErrorLocation'
+          description: The part of the request where the property can be found that caused the error.
+          examples:
+          - body
+        pointer:
+          anyOf:
+          - type: string
+            format: json-pointer
+          - type: string
+          title: Pointer
+          description: A JSON pointer for the particular property that caused the error.
+          examples:
+          - /currency
+        message:
+          type: string
+          title: Message
+          description: A human-readdable explanation of the error.
+          examples:
+          - 'Unknown ISO 4217 currency code: USX'
+        type:
+          type: string
+          title: Type
+          description: The type of error that was raised for this property.
+          examples:
+          - value_error
+      additionalProperties: false
+      type: object
+      required:
+      - location
+      - pointer
+      - message
+      - type
+      title: ErrorDetail
+    Error425:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `too_early`
+          default: too_early
+          examples:
+          - too_early
+        status:
+          type: integer
+          title: Status
+          description: Always `425`.
+          default: 425
+          examples:
+          - 425
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error425
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    Error409:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `duplicate_record`
+          default: duplicate_record
+          examples:
+          - duplicate_record
+        status:
+          type: integer
+          title: Status
+          description: Always `409`.
+          default: 409
+          examples:
+          - 409
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+        resource_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Resource Id
+          description: The ID of the conflicting resource.
+          examples:
+          - cdc70639-cb9c-4222-a73f-b8ce39f7821b
+      additionalProperties: false
+      type: object
+      title: Error409
+    Error504:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `gateway_timeout`
+          default: gateway_timeout
+          examples:
+          - gateway_timeout
+        status:
+          type: integer
+          title: Status
+          default: 504
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error504
+    Error502:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `bad_gateway`
+          default: bad_gateway
+          examples:
+          - bad_gateway
+        status:
+          type: integer
+          title: Status
+          description: Always `502`.
+          default: 502
+          examples:
+          - 502
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error502
+    Error429:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `too_many_requests`
+          default: too_many_requests
+          examples:
+          - too_many_requests
+        status:
+          type: integer
+          title: Status
+          description: Always `429`.
+          default: 429
+          examples:
+          - 429
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error429
+    Error400:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `bad_request`
+          default: bad_request
+          examples:
+          - bad_request
+        status:
+          type: integer
+          title: Status
+          description: Always `400`.
+          default: 400
+          examples:
+          - 400
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error400
+    Capture:
+      properties:
+        type:
+          type: string
+          const: capture
+          title: Type
+          description: Always `capture`.
+          default: capture
+          examples:
+          - capture
+        id:
+          type: string
+          format: uuid
+          title: Id
+          description: The unique identifier for the capture.
+          examples:
+          - b1e2c3d4-5678-1234-9abc-1234567890ab
+        merchant_account_id:
+          type: string
+          title: Merchant Account Id
+          description: The merchant account this capture belongs to.
+          examples:
+          - default
+        transaction_id:
+          type: string
+          format: uuid
+          title: Transaction Id
+          description: The ID of the transaction associated with this capture.
+          examples:
+          - 7099948d-7286-47e4-aad8-b68f7eb44591
+        xid:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Xid
+          description: The payment service's unique ID for the capture.
+          examples:
+          - capture_xYqd43gySMtori
+        currency:
+          type: string
+          title: Currency
+          description: The ISO 4217 currency code for this capture.
+          examples:
+          - USD
+        amount:
+          type: integer
+          title: Amount
+          description: The capture amount in the smallest currency unit.
+          examples:
+          - 1299
+        status:
+          $ref: '#/components/schemas/CaptureStatus'
+          description: The status of the capture.
+          examples:
+          - succeeded
+        final:
+          type: boolean
+          title: Final
+          description: Whether this is marked as the final capture for the associated transaction.
+          examples:
+          - true
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+          description: The date and time this capture was created.
+          examples:
+          - '2013-07-16T19:23:00.000+00:00'
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+          description: The date and time this capture was last updated.
+          examples:
+          - '2013-07-16T19:23:00.000+00:00'
+        captured_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Captured At
+          description: The date and time the capture was completed.
+          examples:
+          - '2013-07-16T19:23:00.000+00:00'
+        external_identifier:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: External Identifier
+          description: An external identifier that can be used to match the capture against your own records.
+          examples:
+          - capture-12345
+        error_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error Code
+          description: The standardized error code set by Gr4vy.
+          examples:
+          - service_error
+        iso_response_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Iso Response Code
+          description: The ISO response code.
+          examples:
+          - '00'
+        raw_response_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Raw Response Code
+          description: This is the response code received from the payment service. This can be set to any value and is not standardized across different payment services.
+          examples:
+          - E104
+        raw_response_description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Raw Response Description
+          description: This is the response description received from the payment service. This can be set to any value and is not standardized across different payment services.
+          examples:
+          - Internal error
+        transaction_external_identifier:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Transaction External Identifier
+          description: The external identifier of the associated transaction.
+          examples:
+          - transaction-12345
+        cart_items:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/CartItem'
+            type: array
+          - type: 'null'
+          title: Cart Items
+          description: An array of cart items that represents the line items of this capture.
+        tracking:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/Tracking'
+            type: array
+          - type: 'null'
+          title: Tracking
+          description: The shipment tracking details associated with the capture.
+      additionalProperties: false
+      type: object
+      required:
+      - id
+      - merchant_account_id
+      - transaction_id
+      - currency
+      - amount
+      - status
+      - final
+      - created_at
+      - updated_at
+      title: Capture
+  securitySchemes:
+    OAuth2PasswordBearer:
+      type: oauth2
+      flows:
+        password:
+          scopes:
+            embed: Shorthand for all gr4vy embed related scopes
+            sessions.refresh: Refresh access-token
+            anti-fraud-service-definitions.read: Read Anti Fraud Service Definitions
+            anti-fraud-services.read: Read Anti Fraud Services
+            api-key-pairs.read: Read API Key Pairs
+            api-logs.read: Read API Logs
+            apple-pay-certificates.read: Read Apple Pay Certificates
+            audit-logs.read: Read Audit Logs
+            bin-checker.read: Read BIN Checker
+            buyers.read: Read Buyers
+            buyers.billing-details.read: Read Billing Details
+            card-scheme-definitions.read: Read Card Scheme Definitions
+            checkout-sessions.read: Read Checkout Sessions
+            connections.read: Read Connections
+            digital-wallets.read: Read Digital Wallets
+            flows.read: Read Flows
+            gift-card-service-definitions.read: Read Gift Card Service Definitions
+            gift-card-services.read: Read Gift Card Services
+            gift-cards.read: Read Gift Cards
+            merchant-accounts.read: Read Merchant Accounts
+            payment-links.read: Read Payment Links
+            payment-method-definitions.read: Read Payment Method Definitions
+            payment-methods.read: Read Payment Methods
+            payment-options.read: Read Payment Options
+            payment-service-definitions.read: Read Payment Service Definitions
+            payment-services.read: Read Payment Service
+            payouts.read: Read Payouts
+            reports.read: Read Reports
+            roles.read: Read Roles
+            three-ds-scenarios.read: Read 3DS Scenarios
+            transactions.read: Read Transactions
+            users.me.read: Read User Profile
+            vault-forward.read: Read Vault Forward
+            vault-forward-authentications.read: Read Vault Forward Authentications
+            vault-forward-configs.read: Read Vault Forward Configurations
+            vault-forward-definitions.read: Read Vault Forward Definitions
+            webhook-subscriptions.read: Read Webhook Subscriptions
+            business-contexts.read: Read Business Contexts
+            health-dashboard.read: Read Health Dashboard
+            metrics-explorer.read: Read Metrics Explorer
+            monitoring.read: Read Monitoring
+            reset.read: Read Reset
+            sessions.read: Read Sessions
+            users.read: Read Users
+            anti-fraud-service-definitions.write: Write Anti Fraud Service Definitions
+            anti-fraud-services.write: Write Anti Fraud Services
+            api-key-pairs.write: Write API Key Pairs
+            api-logs.write: Write API Logs
+            apple-pay-certificates.write: Write Apple Pay Certificates
+            audit-logs.write: Write Audit Logs
+            bin-checker.write: Write BIN Checker
+            buyers.write: Write Buyers
+            buyers.billing-details.write: Write Billing Details
+            card-scheme-definitions.write: Write Card Scheme Definitions
+            checkout-sessions.write: Write Checkout Sessions
+            connections.write: Write Connections
+            digital-wallets.write: Write Digital Wallets
+            flows.write: Write Flows
+            gift-card-service-definitions.write: Write Gift Card Service Definitions
+            gift-card-services.write: Write Gift Card Services
+            gift-cards.write: Write Gift Cards
+            merchant-accounts.write: Write Merchant Accounts
+            payment-links.write: Write Payment Links
+            payment-method-definitions.write: Write Payment Method Definitions
+            payment-methods.write: Write Payment Methods
+            payment-options.write: Write Payment Options
+            payment-service-definitions.write: Write Payment Service Definitions
+            payment-services.write: Write Payment Service
+            payouts.write: Write Payouts
+            reports.write: Write Reports
+            roles.write: Write Roles
+            three-ds-scenarios.write: Write 3DS Scenarios
+            transactions.write: Write Transactions
+            users.me.write: Write User Profile
+            vault-forward.write: Write Vault Forward
+            vault-forward-authentications.write: Write Vault Forward Authentications
+            vault-forward-configs.write: Write Vault Forward Configurations
+            vault-forward-definitions.write: Write Vault Forward Definitions
+            webhook-subscriptions.write: Write Webhook Subscriptions
+            business-contexts.write: Write Business Contexts
+            health-dashboard.write: Write Health Dashboard
+            metrics-explorer.write: Write Metrics Explorer
+            monitoring.write: Write Monitoring
+            reset.write: Write Reset
+            sessions.write: Write Sessions
+            users.write: Write Users
+          tokenUrl: auth/token

@@ -1,0 +1,46 @@
+generated: '2026-09-20'
+method: searched
+source: https://docs.gr4vy.com/guides/tools/cli
+docs: https://docs.gr4vy.com/guides/tools/cli
+repo: https://github.com/gr4vy/gr4vy-cli
+description: Single self-contained native binary built on the official Go SDK; its command surface is generated
+  from the SDK so it tracks the API. Replaces the deprecated npm package @gr4vy/cli.
+version: v1.37.0
+released: '2026-09-17'
+install:
+  homebrew: brew install gr4vy/tap/gr4vy
+  scoop: scoop bucket add gr4vy https://github.com/gr4vy/scoop-bucket && scoop install gr4vy
+  go: go install github.com/gr4vy/gr4vy-cli@latest
+  binaries: https://github.com/gr4vy/gr4vy-cli/releases
+config:
+  file: ~/.config/gr4vy/config.toml
+  secrets: OS keychain (0600 file fallback on headless systems)
+  profiles: true
+commands:
+  setup:
+  - gr4vy init
+  - gr4vy config add|list|show|use
+  - gr4vy version
+  - gr4vy completion <shell>
+  auth:
+  - gr4vy login --email
+  - gr4vy logout
+  tokens:
+  - gr4vy token --scope <scope> --expires-in <d>
+  - gr4vy token --list-scopes
+  - gr4vy embed <amount> <currency> [key=value] [--checkout-session]
+  api:
+  - gr4vy <resource> <action> (every SDK operation)
+  - gr4vy buyers list|create|get
+  - gr4vy transactions list|get
+  - gr4vy transactions refunds create <id> --data
+  - gr4vy checkout-sessions create
+  global_flags:
+  - --profile
+  - -o table|json|yaml
+  - --debug
+  - --help
+key_flows:
+  token_generation: gr4vy token --scope buyers.read --scope buyers.write --expires-in 10d
+  embed_token: gr4vy embed 1299 USD buyer_external_identifier=user-123
+  api_call: gr4vy transactions list --limit 20 --status capture_pending --currency USD

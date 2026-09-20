@@ -1,0 +1,227 @@
+openapi: 3.2.0
+info:
+  title: Gr4vy API Logs API
+  version: 1.1.0-beta
+  contact:
+    name: Gr4vy Support
+    email: code@gr4vy.com
+    url: https://gr4vy.com
+  termsOfService: https://gr4vy.com
+  license:
+    name: MIT
+    url: https://raw.githubusercontent.com/gr4vy/gr4vy-openapi/main/LICENSE
+  description: 'Welcome to the Gr4vy API reference documentation.
+
+    Our API is still very much a work in product and subject to change.'
+servers:
+- url: https://api.sandbox.{id}.gr4vy.app
+  x-speakeasy-server-id: sandbox
+  variables:
+    id:
+      default: example
+      description: The subdomain for your Gr4vy instance.
+- url: https://api.{id}.gr4vy.app
+  x-speakeasy-server-id: production
+  variables:
+    id:
+      default: example
+      description: The subdomain for your Gr4vy instance.
+security:
+- bearerAuth: []
+tags:
+- name: API Logs
+  description: 'API Logs provide an historic of 4XX and 5XX errors that happened in the API
+
+    in the last 24 hours with a 250 result limit.'
+  x-internal: true
+paths:
+  /api-logs:
+    get:
+      operationId: list-api-logs
+      summary: List API error logs
+      description: Returns a list of API 4XX and 5XX logs.
+      tags:
+      - API Logs
+      responses:
+        '200':
+          description: Returns a list of API logs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiLogs'
+        '401':
+          description: Returns an error if no valid authentication was provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401Unauthorized'
+components:
+  schemas:
+    ApiLog:
+      title: API Log
+      type: object
+      description: A log of an error that happened in the API call.
+      x-tags:
+      - API Log
+      properties:
+        type:
+          type: string
+          description: '`api-log`.'
+          example: api-log
+          enum:
+          - api-log
+        id:
+          type: string
+          format: uuid
+          description: The ID of the API log entry.
+          example: 8d3fe99b-1422-42e6-bbb3-932d95ae5f79
+        request_method:
+          type: string
+          description: The http request method that generated the log entry.
+          example: POST
+        request_url:
+          type: string
+          description: The http request URL which trigged the error log.
+          example: http://api.wpay.gr4vy.app/transactions
+        request_received_at:
+          type: string
+          format: date-time
+          description: The date and time that the request was received.
+          example: '2022-01-01T00:00:00+00:00'
+        response_status_code:
+          type: number
+          description: The http request status code.
+          example: 400
+        response_body:
+          type: object
+          description: The JSON response body for the log entry.
+          properties:
+            code:
+              type: string
+              description: The error code.
+              example: bad_request
+            message:
+              type: string
+              description: The error message.
+              example: Request failed validation
+            status:
+              type: number
+              description: The HTTP error code.
+              example: 400
+            type:
+              type: string
+              description: Type of the log entry.
+              example: error
+            details:
+              type: object
+              description: Details of the log entry, stack trace and endpoint.
+              properties:
+                pointer:
+                  type: string
+                  description: Log's pointer.
+                  example: /payment_method/number
+                message:
+                  type: string
+                  description: Detailed message on the log entry.
+                  example: ensure this value has at least 13 characters
+                location:
+                  type: string
+                  description: Location on where the error happened.
+                  example: body
+                type:
+                  type: string
+                  description: Detailed error type that is specified in the log entry.
+                  example: value_error.any_str.min_length
+        response_sent_at:
+          type: string
+          format: date-time
+          description: date-time of when the response was sent.
+          example: '2022-01-01T00:00:10+00:00'
+    Error401Unauthorized:
+      title: Unauthorized Error
+      type: object
+      description: Unauthorized Error (HTTP 401).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`unauthorized`.'
+          example: unauthorized
+          enum:
+          - unauthorized
+        status:
+          type: integer
+          description: '`401`.'
+          example: 401
+          enum:
+          - 401
+        message:
+          type: string
+          description: No valid API authentication found.
+          example: No valid API authentication found
+          enum:
+          - No valid API authentication found
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    ErrorDetail:
+      title: Error details
+      description: Additional detail about the part of a request body that caused an issue.
+      type: object
+      x-tags:
+      - Errors
+      properties:
+        location:
+          type: string
+          example: body
+          description: The location where the error caused an issue.
+          enum:
+          - query
+          - body
+          - path
+          - header
+        type:
+          type: string
+          example: value_error.missing
+          description: A unique identifier for the type of error that occurred.
+        pointer:
+          type: string
+          example: /payment_method/number
+          description: 'The exact item for which the validation did not succeed. This is a JSON
+
+            pointer for request bodies, while for query, path, and header parameters
+
+            it is the name of the parameter.'
+        message:
+          type: string
+          example: field required
+          description: A human readable message for this error detail.
+    ApiLogs:
+      title: API Logs
+      type: object
+      description: A list of API log entries.
+      x-tags:
+      - API Logs
+      properties:
+        items:
+          type: array
+          description: A list of API log entries.
+          items:
+            $ref: '#/components/schemas/ApiLog'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

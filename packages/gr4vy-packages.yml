@@ -1,0 +1,203 @@
+generated: '2026-09-20'
+method: searched
+source: https://github.com/gr4vy + registry metadata endpoints (registry.npmjs.org, pypi.org, repo.packagist.org,
+  api.nuget.org, repo1.maven.org, proxy.golang.org, trunk.cocoapods.org, api.github.com releases)
+description: First-party Gr4vy SDKs, embeddable UI packages and CLI. Server SDKs are generated from the OpenAPI
+  spec with Speakeasy; every version/published pair was read from the registry on the generated date.
+docs: https://docs.gr4vy.com/guides/api/authentication
+packages:
+- language: TypeScript
+  registry: npm
+  name: '@gr4vy/sdk'
+  url: https://www.npmjs.com/package/@gr4vy/sdk
+  source: https://github.com/gr4vy/gr4vy-typescript
+  kind: server-sdk
+  official: true
+  version: 2.4.25
+  published: '2026-09-17'
+  install: npm install @gr4vy/sdk
+- language: Python
+  registry: pypi
+  name: gr4vy
+  url: https://pypi.org/project/gr4vy/
+  source: https://github.com/gr4vy/gr4vy-python
+  kind: server-sdk
+  official: true
+  version: 2.4.15
+  published: '2026-09-18'
+  install: pip install gr4vy
+- language: PHP
+  registry: packagist
+  name: gr4vy/gr4vy-php
+  url: https://packagist.org/packages/gr4vy/gr4vy-php
+  source: https://github.com/gr4vy/gr4vy-php
+  kind: server-sdk
+  official: true
+  version: v1.7.24
+  published: '2026-09-17'
+  install: composer require gr4vy/gr4vy-php
+- language: C#
+  registry: nuget
+  name: Gr4vy
+  url: https://www.nuget.org/packages/Gr4vy
+  source: https://github.com/gr4vy/gr4vy-csharp
+  kind: server-sdk
+  official: true
+  version: 2.10.17
+  published: '2026-09-17'
+  install: dotnet add package Gr4vy
+- language: Java
+  registry: maven
+  name: com.gr4vy:sdk
+  url: https://repo1.maven.org/maven2/com/gr4vy/sdk/
+  source: https://github.com/gr4vy/gr4vy-java
+  kind: server-sdk
+  official: true
+  version: 2.19.12
+  published: '2026-09-17'
+  install: implementation 'com.gr4vy:sdk:2.19.12'
+  note: Version and date read from repo1.maven.org maven-metadata.xml (lastUpdated 20260917074310); search.maven.org
+    returned no rows.
+- language: Go
+  registry: go
+  name: github.com/gr4vy/gr4vy-go
+  url: https://pkg.go.dev/github.com/gr4vy/gr4vy-go
+  source: https://github.com/gr4vy/gr4vy-go
+  kind: server-sdk
+  official: true
+  version: v1.13.18
+  published: '2026-09-17'
+  install: go get github.com/gr4vy/gr4vy-go
+- language: Kotlin
+  registry: maven
+  name: com.gr4vy:gr4vy-kotlin
+  url: https://repo1.maven.org/maven2/com/gr4vy/gr4vy-kotlin/
+  source: https://github.com/gr4vy/gr4vy-kotlin
+  kind: mobile-sdk
+  official: true
+  version: 1.2.0
+  published: '2026-09-09'
+  install: implementation 'com.gr4vy:gr4vy-kotlin:1.2.0'
+  note: Read from repo1.maven.org maven-metadata.xml and the GitHub release 1.2.0.
+- language: Swift
+  registry: swiftpm
+  name: gr4vy-swift
+  url: https://github.com/gr4vy/gr4vy-swift
+  source: https://github.com/gr4vy/gr4vy-swift
+  kind: mobile-sdk
+  official: true
+  version: 1.1.0
+  published: '2026-09-08'
+  note: Swift Package Manager has no registry metadata endpoint; version/date read from the latest GitHub release.
+- language: Swift
+  registry: cocoapods
+  name: gr4vy-ios
+  url: https://cocoapods.org/pods/gr4vy-ios
+  source: https://github.com/gr4vy/gr4vy-ios
+  kind: embed-ui
+  official: true
+  version: 2.9.0
+  published: '2026-05-31'
+  install: pod 'gr4vy-ios'
+- language: Kotlin/Java
+  registry: jitpack
+  name: com.github.gr4vy:gr4vy-android
+  url: https://jitpack.io/#gr4vy/gr4vy-android
+  source: https://github.com/gr4vy/gr4vy-android
+  kind: embed-ui
+  official: true
+  version: v2.1.0
+  published: '2026-07-20'
+  install: implementation 'com.github.gr4vy:gr4vy-android:v2.0.0'
+  note: JitPack builds from GitHub tags; version/date read from the latest GitHub release. README install line still
+    pins v2.0.0.
+- language: JavaScript
+  registry: npm
+  name: '@gr4vy/embed'
+  url: https://www.npmjs.com/package/@gr4vy/embed
+  source: https://github.com/gr4vy/gr4vy-embed
+  kind: embed-ui
+  official: true
+  version: 2.43.0
+  published: '2026-09-02'
+  install: npm install @gr4vy/embed
+- language: JavaScript
+  registry: npm
+  name: '@gr4vy/embed-react'
+  url: https://www.npmjs.com/package/@gr4vy/embed-react
+  source: https://github.com/gr4vy/gr4vy-embed
+  kind: embed-ui
+  official: true
+  version: 2.43.0
+  published: '2026-09-02'
+  install: npm install @gr4vy/embed-react
+- language: JavaScript
+  registry: npm
+  name: '@gr4vy/embed-react-native'
+  url: https://www.npmjs.com/package/@gr4vy/embed-react-native
+  source: https://github.com/gr4vy/gr4vy-react-native
+  kind: embed-ui
+  official: true
+  version: 2.6.0
+  published: '2026-09-14'
+  install: npm install @gr4vy/embed-react-native
+- language: JavaScript
+  registry: npm
+  name: '@gr4vy/secure-fields'
+  url: https://www.npmjs.com/package/@gr4vy/secure-fields
+  source: https://github.com/gr4vy/secure-fields
+  kind: embed-ui
+  official: true
+  version: 2.11.0
+  published: '2026-09-02'
+  install: npm install @gr4vy/secure-fields
+- language: JavaScript
+  registry: npm
+  name: '@gr4vy/secure-fields-react'
+  url: https://www.npmjs.com/package/@gr4vy/secure-fields-react
+  source: https://github.com/gr4vy/secure-fields
+  kind: embed-ui
+  official: true
+  version: 2.11.0
+  published: '2026-09-02'
+  install: npm install @gr4vy/secure-fields-react
+- language: Go (binary)
+  registry: github-releases
+  name: gr4vy-cli
+  url: https://github.com/gr4vy/gr4vy-cli/releases
+  source: https://github.com/gr4vy/gr4vy-cli
+  kind: cli
+  official: true
+  version: v1.37.0
+  published: '2026-09-17'
+  install: brew install gr4vy/tap/gr4vy
+  note: Native binary distributed via Homebrew tap, Scoop bucket, go install and GitHub releases.
+- language: JavaScript
+  registry: npm
+  name: '@gr4vy/cli'
+  url: https://www.npmjs.com/package/@gr4vy/cli
+  source: https://github.com/gr4vy/gr4vy-cli
+  kind: cli
+  official: true
+  version: 0.2.2
+  published: '2025-12-18'
+  note: DEPRECATED per https://docs.gr4vy.com/guides/tools/cli - replaced by the native binary.
+  deprecated: true
+- language: JavaScript
+  registry: npm
+  name: '@gr4vy/node'
+  url: https://www.npmjs.com/package/@gr4vy/node
+  source: https://github.com/gr4vy/gr4vy-node
+  kind: server-sdk
+  official: true
+  version: 1.4.0
+  published: '2025-07-22'
+  note: Legacy Node SDK; GitHub repo gr4vy/gr4vy-node is archived. Superseded by @gr4vy/sdk.
+  deprecated: true
+- language: Ruby
+  registry: rubygems
+  name: gr4vy
+  official: false
+  version: null
+  published: null
+  note: rubygems.org/api/v1/gems/gr4vy.json returned 404 - no Ruby gem is published.
