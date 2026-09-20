@@ -5,7 +5,7 @@ info:
   x-generated: '2026-09-20'
   x-method: generated
   x-source: openapi/gr4vy-openapi.yml + https://docs.gr4vy.com/guides/api/
-extends: ../openapi/gr4vy-openapi.yml
+extends: ../openapi/_original/gr4vy-openapi.yml
 actions:
 - target: $.info
   update:
