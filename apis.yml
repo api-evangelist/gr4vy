@@ -23,6 +23,17 @@ tags:
 - Vault
 - Fraud
 - 3D Secure
+- Webhook
+- Commerce
+tags_raw:
+- Payments
+- Payment Orchestration
+- Fintech
+- Checkout
+- Tokenization
+- Vault
+- Fraud
+- 3D Secure
 - Webhooks
 - Commerce
 apis:
@@ -812,6 +823,8 @@ apis:
   humanURL: https://docs.gr4vy.com/reference
   baseURL: https://api.{id}.gr4vy.app
   tags:
+  - Digital Wallet
+  tags_raw:
   - Digital Wallets
   properties:
   - type: OpenAPI
@@ -2123,6 +2136,8 @@ apis:
   humanURL: https://docs.gr4vy.com/reference
   baseURL: https://api.{id}.gr4vy.app
   tags:
+  - Transaction
+  tags_raw:
   - Transactions
   properties:
   - type: OpenAPI
@@ -2392,6 +2407,8 @@ apis:
   humanURL: https://docs.gr4vy.com/reference
   baseURL: https://api.{id}.gr4vy.app
   tags:
+  - User
+  tags_raw:
   - Users
   properties:
   - type: OpenAPI
@@ -2555,6 +2572,8 @@ apis:
   humanURL: https://docs.gr4vy.com/reference
   baseURL: https://api.{id}.gr4vy.app
   tags:
+  - Webhook Subscriptions
+  tags_raw:
   - Webhook subscriptions
   properties:
   - type: OpenAPI
@@ -2596,6 +2615,8 @@ apis:
   humanURL: https://docs.gr4vy.com/reference
   baseURL: https://api.{id}.gr4vy.app
   tags:
+  - Webhook
+  tags_raw:
   - Webhooks
   properties:
   - type: OpenAPI
@@ -2634,6 +2655,10 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: AgenticAccess
+  url: agentic-access/gr4vy-agentic-access.yml
+- type: LLMsTxt
+  url: llms/gr4vy-website-llms.txt
 - type: Overlay
   url: overlays/gr4vy-openapi-overlay.yaml
 - type: DomainSecurity
