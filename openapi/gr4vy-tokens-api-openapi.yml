@@ -526,6 +526,50 @@ paths:
                 $ref: '#/components/schemas/Error404NotFound'
 components:
   schemas:
+    NetworkTokenRequest:
+      title: Network Token (Provision)
+      type: object
+      description: Request body for provision a network token.
+      x-tags:
+      - Request Bodies
+      required:
+      - merchant_initiated
+      - is_subsequent_payment
+      properties:
+        security_code:
+          type:
+          - string
+          - 'null'
+          description: 'The 3 or 4 digit security code often found on the card. This often
+
+            referred to as the CVV or CVD.
+
+
+            The security code can only be set if the stored payment method
+
+            represents a card.'
+          pattern: ^\d{3,4}$
+          minLength: 3
+          maxLength: 4
+          example: '123'
+        merchant_initiated:
+          type: boolean
+          example: false
+          description: Defines if the request is merchant initiated or not.
+        is_subsequent_payment:
+          type: boolean
+          example: true
+          description: Defines if the request is a subsequent of another request or not.
+    Cryptogram:
+      title: Cryptogram
+      type: object
+      description: A network token cryptogram.
+      x-tags:
+      - Tokens
+      properties:
+        cryptogram:
+          type: string
+          description: The cryptogram of the network token.
     Error404NotFound:
       title: Not Found Error
       type: object
@@ -562,42 +606,6 @@ components:
 
             Not every error supports more detail.'
           example: []
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-    Error400BadRequest:
-      title: Bad Request
-      type: object
-      description: Bad Request (HTTP 400).
-      x-tags:
-      - Errors
-      properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: A short code that describes the reason for the error.
-          example: bad_request
-          enum:
-          - bad_request
-          - incorrect_json
-          - invalid_credentials
-        status:
-          type: integer
-          description: '`400`.'
-          example: 400
-          enum:
-          - 400
-        message:
-          type: string
-          description: A human-readable reason for the error.
-          example: Missing '****' field
-        details:
-          type: array
-          description: A list of detail objects that further clarify the reason for the error.
           items:
             $ref: '#/components/schemas/ErrorDetail'
     PaymentServiceTokens:
@@ -642,20 +650,6 @@ components:
           example: null
           minLength: 1
           maxLength: 1000
-    IssueCryptogramRequest:
-      title: Issue cryptogram
-      type: object
-      description: Request body for issue a cryptogram for a network token.
-      x-tags:
-      - Request Bodies
-      required:
-      - merchant_initiated
-      properties:
-        merchant_initiated:
-          type: boolean
-          example: false
-          default: false
-          description: Defines if the request is merchant initiated or not.
     Error403Forbidden:
       title: Forbidden Error
       type: object
@@ -695,77 +689,91 @@ components:
           example: []
           items:
             $ref: '#/components/schemas/ErrorDetail'
-    PaymentServiceToken:
-      title: Payment Service Token
+    Error401Unauthorized:
+      title: Unauthorized Error
       type: object
-      description: A payment service token.
+      description: Unauthorized Error (HTTP 401).
       x-tags:
-      - Tokens
+      - Errors
       properties:
         type:
           type: string
-          description: The type of this resource.
-          example: payment-service-token
+          description: '`error`.'
           enum:
-          - payment-service-token
-        id:
+          - error
+          example: error
+        code:
           type: string
-          description: The unique ID of the token.
-          format: uuid
-          example: d6ad71d5-6908-45d6-ab65-39c55475dd08
-        payment_method_id:
-          type: string
-          description: The unique ID of the payment method.
-          format: uuid
-          example: 9bdc4bc4-005e-4658-8eee-a309fc43cd4d
-        payment_service_id:
-          type: string
-          description: The unique ID of the payment service.
-          format: uuid
-          example: 50f2e61f-caac-4e12-8d79-30eaf8250423
+          description: '`unauthorized`.'
+          example: unauthorized
+          enum:
+          - unauthorized
         status:
-          type: string
-          description: "The state of the token.\n\n- `processing` - The payment method is still being stored.\n- `buyer_approval_required` - Storing the payment method requires\n  the buyer to provide approval. Follow the `approval_url` for next steps.\n- `succeeded` - The payment method is approved and stored with all\n  relevant payment services.\n- `failed` - Storing the payment method did not succeed."
-          example: succeeded
+          type: integer
+          description: '`401`.'
+          example: 401
           enum:
-          - processing
-          - buyer_approval_required
-          - succeeded
-          - failed
-        approval_url:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: https://api.example.app.gr4vy.com/payment-methods/f4fb0dd1-4ff9-46fb-965e-11de34aa6806/approve
-          description: The optional URL that the buyer needs to be redirected to to further authorize their payment.
-        token:
-          type:
-          - string
-          - 'null'
-          description: The token value. Will be present if succeeded.
-        created_at:
+          - 401
+        message:
           type: string
-          description: 'The date and time when this token was first created in our
+          description: No valid API authentication found.
+          example: No valid API authentication found
+          enum:
+          - No valid API authentication found
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
 
-            system.'
-          format: date-time
-          example: '2021-01-01T12:34:00.000+00:00'
-        updated_at:
-          type: string
-          description: The date and time when this token was last updated in our system.
-          format: date-time
-          example: '2021-01-01T12:34:00.000+00:00'
-    Cryptogram:
-      title: Cryptogram
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    ErrorDetail:
+      title: Error details
+      description: Additional detail about the part of a request body that caused an issue.
       type: object
-      description: A network token cryptogram.
       x-tags:
-      - Tokens
+      - Errors
       properties:
-        cryptogram:
+        location:
           type: string
-          description: The cryptogram of the network token.
+          example: body
+          description: The location where the error caused an issue.
+          enum:
+          - query
+          - body
+          - path
+          - header
+        type:
+          type: string
+          example: value_error.missing
+          description: A unique identifier for the type of error that occurred.
+        pointer:
+          type: string
+          example: /payment_method/number
+          description: 'The exact item for which the validation did not succeed. This is a JSON
+
+            pointer for request bodies, while for query, path, and header parameters
+
+            it is the name of the parameter.'
+        message:
+          type: string
+          example: field required
+          description: A human readable message for this error detail.
+    IssueCryptogramRequest:
+      title: Issue cryptogram
+      type: object
+      description: Request body for issue a cryptogram for a network token.
+      x-tags:
+      - Request Bodies
+      required:
+      - merchant_initiated
+      properties:
+        merchant_initiated:
+          type: boolean
+          example: false
+          default: false
+          description: Defines if the request is merchant initiated or not.
     NetworkTokens:
       title: Network Tokens
       type: object
@@ -808,80 +816,10 @@ components:
           example: null
           minLength: 1
           maxLength: 1000
-    ErrorDetail:
-      title: Error details
-      description: Additional detail about the part of a request body that caused an issue.
+    Error400BadRequest:
+      title: Bad Request
       type: object
-      x-tags:
-      - Errors
-      properties:
-        location:
-          type: string
-          example: body
-          description: The location where the error caused an issue.
-          enum:
-          - query
-          - body
-          - path
-          - header
-        type:
-          type: string
-          example: value_error.missing
-          description: A unique identifier for the type of error that occurred.
-        pointer:
-          type: string
-          example: /payment_method/number
-          description: 'The exact item for which the validation did not succeed. This is a JSON
-
-            pointer for request bodies, while for query, path, and header parameters
-
-            it is the name of the parameter.'
-        message:
-          type: string
-          example: field required
-          description: A human readable message for this error detail.
-    PaymentServiceTokenRequest:
-      title: Payment Service Token (Provision)
-      type: object
-      description: Request body for provision a payment service token.
-      x-tags:
-      - Request Bodies
-      required:
-      - payment_service_id
-      - redirect_url
-      properties:
-        security_code:
-          type:
-          - string
-          - 'null'
-          description: 'The 3 or 4 digit security code often found on the card. This often
-
-            referred to as the CVV or CVD.
-
-
-            The security code can only be set if the stored payment method
-
-            represents a card.'
-          pattern: ^\d{3,4}$
-          minLength: 3
-          maxLength: 4
-          example: '123'
-        payment_service_id:
-          type: string
-          format: uuid
-          example: a7d6b829-aea5-407d-ab7f-138784b5ad2c
-          description: The ID of the payment service.
-        redirect_url:
-          type: string
-          format: uri
-          description: 'The redirect URL to redirect a buyer to after they have authorized their
-
-            payment method. This only applies to payment methods that require buyer approval.'
-          example: https://example.com/callback
-    Error401Unauthorized:
-      title: Unauthorized Error
-      type: object
-      description: Unauthorized Error (HTTP 401).
+      description: Bad Request (HTTP 400).
       x-tags:
       - Errors
       properties:
@@ -893,64 +831,27 @@ components:
           example: error
         code:
           type: string
-          description: '`unauthorized`.'
-          example: unauthorized
+          description: A short code that describes the reason for the error.
+          example: bad_request
           enum:
-          - unauthorized
+          - bad_request
+          - incorrect_json
+          - invalid_credentials
         status:
           type: integer
-          description: '`401`.'
-          example: 401
+          description: '`400`.'
+          example: 400
           enum:
-          - 401
+          - 400
         message:
           type: string
-          description: No valid API authentication found.
-          example: No valid API authentication found
-          enum:
-          - No valid API authentication found
+          description: A human-readable reason for the error.
+          example: Missing '****' field
         details:
           type: array
-          description: 'A list of detail objects that further clarify the reason for the error.
-
-            Not every error supports more detail.'
-          example: []
+          description: A list of detail objects that further clarify the reason for the error.
           items:
             $ref: '#/components/schemas/ErrorDetail'
-    NetworkTokenRequest:
-      title: Network Token (Provision)
-      type: object
-      description: Request body for provision a network token.
-      x-tags:
-      - Request Bodies
-      required:
-      - merchant_initiated
-      - is_subsequent_payment
-      properties:
-        security_code:
-          type:
-          - string
-          - 'null'
-          description: 'The 3 or 4 digit security code often found on the card. This often
-
-            referred to as the CVV or CVD.
-
-
-            The security code can only be set if the stored payment method
-
-            represents a card.'
-          pattern: ^\d{3,4}$
-          minLength: 3
-          maxLength: 4
-          example: '123'
-        merchant_initiated:
-          type: boolean
-          example: false
-          description: Defines if the request is merchant initiated or not.
-        is_subsequent_payment:
-          type: boolean
-          example: true
-          description: Defines if the request is a subsequent of another request or not.
     NetworkToken:
       title: Network Token
       type: object
@@ -1014,6 +915,105 @@ components:
         updated_at:
           type: string
           description: The date and time when this network token was last updated in our system.
+          format: date-time
+          example: '2021-01-01T12:34:00.000+00:00'
+    PaymentServiceTokenRequest:
+      title: Payment Service Token (Provision)
+      type: object
+      description: Request body for provision a payment service token.
+      x-tags:
+      - Request Bodies
+      required:
+      - payment_service_id
+      - redirect_url
+      properties:
+        security_code:
+          type:
+          - string
+          - 'null'
+          description: 'The 3 or 4 digit security code often found on the card. This often
+
+            referred to as the CVV or CVD.
+
+
+            The security code can only be set if the stored payment method
+
+            represents a card.'
+          pattern: ^\d{3,4}$
+          minLength: 3
+          maxLength: 4
+          example: '123'
+        payment_service_id:
+          type: string
+          format: uuid
+          example: a7d6b829-aea5-407d-ab7f-138784b5ad2c
+          description: The ID of the payment service.
+        redirect_url:
+          type: string
+          format: uri
+          description: 'The redirect URL to redirect a buyer to after they have authorized their
+
+            payment method. This only applies to payment methods that require buyer approval.'
+          example: https://example.com/callback
+    PaymentServiceToken:
+      title: Payment Service Token
+      type: object
+      description: A payment service token.
+      x-tags:
+      - Tokens
+      properties:
+        type:
+          type: string
+          description: The type of this resource.
+          example: payment-service-token
+          enum:
+          - payment-service-token
+        id:
+          type: string
+          description: The unique ID of the token.
+          format: uuid
+          example: d6ad71d5-6908-45d6-ab65-39c55475dd08
+        payment_method_id:
+          type: string
+          description: The unique ID of the payment method.
+          format: uuid
+          example: 9bdc4bc4-005e-4658-8eee-a309fc43cd4d
+        payment_service_id:
+          type: string
+          description: The unique ID of the payment service.
+          format: uuid
+          example: 50f2e61f-caac-4e12-8d79-30eaf8250423
+        status:
+          type: string
+          description: "The state of the token.\n\n- `processing` - The payment method is still being stored.\n- `buyer_approval_required` - Storing the payment method requires\n  the buyer to provide approval. Follow the `approval_url` for next steps.\n- `succeeded` - The payment method is approved and stored with all\n  relevant payment services.\n- `failed` - Storing the payment method did not succeed."
+          example: succeeded
+          enum:
+          - processing
+          - buyer_approval_required
+          - succeeded
+          - failed
+        approval_url:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: https://api.example.app.gr4vy.com/payment-methods/f4fb0dd1-4ff9-46fb-965e-11de34aa6806/approve
+          description: The optional URL that the buyer needs to be redirected to to further authorize their payment.
+        token:
+          type:
+          - string
+          - 'null'
+          description: The token value. Will be present if succeeded.
+        created_at:
+          type: string
+          description: 'The date and time when this token was first created in our
+
+            system.'
+          format: date-time
+          example: '2021-01-01T12:34:00.000+00:00'
+        updated_at:
+          type: string
+          description: The date and time when this token was last updated in our system.
           format: date-time
           example: '2021-01-01T12:34:00.000+00:00'
   securitySchemes:

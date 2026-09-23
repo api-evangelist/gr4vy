@@ -464,97 +464,6 @@ paths:
       x-speakeasy-group: merchant-accounts.three-ds-configuration
 components:
   schemas:
-    Error401:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `unauthorized`
-          default: unauthorized
-          examples:
-          - unauthorized
-        status:
-          type: integer
-          title: Status
-          description: Always `401`.
-          default: 401
-          examples:
-          - 401
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: No valid API authentication found
-          examples:
-          - No valid API authentication found
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error401
-    Error403:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `forbidden`
-          default: forbidden
-          examples:
-          - forbidden
-        status:
-          type: integer
-          title: Status
-          description: Always `403`.
-          default: 403
-          examples:
-          - 403
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error403
-    ErrorLocation:
-      type: string
-      enum:
-      - query
-      - body
-      - path
-      - header
-      - unknown
-      title: ErrorLocation
     Error500:
       properties:
         type:
@@ -596,6 +505,132 @@ components:
       additionalProperties: false
       type: object
       title: Error500
+    Error409:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `duplicate_record`
+          default: duplicate_record
+          examples:
+          - duplicate_record
+        status:
+          type: integer
+          title: Status
+          description: Always `409`.
+          default: 409
+          examples:
+          - 409
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+        resource_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Resource Id
+          description: The ID of the conflicting resource.
+          examples:
+          - cdc70639-cb9c-4222-a73f-b8ce39f7821b
+      additionalProperties: false
+      type: object
+      title: Error409
+    ErrorDetail:
+      properties:
+        location:
+          $ref: '#/components/schemas/ErrorLocation'
+          description: The part of the request where the property can be found that caused the error.
+          examples:
+          - body
+        pointer:
+          anyOf:
+          - type: string
+            format: json-pointer
+          - type: string
+          title: Pointer
+          description: A JSON pointer for the particular property that caused the error.
+          examples:
+          - /currency
+        message:
+          type: string
+          title: Message
+          description: A human-readdable explanation of the error.
+          examples:
+          - 'Unknown ISO 4217 currency code: USX'
+        type:
+          type: string
+          title: Type
+          description: The type of error that was raised for this property.
+          examples:
+          - value_error
+      additionalProperties: false
+      type: object
+      required:
+      - location
+      - pointer
+      - message
+      - type
+      title: ErrorDetail
+    Error502:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `bad_gateway`
+          default: bad_gateway
+          examples:
+          - bad_gateway
+        status:
+          type: integer
+          title: Status
+          description: Always `502`.
+          default: 502
+          examples:
+          - 502
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error502
     Error405:
       properties:
         type:
@@ -723,7 +758,7 @@ components:
       additionalProperties: false
       type: object
       title: MerchantAccountThreeDSConfigurationUpdate
-    Error404:
+    Error429:
       properties:
         type:
           type: string
@@ -736,24 +771,24 @@ components:
         code:
           type: string
           title: Code
-          description: Always `not_found`
-          default: not_found
+          description: Always `too_many_requests`
+          default: too_many_requests
           examples:
-          - not_found
+          - too_many_requests
         status:
           type: integer
           title: Status
-          description: Always `404`.
-          default: 404
+          description: Always `429`.
+          default: 429
           examples:
-          - 404
+          - 429
         message:
           type: string
           title: Message
           description: A human readable message that provides more context to the error.
-          default: The resource could not be found
+          default: Generic error
           examples:
-          - The resource could not be found
+          - Request failed validation
         details:
           items:
             $ref: '#/components/schemas/ErrorDetail'
@@ -763,7 +798,7 @@ components:
           default: []
       additionalProperties: false
       type: object
-      title: Error404
+      title: Error429
     Error425:
       properties:
         type:
@@ -805,51 +840,167 @@ components:
       additionalProperties: false
       type: object
       title: Error425
-    ErrorDetail:
+    MerchantAccountThreeDSConfigurationCreate:
       properties:
-        location:
-          $ref: '#/components/schemas/ErrorLocation'
-          description: The part of the request where the property can be found that caused the error.
+        merchant_acquirer_bin:
+          type: string
+          maxLength: 11
+          title: Merchant Acquirer Bin
+          description: Acquirer BIN to use when calling 3DS through this scheme.
           examples:
-          - body
-        pointer:
+          - '516327'
+        merchant_acquirer_id:
+          type: string
+          maxLength: 35
+          title: Merchant Acquirer Id
+          description: Merchant ID to use when calling 3DS through this scheme.
+          examples:
+          - '123456789012345'
+        merchant_name:
+          type: string
+          maxLength: 40
+          title: Merchant Name
+          description: ''
+          examples:
+          - Acme Inc.
+        merchant_country_code:
+          type: string
+          title: Merchant Country Code
+          description: The merchant's ISO 3166-1 numeric country code.
+          examples:
+          - '840'
+        merchant_category_code:
+          type: string
+          maxLength: 4
+          minLength: 4
+          title: Merchant Category Code
+          description: Merchant category code to use when calling 3DS through this scheme.
+          examples:
+          - '1234'
+        merchant_url:
+          type: string
+          title: Merchant Url
+          description: URL to send when calling 3DS through this scheme.
+          examples:
+          - https://example.com
+        scheme:
+          $ref: '#/components/schemas/CardScheme'
+          description: The card scheme for this 3DS configuration
+        currency:
           anyOf:
           - type: string
-            format: json-pointer
-          - type: string
-          title: Pointer
-          description: A JSON pointer for the particular property that caused the error.
+            pattern: ^[A-Z]{3}$
+            examples:
+            - EUR
+            - GBP
+            - USD
+          - type: 'null'
+          title: Currency
+          description: ISO 4217 currency code (3 characters). If left null, the configuration will apply to all currencies.
           examples:
-          - /currency
-        message:
-          type: string
-          title: Message
-          description: A human-readdable explanation of the error.
-          examples:
-          - 'Unknown ISO 4217 currency code: USX'
-        type:
-          type: string
-          title: Type
-          description: The type of error that was raised for this property.
-          examples:
-          - value_error
+          - USD
+          - EUR
+          - GBP
+        metadata:
+          additionalProperties:
+            type: string
+          type: object
+          title: Metadata
+          description: Any additional information about the 3DS configuration that you would like to store as key-value pairs.
       additionalProperties: false
       type: object
       required:
-      - location
-      - pointer
-      - message
-      - type
-      title: ErrorDetail
-    HTTPValidationError:
+      - merchant_acquirer_bin
+      - merchant_acquirer_id
+      - merchant_name
+      - merchant_country_code
+      - merchant_category_code
+      - merchant_url
+      - scheme
+      - metadata
+      title: MerchantAccountThreeDSConfigurationCreate
+    Error401:
       properties:
-        detail:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `unauthorized`
+          default: unauthorized
+          examples:
+          - unauthorized
+        status:
+          type: integer
+          title: Status
+          description: Always `401`.
+          default: 401
+          examples:
+          - 401
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: No valid API authentication found
+          examples:
+          - No valid API authentication found
+        details:
           items:
-            $ref: '#/components/schemas/ValidationError'
+            $ref: '#/components/schemas/ErrorDetail'
           type: array
-          title: Detail
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
       type: object
-      title: HTTPValidationError
+      title: Error401
+    Error400:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `bad_request`
+          default: bad_request
+          examples:
+          - bad_request
+        status:
+          type: integer
+          title: Status
+          description: Always `400`.
+          default: 400
+          examples:
+          - 400
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error400
     CardScheme:
       type: string
       enum:
@@ -879,6 +1030,56 @@ components:
       - unionpay
       - visa
       title: CardScheme
+    Error504:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `gateway_timeout`
+          default: gateway_timeout
+          examples:
+          - gateway_timeout
+        status:
+          type: integer
+          title: Status
+          default: 504
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error504
+    MerchantAccountThreeDSConfigurations:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/MerchantAccountThreeDSConfiguration'
+          type: array
+          title: Items
+          description: A list of items returned for this request.
+      type: object
+      required:
+      - items
+      title: MerchantAccountThreeDSConfigurations
     ValidationError:
       properties:
         loc:
@@ -905,55 +1106,6 @@ components:
       - msg
       - type
       title: ValidationError
-    Error409:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `duplicate_record`
-          default: duplicate_record
-          examples:
-          - duplicate_record
-        status:
-          type: integer
-          title: Status
-          description: Always `409`.
-          default: 409
-          examples:
-          - 409
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-        resource_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Resource Id
-          description: The ID of the conflicting resource.
-          examples:
-          - cdc70639-cb9c-4222-a73f-b8ce39f7821b
-      additionalProperties: false
-      type: object
-      title: Error409
     MerchantAccountThreeDSConfiguration:
       properties:
         merchant_acquirer_bin:
@@ -1069,7 +1221,7 @@ components:
       - currency
       - metadata
       title: MerchantAccountThreeDSConfiguration
-    Error504:
+    Error404:
       properties:
         type:
           type: string
@@ -1082,21 +1234,24 @@ components:
         code:
           type: string
           title: Code
-          description: Always `gateway_timeout`
-          default: gateway_timeout
+          description: Always `not_found`
+          default: not_found
           examples:
-          - gateway_timeout
+          - not_found
         status:
           type: integer
           title: Status
-          default: 504
+          description: Always `404`.
+          default: 404
+          examples:
+          - 404
         message:
           type: string
           title: Message
           description: A human readable message that provides more context to the error.
-          default: Request could not be processed
+          default: The resource could not be found
           examples:
-          - Request could not be processed
+          - The resource could not be found
         details:
           items:
             $ref: '#/components/schemas/ErrorDetail'
@@ -1106,20 +1261,17 @@ components:
           default: []
       additionalProperties: false
       type: object
-      title: Error504
-    MerchantAccountThreeDSConfigurations:
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/MerchantAccountThreeDSConfiguration'
-          type: array
-          title: Items
-          description: A list of items returned for this request.
-      type: object
-      required:
-      - items
-      title: MerchantAccountThreeDSConfigurations
-    Error502:
+      title: Error404
+    ErrorLocation:
+      type: string
+      enum:
+      - query
+      - body
+      - path
+      - header
+      - unknown
+      title: ErrorLocation
+    Error403:
       properties:
         type:
           type: string
@@ -1132,58 +1284,17 @@ components:
         code:
           type: string
           title: Code
-          description: Always `bad_gateway`
-          default: bad_gateway
+          description: Always `forbidden`
+          default: forbidden
           examples:
-          - bad_gateway
+          - forbidden
         status:
           type: integer
           title: Status
-          description: Always `502`.
-          default: 502
+          description: Always `403`.
+          default: 403
           examples:
-          - 502
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Request could not be processed
-          examples:
-          - Request could not be processed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error502
-    Error429:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `too_many_requests`
-          default: too_many_requests
-          examples:
-          - too_many_requests
-        status:
-          type: integer
-          title: Status
-          description: Always `429`.
-          default: 429
-          examples:
-          - 429
+          - 403
         message:
           type: string
           title: Message
@@ -1200,127 +1311,16 @@ components:
           default: []
       additionalProperties: false
       type: object
-      title: Error429
-    MerchantAccountThreeDSConfigurationCreate:
+      title: Error403
+    HTTPValidationError:
       properties:
-        merchant_acquirer_bin:
-          type: string
-          maxLength: 11
-          title: Merchant Acquirer Bin
-          description: Acquirer BIN to use when calling 3DS through this scheme.
-          examples:
-          - '516327'
-        merchant_acquirer_id:
-          type: string
-          maxLength: 35
-          title: Merchant Acquirer Id
-          description: Merchant ID to use when calling 3DS through this scheme.
-          examples:
-          - '123456789012345'
-        merchant_name:
-          type: string
-          maxLength: 40
-          title: Merchant Name
-          description: ''
-          examples:
-          - Acme Inc.
-        merchant_country_code:
-          type: string
-          title: Merchant Country Code
-          description: The merchant's ISO 3166-1 numeric country code.
-          examples:
-          - '840'
-        merchant_category_code:
-          type: string
-          maxLength: 4
-          minLength: 4
-          title: Merchant Category Code
-          description: Merchant category code to use when calling 3DS through this scheme.
-          examples:
-          - '1234'
-        merchant_url:
-          type: string
-          title: Merchant Url
-          description: URL to send when calling 3DS through this scheme.
-          examples:
-          - https://example.com
-        scheme:
-          $ref: '#/components/schemas/CardScheme'
-          description: The card scheme for this 3DS configuration
-        currency:
-          anyOf:
-          - type: string
-            pattern: ^[A-Z]{3}$
-            examples:
-            - EUR
-            - GBP
-            - USD
-          - type: 'null'
-          title: Currency
-          description: ISO 4217 currency code (3 characters). If left null, the configuration will apply to all currencies.
-          examples:
-          - USD
-          - EUR
-          - GBP
-        metadata:
-          additionalProperties:
-            type: string
-          type: object
-          title: Metadata
-          description: Any additional information about the 3DS configuration that you would like to store as key-value pairs.
-      additionalProperties: false
-      type: object
-      required:
-      - merchant_acquirer_bin
-      - merchant_acquirer_id
-      - merchant_name
-      - merchant_country_code
-      - merchant_category_code
-      - merchant_url
-      - scheme
-      - metadata
-      title: MerchantAccountThreeDSConfigurationCreate
-    Error400:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `bad_request`
-          default: bad_request
-          examples:
-          - bad_request
-        status:
-          type: integer
-          title: Status
-          description: Always `400`.
-          default: 400
-          examples:
-          - 400
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
+        detail:
           items:
-            $ref: '#/components/schemas/ErrorDetail'
+            $ref: '#/components/schemas/ValidationError'
           type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
+          title: Detail
       type: object
-      title: Error400
+      title: HTTPValidationError
   securitySchemes:
     OAuth2PasswordBearer:
       type: oauth2

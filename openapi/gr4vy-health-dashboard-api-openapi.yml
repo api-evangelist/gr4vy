@@ -326,464 +326,6 @@ paths:
                 $ref: '#/components/schemas/Error404NotFound'
 components:
   schemas:
-    Error404NotFound:
-      title: Not Found Error
-      type: object
-      description: Not Found Error (HTTP 404).
-      x-tags:
-      - Errors
-      properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: The reason code for the error.
-          example: not_found
-          enum:
-          - not_found
-          - pending_creation
-        status:
-          type: integer
-          description: '`404`.'
-          example: 404
-          enum:
-          - 404
-        message:
-          type: string
-          description: The human readable reason for the error.
-          example: The resource could not be found
-        details:
-          type: array
-          description: 'A list of detail objects that further clarify the reason for the error.
-
-            Not every error supports more detail.'
-          example: []
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-    HealthDashboardTotal:
-      title: Health Dashboard total
-      type: object
-      description: Health Dashboard transactions and refunds line chart data.
-      x-tags:
-      - Health Dashboard
-      x-internal: true
-      properties:
-        type:
-          type: string
-          description: The type of this resource.
-          example: health-dashboard.total
-          enum:
-          - health-dashboard.total
-        summary:
-          type: object
-          description: Summary of the aggregated data.
-          properties:
-            transactions_accepted:
-              type: integer
-              description: The total number of transactions created during the current period.
-              example: 7890
-            transactions_accepted_delta_pct:
-              type:
-              - integer
-              - 'null'
-              description: The percentage difference between the total number of transactions created during the current period and the previous period.
-              example: -5
-            transactions_authorized_rate:
-              type:
-              - integer
-              - 'null'
-              description: The rate of authorized transactions created during the current period.
-              example: 89
-            transactions_authorized_rate_delta:
-              type:
-              - integer
-              - 'null'
-              description: The absolute difference between the rate of authorized transactions created during the current period and the previous period.
-              example: 15
-            refunds:
-              type: integer
-              description: The total number of successful refunds from all sources created during the current period.
-              example: 590
-            refunds_delta_pct:
-              type:
-              - integer
-              - 'null'
-              description: The percentage difference between the total number of successful refunds from all sources created during the current period and the previous period.
-              example: 7
-        series:
-          type: object
-          description: Contains two series of data points used to build the line chart. Each series contains aggregations of data created over the duration of the specified period (e.g. `7-days`). The `previous` series contains aggregations from the period immediately preceding the `current` series.
-          properties:
-            current:
-              type: object
-              description: Metrics for the transactions and refunds created during the current period aggregated by hour or day.
-              properties:
-                first_interval:
-                  type: string
-                  description: The date and time of the first data point, represented with an ISO 8601 interval value indicating whether it is aggregated by one hour (PT1H) or one day (P1D) periods.
-                  example: 2024-05-07T00:00:00Z/P1D
-                transactions_accepted:
-                  type: array
-                  items:
-                    type: integer
-                  description: The total number of transactions created within the period that the data point corresponds to.
-                  example:
-                  - 1919
-                  - 2194
-                  - 1920
-                  - 2184
-                  - 1328
-                  - 1868
-                  - 2001
-                  - 2082
-                transactions_authorized_rate:
-                  type: array
-                  items:
-                    type:
-                    - integer
-                    - 'null'
-                  description: The rate of authorized transactions created within the period that the data point corresponds to.
-                  example:
-                  - 66
-                  - 89
-                  - 75
-                  - 98
-                  - 100
-                  - null
-                  - 95
-                  - 100
-                refunds:
-                  type: array
-                  items:
-                    type: integer
-                  description: The total number of successful refunds created within the period that the data point corresponds to.
-                  example:
-                  - 119
-                  - 294
-                  - 120
-                  - 184
-                  - 138
-                  - 168
-                  - 201
-                  - 182
-            previous:
-              type: object
-              description: Metrics for the transactions and refunds created during the previous period aggregated by hour or day.
-              properties:
-                first_interval:
-                  type: string
-                  description: The date and time of the first data point, represented with an ISO 8601 interval value indicating whether it is aggregated by one hour (PT1H) or one day (P1D) periods.
-                  example: 2024-04-29T00:00:00Z/P1D
-                transactions_accepted:
-                  type: array
-                  items:
-                    type: integer
-                  description: The total number of transactions created within the period that the data point corresponds to.
-                  example:
-                  - 1919
-                  - 2194
-                  - 1920
-                  - 2184
-                  - 1328
-                  - 1868
-                  - 2001
-                  - 2082
-                transactions_authorized_rate:
-                  type: array
-                  items:
-                    type:
-                    - integer
-                    - 'null'
-                  description: The rate of authorized transactions created within the period that the data point corresponds to.
-                  example:
-                  - 66
-                  - 89
-                  - 75
-                  - 98
-                  - 100
-                  - null
-                  - 95
-                  - 100
-                refunds:
-                  type: array
-                  items:
-                    type: integer
-                  description: The total number of successful refunds created within the period that the data point corresponds to.
-                  example:
-                  - 119
-                  - 294
-                  - 120
-                  - 184
-                  - 138
-                  - 168
-                  - 201
-                  - 182
-    Error400BadRequest:
-      title: Bad Request
-      type: object
-      description: Bad Request (HTTP 400).
-      x-tags:
-      - Errors
-      properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: A short code that describes the reason for the error.
-          example: bad_request
-          enum:
-          - bad_request
-          - incorrect_json
-          - invalid_credentials
-        status:
-          type: integer
-          description: '`400`.'
-          example: 400
-          enum:
-          - 400
-        message:
-          type: string
-          description: A human-readable reason for the error.
-          example: Missing '****' field
-        details:
-          type: array
-          description: A list of detail objects that further clarify the reason for the error.
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-    HealthDashboardConnection:
-      title: Health Dashboard connection
-      type: object
-      description: Health Dashboard connection table data.
-      x-tags:
-      - Health Dashboard
-      x-internal: true
-      properties:
-        type:
-          type: string
-          description: The type of this resource.
-          example: health-dashboard.connection
-          enum:
-          - health-dashboard.connection
-        summary:
-          type: object
-          description: Summary of the aggregated payment service data.
-          properties:
-            payment_service_id:
-              type: string
-              format: uuid
-              description: The ID of the payment service.
-              example: 50f2e61f-caac-4e12-8d79-30eaf8250423
-            payment_service_definition_id:
-              type: string
-              description: The payment service definition ID.
-              example: stripe-card
-            payment_service_display_name:
-              type: string
-              description: The display name of the payment service.
-              example: Stripe UK
-            payment_service_is_active:
-              type: boolean
-              description: Indicates whether the payment service is currently active.
-              example: true
-            payment_service_is_deleted:
-              type: boolean
-              description: Indicates whether the payment service has been deleted.
-              example: false
-            transactions_authorized:
-              type: integer
-              description: 'The total number of transactions authorized by the payment
-
-                service during the current period.'
-              example: 290
-            transactions_authorized_rate:
-              type:
-              - integer
-              - 'null'
-              description: 'The rate of transactions authorized by the payment service
-
-                during the current period.'
-              example: 85
-            transactions_authorized_rate_delta:
-              type:
-              - integer
-              - 'null'
-              description: 'The absolute difference between the rate of transactions authorized by
-
-                the payment service during the current period and the previous period.'
-              example: 2
-            transactions_declined:
-              type: integer
-              description: 'The total number of transactions declined by the payment
-
-                service during the current period.'
-              example: 30
-            transactions_recovered:
-              type: integer
-              description: 'The total number of transactions recovered by the payment service
-
-                during the current period. A recovered transaction is a transaction
-
-                that has failed attempts before being successfully processed by
-
-                this payment service.'
-              example: 70
-    HealthDashboardStatus:
-      title: Health Dashboard status
-      type: object
-      description: Health Dashboard status summary.
-      x-tags:
-      - Health Dashboard
-      x-internal: true
-      properties:
-        type:
-          type: string
-          description: The type of this resource.
-          example: health-dashboard.status
-          enum:
-          - health-dashboard.status
-        latest_execution:
-          type:
-          - object
-          - 'null'
-          description: Information about the latest execution to process data for the Health Dashboard. This value is null if the data has not been fully processed for the first time yet.
-          properties:
-            timestamp:
-              type: string
-              format: date-time
-              description: The date and time when the data was last processed.
-              example: '2023-07-26T19:23:00.000Z'
-        currencies:
-          type:
-          - array
-          - 'null'
-          description: The list of currencies that were transacted within the last 60+ days in ISO 4217 currency code format. This value is null if the data has not been fully processed for the first time yet.
-          items:
-            type: string
-          example:
-          - USD
-          - GBP
-    ErrorDetail:
-      title: Error details
-      description: Additional detail about the part of a request body that caused an issue.
-      type: object
-      x-tags:
-      - Errors
-      properties:
-        location:
-          type: string
-          example: body
-          description: The location where the error caused an issue.
-          enum:
-          - query
-          - body
-          - path
-          - header
-        type:
-          type: string
-          example: value_error.missing
-          description: A unique identifier for the type of error that occurred.
-        pointer:
-          type: string
-          example: /payment_method/number
-          description: 'The exact item for which the validation did not succeed. This is a JSON
-
-            pointer for request bodies, while for query, path, and header parameters
-
-            it is the name of the parameter.'
-        message:
-          type: string
-          example: field required
-          description: A human readable message for this error detail.
-    Error401Unauthorized:
-      title: Unauthorized Error
-      type: object
-      description: Unauthorized Error (HTTP 401).
-      x-tags:
-      - Errors
-      properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: '`unauthorized`.'
-          example: unauthorized
-          enum:
-          - unauthorized
-        status:
-          type: integer
-          description: '`401`.'
-          example: 401
-          enum:
-          - 401
-        message:
-          type: string
-          description: No valid API authentication found.
-          example: No valid API authentication found
-          enum:
-          - No valid API authentication found
-        details:
-          type: array
-          description: 'A list of detail objects that further clarify the reason for the error.
-
-            Not every error supports more detail.'
-          example: []
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-    HealthDashboardConnections:
-      title: Health Dashboard connections
-      type: object
-      description: Health Dashboard connections table data.
-      x-tags:
-      - Health Dashboard
-      x-internal: true
-      properties:
-        items:
-          type: array
-          description: A list of connection summaries.
-          items:
-            $ref: '#/components/schemas/HealthDashboardConnection'
-        limit:
-          type: integer
-          description: 'The limit applied to request. This represents the number of items that are at
-
-            maximum returned by this request.'
-          format: int32
-          minimum: 1
-          maximum: 100
-          example: 1
-          default: 20
-        next_cursor:
-          type:
-          - string
-          - 'null'
-          description: 'The cursor that represents the next page of results. Use the `cursor` query
-
-            parameter to fetch this page of items.'
-          example: ZXhhbXBsZTE
-          minLength: 1
-          maxLength: 1000
-        previous_cursor:
-          type:
-          - string
-          - 'null'
-          description: 'The cursor that represents the next page of results. Use the `cursor` query
-
-            parameter to fetch this page of items.'
-          example: null
-          minLength: 1
-          maxLength: 1000
     HealthDashboardTotalVolume:
       title: Health Dashboard total volume
       type: object
@@ -946,6 +488,464 @@ components:
                   - 168
                   - 201
                   - 182
+    Error404NotFound:
+      title: Not Found Error
+      type: object
+      description: Not Found Error (HTTP 404).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: The reason code for the error.
+          example: not_found
+          enum:
+          - not_found
+          - pending_creation
+        status:
+          type: integer
+          description: '`404`.'
+          example: 404
+          enum:
+          - 404
+        message:
+          type: string
+          description: The human readable reason for the error.
+          example: The resource could not be found
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    Error401Unauthorized:
+      title: Unauthorized Error
+      type: object
+      description: Unauthorized Error (HTTP 401).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`unauthorized`.'
+          example: unauthorized
+          enum:
+          - unauthorized
+        status:
+          type: integer
+          description: '`401`.'
+          example: 401
+          enum:
+          - 401
+        message:
+          type: string
+          description: No valid API authentication found.
+          example: No valid API authentication found
+          enum:
+          - No valid API authentication found
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    ErrorDetail:
+      title: Error details
+      description: Additional detail about the part of a request body that caused an issue.
+      type: object
+      x-tags:
+      - Errors
+      properties:
+        location:
+          type: string
+          example: body
+          description: The location where the error caused an issue.
+          enum:
+          - query
+          - body
+          - path
+          - header
+        type:
+          type: string
+          example: value_error.missing
+          description: A unique identifier for the type of error that occurred.
+        pointer:
+          type: string
+          example: /payment_method/number
+          description: 'The exact item for which the validation did not succeed. This is a JSON
+
+            pointer for request bodies, while for query, path, and header parameters
+
+            it is the name of the parameter.'
+        message:
+          type: string
+          example: field required
+          description: A human readable message for this error detail.
+    HealthDashboardConnection:
+      title: Health Dashboard connection
+      type: object
+      description: Health Dashboard connection table data.
+      x-tags:
+      - Health Dashboard
+      x-internal: true
+      properties:
+        type:
+          type: string
+          description: The type of this resource.
+          example: health-dashboard.connection
+          enum:
+          - health-dashboard.connection
+        summary:
+          type: object
+          description: Summary of the aggregated payment service data.
+          properties:
+            payment_service_id:
+              type: string
+              format: uuid
+              description: The ID of the payment service.
+              example: 50f2e61f-caac-4e12-8d79-30eaf8250423
+            payment_service_definition_id:
+              type: string
+              description: The payment service definition ID.
+              example: stripe-card
+            payment_service_display_name:
+              type: string
+              description: The display name of the payment service.
+              example: Stripe UK
+            payment_service_is_active:
+              type: boolean
+              description: Indicates whether the payment service is currently active.
+              example: true
+            payment_service_is_deleted:
+              type: boolean
+              description: Indicates whether the payment service has been deleted.
+              example: false
+            transactions_authorized:
+              type: integer
+              description: 'The total number of transactions authorized by the payment
+
+                service during the current period.'
+              example: 290
+            transactions_authorized_rate:
+              type:
+              - integer
+              - 'null'
+              description: 'The rate of transactions authorized by the payment service
+
+                during the current period.'
+              example: 85
+            transactions_authorized_rate_delta:
+              type:
+              - integer
+              - 'null'
+              description: 'The absolute difference between the rate of transactions authorized by
+
+                the payment service during the current period and the previous period.'
+              example: 2
+            transactions_declined:
+              type: integer
+              description: 'The total number of transactions declined by the payment
+
+                service during the current period.'
+              example: 30
+            transactions_recovered:
+              type: integer
+              description: 'The total number of transactions recovered by the payment service
+
+                during the current period. A recovered transaction is a transaction
+
+                that has failed attempts before being successfully processed by
+
+                this payment service.'
+              example: 70
+    HealthDashboardStatus:
+      title: Health Dashboard status
+      type: object
+      description: Health Dashboard status summary.
+      x-tags:
+      - Health Dashboard
+      x-internal: true
+      properties:
+        type:
+          type: string
+          description: The type of this resource.
+          example: health-dashboard.status
+          enum:
+          - health-dashboard.status
+        latest_execution:
+          type:
+          - object
+          - 'null'
+          description: Information about the latest execution to process data for the Health Dashboard. This value is null if the data has not been fully processed for the first time yet.
+          properties:
+            timestamp:
+              type: string
+              format: date-time
+              description: The date and time when the data was last processed.
+              example: '2023-07-26T19:23:00.000Z'
+        currencies:
+          type:
+          - array
+          - 'null'
+          description: The list of currencies that were transacted within the last 60+ days in ISO 4217 currency code format. This value is null if the data has not been fully processed for the first time yet.
+          items:
+            type: string
+          example:
+          - USD
+          - GBP
+    Error400BadRequest:
+      title: Bad Request
+      type: object
+      description: Bad Request (HTTP 400).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: A short code that describes the reason for the error.
+          example: bad_request
+          enum:
+          - bad_request
+          - incorrect_json
+          - invalid_credentials
+        status:
+          type: integer
+          description: '`400`.'
+          example: 400
+          enum:
+          - 400
+        message:
+          type: string
+          description: A human-readable reason for the error.
+          example: Missing '****' field
+        details:
+          type: array
+          description: A list of detail objects that further clarify the reason for the error.
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    HealthDashboardTotal:
+      title: Health Dashboard total
+      type: object
+      description: Health Dashboard transactions and refunds line chart data.
+      x-tags:
+      - Health Dashboard
+      x-internal: true
+      properties:
+        type:
+          type: string
+          description: The type of this resource.
+          example: health-dashboard.total
+          enum:
+          - health-dashboard.total
+        summary:
+          type: object
+          description: Summary of the aggregated data.
+          properties:
+            transactions_accepted:
+              type: integer
+              description: The total number of transactions created during the current period.
+              example: 7890
+            transactions_accepted_delta_pct:
+              type:
+              - integer
+              - 'null'
+              description: The percentage difference between the total number of transactions created during the current period and the previous period.
+              example: -5
+            transactions_authorized_rate:
+              type:
+              - integer
+              - 'null'
+              description: The rate of authorized transactions created during the current period.
+              example: 89
+            transactions_authorized_rate_delta:
+              type:
+              - integer
+              - 'null'
+              description: The absolute difference between the rate of authorized transactions created during the current period and the previous period.
+              example: 15
+            refunds:
+              type: integer
+              description: The total number of successful refunds from all sources created during the current period.
+              example: 590
+            refunds_delta_pct:
+              type:
+              - integer
+              - 'null'
+              description: The percentage difference between the total number of successful refunds from all sources created during the current period and the previous period.
+              example: 7
+        series:
+          type: object
+          description: Contains two series of data points used to build the line chart. Each series contains aggregations of data created over the duration of the specified period (e.g. `7-days`). The `previous` series contains aggregations from the period immediately preceding the `current` series.
+          properties:
+            current:
+              type: object
+              description: Metrics for the transactions and refunds created during the current period aggregated by hour or day.
+              properties:
+                first_interval:
+                  type: string
+                  description: The date and time of the first data point, represented with an ISO 8601 interval value indicating whether it is aggregated by one hour (PT1H) or one day (P1D) periods.
+                  example: 2024-05-07T00:00:00Z/P1D
+                transactions_accepted:
+                  type: array
+                  items:
+                    type: integer
+                  description: The total number of transactions created within the period that the data point corresponds to.
+                  example:
+                  - 1919
+                  - 2194
+                  - 1920
+                  - 2184
+                  - 1328
+                  - 1868
+                  - 2001
+                  - 2082
+                transactions_authorized_rate:
+                  type: array
+                  items:
+                    type:
+                    - integer
+                    - 'null'
+                  description: The rate of authorized transactions created within the period that the data point corresponds to.
+                  example:
+                  - 66
+                  - 89
+                  - 75
+                  - 98
+                  - 100
+                  - null
+                  - 95
+                  - 100
+                refunds:
+                  type: array
+                  items:
+                    type: integer
+                  description: The total number of successful refunds created within the period that the data point corresponds to.
+                  example:
+                  - 119
+                  - 294
+                  - 120
+                  - 184
+                  - 138
+                  - 168
+                  - 201
+                  - 182
+            previous:
+              type: object
+              description: Metrics for the transactions and refunds created during the previous period aggregated by hour or day.
+              properties:
+                first_interval:
+                  type: string
+                  description: The date and time of the first data point, represented with an ISO 8601 interval value indicating whether it is aggregated by one hour (PT1H) or one day (P1D) periods.
+                  example: 2024-04-29T00:00:00Z/P1D
+                transactions_accepted:
+                  type: array
+                  items:
+                    type: integer
+                  description: The total number of transactions created within the period that the data point corresponds to.
+                  example:
+                  - 1919
+                  - 2194
+                  - 1920
+                  - 2184
+                  - 1328
+                  - 1868
+                  - 2001
+                  - 2082
+                transactions_authorized_rate:
+                  type: array
+                  items:
+                    type:
+                    - integer
+                    - 'null'
+                  description: The rate of authorized transactions created within the period that the data point corresponds to.
+                  example:
+                  - 66
+                  - 89
+                  - 75
+                  - 98
+                  - 100
+                  - null
+                  - 95
+                  - 100
+                refunds:
+                  type: array
+                  items:
+                    type: integer
+                  description: The total number of successful refunds created within the period that the data point corresponds to.
+                  example:
+                  - 119
+                  - 294
+                  - 120
+                  - 184
+                  - 138
+                  - 168
+                  - 201
+                  - 182
+    HealthDashboardConnections:
+      title: Health Dashboard connections
+      type: object
+      description: Health Dashboard connections table data.
+      x-tags:
+      - Health Dashboard
+      x-internal: true
+      properties:
+        items:
+          type: array
+          description: A list of connection summaries.
+          items:
+            $ref: '#/components/schemas/HealthDashboardConnection'
+        limit:
+          type: integer
+          description: 'The limit applied to request. This represents the number of items that are at
+
+            maximum returned by this request.'
+          format: int32
+          minimum: 1
+          maximum: 100
+          example: 1
+          default: 20
+        next_cursor:
+          type:
+          - string
+          - 'null'
+          description: 'The cursor that represents the next page of results. Use the `cursor` query
+
+            parameter to fetch this page of items.'
+          example: ZXhhbXBsZTE
+          minLength: 1
+          maxLength: 1000
+        previous_cursor:
+          type:
+          - string
+          - 'null'
+          description: 'The cursor that represents the next page of results. Use the `cursor` query
+
+            parameter to fetch this page of items.'
+          example: null
+          minLength: 1
+          maxLength: 1000
   securitySchemes:
     bearerAuth:
       type: http

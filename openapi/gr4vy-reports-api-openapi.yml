@@ -572,6 +572,280 @@ paths:
           description: The subdomain for your Gr4vy instance.
 components:
   schemas:
+    ReportExecution:
+      title: Report Execution
+      type: object
+      description: A report execution.
+      x-tags:
+      - Reports
+      allOf:
+      - $ref: '#/components/schemas/ReportExecutionSummary'
+      properties:
+        report:
+          type: object
+          description: The report associated with this report execution.
+          allOf:
+          - $ref: '#/components/schemas/ReportSummary'
+    ReportExecutionUrl:
+      title: Report Execution URL
+      type: object
+      description: 'The temporary signed URL to download the result of a report execution
+
+        and its expiration date and time.'
+      x-tags:
+      - Reports
+      properties:
+        url:
+          type: string
+          format: uri
+          description: The URL to download the report execution.
+          example: https://example.com/download
+        expires_at:
+          type: string
+          description: The date and time when the download URL expires.
+          format: date-time
+          example: '2013-07-16T19:23:00.000+00:00'
+    ReportExecutions:
+      title: Report Executions
+      type: object
+      description: A list of report executions.
+      x-tags:
+      - Reports
+      properties:
+        items:
+          type: array
+          description: A list of report executions.
+          items:
+            $ref: '#/components/schemas/ReportExecution'
+        limit:
+          type: integer
+          description: 'The limit applied to request. This represents the number of items that are at
+
+            maximum returned by this request.'
+          format: int32
+          minimum: 1
+          maximum: 100
+          example: 1
+          default: 20
+        next_cursor:
+          type:
+          - string
+          - 'null'
+          description: 'The cursor that represents the next page of results. Use the `cursor` query
+
+            parameter to fetch this page of items.'
+          example: ZXhhbXBsZTE
+          minLength: 1
+          maxLength: 1000
+        previous_cursor:
+          type:
+          - string
+          - 'null'
+          description: 'The cursor that represents the next page of results. Use the `cursor` query
+
+            parameter to fetch this page of items.'
+          example: null
+          minLength: 1
+          maxLength: 1000
+    ReportSummary:
+      title: Report Summary
+      type: object
+      description: A report record summary.
+      x-tags:
+      - Reports
+      properties:
+        type:
+          type: string
+          description: The type of this resource. Is always `report`.
+          example: report
+          enum:
+          - report
+        id:
+          type: string
+          example: fe26475d-ec3e-4884-9553-f7356683f7f9
+          description: The unique identifier for this report.
+          format: uuid
+        merchant_account_id:
+          type: string
+          description: The unique ID for a merchant account.
+          example: default
+        name:
+          type: string
+          maxLength: 100
+          description: The name of this report.
+          example: Failed Authorizations 042022
+        creator_id:
+          type:
+          - string
+          - 'null'
+          example: bd5d40d1-913b-419c-bd62-84efc46e0026
+          description: The unique identifier for the creator of this report.
+          format: uuid
+        creator_display_name:
+          type:
+          - string
+          - 'null'
+          maxLength: 1000
+          description: The name of the creator of this report.
+          example: John Doe
+        creator_type:
+          type:
+          - string
+          - 'null'
+          description: The type of the creator of this report.
+          enum:
+          - user
+          - private_key
+    Error404NotFound:
+      title: Not Found Error
+      type: object
+      description: Not Found Error (HTTP 404).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: The reason code for the error.
+          example: not_found
+          enum:
+          - not_found
+          - pending_creation
+        status:
+          type: integer
+          description: '`404`.'
+          example: 404
+          enum:
+          - 404
+        message:
+          type: string
+          description: The human readable reason for the error.
+          example: The resource could not be found
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    ReportExecutionSummary:
+      title: Report Execution Summary
+      type: object
+      description: A report execution summary.
+      x-tags:
+      - Reports
+      properties:
+        type:
+          type: string
+          description: The type of this resource. Is always `report-execution`.
+          example: report-execution
+          enum:
+          - report-execution
+        id:
+          type: string
+          example: fe26475d-ec3e-4884-9553-f7356683f7f9
+          description: The unique identifier for this report execution.
+          format: uuid
+        created_at:
+          type: string
+          description: The date and time this report execution was created in our system.
+          format: date-time
+          example: '2013-07-16T19:23:00.000+00:00'
+        updated_at:
+          type: string
+          format: date-time
+          description: The date and time this report execution was last updated.
+          example: '2013-07-16T19:23:00.000+00:00'
+        status:
+          type: string
+          description: The status of this report execution.
+          example: succeeded
+          enum:
+          - dispatched
+          - failed
+          - pending
+          - processing
+          - succeeded
+        context:
+          type: object
+          description: 'Contains the context values used to compute the value of date-time
+
+            placeholders such as `month_start` and `month_end` if present in
+
+            the report''s specification. Date-time placeholders are dynamic
+
+            timestamps that change with every report execution.'
+          properties:
+            reference_timestamp:
+              type: string
+              format: date-time
+              description: 'The date and time used by the system as a reference point to
+
+                compute date-time placeholders.'
+              example: '2013-07-16T19:23:00.000+00:00'
+            reference_timezone:
+              type: string
+              description: The time zone used to compute date-time placeholders.
+              example: Europe/London
+    DetailedSettlementReportSpec:
+      title: Detailed Settlement Report Specification
+      type: object
+      description: The specification of a detailed settlement report.
+      x-tags:
+      - Reports
+      required:
+      - model
+      - params
+      properties:
+        model:
+          type: string
+          description: 'The model (dataset) that the data used for the report is
+
+            retrieved from.'
+          example: detailed_settlement
+          enum:
+          - detailed_settlement
+        params:
+          type: object
+          description: Parameters used to configure the report.
+          properties:
+            filters:
+              type: object
+              description: The filters for the report.
+              example:
+                ingested_at:
+                  start: day_start
+                  end: day_end
+              properties:
+                ingested_at:
+                  type: object
+                  description: The time window for when the data was ingested to filter by.
+                  example:
+                    start: day_start
+                    end: day_end
+                  properties:
+                    start:
+                      type: string
+                      description: 'The starting boundary for when the data was ingested
+
+                        as a date-time placeholder value.'
+                      example: day_start
+                      enum:
+                      - day_start
+                    end:
+                      type: string
+                      description: 'The ending boundary for when the data was ingested
+
+                        as a date-time placeholder value.'
+                      example: day_end
+                      enum:
+                      - day_end
     Report:
       title: Report
       type: object
@@ -676,10 +950,10 @@ components:
           allOf:
           - $ref: '#/components/schemas/ReportExecutionSummary'
           description: Details of the latest execution of this report.
-    Error404NotFound:
-      title: Not Found Error
+    Error401Unauthorized:
+      title: Unauthorized Error
       type: object
-      description: Not Found Error (HTTP 404).
+      description: Unauthorized Error (HTTP 401).
       x-tags:
       - Errors
       properties:
@@ -691,21 +965,22 @@ components:
           example: error
         code:
           type: string
-          description: The reason code for the error.
-          example: not_found
+          description: '`unauthorized`.'
+          example: unauthorized
           enum:
-          - not_found
-          - pending_creation
+          - unauthorized
         status:
           type: integer
-          description: '`404`.'
-          example: 404
+          description: '`401`.'
+          example: 401
           enum:
-          - 404
+          - 401
         message:
           type: string
-          description: The human readable reason for the error.
-          example: The resource could not be found
+          description: No valid API authentication found.
+          example: No valid API authentication found
+          enum:
+          - No valid API authentication found
         details:
           type: array
           description: 'A list of detail objects that further clarify the reason for the error.
@@ -714,42 +989,84 @@ components:
           example: []
           items:
             $ref: '#/components/schemas/ErrorDetail'
-    Error400BadRequest:
-      title: Bad Request
+    ErrorDetail:
+      title: Error details
+      description: Additional detail about the part of a request body that caused an issue.
       type: object
-      description: Bad Request (HTTP 400).
       x-tags:
       - Errors
       properties:
+        location:
+          type: string
+          example: body
+          description: The location where the error caused an issue.
+          enum:
+          - query
+          - body
+          - path
+          - header
         type:
           type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
+          example: value_error.missing
+          description: A unique identifier for the type of error that occurred.
+        pointer:
           type: string
-          description: A short code that describes the reason for the error.
-          example: bad_request
-          enum:
-          - bad_request
-          - incorrect_json
-          - invalid_credentials
-        status:
-          type: integer
-          description: '`400`.'
-          example: 400
-          enum:
-          - 400
+          example: /payment_method/number
+          description: 'The exact item for which the validation did not succeed. This is a JSON
+
+            pointer for request bodies, while for query, path, and header parameters
+
+            it is the name of the parameter.'
         message:
           type: string
-          description: A human-readable reason for the error.
-          example: Missing '****' field
-        details:
-          type: array
-          description: A list of detail objects that further clarify the reason for the error.
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
+          example: field required
+          description: A human readable message for this error detail.
+    ReportUpdate:
+      title: Report (Update)
+      type: object
+      description: Request body to update a report.
+      x-tags:
+      - Request Bodies
+      properties:
+        name:
+          type: string
+          maxLength: 100
+          description: The name of the report.
+          example: Failed Authorizations 042022
+        description:
+          type:
+          - string
+          - 'null'
+          maxLength: 1000
+          description: The description of the report.
+          example: Transactions that failed to authorize in April 2022
+        schedule_enabled:
+          type: boolean
+          description: 'Indicates whether the report''s scheduling is enabled. This value
+
+            can only be set to `true` if this is a recurring report.
+
+
+            When this value is set to `true`, the report will be executed at
+
+            the `next_execution_at` date and time.
+
+
+            When this value is set to `false`, future executions of the
+
+            report are paused until this value is set to `true` again.
+
+
+            If scheduling is enabled after being disabled, then the
+
+            `next_execution_at` value is updated if and only if its current
+
+            value is a past date-time. The `next_execution_at` value is then
+
+            set to the next closest date-time in the future depending on the
+
+            values of `schedule` and `schedule_timezone`.'
+          example: true
     TransactionsReportSpec:
       title: Transactions Report Specification
       type: object
@@ -1151,6 +1468,42 @@ components:
               example:
               - field: captured_at
                 order: desc
+    Error400BadRequest:
+      title: Bad Request
+      type: object
+      description: Bad Request (HTTP 400).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: A short code that describes the reason for the error.
+          example: bad_request
+          enum:
+          - bad_request
+          - incorrect_json
+          - invalid_credentials
+        status:
+          type: integer
+          description: '`400`.'
+          example: 400
+          enum:
+          - 400
+        message:
+          type: string
+          description: A human-readable reason for the error.
+          example: Missing '****' field
+        details:
+          type: array
+          description: A list of detail objects that further clarify the reason for the error.
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
     TransactionRetriesReportSpec:
       title: Transaction Retries Report Specification
       type: object
@@ -1200,84 +1553,6 @@ components:
 
                         as either a date-time or date-time placeholder value.'
                       example: day_end
-    ReportExecutionSummary:
-      title: Report Execution Summary
-      type: object
-      description: A report execution summary.
-      x-tags:
-      - Reports
-      properties:
-        type:
-          type: string
-          description: The type of this resource. Is always `report-execution`.
-          example: report-execution
-          enum:
-          - report-execution
-        id:
-          type: string
-          example: fe26475d-ec3e-4884-9553-f7356683f7f9
-          description: The unique identifier for this report execution.
-          format: uuid
-        created_at:
-          type: string
-          description: The date and time this report execution was created in our system.
-          format: date-time
-          example: '2013-07-16T19:23:00.000+00:00'
-        updated_at:
-          type: string
-          format: date-time
-          description: The date and time this report execution was last updated.
-          example: '2013-07-16T19:23:00.000+00:00'
-        status:
-          type: string
-          description: The status of this report execution.
-          example: succeeded
-          enum:
-          - dispatched
-          - failed
-          - pending
-          - processing
-          - succeeded
-        context:
-          type: object
-          description: 'Contains the context values used to compute the value of date-time
-
-            placeholders such as `month_start` and `month_end` if present in
-
-            the report''s specification. Date-time placeholders are dynamic
-
-            timestamps that change with every report execution.'
-          properties:
-            reference_timestamp:
-              type: string
-              format: date-time
-              description: 'The date and time used by the system as a reference point to
-
-                compute date-time placeholders.'
-              example: '2013-07-16T19:23:00.000+00:00'
-            reference_timezone:
-              type: string
-              description: The time zone used to compute date-time placeholders.
-              example: Europe/London
-    ReportExecutionUrl:
-      title: Report Execution URL
-      type: object
-      description: 'The temporary signed URL to download the result of a report execution
-
-        and its expiration date and time.'
-      x-tags:
-      - Reports
-      properties:
-        url:
-          type: string
-          format: uri
-          description: The URL to download the report execution.
-          example: https://example.com/download
-        expires_at:
-          type: string
-          description: The date and time when the download URL expires.
-          format: date-time
-          example: '2013-07-16T19:23:00.000+00:00'
     Reports:
       title: Reports
       type: object
@@ -1320,182 +1595,6 @@ components:
           example: null
           minLength: 1
           maxLength: 1000
-    ReportExecutions:
-      title: Report Executions
-      type: object
-      description: A list of report executions.
-      x-tags:
-      - Reports
-      properties:
-        items:
-          type: array
-          description: A list of report executions.
-          items:
-            $ref: '#/components/schemas/ReportExecution'
-        limit:
-          type: integer
-          description: 'The limit applied to request. This represents the number of items that are at
-
-            maximum returned by this request.'
-          format: int32
-          minimum: 1
-          maximum: 100
-          example: 1
-          default: 20
-        next_cursor:
-          type:
-          - string
-          - 'null'
-          description: 'The cursor that represents the next page of results. Use the `cursor` query
-
-            parameter to fetch this page of items.'
-          example: ZXhhbXBsZTE
-          minLength: 1
-          maxLength: 1000
-        previous_cursor:
-          type:
-          - string
-          - 'null'
-          description: 'The cursor that represents the next page of results. Use the `cursor` query
-
-            parameter to fetch this page of items.'
-          example: null
-          minLength: 1
-          maxLength: 1000
-    ReportSummary:
-      title: Report Summary
-      type: object
-      description: A report record summary.
-      x-tags:
-      - Reports
-      properties:
-        type:
-          type: string
-          description: The type of this resource. Is always `report`.
-          example: report
-          enum:
-          - report
-        id:
-          type: string
-          example: fe26475d-ec3e-4884-9553-f7356683f7f9
-          description: The unique identifier for this report.
-          format: uuid
-        merchant_account_id:
-          type: string
-          description: The unique ID for a merchant account.
-          example: default
-        name:
-          type: string
-          maxLength: 100
-          description: The name of this report.
-          example: Failed Authorizations 042022
-        creator_id:
-          type:
-          - string
-          - 'null'
-          example: bd5d40d1-913b-419c-bd62-84efc46e0026
-          description: The unique identifier for the creator of this report.
-          format: uuid
-        creator_display_name:
-          type:
-          - string
-          - 'null'
-          maxLength: 1000
-          description: The name of the creator of this report.
-          example: John Doe
-        creator_type:
-          type:
-          - string
-          - 'null'
-          description: The type of the creator of this report.
-          enum:
-          - user
-          - private_key
-    ErrorDetail:
-      title: Error details
-      description: Additional detail about the part of a request body that caused an issue.
-      type: object
-      x-tags:
-      - Errors
-      properties:
-        location:
-          type: string
-          example: body
-          description: The location where the error caused an issue.
-          enum:
-          - query
-          - body
-          - path
-          - header
-        type:
-          type: string
-          example: value_error.missing
-          description: A unique identifier for the type of error that occurred.
-        pointer:
-          type: string
-          example: /payment_method/number
-          description: 'The exact item for which the validation did not succeed. This is a JSON
-
-            pointer for request bodies, while for query, path, and header parameters
-
-            it is the name of the parameter.'
-        message:
-          type: string
-          example: field required
-          description: A human readable message for this error detail.
-    DetailedSettlementReportSpec:
-      title: Detailed Settlement Report Specification
-      type: object
-      description: The specification of a detailed settlement report.
-      x-tags:
-      - Reports
-      required:
-      - model
-      - params
-      properties:
-        model:
-          type: string
-          description: 'The model (dataset) that the data used for the report is
-
-            retrieved from.'
-          example: detailed_settlement
-          enum:
-          - detailed_settlement
-        params:
-          type: object
-          description: Parameters used to configure the report.
-          properties:
-            filters:
-              type: object
-              description: The filters for the report.
-              example:
-                ingested_at:
-                  start: day_start
-                  end: day_end
-              properties:
-                ingested_at:
-                  type: object
-                  description: The time window for when the data was ingested to filter by.
-                  example:
-                    start: day_start
-                    end: day_end
-                  properties:
-                    start:
-                      type: string
-                      description: 'The starting boundary for when the data was ingested
-
-                        as a date-time placeholder value.'
-                      example: day_start
-                      enum:
-                      - day_start
-                    end:
-                      type: string
-                      description: 'The ending boundary for when the data was ingested
-
-                        as a date-time placeholder value.'
-                      example: day_end
-                      enum:
-                      - day_end
     ReportCreate:
       title: Report (Create)
       type: object
@@ -1602,221 +1701,6 @@ components:
           - $ref: '#/components/schemas/DetailedSettlementReportSpec'
           - $ref: '#/components/schemas/TransactionRetriesReportSpec'
           - $ref: '#/components/schemas/TransactionsReportSpec'
-    ReportExecution:
-      title: Report Execution
-      type: object
-      description: A report execution.
-      x-tags:
-      - Reports
-      allOf:
-      - $ref: '#/components/schemas/ReportExecutionSummary'
-      properties:
-        report:
-          type: object
-          description: The report associated with this report execution.
-          allOf:
-          - $ref: '#/components/schemas/ReportSummary'
-    Error401Unauthorized:
-      title: Unauthorized Error
-      type: object
-      description: Unauthorized Error (HTTP 401).
-      x-tags:
-      - Errors
-      properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: '`unauthorized`.'
-          example: unauthorized
-          enum:
-          - unauthorized
-        status:
-          type: integer
-          description: '`401`.'
-          example: 401
-          enum:
-          - 401
-        message:
-          type: string
-          description: No valid API authentication found.
-          example: No valid API authentication found
-          enum:
-          - No valid API authentication found
-        details:
-          type: array
-          description: 'A list of detail objects that further clarify the reason for the error.
-
-            Not every error supports more detail.'
-          example: []
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-    ReportUpdate:
-      title: Report (Update)
-      type: object
-      description: Request body to update a report.
-      x-tags:
-      - Request Bodies
-      properties:
-        name:
-          type: string
-          maxLength: 100
-          description: The name of the report.
-          example: Failed Authorizations 042022
-        description:
-          type:
-          - string
-          - 'null'
-          maxLength: 1000
-          description: The description of the report.
-          example: Transactions that failed to authorize in April 2022
-        schedule_enabled:
-          type: boolean
-          description: 'Indicates whether the report''s scheduling is enabled. This value
-
-            can only be set to `true` if this is a recurring report.
-
-
-            When this value is set to `true`, the report will be executed at
-
-            the `next_execution_at` date and time.
-
-
-            When this value is set to `false`, future executions of the
-
-            report are paused until this value is set to `true` again.
-
-
-            If scheduling is enabled after being disabled, then the
-
-            `next_execution_at` value is updated if and only if its current
-
-            value is a past date-time. The `next_execution_at` value is then
-
-            set to the next closest date-time in the future depending on the
-
-            values of `schedule` and `schedule_timezone`.'
-          example: true
-    Error401:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `unauthorized`
-          default: unauthorized
-          examples:
-          - unauthorized
-        status:
-          type: integer
-          title: Status
-          description: Always `401`.
-          default: 401
-          examples:
-          - 401
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: No valid API authentication found
-          examples:
-          - No valid API authentication found
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error401
-    Error403:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `forbidden`
-          default: forbidden
-          examples:
-          - forbidden
-        status:
-          type: integer
-          title: Status
-          description: Always `403`.
-          default: 403
-          examples:
-          - 403
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error403
-    AccountsReceivablesReportSpec:
-      properties:
-        model:
-          type: string
-          const: accounts_receivables
-          title: Model
-          description: The report model type.
-          default: accounts_receivables
-          examples:
-          - accounts_receivables
-        params:
-          additionalProperties: true
-          type: object
-          title: Params
-          description: The parameters for the accounts receivables report model.
-          examples:
-          - filters:
-              timestamp:
-                end: '2024-05-31T23:59:59Z'
-                start: '2024-05-01T00:00:00Z'
-      additionalProperties: false
-      type: object
-      required:
-      - params
-      title: AccountsReceivablesReportSpec
-    ErrorLocation:
-      type: string
-      enum:
-      - query
-      - body
-      - path
-      - header
-      - unknown
-      title: ErrorLocation
     Error500:
       properties:
         type:
@@ -1858,89 +1742,15 @@ components:
       additionalProperties: false
       type: object
       title: Error500
-    Reports_2:
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/Report_2'
-          type: array
-          title: Items
-          description: A list of items returned for this request.
-        limit:
-          type: integer
-          maximum: 100.0
-          minimum: 1.0
-          title: Limit
-          description: The number of items for this page.
-          default: 20
-          examples:
-          - 20
-        next_cursor:
-          anyOf:
-          - type: string
-            maxLength: 1000
-            minLength: 1
-          - type: 'null'
-          title: Next Cursor
-          description: The cursor pointing at the next page of items.
-          examples:
-          - ZXhhbXBsZTE
-        previous_cursor:
-          anyOf:
-          - type: string
-            maxLength: 1000
-            minLength: 1
-          - type: 'null'
-          title: Previous Cursor
-          description: The cursor pointing at the previous page of items.
-          examples:
-          - Xkjss7asS
-      additionalProperties: false
-      type: object
-      required:
-      - items
-      title: Reports
-    Error405:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `method_not_allowed`
-          default: method_not_allowed
-          examples:
-          - method_not_allowed
-        status:
-          type: integer
-          title: Status
-          description: Always `405`.
-          default: 405
-          examples:
-          - 405
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Method Not Allowed
-          examples:
-          - Method Not Allowed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error405
+    ReportSpecModel:
+      type: string
+      enum:
+      - transactions
+      - transaction_retries
+      - detailed_settlement
+      - accounts_receivables
+      - ai_insights
+      title: ReportSpecModel
     ReportExecutionStatus:
       type: string
       enum:
@@ -1950,369 +1760,6 @@ components:
       - processing
       - succeeded
       title: ReportExecutionStatus
-    ReportUpdate_2:
-      properties:
-        name:
-          anyOf:
-          - type: string
-            maxLength: 100
-            minLength: 1
-          - type: 'null'
-          title: Name
-          description: The name of the report.
-          examples:
-          - Monthly Transaction Report
-        description:
-          anyOf:
-          - type: string
-            maxLength: 1000
-            minLength: 1
-          - type: 'null'
-          title: Description
-          description: A description of the report.
-          examples:
-          - Monthly transaction summary for May 2024.
-        schedule_enabled:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Schedule Enabled
-          description: Whether the report schedule is enabled.
-          examples:
-          - true
-      additionalProperties: false
-      type: object
-      title: ReportUpdate
-    AIInsightsReportSpec:
-      properties:
-        model:
-          type: string
-          const: ai_insights
-          title: Model
-          description: The report model type.
-          default: ai_insights
-          examples:
-          - ai_insights
-        params:
-          additionalProperties: true
-          type: object
-          title: Params
-          description: The parameters for the AI insights report model.
-          examples:
-          - filters:
-              prompt_key: payment_performance
-      additionalProperties: false
-      type: object
-      required:
-      - params
-      title: AIInsightsReportSpec
-    ReportSpec:
-      properties:
-        model:
-          $ref: '#/components/schemas/ReportSpecModel'
-          description: The report model type.
-          examples:
-          - transactions
-          - transaction_retries
-          - detailed_settlement
-        params:
-          additionalProperties: true
-          type: object
-          title: Params
-          description: The parameters for the report model.
-          examples:
-          - fields:
-            - id
-            - status
-            filters:
-              status:
-              - succeeded
-      additionalProperties: false
-      type: object
-      required:
-      - model
-      - params
-      title: ReportSpec
-    ReportExecutionContext:
-      properties:
-        reference_timestamp:
-          type: string
-          format: date-time
-          title: Reference Timestamp
-          description: The reference timestamp for the report execution context.
-          examples:
-          - '2024-05-30T12:34:56.000Z'
-        reference_timezone:
-          type: string
-          title: Reference Timezone
-          description: The reference timezone for the report execution context.
-          examples:
-          - UTC
-      additionalProperties: false
-      type: object
-      required:
-      - reference_timestamp
-      - reference_timezone
-      title: ReportExecutionContext
-    ReportCreatorType:
-      type: string
-      enum:
-      - user
-      - private_key
-      title: ReportCreatorType
-    Error404:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `not_found`
-          default: not_found
-          examples:
-          - not_found
-        status:
-          type: integer
-          title: Status
-          description: Always `404`.
-          default: 404
-          examples:
-          - 404
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: The resource could not be found
-          examples:
-          - The resource could not be found
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error404
-    ReportExecutionSummary_2:
-      properties:
-        type:
-          type: string
-          const: report-execution
-          title: Type
-          description: Always `report-execution`.
-          default: report-execution
-          examples:
-          - report-execution
-        id:
-          type: string
-          format: uuid
-          title: Id
-          description: The unique ID for the report execution.
-          examples:
-          - a1b2c3d4-5678-90ab-cdef-1234567890ab
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-          description: The date this report execution was created at.
-          examples:
-          - '2024-05-30T12:34:56.000Z'
-        updated_at:
-          type: string
-          format: date-time
-          title: Updated At
-          description: The date this report execution was last updated.
-          examples:
-          - '2024-05-30T13:00:00.000Z'
-        status:
-          $ref: '#/components/schemas/ReportExecutionStatus'
-          description: The status of the report execution.
-          examples:
-          - succeeded
-        context:
-          $ref: '#/components/schemas/ReportExecutionContext'
-          description: The context for the report execution.
-      additionalProperties: false
-      type: object
-      required:
-      - id
-      - created_at
-      - updated_at
-      - status
-      - context
-      title: ReportExecutionSummary
-    Error425:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `too_early`
-          default: too_early
-          examples:
-          - too_early
-        status:
-          type: integer
-          title: Status
-          description: Always `425`.
-          default: 425
-          examples:
-          - 425
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error425
-    ErrorDetail_2:
-      properties:
-        location:
-          $ref: '#/components/schemas/ErrorLocation'
-          description: The part of the request where the property can be found that caused the error.
-          examples:
-          - body
-        pointer:
-          anyOf:
-          - type: string
-            format: json-pointer
-          - type: string
-          title: Pointer
-          description: A JSON pointer for the particular property that caused the error.
-          examples:
-          - /currency
-        message:
-          type: string
-          title: Message
-          description: A human-readdable explanation of the error.
-          examples:
-          - 'Unknown ISO 4217 currency code: USX'
-        type:
-          type: string
-          title: Type
-          description: The type of error that was raised for this property.
-          examples:
-          - value_error
-      additionalProperties: false
-      type: object
-      required:
-      - location
-      - pointer
-      - message
-      - type
-      title: ErrorDetail
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    TransactionsReportSpec_2:
-      properties:
-        model:
-          type: string
-          const: transactions
-          title: Model
-          description: The report model type.
-          default: transactions
-          examples:
-          - transactions
-        params:
-          additionalProperties: true
-          type: object
-          title: Params
-          description: The parameters for the transactions report model.
-          examples:
-          - fields:
-            - id
-            - status
-            filters:
-              status:
-              - succeeded
-      additionalProperties: false
-      type: object
-      required:
-      - params
-      title: TransactionsReportSpec
-    TransactionRetriesReportSpec_2:
-      properties:
-        model:
-          type: string
-          const: transaction_retries
-          title: Model
-          description: The report model type.
-          default: transaction_retries
-          examples:
-          - transaction_retries
-        params:
-          additionalProperties: true
-          type: object
-          title: Params
-          description: The parameters for the transaction retries report model.
-          examples:
-          - filters:
-              created_at:
-                end: '2024-05-31T23:59:59Z'
-                start: '2024-05-01T00:00:00Z'
-      additionalProperties: false
-      type: object
-      required:
-      - params
-      title: TransactionRetriesReportSpec
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     Error409:
       properties:
         type:
@@ -2362,6 +1809,42 @@ components:
       additionalProperties: false
       type: object
       title: Error409
+    ErrorDetail_2:
+      properties:
+        location:
+          $ref: '#/components/schemas/ErrorLocation'
+          description: The part of the request where the property can be found that caused the error.
+          examples:
+          - body
+        pointer:
+          anyOf:
+          - type: string
+            format: json-pointer
+          - type: string
+          title: Pointer
+          description: A JSON pointer for the particular property that caused the error.
+          examples:
+          - /currency
+        message:
+          type: string
+          title: Message
+          description: A human-readdable explanation of the error.
+          examples:
+          - 'Unknown ISO 4217 currency code: USX'
+        type:
+          type: string
+          title: Type
+          description: The type of error that was raised for this property.
+          examples:
+          - value_error
+      additionalProperties: false
+      type: object
+      required:
+      - location
+      - pointer
+      - message
+      - type
+      title: ErrorDetail
     ReportSchedule:
       type: string
       enum:
@@ -2370,6 +1853,446 @@ components:
       - once
       - weekly
       title: ReportSchedule
+    Error502:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `bad_gateway`
+          default: bad_gateway
+          examples:
+          - bad_gateway
+        status:
+          type: integer
+          title: Status
+          description: Always `502`.
+          default: 502
+          examples:
+          - 502
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error502
+    ReportSpec:
+      properties:
+        model:
+          $ref: '#/components/schemas/ReportSpecModel'
+          description: The report model type.
+          examples:
+          - transactions
+          - transaction_retries
+          - detailed_settlement
+        params:
+          additionalProperties: true
+          type: object
+          title: Params
+          description: The parameters for the report model.
+          examples:
+          - fields:
+            - id
+            - status
+            filters:
+              status:
+              - succeeded
+      additionalProperties: false
+      type: object
+      required:
+      - model
+      - params
+      title: ReportSpec
+    Error405:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `method_not_allowed`
+          default: method_not_allowed
+          examples:
+          - method_not_allowed
+        status:
+          type: integer
+          title: Status
+          description: Always `405`.
+          default: 405
+          examples:
+          - 405
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Method Not Allowed
+          examples:
+          - Method Not Allowed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error405
+    ReportCreatorType:
+      type: string
+      enum:
+      - user
+      - private_key
+      title: ReportCreatorType
+    Error429:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `too_many_requests`
+          default: too_many_requests
+          examples:
+          - too_many_requests
+        status:
+          type: integer
+          title: Status
+          description: Always `429`.
+          default: 429
+          examples:
+          - 429
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error429
+    Error425:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `too_early`
+          default: too_early
+          examples:
+          - too_early
+        status:
+          type: integer
+          title: Status
+          description: Always `425`.
+          default: 425
+          examples:
+          - 425
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error425
+    Error401:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `unauthorized`
+          default: unauthorized
+          examples:
+          - unauthorized
+        status:
+          type: integer
+          title: Status
+          description: Always `401`.
+          default: 401
+          examples:
+          - 401
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: No valid API authentication found
+          examples:
+          - No valid API authentication found
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error401
+    Error400:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `bad_request`
+          default: bad_request
+          examples:
+          - bad_request
+        status:
+          type: integer
+          title: Status
+          description: Always `400`.
+          default: 400
+          examples:
+          - 400
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error400
+    AIInsightsReportSpec:
+      properties:
+        model:
+          type: string
+          const: ai_insights
+          title: Model
+          description: The report model type.
+          default: ai_insights
+          examples:
+          - ai_insights
+        params:
+          additionalProperties: true
+          type: object
+          title: Params
+          description: The parameters for the AI insights report model.
+          examples:
+          - filters:
+              prompt_key: payment_performance
+      additionalProperties: false
+      type: object
+      required:
+      - params
+      title: AIInsightsReportSpec
+    TransactionsReportSpec_2:
+      properties:
+        model:
+          type: string
+          const: transactions
+          title: Model
+          description: The report model type.
+          default: transactions
+          examples:
+          - transactions
+        params:
+          additionalProperties: true
+          type: object
+          title: Params
+          description: The parameters for the transactions report model.
+          examples:
+          - fields:
+            - id
+            - status
+            filters:
+              status:
+              - succeeded
+      additionalProperties: false
+      type: object
+      required:
+      - params
+      title: TransactionsReportSpec
+    Error504:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `gateway_timeout`
+          default: gateway_timeout
+          examples:
+          - gateway_timeout
+        status:
+          type: integer
+          title: Status
+          default: 504
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error504
+    AccountsReceivablesReportSpec:
+      properties:
+        model:
+          type: string
+          const: accounts_receivables
+          title: Model
+          description: The report model type.
+          default: accounts_receivables
+          examples:
+          - accounts_receivables
+        params:
+          additionalProperties: true
+          type: object
+          title: Params
+          description: The parameters for the accounts receivables report model.
+          examples:
+          - filters:
+              timestamp:
+                end: '2024-05-31T23:59:59Z'
+                start: '2024-05-01T00:00:00Z'
+      additionalProperties: false
+      type: object
+      required:
+      - params
+      title: AccountsReceivablesReportSpec
+    ReportExecutionSummary_2:
+      properties:
+        type:
+          type: string
+          const: report-execution
+          title: Type
+          description: Always `report-execution`.
+          default: report-execution
+          examples:
+          - report-execution
+        id:
+          type: string
+          format: uuid
+          title: Id
+          description: The unique ID for the report execution.
+          examples:
+          - a1b2c3d4-5678-90ab-cdef-1234567890ab
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+          description: The date this report execution was created at.
+          examples:
+          - '2024-05-30T12:34:56.000Z'
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+          description: The date this report execution was last updated.
+          examples:
+          - '2024-05-30T13:00:00.000Z'
+        status:
+          $ref: '#/components/schemas/ReportExecutionStatus'
+          description: The status of the report execution.
+          examples:
+          - succeeded
+        context:
+          $ref: '#/components/schemas/ReportExecutionContext'
+          description: The context for the report execution.
+      additionalProperties: false
+      type: object
+      required:
+      - id
+      - created_at
+      - updated_at
+      - status
+      - context
+      title: ReportExecutionSummary
     DetailedSettlementReportSpec_2:
       properties:
         model:
@@ -2395,69 +2318,6 @@ components:
       required:
       - params
       title: DetailedSettlementReportSpec
-    ReportCreate_2:
-      properties:
-        name:
-          type: string
-          maxLength: 100
-          minLength: 1
-          title: Name
-          description: The name of the report.
-          examples:
-          - Monthly Transaction Report
-        description:
-          anyOf:
-          - type: string
-            maxLength: 1000
-            minLength: 1
-          - type: 'null'
-          title: Description
-          description: A description of the report.
-          examples:
-          - Monthly transaction summary for May 2024.
-        schedule:
-          $ref: '#/components/schemas/ReportSchedule'
-          description: The schedule for the report.
-          examples:
-          - daily
-        schedule_enabled:
-          type: boolean
-          title: Schedule Enabled
-          description: Whether the report schedule is enabled.
-          examples:
-          - true
-        schedule_timezone:
-          type: string
-          title: Schedule Timezone
-          description: The timezone for the report schedule.
-          default: Etc/UTC
-          examples:
-          - UTC
-        spec:
-          oneOf:
-          - $ref: '#/components/schemas/TransactionsReportSpec_2'
-          - $ref: '#/components/schemas/TransactionRetriesReportSpec_2'
-          - $ref: '#/components/schemas/DetailedSettlementReportSpec_2'
-          - $ref: '#/components/schemas/AccountsReceivablesReportSpec'
-          - $ref: '#/components/schemas/AIInsightsReportSpec'
-          title: Spec
-          description: The report specification.
-          discriminator:
-            propertyName: model
-            mapping:
-              accounts_receivables: '#/components/schemas/AccountsReceivablesReportSpec'
-              ai_insights: '#/components/schemas/AIInsightsReportSpec'
-              detailed_settlement: '#/components/schemas/DetailedSettlementReportSpec'
-              transaction_retries: '#/components/schemas/TransactionRetriesReportSpec'
-              transactions: '#/components/schemas/TransactionsReportSpec'
-      additionalProperties: false
-      type: object
-      required:
-      - name
-      - schedule
-      - schedule_enabled
-      - spec
-      title: ReportCreate
     Report_2:
       properties:
         type:
@@ -2586,7 +2446,154 @@ components:
       - schedule_timezone
       - spec
       title: Report
-    Error504:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ReportUpdate_2:
+      properties:
+        name:
+          anyOf:
+          - type: string
+            maxLength: 100
+            minLength: 1
+          - type: 'null'
+          title: Name
+          description: The name of the report.
+          examples:
+          - Monthly Transaction Report
+        description:
+          anyOf:
+          - type: string
+            maxLength: 1000
+            minLength: 1
+          - type: 'null'
+          title: Description
+          description: A description of the report.
+          examples:
+          - Monthly transaction summary for May 2024.
+        schedule_enabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Schedule Enabled
+          description: Whether the report schedule is enabled.
+          examples:
+          - true
+      additionalProperties: false
+      type: object
+      title: ReportUpdate
+    TransactionRetriesReportSpec_2:
+      properties:
+        model:
+          type: string
+          const: transaction_retries
+          title: Model
+          description: The report model type.
+          default: transaction_retries
+          examples:
+          - transaction_retries
+        params:
+          additionalProperties: true
+          type: object
+          title: Params
+          description: The parameters for the transaction retries report model.
+          examples:
+          - filters:
+              created_at:
+                end: '2024-05-31T23:59:59Z'
+                start: '2024-05-01T00:00:00Z'
+      additionalProperties: false
+      type: object
+      required:
+      - params
+      title: TransactionRetriesReportSpec
+    ReportCreate_2:
+      properties:
+        name:
+          type: string
+          maxLength: 100
+          minLength: 1
+          title: Name
+          description: The name of the report.
+          examples:
+          - Monthly Transaction Report
+        description:
+          anyOf:
+          - type: string
+            maxLength: 1000
+            minLength: 1
+          - type: 'null'
+          title: Description
+          description: A description of the report.
+          examples:
+          - Monthly transaction summary for May 2024.
+        schedule:
+          $ref: '#/components/schemas/ReportSchedule'
+          description: The schedule for the report.
+          examples:
+          - daily
+        schedule_enabled:
+          type: boolean
+          title: Schedule Enabled
+          description: Whether the report schedule is enabled.
+          examples:
+          - true
+        schedule_timezone:
+          type: string
+          title: Schedule Timezone
+          description: The timezone for the report schedule.
+          default: Etc/UTC
+          examples:
+          - UTC
+        spec:
+          oneOf:
+          - $ref: '#/components/schemas/TransactionsReportSpec_2'
+          - $ref: '#/components/schemas/TransactionRetriesReportSpec_2'
+          - $ref: '#/components/schemas/DetailedSettlementReportSpec_2'
+          - $ref: '#/components/schemas/AccountsReceivablesReportSpec'
+          - $ref: '#/components/schemas/AIInsightsReportSpec'
+          title: Spec
+          description: The report specification.
+          discriminator:
+            propertyName: model
+            mapping:
+              accounts_receivables: '#/components/schemas/AccountsReceivablesReportSpec'
+              ai_insights: '#/components/schemas/AIInsightsReportSpec'
+              detailed_settlement: '#/components/schemas/DetailedSettlementReportSpec'
+              transaction_retries: '#/components/schemas/TransactionRetriesReportSpec'
+              transactions: '#/components/schemas/TransactionsReportSpec'
+      additionalProperties: false
+      type: object
+      required:
+      - name
+      - schedule
+      - schedule_enabled
+      - spec
+      title: ReportCreate
+    Error404:
       properties:
         type:
           type: string
@@ -2599,21 +2606,24 @@ components:
         code:
           type: string
           title: Code
-          description: Always `gateway_timeout`
-          default: gateway_timeout
+          description: Always `not_found`
+          default: not_found
           examples:
-          - gateway_timeout
+          - not_found
         status:
           type: integer
           title: Status
-          default: 504
+          description: Always `404`.
+          default: 404
+          examples:
+          - 404
         message:
           type: string
           title: Message
           description: A human readable message that provides more context to the error.
-          default: Request could not be processed
+          default: The resource could not be found
           examples:
-          - Request could not be processed
+          - The resource could not be found
         details:
           items:
             $ref: '#/components/schemas/ErrorDetail_2'
@@ -2623,139 +2633,129 @@ components:
           default: []
       additionalProperties: false
       type: object
-      title: Error504
-    Error502:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `bad_gateway`
-          default: bad_gateway
-          examples:
-          - bad_gateway
-        status:
-          type: integer
-          title: Status
-          description: Always `502`.
-          default: 502
-          examples:
-          - 502
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Request could not be processed
-          examples:
-          - Request could not be processed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error502
-    Error429:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `too_many_requests`
-          default: too_many_requests
-          examples:
-          - too_many_requests
-        status:
-          type: integer
-          title: Status
-          description: Always `429`.
-          default: 429
-          examples:
-          - 429
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error429
-    Error400:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `bad_request`
-          default: bad_request
-          examples:
-          - bad_request
-        status:
-          type: integer
-          title: Status
-          description: Always `400`.
-          default: 400
-          examples:
-          - 400
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error400
-    ReportSpecModel:
+      title: Error404
+    ErrorLocation:
       type: string
       enum:
-      - transactions
-      - transaction_retries
-      - detailed_settlement
-      - accounts_receivables
-      - ai_insights
-      title: ReportSpecModel
+      - query
+      - body
+      - path
+      - header
+      - unknown
+      title: ErrorLocation
+    ReportExecutionContext:
+      properties:
+        reference_timestamp:
+          type: string
+          format: date-time
+          title: Reference Timestamp
+          description: The reference timestamp for the report execution context.
+          examples:
+          - '2024-05-30T12:34:56.000Z'
+        reference_timezone:
+          type: string
+          title: Reference Timezone
+          description: The reference timezone for the report execution context.
+          examples:
+          - UTC
+      additionalProperties: false
+      type: object
+      required:
+      - reference_timestamp
+      - reference_timezone
+      title: ReportExecutionContext
+    Error403:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `forbidden`
+          default: forbidden
+          examples:
+          - forbidden
+        status:
+          type: integer
+          title: Status
+          description: Always `403`.
+          default: 403
+          examples:
+          - 403
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error403
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    Reports_2:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/Report_2'
+          type: array
+          title: Items
+          description: A list of items returned for this request.
+        limit:
+          type: integer
+          maximum: 100.0
+          minimum: 1.0
+          title: Limit
+          description: The number of items for this page.
+          default: 20
+          examples:
+          - 20
+        next_cursor:
+          anyOf:
+          - type: string
+            maxLength: 1000
+            minLength: 1
+          - type: 'null'
+          title: Next Cursor
+          description: The cursor pointing at the next page of items.
+          examples:
+          - ZXhhbXBsZTE
+        previous_cursor:
+          anyOf:
+          - type: string
+            maxLength: 1000
+            minLength: 1
+          - type: 'null'
+          title: Previous Cursor
+          description: The cursor pointing at the previous page of items.
+          examples:
+          - Xkjss7asS
+      additionalProperties: false
+      type: object
+      required:
+      - items
+      title: Reports
   securitySchemes:
     bearerAuth:
       type: http

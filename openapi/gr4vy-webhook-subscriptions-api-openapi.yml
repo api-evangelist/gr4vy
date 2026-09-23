@@ -795,6 +795,23 @@ paths:
       x-speakeasy-ignore: true
 components:
   schemas:
+    WebhookSubscriptionRotateSecretRequest:
+      title: Rotate secret of a webhook subscription.
+      type: object
+      description: A request to rotate the secret of a webhook subscription.
+      x-tags:
+      - Request Bodies
+      properties:
+        delta:
+          type:
+          - integer
+          - 'null'
+          description: 'Delta time in minutes to expire existing secret if any.
+
+            If not set or set to zero it will expire immediately.'
+          example: 1440
+          minimum: 0
+          maximum: 99999999
     Error404NotFound:
       title: Not Found Error
       type: object
@@ -833,105 +850,6 @@ components:
           example: []
           items:
             $ref: '#/components/schemas/ErrorDetail'
-    WebhookSubscription:
-      title: Webhook subscription
-      type: object
-      x-tags:
-      - Webhook subscriptions
-      properties:
-        type:
-          type: string
-          description: '`webhook-subscription`.'
-          example: webhook-subscription
-          enum:
-          - webhook-subscription
-        id:
-          type: string
-          example: 8fd77b13-a5e3-43de-bd54-26a8a714ac18
-          description: The unique Gr4vy ID for this webhook subscription.
-        merchant_account_id:
-          type:
-          - string
-          - 'null'
-          description: The unique ID for a merchant account.
-          example: default
-        active:
-          type: boolean
-          example: true
-          description: 'Defines if this subscription is currently active or not. When deactivated,
-
-            webhook events are not sent to the endpoint configured for this subscription.'
-        url:
-          type: string
-          format: uri
-          description: The URL of the endpoint to deliver webhook events to.
-          example: https://example.com/webhooks
-        authentication:
-          allOf:
-          - $ref: '#/components/schemas/WebhookSubscriptionAuthentication'
-        secret:
-          type:
-          - string
-          - 'null'
-          description: The active secret value.
-          example: 234567890abcdef1234567890abcdef
-        rotating:
-          type: boolean
-          description: Flag to determine whether the subscription has a secret rotation in progress or not.
-          example: false
-    WebhookSubscriptionRotateSecretRequest:
-      title: Rotate secret of a webhook subscription.
-      type: object
-      description: A request to rotate the secret of a webhook subscription.
-      x-tags:
-      - Request Bodies
-      properties:
-        delta:
-          type:
-          - integer
-          - 'null'
-          description: 'Delta time in minutes to expire existing secret if any.
-
-            If not set or set to zero it will expire immediately.'
-          example: 1440
-          minimum: 0
-          maximum: 99999999
-    Error400BadRequest:
-      title: Bad Request
-      type: object
-      description: Bad Request (HTTP 400).
-      x-tags:
-      - Errors
-      properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: A short code that describes the reason for the error.
-          example: bad_request
-          enum:
-          - bad_request
-          - incorrect_json
-          - invalid_credentials
-        status:
-          type: integer
-          description: '`400`.'
-          example: 400
-          enum:
-          - 400
-        message:
-          type: string
-          description: A human-readable reason for the error.
-          example: Missing '****' field
-        details:
-          type: array
-          description: A list of detail objects that further clarify the reason for the error.
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
     WebhookSubscriptionRequest:
       title: Webhook subscription (Create)
       type: object
@@ -952,38 +870,6 @@ components:
         authentication:
           allOf:
           - $ref: '#/components/schemas/WebhookSubscriptionAuthentication'
-    ErrorDetail:
-      title: Error details
-      description: Additional detail about the part of a request body that caused an issue.
-      type: object
-      x-tags:
-      - Errors
-      properties:
-        location:
-          type: string
-          example: body
-          description: The location where the error caused an issue.
-          enum:
-          - query
-          - body
-          - path
-          - header
-        type:
-          type: string
-          example: value_error.missing
-          description: A unique identifier for the type of error that occurred.
-        pointer:
-          type: string
-          example: /payment_method/number
-          description: 'The exact item for which the validation did not succeed. This is a JSON
-
-            pointer for request bodies, while for query, path, and header parameters
-
-            it is the name of the parameter.'
-        message:
-          type: string
-          example: field required
-          description: A human readable message for this error detail.
     WebhookSubscriptions:
       title: Webhook subscriptions
       type: object
@@ -1064,30 +950,120 @@ components:
           example: []
           items:
             $ref: '#/components/schemas/ErrorDetail'
-    WebhookSubscriptionAuthentication:
-      title: Webhook subscription authentication
+    WebhookSubscription:
+      title: Webhook subscription
       type: object
       x-tags:
       - Webhook subscriptions
       properties:
-        kind:
+        type:
           type: string
-          description: Only `basic`` is currently supported.
-          example: basic
+          description: '`webhook-subscription`.'
+          example: webhook-subscription
           enum:
-          - basic
-        username:
+          - webhook-subscription
+        id:
+          type: string
+          example: 8fd77b13-a5e3-43de-bd54-26a8a714ac18
+          description: The unique Gr4vy ID for this webhook subscription.
+        merchant_account_id:
           type:
           - string
           - 'null'
-          example: username
-          description: The basic authentication username to use for authentication.
-        password:
+          description: The unique ID for a merchant account.
+          example: default
+        active:
+          type: boolean
+          example: true
+          description: 'Defines if this subscription is currently active or not. When deactivated,
+
+            webhook events are not sent to the endpoint configured for this subscription.'
+        url:
+          type: string
+          format: uri
+          description: The URL of the endpoint to deliver webhook events to.
+          example: https://example.com/webhooks
+        authentication:
+          allOf:
+          - $ref: '#/components/schemas/WebhookSubscriptionAuthentication'
+        secret:
           type:
           - string
           - 'null'
-          example: password
-          description: The basic authentication password to use for authentication.
+          description: The active secret value.
+          example: 234567890abcdef1234567890abcdef
+        rotating:
+          type: boolean
+          description: Flag to determine whether the subscription has a secret rotation in progress or not.
+          example: false
+    ErrorDetail:
+      title: Error details
+      description: Additional detail about the part of a request body that caused an issue.
+      type: object
+      x-tags:
+      - Errors
+      properties:
+        location:
+          type: string
+          example: body
+          description: The location where the error caused an issue.
+          enum:
+          - query
+          - body
+          - path
+          - header
+        type:
+          type: string
+          example: value_error.missing
+          description: A unique identifier for the type of error that occurred.
+        pointer:
+          type: string
+          example: /payment_method/number
+          description: 'The exact item for which the validation did not succeed. This is a JSON
+
+            pointer for request bodies, while for query, path, and header parameters
+
+            it is the name of the parameter.'
+        message:
+          type: string
+          example: field required
+          description: A human readable message for this error detail.
+    Error400BadRequest:
+      title: Bad Request
+      type: object
+      description: Bad Request (HTTP 400).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: A short code that describes the reason for the error.
+          example: bad_request
+          enum:
+          - bad_request
+          - incorrect_json
+          - invalid_credentials
+        status:
+          type: integer
+          description: '`400`.'
+          example: 400
+          enum:
+          - 400
+        message:
+          type: string
+          description: A human-readable reason for the error.
+          example: Missing '****' field
+        details:
+          type: array
+          description: A list of detail objects that further clarify the reason for the error.
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
     WebhookSubscriptionUpdateRequest:
       title: Webhook subscription (Update)
       type: object
@@ -1112,97 +1088,30 @@ components:
         authentication:
           allOf:
           - $ref: '#/components/schemas/WebhookSubscriptionAuthentication'
-    Error401:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `unauthorized`
-          default: unauthorized
-          examples:
-          - unauthorized
-        status:
-          type: integer
-          title: Status
-          description: Always `401`.
-          default: 401
-          examples:
-          - 401
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: No valid API authentication found
-          examples:
-          - No valid API authentication found
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
+    WebhookSubscriptionAuthentication:
+      title: Webhook subscription authentication
       type: object
-      title: Error401
-    Error403:
+      x-tags:
+      - Webhook subscriptions
       properties:
-        type:
+        kind:
           type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `forbidden`
-          default: forbidden
-          examples:
-          - forbidden
-        status:
-          type: integer
-          title: Status
-          description: Always `403`.
-          default: 403
-          examples:
-          - 403
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error403
-    ErrorLocation:
-      type: string
-      enum:
-      - query
-      - body
-      - path
-      - header
-      - unknown
-      title: ErrorLocation
+          description: Only `basic`` is currently supported.
+          example: basic
+          enum:
+          - basic
+        username:
+          type:
+          - string
+          - 'null'
+          example: username
+          description: The basic authentication username to use for authentication.
+        password:
+          type:
+          - string
+          - 'null'
+          example: password
+          description: The basic authentication password to use for authentication.
     Error500:
       properties:
         type:
@@ -1244,6 +1153,160 @@ components:
       additionalProperties: false
       type: object
       title: Error500
+    Error409:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `duplicate_record`
+          default: duplicate_record
+          examples:
+          - duplicate_record
+        status:
+          type: integer
+          title: Status
+          description: Always `409`.
+          default: 409
+          examples:
+          - 409
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+        resource_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Resource Id
+          description: The ID of the conflicting resource.
+          examples:
+          - cdc70639-cb9c-4222-a73f-b8ce39f7821b
+      additionalProperties: false
+      type: object
+      title: Error409
+    ErrorDetail_2:
+      properties:
+        location:
+          $ref: '#/components/schemas/ErrorLocation'
+          description: The part of the request where the property can be found that caused the error.
+          examples:
+          - body
+        pointer:
+          anyOf:
+          - type: string
+            format: json-pointer
+          - type: string
+          title: Pointer
+          description: A JSON pointer for the particular property that caused the error.
+          examples:
+          - /currency
+        message:
+          type: string
+          title: Message
+          description: A human-readdable explanation of the error.
+          examples:
+          - 'Unknown ISO 4217 currency code: USX'
+        type:
+          type: string
+          title: Type
+          description: The type of error that was raised for this property.
+          examples:
+          - value_error
+      additionalProperties: false
+      type: object
+      required:
+      - location
+      - pointer
+      - message
+      - type
+      title: ErrorDetail
+    BasicAuthenticationCreate:
+      properties:
+        kind:
+          type: string
+          const: basic
+          title: Kind
+          description: Type of authentication for webhook request.
+          default: basic
+          examples:
+          - basic
+        username:
+          type: string
+          title: Username
+          description: The username value for basic auth.
+          examples:
+          - gr4vy
+        password:
+          type: string
+          title: Password
+          description: The password value for basic auth.
+          examples:
+          - super-strong-password
+      additionalProperties: false
+      type: object
+      required:
+      - username
+      - password
+      title: BasicAuthenticationCreate
+    Error502:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `bad_gateway`
+          default: bad_gateway
+          examples:
+          - bad_gateway
+        status:
+          type: integer
+          title: Status
+          description: Always `502`.
+          default: 502
+          examples:
+          - 502
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error502
     Error405:
       properties:
         type:
@@ -1285,57 +1348,189 @@ components:
       additionalProperties: false
       type: object
       title: Error405
-    WebhookSubscriptionUpdate:
+    Error429:
       properties:
-        active:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Active
-          description: Flag to determine whether this subscription should be sent webhook payloads.
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
           examples:
-          - true
-          - false
-        url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Url
-          description: URL to send webhook payloads.
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `too_many_requests`
+          default: too_many_requests
           examples:
-          - https://www.gr4vy.com/webhooks
-        authentication:
-          anyOf:
-          - oneOf:
-            - $ref: '#/components/schemas/BasicAuthenticationCreate'
-            - $ref: '#/components/schemas/CredentialsOAuthAuthenticationCreate'
-            - $ref: '#/components/schemas/PasswordOAuthAuthenticationCreate'
-            discriminator:
-              propertyName: kind
-              mapping:
-                basic: '#/components/schemas/BasicAuthenticationCreate'
-                oauth_client_credentials: '#/components/schemas/CredentialsOAuthAuthenticationCreate'
-                oauth_password: '#/components/schemas/PasswordOAuthAuthenticationCreate'
-          - type: 'null'
-          title: Authentication
-          description: Optional authentication configuration for webhook requests.
+          - too_many_requests
+        status:
+          type: integer
+          title: Status
+          description: Always `429`.
+          default: 429
           examples:
-          - kind: basic
-            password: super-strong-password
-            username: gr4vy
-          - client_id: 1234abcd
-            client_secret: sec_123_abc
-            kind: oauth_password
-            password: super-strong-password
-            token_url: https://www.gr4vy.com/oauth/token
-            username: gr4vy
-          - client_id: 1234abcd
-            client_secret: sec_123_abc
-            kind: oauth_client_credentials
-            token_url: https://www.gr4vy.com/oauth/token
+          - 429
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
       additionalProperties: false
       type: object
-      title: WebhookSubscriptionUpdate
+      title: Error429
+    Error425:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `too_early`
+          default: too_early
+          examples:
+          - too_early
+        status:
+          type: integer
+          title: Status
+          description: Always `425`.
+          default: 425
+          examples:
+          - 425
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error425
+    Error401:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `unauthorized`
+          default: unauthorized
+          examples:
+          - unauthorized
+        status:
+          type: integer
+          title: Status
+          description: Always `401`.
+          default: 401
+          examples:
+          - 401
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: No valid API authentication found
+          examples:
+          - No valid API authentication found
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error401
+    api__common_schemas__Creator:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        name:
+          type: string
+          title: Name
+        email_address:
+          type: string
+          title: Email Address
+      additionalProperties: false
+      type: object
+      required:
+      - id
+      - name
+      - email_address
+      title: Creator
+    Error400:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `bad_request`
+          default: bad_request
+          examples:
+          - bad_request
+        status:
+          type: integer
+          title: Status
+          description: Always `400`.
+          default: 400
+          examples:
+          - 400
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error400
     WebhookSubscription_2:
       properties:
         id:
@@ -1429,43 +1624,54 @@ components:
       - url
       - rotating
       title: WebhookSubscription
-    api__common_schemas__Creator:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        name:
-          type: string
-          title: Name
-        email_address:
-          type: string
-          title: Email Address
-      additionalProperties: false
-      type: object
-      required:
-      - id
-      - name
-      - email_address
-      title: Creator
-    CredentialsOAuthAuthentication:
+    Error504:
       properties:
         type:
           type: string
-          const: webhook-authentication
+          const: error
           title: Type
-          description: Type of resource for webhook authentication.
-          default: webhook-authentication
+          description: Always `error`.
+          default: error
           examples:
-          - webhook-authentication
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `gateway_timeout`
+          default: gateway_timeout
+          examples:
+          - gateway_timeout
+        status:
+          type: integer
+          title: Status
+          default: 504
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error504
+    PasswordOAuthAuthenticationCreate:
+      properties:
         kind:
           type: string
-          const: oauth_client_credentials
+          const: oauth_password
           title: Kind
           description: Type of authentication for webhook request.
-          default: oauth_client_credentials
+          default: oauth_password
           examples:
-          - oauth_client_credentials
+          - oauth_password
         client_id:
           type: string
           title: Client Id
@@ -1475,10 +1681,9 @@ components:
         client_secret:
           type: string
           title: Client Secret
-          description: The masked OAuth client secret.
-          default: '********'
+          description: The OAuth client secret.
           examples:
-          - '********'
+          - sec_123_abc
         token_url:
           type: string
           title: Token Url
@@ -1493,27 +1698,27 @@ components:
           description: The OAuth scope.
           examples:
           - example:scope
+        username:
+          type: string
+          title: Username
+          description: The username value.
+          examples:
+          - gr4vy
+        password:
+          type: string
+          title: Password
+          description: The password value.
+          examples:
+          - super-strong-password
       additionalProperties: false
       type: object
       required:
       - client_id
+      - client_secret
       - token_url
-      title: CredentialsOAuthAuthentication
-    WebhookSubscriptionRotateSecret:
-      properties:
-        delta:
-          anyOf:
-          - type: integer
-            minimum: 0.0
-          - type: 'null'
-          title: Delta
-          description: Delta time in minutes to expire existing secret if any. If not set or set to zero it will expire immediately.
-          examples:
-          - 1440
-          - null
-      additionalProperties: false
-      type: object
-      title: WebhookSubscriptionRotateSecret
+      - username
+      - password
+      title: PasswordOAuthAuthenticationCreate
     CredentialsOAuthAuthenticationCreate:
       properties:
         kind:
@@ -1557,198 +1762,48 @@ components:
       - client_secret
       - token_url
       title: CredentialsOAuthAuthenticationCreate
-    Error404:
+    WebhookSubscriptions_2:
       properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `not_found`
-          default: not_found
-          examples:
-          - not_found
-        status:
-          type: integer
-          title: Status
-          description: Always `404`.
-          default: 404
-          examples:
-          - 404
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: The resource could not be found
-          examples:
-          - The resource could not be found
-        details:
+        items:
           items:
-            $ref: '#/components/schemas/ErrorDetail_2'
+            $ref: '#/components/schemas/WebhookSubscription_2'
           type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error404
-    BasicAuthentication:
-      properties:
-        type:
-          type: string
-          const: webhook-authentication
-          title: Type
-          description: Type of resource for webhook authentication.
-          default: webhook-authentication
-          examples:
-          - webhook-authentication
-        kind:
-          type: string
-          const: basic
-          title: Kind
-          description: Type of authentication for webhook request.
-          default: basic
-          examples:
-          - basic
-        username:
-          type: string
-          title: Username
-          description: The username value for basic auth.
-          examples:
-          - gr4vy
-        password:
-          type: string
-          const: '********'
-          title: Password
-          description: The masked password value for basic auth.
-          default: '********'
-          examples:
-          - '********'
-      additionalProperties: false
-      type: object
-      required:
-      - username
-      title: BasicAuthentication
-    Error425:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `too_early`
-          default: too_early
-          examples:
-          - too_early
-        status:
+          title: Items
+          description: A list of items returned for this request.
+        limit:
           type: integer
-          title: Status
-          description: Always `425`.
-          default: 425
+          maximum: 100.0
+          minimum: 1.0
+          title: Limit
+          description: The number of items for this page.
+          default: 20
           examples:
-          - 425
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error425
-    ErrorDetail_2:
-      properties:
-        location:
-          $ref: '#/components/schemas/ErrorLocation'
-          description: The part of the request where the property can be found that caused the error.
-          examples:
-          - body
-        pointer:
+          - 20
+        next_cursor:
           anyOf:
           - type: string
-            format: json-pointer
+            maxLength: 1000
+            minLength: 1
+          - type: 'null'
+          title: Next Cursor
+          description: The cursor pointing at the next page of items.
+          examples:
+          - ZXhhbXBsZTE
+        previous_cursor:
+          anyOf:
           - type: string
-          title: Pointer
-          description: A JSON pointer for the particular property that caused the error.
+            maxLength: 1000
+            minLength: 1
+          - type: 'null'
+          title: Previous Cursor
+          description: The cursor pointing at the previous page of items.
           examples:
-          - /currency
-        message:
-          type: string
-          title: Message
-          description: A human-readdable explanation of the error.
-          examples:
-          - 'Unknown ISO 4217 currency code: USX'
-        type:
-          type: string
-          title: Type
-          description: The type of error that was raised for this property.
-          examples:
-          - value_error
+          - Xkjss7asS
       additionalProperties: false
       type: object
       required:
-      - location
-      - pointer
-      - message
-      - type
-      title: ErrorDetail
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    BasicAuthenticationCreate:
-      properties:
-        kind:
-          type: string
-          const: basic
-          title: Kind
-          description: Type of authentication for webhook request.
-          default: basic
-          examples:
-          - basic
-        username:
-          type: string
-          title: Username
-          description: The username value for basic auth.
-          examples:
-          - gr4vy
-        password:
-          type: string
-          title: Password
-          description: The password value for basic auth.
-          examples:
-          - super-strong-password
-      additionalProperties: false
-      type: object
-      required:
-      - username
-      - password
-      title: BasicAuthenticationCreate
+      - items
+      title: WebhookSubscriptions
     ValidationError:
       properties:
         loc:
@@ -1775,55 +1830,21 @@ components:
       - msg
       - type
       title: ValidationError
-    Error409:
+    WebhookSubscriptionRotateSecret:
       properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `duplicate_record`
-          default: duplicate_record
-          examples:
-          - duplicate_record
-        status:
-          type: integer
-          title: Status
-          description: Always `409`.
-          default: 409
-          examples:
-          - 409
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-        resource_id:
+        delta:
           anyOf:
-          - type: string
+          - type: integer
+            minimum: 0.0
           - type: 'null'
-          title: Resource Id
-          description: The ID of the conflicting resource.
+          title: Delta
+          description: Delta time in minutes to expire existing secret if any. If not set or set to zero it will expire immediately.
           examples:
-          - cdc70639-cb9c-4222-a73f-b8ce39f7821b
+          - 1440
+          - null
       additionalProperties: false
       type: object
-      title: Error409
+      title: WebhookSubscriptionRotateSecret
     PasswordOAuthAuthentication:
       properties:
         type:
@@ -1890,49 +1911,7 @@ components:
       - token_url
       - username
       title: PasswordOAuthAuthentication
-    WebhookSubscriptions_2:
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/WebhookSubscription_2'
-          type: array
-          title: Items
-          description: A list of items returned for this request.
-        limit:
-          type: integer
-          maximum: 100.0
-          minimum: 1.0
-          title: Limit
-          description: The number of items for this page.
-          default: 20
-          examples:
-          - 20
-        next_cursor:
-          anyOf:
-          - type: string
-            maxLength: 1000
-            minLength: 1
-          - type: 'null'
-          title: Next Cursor
-          description: The cursor pointing at the next page of items.
-          examples:
-          - ZXhhbXBsZTE
-        previous_cursor:
-          anyOf:
-          - type: string
-            maxLength: 1000
-            minLength: 1
-          - type: 'null'
-          title: Previous Cursor
-          description: The cursor pointing at the previous page of items.
-          examples:
-          - Xkjss7asS
-      additionalProperties: false
-      type: object
-      required:
-      - items
-      title: WebhookSubscriptions
-    Error504:
+    Error404:
       properties:
         type:
           type: string
@@ -1945,21 +1924,24 @@ components:
         code:
           type: string
           title: Code
-          description: Always `gateway_timeout`
-          default: gateway_timeout
+          description: Always `not_found`
+          default: not_found
           examples:
-          - gateway_timeout
+          - not_found
         status:
           type: integer
           title: Status
-          default: 504
+          description: Always `404`.
+          default: 404
+          examples:
+          - 404
         message:
           type: string
           title: Message
           description: A human readable message that provides more context to the error.
-          default: Request could not be processed
+          default: The resource could not be found
           examples:
-          - Request could not be processed
+          - The resource could not be found
         details:
           items:
             $ref: '#/components/schemas/ErrorDetail_2'
@@ -1969,49 +1951,68 @@ components:
           default: []
       additionalProperties: false
       type: object
-      title: Error504
-    Error502:
+      title: Error404
+    WebhookSubscriptionUpdate:
       properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
+        active:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Active
+          description: Flag to determine whether this subscription should be sent webhook payloads.
           examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `bad_gateway`
-          default: bad_gateway
+          - true
+          - false
+        url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Url
+          description: URL to send webhook payloads.
           examples:
-          - bad_gateway
-        status:
-          type: integer
-          title: Status
-          description: Always `502`.
-          default: 502
+          - https://www.gr4vy.com/webhooks
+        authentication:
+          anyOf:
+          - oneOf:
+            - $ref: '#/components/schemas/BasicAuthenticationCreate'
+            - $ref: '#/components/schemas/CredentialsOAuthAuthenticationCreate'
+            - $ref: '#/components/schemas/PasswordOAuthAuthenticationCreate'
+            discriminator:
+              propertyName: kind
+              mapping:
+                basic: '#/components/schemas/BasicAuthenticationCreate'
+                oauth_client_credentials: '#/components/schemas/CredentialsOAuthAuthenticationCreate'
+                oauth_password: '#/components/schemas/PasswordOAuthAuthenticationCreate'
+          - type: 'null'
+          title: Authentication
+          description: Optional authentication configuration for webhook requests.
           examples:
-          - 502
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Request could not be processed
-          examples:
-          - Request could not be processed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
+          - kind: basic
+            password: super-strong-password
+            username: gr4vy
+          - client_id: 1234abcd
+            client_secret: sec_123_abc
+            kind: oauth_password
+            password: super-strong-password
+            token_url: https://www.gr4vy.com/oauth/token
+            username: gr4vy
+          - client_id: 1234abcd
+            client_secret: sec_123_abc
+            kind: oauth_client_credentials
+            token_url: https://www.gr4vy.com/oauth/token
       additionalProperties: false
       type: object
-      title: Error502
-    Error429:
+      title: WebhookSubscriptionUpdate
+    ErrorLocation:
+      type: string
+      enum:
+      - query
+      - body
+      - path
+      - header
+      - unknown
+      title: ErrorLocation
+    Error403:
       properties:
         type:
           type: string
@@ -2024,17 +2025,17 @@ components:
         code:
           type: string
           title: Code
-          description: Always `too_many_requests`
-          default: too_many_requests
+          description: Always `forbidden`
+          default: forbidden
           examples:
-          - too_many_requests
+          - forbidden
         status:
           type: integer
           title: Status
-          description: Always `429`.
-          default: 429
+          description: Always `403`.
+          default: 403
           examples:
-          - 429
+          - 403
         message:
           type: string
           title: Message
@@ -2051,7 +2052,7 @@ components:
           default: []
       additionalProperties: false
       type: object
-      title: Error429
+      title: Error403
     WebhookSubscriptionCreate:
       properties:
         active:
@@ -2102,57 +2103,70 @@ components:
       required:
       - url
       title: WebhookSubscriptionCreate
-    Error400:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    BasicAuthentication:
       properties:
         type:
           type: string
-          const: error
+          const: webhook-authentication
           title: Type
-          description: Always `error`.
-          default: error
+          description: Type of resource for webhook authentication.
+          default: webhook-authentication
           examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `bad_request`
-          default: bad_request
-          examples:
-          - bad_request
-        status:
-          type: integer
-          title: Status
-          description: Always `400`.
-          default: 400
-          examples:
-          - 400
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error400
-    PasswordOAuthAuthenticationCreate:
-      properties:
+          - webhook-authentication
         kind:
           type: string
-          const: oauth_password
+          const: basic
           title: Kind
           description: Type of authentication for webhook request.
-          default: oauth_password
+          default: basic
           examples:
-          - oauth_password
+          - basic
+        username:
+          type: string
+          title: Username
+          description: The username value for basic auth.
+          examples:
+          - gr4vy
+        password:
+          type: string
+          const: '********'
+          title: Password
+          description: The masked password value for basic auth.
+          default: '********'
+          examples:
+          - '********'
+      additionalProperties: false
+      type: object
+      required:
+      - username
+      title: BasicAuthentication
+    CredentialsOAuthAuthentication:
+      properties:
+        type:
+          type: string
+          const: webhook-authentication
+          title: Type
+          description: Type of resource for webhook authentication.
+          default: webhook-authentication
+          examples:
+          - webhook-authentication
+        kind:
+          type: string
+          const: oauth_client_credentials
+          title: Kind
+          description: Type of authentication for webhook request.
+          default: oauth_client_credentials
+          examples:
+          - oauth_client_credentials
         client_id:
           type: string
           title: Client Id
@@ -2162,9 +2176,10 @@ components:
         client_secret:
           type: string
           title: Client Secret
-          description: The OAuth client secret.
+          description: The masked OAuth client secret.
+          default: '********'
           examples:
-          - sec_123_abc
+          - '********'
         token_url:
           type: string
           title: Token Url
@@ -2179,27 +2194,12 @@ components:
           description: The OAuth scope.
           examples:
           - example:scope
-        username:
-          type: string
-          title: Username
-          description: The username value.
-          examples:
-          - gr4vy
-        password:
-          type: string
-          title: Password
-          description: The password value.
-          examples:
-          - super-strong-password
       additionalProperties: false
       type: object
       required:
       - client_id
-      - client_secret
       - token_url
-      - username
-      - password
-      title: PasswordOAuthAuthenticationCreate
+      title: CredentialsOAuthAuthentication
   securitySchemes:
     bearerAuth:
       type: http

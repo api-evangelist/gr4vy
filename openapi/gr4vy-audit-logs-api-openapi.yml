@@ -114,45 +114,80 @@ paths:
           description: The subdomain for your Gr4vy instance.
 components:
   schemas:
-    Error401Unauthorized:
-      title: Unauthorized Error
+    ErrorDetail:
+      title: Error details
+      description: Additional detail about the part of a request body that caused an issue.
       type: object
-      description: Unauthorized Error (HTTP 401).
       x-tags:
       - Errors
       properties:
+        location:
+          type: string
+          example: body
+          description: The location where the error caused an issue.
+          enum:
+          - query
+          - body
+          - path
+          - header
         type:
           type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
+          example: value_error.missing
+          description: A unique identifier for the type of error that occurred.
+        pointer:
           type: string
-          description: '`unauthorized`.'
-          example: unauthorized
-          enum:
-          - unauthorized
-        status:
-          type: integer
-          description: '`401`.'
-          example: 401
-          enum:
-          - 401
+          example: /payment_method/number
+          description: 'The exact item for which the validation did not succeed. This is a JSON
+
+            pointer for request bodies, while for query, path, and header parameters
+
+            it is the name of the parameter.'
         message:
           type: string
-          description: No valid API authentication found.
-          example: No valid API authentication found
-          enum:
-          - No valid API authentication found
-        details:
+          example: field required
+          description: A human readable message for this error detail.
+    AuditLogs:
+      title: Audit Logs
+      type: object
+      description: A list of audit log entries.
+      x-tags:
+      - Audit Logs
+      properties:
+        items:
           type: array
-          description: 'A list of detail objects that further clarify the reason for the error.
-
-            Not every error supports more detail.'
-          example: []
+          description: A list of audit log entries.
           items:
-            $ref: '#/components/schemas/ErrorDetail'
+            $ref: '#/components/schemas/AuditLog'
+        limit:
+          type: integer
+          description: 'The limit applied to request. This represents the number of items that are at
+
+            maximum returned by this request.'
+          format: int32
+          minimum: 1
+          maximum: 100
+          example: 1
+          default: 20
+        next_cursor:
+          type:
+          - string
+          - 'null'
+          description: 'The cursor that represents the next page of results. Use the `cursor` query
+
+            parameter to fetch this page of items.'
+          example: ZXhhbXBsZTE
+          minLength: 1
+          maxLength: 1000
+        previous_cursor:
+          type:
+          - string
+          - 'null'
+          description: 'The cursor that represents the next page of results. Use the `cursor` query
+
+            parameter to fetch this page of items.'
+          example: null
+          minLength: 1
+          maxLength: 1000
     AuditLog:
       title: Audit Log
       type: object
@@ -238,81 +273,46 @@ components:
               type: string
               description: The descriptive name of the resource.
               example: Samuel J
-    AuditLogs:
-      title: Audit Logs
+    Error401Unauthorized:
+      title: Unauthorized Error
       type: object
-      description: A list of audit log entries.
-      x-tags:
-      - Audit Logs
-      properties:
-        items:
-          type: array
-          description: A list of audit log entries.
-          items:
-            $ref: '#/components/schemas/AuditLog'
-        limit:
-          type: integer
-          description: 'The limit applied to request. This represents the number of items that are at
-
-            maximum returned by this request.'
-          format: int32
-          minimum: 1
-          maximum: 100
-          example: 1
-          default: 20
-        next_cursor:
-          type:
-          - string
-          - 'null'
-          description: 'The cursor that represents the next page of results. Use the `cursor` query
-
-            parameter to fetch this page of items.'
-          example: ZXhhbXBsZTE
-          minLength: 1
-          maxLength: 1000
-        previous_cursor:
-          type:
-          - string
-          - 'null'
-          description: 'The cursor that represents the next page of results. Use the `cursor` query
-
-            parameter to fetch this page of items.'
-          example: null
-          minLength: 1
-          maxLength: 1000
-    ErrorDetail:
-      title: Error details
-      description: Additional detail about the part of a request body that caused an issue.
-      type: object
+      description: Unauthorized Error (HTTP 401).
       x-tags:
       - Errors
       properties:
-        location:
-          type: string
-          example: body
-          description: The location where the error caused an issue.
-          enum:
-          - query
-          - body
-          - path
-          - header
         type:
           type: string
-          example: value_error.missing
-          description: A unique identifier for the type of error that occurred.
-        pointer:
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
           type: string
-          example: /payment_method/number
-          description: 'The exact item for which the validation did not succeed. This is a JSON
-
-            pointer for request bodies, while for query, path, and header parameters
-
-            it is the name of the parameter.'
+          description: '`unauthorized`.'
+          example: unauthorized
+          enum:
+          - unauthorized
+        status:
+          type: integer
+          description: '`401`.'
+          example: 401
+          enum:
+          - 401
         message:
           type: string
-          example: field required
-          description: A human readable message for this error detail.
-    Error401:
+          description: No valid API authentication found.
+          example: No valid API authentication found
+          enum:
+          - No valid API authentication found
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    Error500:
       properties:
         type:
           type: string
@@ -325,24 +325,24 @@ components:
         code:
           type: string
           title: Code
-          description: Always `unauthorized`
-          default: unauthorized
+          description: Always `server_error`
+          default: server_error
           examples:
-          - unauthorized
+          - server_error
         status:
           type: integer
           title: Status
-          description: Always `401`.
-          default: 401
+          description: Always `500`.
+          default: 500
           examples:
-          - 401
+          - 500
         message:
           type: string
           title: Message
           description: A human readable message that provides more context to the error.
-          default: No valid API authentication found
+          default: Request could not be processed
           examples:
-          - No valid API authentication found
+          - Request could not be processed
         details:
           items:
             $ref: '#/components/schemas/ErrorDetail_2'
@@ -352,7 +352,184 @@ components:
           default: []
       additionalProperties: false
       type: object
-      title: Error401
+      title: Error500
+    Error409:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `duplicate_record`
+          default: duplicate_record
+          examples:
+          - duplicate_record
+        status:
+          type: integer
+          title: Status
+          description: Always `409`.
+          default: 409
+          examples:
+          - 409
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+        resource_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Resource Id
+          description: The ID of the conflicting resource.
+          examples:
+          - cdc70639-cb9c-4222-a73f-b8ce39f7821b
+      additionalProperties: false
+      type: object
+      title: Error409
+    ErrorDetail_2:
+      properties:
+        location:
+          $ref: '#/components/schemas/ErrorLocation'
+          description: The part of the request where the property can be found that caused the error.
+          examples:
+          - body
+        pointer:
+          anyOf:
+          - type: string
+            format: json-pointer
+          - type: string
+          title: Pointer
+          description: A JSON pointer for the particular property that caused the error.
+          examples:
+          - /currency
+        message:
+          type: string
+          title: Message
+          description: A human-readdable explanation of the error.
+          examples:
+          - 'Unknown ISO 4217 currency code: USX'
+        type:
+          type: string
+          title: Type
+          description: The type of error that was raised for this property.
+          examples:
+          - value_error
+      additionalProperties: false
+      type: object
+      required:
+      - location
+      - pointer
+      - message
+      - type
+      title: ErrorDetail
+    Error502:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `bad_gateway`
+          default: bad_gateway
+          examples:
+          - bad_gateway
+        status:
+          type: integer
+          title: Status
+          description: Always `502`.
+          default: 502
+          examples:
+          - 502
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error502
+    AuditLogEntryUser:
+      properties:
+        type:
+          type: string
+          const: user
+          title: Type
+          description: Always `user`.
+          default: user
+          examples:
+          - user
+        id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Id
+          description: The ID of the user.
+          examples:
+          - 14b7b8c5-a6ba-4fb6-bbab-52d43c7f37ef
+        name:
+          type: string
+          title: Name
+          description: The name of the user.
+          examples:
+          - John Doe
+        email_address:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email Address
+          description: The email address for this user.
+          examples:
+          - john@example.com
+        is_staff:
+          type: boolean
+          title: Is Staff
+          description: Whether this is a Gr4vy staff user.
+          examples:
+          - false
+        status:
+          $ref: '#/components/schemas/UserStatus'
+          description: The status of the user.
+          examples:
+          - active
+      additionalProperties: false
+      type: object
+      required:
+      - name
+      - is_staff
+      - status
+      title: AuditLogEntryUser
     AuditLogEntries:
       properties:
         items:
@@ -395,107 +572,6 @@ components:
       required:
       - items
       title: AuditLogEntries
-    Error403:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `forbidden`
-          default: forbidden
-          examples:
-          - forbidden
-        status:
-          type: integer
-          title: Status
-          description: Always `403`.
-          default: 403
-          examples:
-          - 403
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error403
-    AuditLogAction:
-      type: string
-      enum:
-      - created
-      - updated
-      - deleted
-      - voided
-      - canceled
-      - captured
-      title: AuditLogAction
-    ErrorLocation:
-      type: string
-      enum:
-      - query
-      - body
-      - path
-      - header
-      - unknown
-      title: ErrorLocation
-    Error500:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `server_error`
-          default: server_error
-          examples:
-          - server_error
-        status:
-          type: integer
-          title: Status
-          description: Always `500`.
-          default: 500
-          examples:
-          - 500
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Request could not be processed
-          examples:
-          - Request could not be processed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error500
     Error405:
       properties:
         type:
@@ -537,7 +613,14 @@ components:
       additionalProperties: false
       type: object
       title: Error405
-    Error404:
+    UserStatus:
+      type: string
+      enum:
+      - active
+      - pending
+      - deleted
+      title: UserStatus
+    Error429:
       properties:
         type:
           type: string
@@ -550,24 +633,24 @@ components:
         code:
           type: string
           title: Code
-          description: Always `not_found`
-          default: not_found
+          description: Always `too_many_requests`
+          default: too_many_requests
           examples:
-          - not_found
+          - too_many_requests
         status:
           type: integer
           title: Status
-          description: Always `404`.
-          default: 404
+          description: Always `429`.
+          default: 429
           examples:
-          - 404
+          - 429
         message:
           type: string
           title: Message
           description: A human readable message that provides more context to the error.
-          default: The resource could not be found
+          default: Generic error
           examples:
-          - The resource could not be found
+          - Request failed validation
         details:
           items:
             $ref: '#/components/schemas/ErrorDetail_2'
@@ -577,7 +660,75 @@ components:
           default: []
       additionalProperties: false
       type: object
-      title: Error404
+      title: Error429
+    AuditLogEntryResource:
+      properties:
+        type:
+          type: string
+          title: Type
+          description: ' The type of the resource.'
+          examples:
+          - user
+        id:
+          type: string
+          title: Id
+          description: The ID of the resource.
+          examples:
+          - d0f98bc9-8915-413c-a1de-d853eb658c1b
+        name:
+          type: string
+          title: Name
+          description: The descriptive name of the resource.
+          examples:
+          - Jane Zoe
+      additionalProperties: false
+      type: object
+      required:
+      - type
+      - id
+      - name
+      title: AuditLogEntryResource
+    Error401:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `unauthorized`
+          default: unauthorized
+          examples:
+          - unauthorized
+        status:
+          type: integer
+          title: Status
+          description: Always `401`.
+          default: 401
+          examples:
+          - 401
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: No valid API authentication found
+          examples:
+          - No valid API authentication found
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error401
     Error425:
       properties:
         type:
@@ -619,78 +770,162 @@ components:
       additionalProperties: false
       type: object
       title: Error425
-    ErrorDetail_2:
+    Error400:
       properties:
-        location:
-          $ref: '#/components/schemas/ErrorLocation'
-          description: The part of the request where the property can be found that caused the error.
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
           examples:
-          - body
-        pointer:
-          anyOf:
-          - type: string
-            format: json-pointer
-          - type: string
-          title: Pointer
-          description: A JSON pointer for the particular property that caused the error.
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `bad_request`
+          default: bad_request
           examples:
-          - /currency
+          - bad_request
+        status:
+          type: integer
+          title: Status
+          description: Always `400`.
+          default: 400
+          examples:
+          - 400
         message:
           type: string
           title: Message
-          description: A human-readdable explanation of the error.
+          description: A human readable message that provides more context to the error.
+          default: Generic error
           examples:
-          - 'Unknown ISO 4217 currency code: USX'
-        type:
-          type: string
-          title: Type
-          description: The type of error that was raised for this property.
-          examples:
-          - value_error
-      additionalProperties: false
-      type: object
-      required:
-      - location
-      - pointer
-      - message
-      - type
-      title: ErrorDetail
-    AuditLogEntryResource:
-      properties:
-        type:
-          type: string
-          title: Type
-          description: ' The type of the resource.'
-          examples:
-          - user
-        id:
-          type: string
-          title: Id
-          description: The ID of the resource.
-          examples:
-          - d0f98bc9-8915-413c-a1de-d853eb658c1b
-        name:
-          type: string
-          title: Name
-          description: The descriptive name of the resource.
-          examples:
-          - Jane Zoe
-      additionalProperties: false
-      type: object
-      required:
-      - type
-      - id
-      - name
-      title: AuditLogEntryResource
-    HTTPValidationError:
-      properties:
-        detail:
+          - Request failed validation
+        details:
           items:
-            $ref: '#/components/schemas/ValidationError'
+            $ref: '#/components/schemas/ErrorDetail_2'
           type: array
-          title: Detail
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
       type: object
-      title: HTTPValidationError
+      title: Error400
+    Error504:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `gateway_timeout`
+          default: gateway_timeout
+          examples:
+          - gateway_timeout
+        status:
+          type: integer
+          title: Status
+          default: 504
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error504
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    AuditLogAction:
+      type: string
+      enum:
+      - created
+      - updated
+      - deleted
+      - voided
+      - canceled
+      - captured
+      title: AuditLogAction
+    Error404:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `not_found`
+          default: not_found
+          examples:
+          - not_found
+        status:
+          type: integer
+          title: Status
+          description: Always `404`.
+          default: 404
+          examples:
+          - 404
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: The resource could not be found
+          examples:
+          - The resource could not be found
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error404
     AuditLogEntry:
       properties:
         type:
@@ -744,260 +979,16 @@ components:
       - user
       - timestamp
       title: AuditLogEntry
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    Error409:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `duplicate_record`
-          default: duplicate_record
-          examples:
-          - duplicate_record
-        status:
-          type: integer
-          title: Status
-          description: Always `409`.
-          default: 409
-          examples:
-          - 409
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-        resource_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Resource Id
-          description: The ID of the conflicting resource.
-          examples:
-          - cdc70639-cb9c-4222-a73f-b8ce39f7821b
-      additionalProperties: false
-      type: object
-      title: Error409
-    Error504:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `gateway_timeout`
-          default: gateway_timeout
-          examples:
-          - gateway_timeout
-        status:
-          type: integer
-          title: Status
-          default: 504
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Request could not be processed
-          examples:
-          - Request could not be processed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error504
-    Error502:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `bad_gateway`
-          default: bad_gateway
-          examples:
-          - bad_gateway
-        status:
-          type: integer
-          title: Status
-          description: Always `502`.
-          default: 502
-          examples:
-          - 502
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Request could not be processed
-          examples:
-          - Request could not be processed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error502
-    Error429:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `too_many_requests`
-          default: too_many_requests
-          examples:
-          - too_many_requests
-        status:
-          type: integer
-          title: Status
-          description: Always `429`.
-          default: 429
-          examples:
-          - 429
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error429
-    AuditLogEntryUser:
-      properties:
-        type:
-          type: string
-          const: user
-          title: Type
-          description: Always `user`.
-          default: user
-          examples:
-          - user
-        id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Id
-          description: The ID of the user.
-          examples:
-          - 14b7b8c5-a6ba-4fb6-bbab-52d43c7f37ef
-        name:
-          type: string
-          title: Name
-          description: The name of the user.
-          examples:
-          - John Doe
-        email_address:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Email Address
-          description: The email address for this user.
-          examples:
-          - john@example.com
-        is_staff:
-          type: boolean
-          title: Is Staff
-          description: Whether this is a Gr4vy staff user.
-          examples:
-          - false
-        status:
-          $ref: '#/components/schemas/UserStatus'
-          description: The status of the user.
-          examples:
-          - active
-      additionalProperties: false
-      type: object
-      required:
-      - name
-      - is_staff
-      - status
-      title: AuditLogEntryUser
-    UserStatus:
+    ErrorLocation:
       type: string
       enum:
-      - active
-      - pending
-      - deleted
-      title: UserStatus
-    Error400:
+      - query
+      - body
+      - path
+      - header
+      - unknown
+      title: ErrorLocation
+    Error403:
       properties:
         type:
           type: string
@@ -1010,17 +1001,17 @@ components:
         code:
           type: string
           title: Code
-          description: Always `bad_request`
-          default: bad_request
+          description: Always `forbidden`
+          default: forbidden
           examples:
-          - bad_request
+          - forbidden
         status:
           type: integer
           title: Status
-          description: Always `400`.
-          default: 400
+          description: Always `403`.
+          default: 403
           examples:
-          - 400
+          - 403
         message:
           type: string
           title: Message
@@ -1037,7 +1028,16 @@ components:
           default: []
       additionalProperties: false
       type: object
-      title: Error400
+      title: Error403
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
   securitySchemes:
     bearerAuth:
       type: http

@@ -428,6 +428,69 @@ paths:
                 $ref: '#/components/schemas/Error404NotFound'
 components:
   schemas:
+    DigitalWalletDomain:
+      title: Digital Wallet Domain
+      type: object
+      description: Domain name for a digital wallet.
+      x-tags:
+      - Request Bodies
+      required:
+      - domain_name
+      properties:
+        domain_name:
+          type: string
+          example: example.com
+          description: 'The domain name that a digital wallet can be used on. To use a
+
+            digital wallet on a website, the domain of the site is required to be
+
+            in this list.'
+    ClickToPaySession:
+      title: Click to Pay Session
+      type: object
+      x-internal: true
+      properties:
+        digital_payment_application_id:
+          type: string
+          description: The ID of the Digital Payment Application for Click to Pay.
+          example: a0b093e4-028a-4310-93fb-4ed0afc813fb
+        digital_payment_application_name:
+          type: string
+          description: The name of the Digital Payment Application for Click to Pay.
+          example: Plantly T4JUU1
+    ApplePaySessionRequest:
+      title: Apple Pay session request
+      type: object
+      description: Initiates a new session with Apple Pay.
+      x-tags:
+      - Request Bodies
+      required:
+      - validation_url
+      - domain_name
+      properties:
+        validation_url:
+          type: string
+          format: uri
+          description: 'Validation URL obtained from the event passed to a
+
+            `onvalidatemerchant` callback.'
+        domain_name:
+          type: string
+          description: Fully qualified domain name of the merchant.
+    ClickToPaySessionRequest:
+      title: Click to Pay session request
+      type: object
+      description: Return digital payment application details for Click to Pay.
+      x-tags:
+      - Request Bodies
+      required:
+      - checkout_session_id
+      properties:
+        checkout_session_id:
+          type: string
+          example: fe26475d-ec3e-4884-9553-f7356683f7f9
+          description: The identifier for the current checkout session.
+          format: uuid
     Error404NotFound:
       title: Not Found Error
       type: object
@@ -466,113 +529,19 @@ components:
           example: []
           items:
             $ref: '#/components/schemas/ErrorDetail'
-    Error400BadRequest:
-      title: Bad Request
-      type: object
-      description: Bad Request (HTTP 400).
-      x-tags:
-      - Errors
-      properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: A short code that describes the reason for the error.
-          example: bad_request
-          enum:
-          - bad_request
-          - incorrect_json
-          - invalid_credentials
-        status:
-          type: integer
-          description: '`400`.'
-          example: 400
-          enum:
-          - 400
-        message:
-          type: string
-          description: A human-readable reason for the error.
-          example: Missing '****' field
-        details:
-          type: array
-          description: A list of detail objects that further clarify the reason for the error.
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-    ClickToPaySession:
-      title: Click to Pay Session
+    GooglePaySession:
+      title: Google Pay Session
       type: object
       x-internal: true
       properties:
-        digital_payment_application_id:
+        gateway_merchant_id:
           type: string
-          description: The ID of the Digital Payment Application for Click to Pay.
-          example: a0b093e4-028a-4310-93fb-4ed0afc813fb
-        digital_payment_application_name:
+          description: Your merchant ID.
+          example: app.gr4vy.sandbox.spider.default
+        token:
           type: string
-          description: The name of the Digital Payment Application for Click to Pay.
-          example: Plantly T4JUU1
-    GooglePaySessionRequest:
-      title: Google Pay session request
-      type: object
-      description: Initiates a new session with Google Pay.
-      x-tags:
-      - Request Bodies
-      required:
-      - origin_domain
-      properties:
-        origin_domain:
-          type: string
-          description: Fully qualified domain name of the merchant.
-    DigitalWalletUpdate:
-      title: Digital Wallet (Update)
-      type: object
-      description: Request body to update a registered digital wallet's details.
-      x-tags:
-      - Request Bodies
-      properties:
-        merchant_name:
-          type: string
-          description: 'The name of the merchant. This is used to update the value initially
-
-            used to register with a digital wallet provider and this name is not
-
-            displayed to the buyer.'
-          example: Gr4vy
-        domain_names:
-          type: array
-          minItems: 1
-          maxItems: 99
-          items:
-            type: string
-          example:
-          - example.com
-          description: 'The list of domain names that a digital wallet can be used on. To use a
-
-            digital wallet on a website, the domain of the site is required to be
-
-            in this list.'
-        merchant_display_name:
-          type:
-          - string
-          - 'null'
-          example: Gr4vy
-          description: The consumer facing name of the merchant.
-        merchant_country_code:
-          type:
-          - string
-          - 'null'
-          example: US
-          description: The country code where the merchant is registered.
-          maxLength: 2
-          minLength: 2
-        merchant_url:
-          type: string
-          example: https://example.com
-          description: The main URL of the merchant.
+          description: The JWT for the current Google Pay session.
+          example: eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJtZXJjaGFudElkIjoiQkNSMkRONFQ3QzNLWDZEWSIsIm1lcmNoYW50T3JpZ2luIjoiZW1iZWQuc2FuZGJveC5zcGlkZXIuZ3I0dnkuYXBwIiwiaWF0IjoxNjgzMjExMzk5fQ.Qk99p_j96aSxGmxUyyb06rNxIY7nh9-BvHJGWBrLBSFb3HkSbYRgq9YQzscWJtLHVvIJifkzSc8BgtllfAzh9A
     Error409DuplicateRecord:
       title: Duplicate Record Error
       type: object
@@ -610,18 +579,77 @@ components:
           example: []
           items:
             $ref: '#/components/schemas/ErrorDetail'
-    DigitalWalletClickToPayFields:
-      title: Click to Pay
+    Error401Unauthorized:
+      title: Unauthorized Error
+      type: object
+      description: Unauthorized Error (HTTP 401).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`unauthorized`.'
+          example: unauthorized
+          enum:
+          - unauthorized
+        status:
+          type: integer
+          description: '`401`.'
+          example: 401
+          enum:
+          - 401
+        message:
+          type: string
+          description: No valid API authentication found.
+          example: No valid API authentication found
+          enum:
+          - No valid API authentication found
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    ErrorDetail:
+      title: Error details
+      description: Additional detail about the part of a request body that caused an issue.
       type: object
       x-tags:
-      - Request Bodies
+      - Errors
       properties:
-        digital_payment_application_id:
+        location:
           type: string
-          description: Unique ID assigned for digital payment application.
-        digital_payment_application_name:
+          example: body
+          description: The location where the error caused an issue.
+          enum:
+          - query
+          - body
+          - path
+          - header
+        type:
           type: string
-          description: Name assigned for digital payment application.
+          example: value_error.missing
+          description: A unique identifier for the type of error that occurred.
+        pointer:
+          type: string
+          example: /payment_method/number
+          description: 'The exact item for which the validation did not succeed. This is a JSON
+
+            pointer for request bodies, while for query, path, and header parameters
+
+            it is the name of the parameter.'
+        message:
+          type: string
+          example: field required
+          description: A human readable message for this error detail.
     DigitalWallet:
       title: Digital Wallet
       type: object
@@ -717,57 +745,18 @@ components:
           type: integer
           example: 1
           description: The number of expired custom certificates registered for this digital wallet (Apple Pay only).
-    ApplePaySession:
-      title: Apple Pay Session
+    GooglePaySessionRequest:
+      title: Google Pay session request
       type: object
-      x-internal: true
-      additionalProperties: true
-    ClickToPaySessionRequest:
-      title: Click to Pay session request
-      type: object
-      description: Return digital payment application details for Click to Pay.
+      description: Initiates a new session with Google Pay.
       x-tags:
       - Request Bodies
       required:
-      - checkout_session_id
+      - origin_domain
       properties:
-        checkout_session_id:
+        origin_domain:
           type: string
-          example: fe26475d-ec3e-4884-9553-f7356683f7f9
-          description: The identifier for the current checkout session.
-          format: uuid
-    ErrorDetail:
-      title: Error details
-      description: Additional detail about the part of a request body that caused an issue.
-      type: object
-      x-tags:
-      - Errors
-      properties:
-        location:
-          type: string
-          example: body
-          description: The location where the error caused an issue.
-          enum:
-          - query
-          - body
-          - path
-          - header
-        type:
-          type: string
-          example: value_error.missing
-          description: A unique identifier for the type of error that occurred.
-        pointer:
-          type: string
-          example: /payment_method/number
-          description: 'The exact item for which the validation did not succeed. This is a JSON
-
-            pointer for request bodies, while for query, path, and header parameters
-
-            it is the name of the parameter.'
-        message:
-          type: string
-          example: field required
-          description: A human readable message for this error detail.
+          description: Fully qualified domain name of the merchant.
     DigitalWalletRequest:
       title: Digital Wallet (Register)
       type: object
@@ -836,25 +825,93 @@ components:
 
             wallet.'
           example: true
-    ApplePaySessionRequest:
-      title: Apple Pay session request
+    Error400BadRequest:
+      title: Bad Request
       type: object
-      description: Initiates a new session with Apple Pay.
+      description: Bad Request (HTTP 400).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: A short code that describes the reason for the error.
+          example: bad_request
+          enum:
+          - bad_request
+          - incorrect_json
+          - invalid_credentials
+        status:
+          type: integer
+          description: '`400`.'
+          example: 400
+          enum:
+          - 400
+        message:
+          type: string
+          description: A human-readable reason for the error.
+          example: Missing '****' field
+        details:
+          type: array
+          description: A list of detail objects that further clarify the reason for the error.
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    DigitalWalletUpdate:
+      title: Digital Wallet (Update)
+      type: object
+      description: Request body to update a registered digital wallet's details.
       x-tags:
       - Request Bodies
-      required:
-      - validation_url
-      - domain_name
       properties:
-        validation_url:
+        merchant_name:
           type: string
-          format: uri
-          description: 'Validation URL obtained from the event passed to a
+          description: 'The name of the merchant. This is used to update the value initially
 
-            `onvalidatemerchant` callback.'
-        domain_name:
+            used to register with a digital wallet provider and this name is not
+
+            displayed to the buyer.'
+          example: Gr4vy
+        domain_names:
+          type: array
+          minItems: 1
+          maxItems: 99
+          items:
+            type: string
+          example:
+          - example.com
+          description: 'The list of domain names that a digital wallet can be used on. To use a
+
+            digital wallet on a website, the domain of the site is required to be
+
+            in this list.'
+        merchant_display_name:
+          type:
+          - string
+          - 'null'
+          example: Gr4vy
+          description: The consumer facing name of the merchant.
+        merchant_country_code:
+          type:
+          - string
+          - 'null'
+          example: US
+          description: The country code where the merchant is registered.
+          maxLength: 2
+          minLength: 2
+        merchant_url:
           type: string
-          description: Fully qualified domain name of the merchant.
+          example: https://example.com
+          description: The main URL of the merchant.
+    ApplePaySession:
+      title: Apple Pay Session
+      type: object
+      x-internal: true
+      additionalProperties: true
     DigitalWallets:
       title: Digital Wallets
       type: object
@@ -867,75 +924,18 @@ components:
           description: A list of registered digital wallets.
           items:
             $ref: '#/components/schemas/DigitalWallet'
-    GooglePaySession:
-      title: Google Pay Session
+    DigitalWalletClickToPayFields:
+      title: Click to Pay
       type: object
-      x-internal: true
-      properties:
-        gateway_merchant_id:
-          type: string
-          description: Your merchant ID.
-          example: app.gr4vy.sandbox.spider.default
-        token:
-          type: string
-          description: The JWT for the current Google Pay session.
-          example: eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJtZXJjaGFudElkIjoiQkNSMkRONFQ3QzNLWDZEWSIsIm1lcmNoYW50T3JpZ2luIjoiZW1iZWQuc2FuZGJveC5zcGlkZXIuZ3I0dnkuYXBwIiwiaWF0IjoxNjgzMjExMzk5fQ.Qk99p_j96aSxGmxUyyb06rNxIY7nh9-BvHJGWBrLBSFb3HkSbYRgq9YQzscWJtLHVvIJifkzSc8BgtllfAzh9A
-    Error401Unauthorized:
-      title: Unauthorized Error
-      type: object
-      description: Unauthorized Error (HTTP 401).
-      x-tags:
-      - Errors
-      properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: '`unauthorized`.'
-          example: unauthorized
-          enum:
-          - unauthorized
-        status:
-          type: integer
-          description: '`401`.'
-          example: 401
-          enum:
-          - 401
-        message:
-          type: string
-          description: No valid API authentication found.
-          example: No valid API authentication found
-          enum:
-          - No valid API authentication found
-        details:
-          type: array
-          description: 'A list of detail objects that further clarify the reason for the error.
-
-            Not every error supports more detail.'
-          example: []
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-    DigitalWalletDomain:
-      title: Digital Wallet Domain
-      type: object
-      description: Domain name for a digital wallet.
       x-tags:
       - Request Bodies
-      required:
-      - domain_name
       properties:
-        domain_name:
+        digital_payment_application_id:
           type: string
-          example: example.com
-          description: 'The domain name that a digital wallet can be used on. To use a
-
-            digital wallet on a website, the domain of the site is required to be
-
-            in this list.'
+          description: Unique ID assigned for digital payment application.
+        digital_payment_application_name:
+          type: string
+          description: Name assigned for digital payment application.
   securitySchemes:
     bearerAuth:
       type: http

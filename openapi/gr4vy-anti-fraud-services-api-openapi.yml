@@ -212,80 +212,6 @@ paths:
                 $ref: '#/components/schemas/Error404NotFound'
 components:
   schemas:
-    Error404NotFound:
-      title: Not Found Error
-      type: object
-      description: Not Found Error (HTTP 404).
-      x-tags:
-      - Errors
-      properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: The reason code for the error.
-          example: not_found
-          enum:
-          - not_found
-          - pending_creation
-        status:
-          type: integer
-          description: '`404`.'
-          example: 404
-          enum:
-          - 404
-        message:
-          type: string
-          description: The human readable reason for the error.
-          example: The resource could not be found
-        details:
-          type: array
-          description: 'A list of detail objects that further clarify the reason for the error.
-
-            Not every error supports more detail.'
-          example: []
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-    Error400BadRequest:
-      title: Bad Request
-      type: object
-      description: Bad Request (HTTP 400).
-      x-tags:
-      - Errors
-      properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: A short code that describes the reason for the error.
-          example: bad_request
-          enum:
-          - bad_request
-          - incorrect_json
-          - invalid_credentials
-        status:
-          type: integer
-          description: '`400`.'
-          example: 400
-          enum:
-          - 400
-        message:
-          type: string
-          description: A human-readable reason for the error.
-          example: Missing '****' field
-        details:
-          type: array
-          description: A list of detail objects that further clarify the reason for the error.
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
     AntiFraudService:
       title: Anti-Fraud Service
       type: object
@@ -389,10 +315,10 @@ components:
             when this anti-fraud service was last updated in our system.'
           format: date-time
           example: '2013-07-16T19:23:00.000+00:00'
-    Error409DuplicateRecord:
-      title: Duplicate Record Error
+    Error404NotFound:
+      title: Not Found Error
       type: object
-      description: Duplicate Record Error (HTTP 409).
+      description: Not Found Error (HTTP 404).
       x-tags:
       - Errors
       properties:
@@ -404,20 +330,21 @@ components:
           example: error
         code:
           type: string
-          description: '`duplicate_record`.'
-          example: duplicate_record
+          description: The reason code for the error.
+          example: not_found
           enum:
-          - duplicate_record
+          - not_found
+          - pending_creation
         status:
           type: integer
-          description: '`409`.'
-          example: 409
+          description: '`404`.'
+          example: 404
           enum:
-          - 409
+          - 404
         message:
           type: string
-          description: Further details on the field that triggered the error.
-          example: A duplicate record exists with this external_identifier value
+          description: The human readable reason for the error.
+          example: The resource could not be found
         details:
           type: array
           description: 'A list of detail objects that further clarify the reason for the error.
@@ -515,6 +442,82 @@ components:
                 example: REDACTED_STRIPE_KEY
                 minLength: 1
                 maxLength: 10000
+    Error409DuplicateRecord:
+      title: Duplicate Record Error
+      type: object
+      description: Duplicate Record Error (HTTP 409).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`duplicate_record`.'
+          example: duplicate_record
+          enum:
+          - duplicate_record
+        status:
+          type: integer
+          description: '`409`.'
+          example: 409
+          enum:
+          - 409
+        message:
+          type: string
+          description: Further details on the field that triggered the error.
+          example: A duplicate record exists with this external_identifier value
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    Error401Unauthorized:
+      title: Unauthorized Error
+      type: object
+      description: Unauthorized Error (HTTP 401).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`unauthorized`.'
+          example: unauthorized
+          enum:
+          - unauthorized
+        status:
+          type: integer
+          description: '`401`.'
+          example: 401
+          enum:
+          - 401
+        message:
+          type: string
+          description: No valid API authentication found.
+          example: No valid API authentication found
+          enum:
+          - No valid API authentication found
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
     ErrorDetail:
       title: Error details
       description: Additional detail about the part of a request body that caused an issue.
@@ -559,10 +562,10 @@ components:
       - fields
       allOf:
       - $ref: '#/components/schemas/AntiFraudServiceUpdate'
-    Error401Unauthorized:
-      title: Unauthorized Error
+    Error400BadRequest:
+      title: Bad Request
       type: object
-      description: Unauthorized Error (HTTP 401).
+      description: Bad Request (HTTP 400).
       x-tags:
       - Errors
       properties:
@@ -574,28 +577,25 @@ components:
           example: error
         code:
           type: string
-          description: '`unauthorized`.'
-          example: unauthorized
+          description: A short code that describes the reason for the error.
+          example: bad_request
           enum:
-          - unauthorized
+          - bad_request
+          - incorrect_json
+          - invalid_credentials
         status:
           type: integer
-          description: '`401`.'
-          example: 401
+          description: '`400`.'
+          example: 400
           enum:
-          - 401
+          - 400
         message:
           type: string
-          description: No valid API authentication found.
-          example: No valid API authentication found
-          enum:
-          - No valid API authentication found
+          description: A human-readable reason for the error.
+          example: Missing '****' field
         details:
           type: array
-          description: 'A list of detail objects that further clarify the reason for the error.
-
-            Not every error supports more detail.'
-          example: []
+          description: A list of detail objects that further clarify the reason for the error.
           items:
             $ref: '#/components/schemas/ErrorDetail'
   securitySchemes:

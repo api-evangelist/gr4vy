@@ -946,6 +946,119 @@ paths:
                 $ref: '#/components/schemas/Error401Unauthorized'
 components:
   schemas:
+    Error401Unauthorized:
+      title: Unauthorized Error
+      type: object
+      description: Unauthorized Error (HTTP 401).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`unauthorized`.'
+          example: unauthorized
+          enum:
+          - unauthorized
+        status:
+          type: integer
+          description: '`401`.'
+          example: 401
+          enum:
+          - 401
+        message:
+          type: string
+          description: No valid API authentication found.
+          example: No valid API authentication found
+          enum:
+          - No valid API authentication found
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    ErrorDetail:
+      title: Error details
+      description: Additional detail about the part of a request body that caused an issue.
+      type: object
+      x-tags:
+      - Errors
+      properties:
+        location:
+          type: string
+          example: body
+          description: The location where the error caused an issue.
+          enum:
+          - query
+          - body
+          - path
+          - header
+        type:
+          type: string
+          example: value_error.missing
+          description: A unique identifier for the type of error that occurred.
+        pointer:
+          type: string
+          example: /payment_method/number
+          description: 'The exact item for which the validation did not succeed. This is a JSON
+
+            pointer for request bodies, while for query, path, and header parameters
+
+            it is the name of the parameter.'
+        message:
+          type: string
+          example: field required
+          description: A human readable message for this error detail.
+    MetricsExplorerModule:
+      title: Metrics Explorer Module
+      type: object
+      description: Data for a module in the Metrics Explorer.
+      x-tags:
+      - Metrics Explorer
+      x-internal: true
+      properties:
+        type:
+          type: string
+          description: The type of this resource.
+          enum:
+          - metrics-explorer.module
+          example: metrics-explorer.module
+        key:
+          type: string
+          description: The key for the module data entry. <br/>This key is the value that should be used as a filter when calling the endpoints. For example, for module `payment_service`, the key will be the id of the payment service (UUID), so it should be used to filter other modules using the `payment_service_id` filter.
+          example: d8c3d939-d75d-4598-81c7-a13f8238e624
+        display_name:
+          type: string
+          description: The display name for the module data entry.
+          example: Stripe (US)
+        value:
+          description: The value associated with the key. The type depends on the metric.
+          oneOf:
+          - type: integer
+            description: This type is used for "volume" and "transactions" metrics.
+            example: 100
+          - type: number
+            description: This type is used for "authorization rate" metric.
+            format: decimal
+            example: 0.5
+          example: 100
+        metadata:
+          type:
+          - object
+          - 'null'
+          description: A dictionary containing metadata as key-value pairs.
+          additionalProperties:
+            type: string
+          example:
+            payment_service_definition_id: stripe-card
     MetricsExplorerTotals:
       title: Metrics Explorer Totals
       type: object
@@ -1122,119 +1235,6 @@ components:
         details:
           type: array
           description: A list of detail objects that further clarify the reason for the error.
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-    MetricsExplorerModule:
-      title: Metrics Explorer Module
-      type: object
-      description: Data for a module in the Metrics Explorer.
-      x-tags:
-      - Metrics Explorer
-      x-internal: true
-      properties:
-        type:
-          type: string
-          description: The type of this resource.
-          enum:
-          - metrics-explorer.module
-          example: metrics-explorer.module
-        key:
-          type: string
-          description: The key for the module data entry. <br/>This key is the value that should be used as a filter when calling the endpoints. For example, for module `payment_service`, the key will be the id of the payment service (UUID), so it should be used to filter other modules using the `payment_service_id` filter.
-          example: d8c3d939-d75d-4598-81c7-a13f8238e624
-        display_name:
-          type: string
-          description: The display name for the module data entry.
-          example: Stripe (US)
-        value:
-          description: The value associated with the key. The type depends on the metric.
-          oneOf:
-          - type: integer
-            description: This type is used for "volume" and "transactions" metrics.
-            example: 100
-          - type: number
-            description: This type is used for "authorization rate" metric.
-            format: decimal
-            example: 0.5
-          example: 100
-        metadata:
-          type:
-          - object
-          - 'null'
-          description: A dictionary containing metadata as key-value pairs.
-          additionalProperties:
-            type: string
-          example:
-            payment_service_definition_id: stripe-card
-    ErrorDetail:
-      title: Error details
-      description: Additional detail about the part of a request body that caused an issue.
-      type: object
-      x-tags:
-      - Errors
-      properties:
-        location:
-          type: string
-          example: body
-          description: The location where the error caused an issue.
-          enum:
-          - query
-          - body
-          - path
-          - header
-        type:
-          type: string
-          example: value_error.missing
-          description: A unique identifier for the type of error that occurred.
-        pointer:
-          type: string
-          example: /payment_method/number
-          description: 'The exact item for which the validation did not succeed. This is a JSON
-
-            pointer for request bodies, while for query, path, and header parameters
-
-            it is the name of the parameter.'
-        message:
-          type: string
-          example: field required
-          description: A human readable message for this error detail.
-    Error401Unauthorized:
-      title: Unauthorized Error
-      type: object
-      description: Unauthorized Error (HTTP 401).
-      x-tags:
-      - Errors
-      properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: '`unauthorized`.'
-          example: unauthorized
-          enum:
-          - unauthorized
-        status:
-          type: integer
-          description: '`401`.'
-          example: 401
-          enum:
-          - 401
-        message:
-          type: string
-          description: No valid API authentication found.
-          example: No valid API authentication found
-          enum:
-          - No valid API authentication found
-        details:
-          type: array
-          description: 'A list of detail objects that further clarify the reason for the error.
-
-            Not every error supports more detail.'
-          example: []
           items:
             $ref: '#/components/schemas/ErrorDetail'
   securitySchemes:

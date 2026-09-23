@@ -772,211 +772,49 @@ paths:
       x-speakeasy-group: digital-wallets.sessions
 components:
   schemas:
-    PazeSessionReview:
+    ClickToPaySessionRequest:
       properties:
-        consumer:
-          $ref: '#/components/schemas/PazeConsumer'
-        shippingAddress:
-          anyOf:
-          - $ref: '#/components/schemas/PazeShippingAddress'
-          - type: 'null'
-        maskedCard:
-          $ref: '#/components/schemas/PazeMaskedCard'
-        links:
-          $ref: '#/components/schemas/PazeSessionReviewLinks'
-        code:
+        checkout_session_id:
           type: string
-          title: Code
-          description: Opaque token issued by the Paze service to be used in the next Paze interaction.
+          format: uuid
+          title: Checkout Session Id
+          description: The checkout session ID to create a Click to Pay session for.
           examples:
-          - eyJhdWQiOm51bGwsImtpZCI6IjE3...
+          - 4137b1cf-39ac-42a8-bad6-1c680d5dab6b
       additionalProperties: false
       type: object
       required:
-      - consumer
-      - shippingAddress
-      - maskedCard
-      - links
-      - code
-      title: PazeSessionReview
-    Error401:
+      - checkout_session_id
+      title: ClickToPaySessionRequest
+    PazeSessionReviewRequest:
       properties:
-        type:
+        sessionId:
           type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `unauthorized`
-          default: unauthorized
-          examples:
-          - unauthorized
-        status:
-          type: integer
-          title: Status
-          description: Always `401`.
-          default: 401
-          examples:
-          - 401
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: No valid API authentication found
-          examples:
-          - No valid API authentication found
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error401
-    PazeTransactionOptions:
-      properties:
-        merchantCategoryCode:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Merchantcategorycode
-          description: Merchant Category Code (MCC) of the merchant.
-          examples:
-          - '2121'
-        billingPreference:
-          anyOf:
-          - type: string
-            enum:
-            - ALL
-            - NONE
-          - type: 'null'
-          title: Billingpreference
-          description: Verbosity of the billing address required by the merchant.
-          examples:
-          - ALL
-        payloadTypeIndicator:
-          anyOf:
-          - type: string
-            enum:
-            - ID
-            - PAYMENT
-          - type: 'null'
-          title: Payloadtypeindicator
-          description: ID returns `payloadId` only (default). PAYMENT returns `payloadId` and `securePayload`.
-          examples:
-          - PAYMENT
-      additionalProperties: false
-      type: object
-      title: PazeTransactionOptions
-    Error403:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `forbidden`
-          default: forbidden
-          examples:
-          - forbidden
-        status:
-          type: integer
-          title: Status
-          description: Always `403`.
-          default: 403
-          examples:
-          - 403
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error403
-    ErrorLocation:
-      type: string
-      enum:
-      - query
-      - body
-      - path
-      - header
-      - unknown
-      title: ErrorLocation
-    PazeSessionComplete:
-      properties:
-        payloadId:
-          type: string
-          title: Payloadid
-          description: Unique identifier generated by Paze to track and link the wallet transaction. Used as the wallet transaction identifier.
-          examples:
-          - 5C90F1500800f8dc1ce2-2b49-9d82-823e-111195cd4301
-        completeResponse:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Completeresponse
-          description: Opaque token returned by Paze for the completion call.
-          examples:
-          - eyJhdWQiOm51bGwsImtpZCI6IjE3...
-        securePayload:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Securepayload
-          description: Signed and encrypted payload containing the data necessary to process the payment. Returned when `payloadTypeIndicator` is PAYMENT.
-          examples:
-          - eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...
-        clientContext:
-          type: string
-          title: Clientcontext
-          description: Echo of the `clientContext` sent on the request. Returned by Paze for client-side tracing.
+          maxLength: 255
+          title: Sessionid
+          description: Session reference identifier generated by the merchant. Must match the value sent in the Paze session create call.
           examples:
           - 7c1cba03-d20e-4a3f-9d77-e5dc23a39ac2
-        ewSID:
+        code:
           type: string
-          title: Ewsid
-          description: Paze-issued session identifier returned for tracing.
+          maxLength: 10240
+          title: Code
+          description: Opaque token issued by the Paze service in the response from the most recent Paze UX interaction (checkout, change card, or change shipping address).
           examples:
-          - c4b5e9fa-9d35-4cf2-bfc2-2cb1b9f1f6ab
-        timestampISO8601:
+          - eyJhdWQiOm51bGwsImtpZCI6IjE3...
+        accessToken:
           type: string
-          title: Timestampiso8601
-          description: Server timestamp of the Paze response in ISO 8601 format. Returned for tracing.
+          title: Accesstoken
+          description: The Paze OAuth access token returned by the Paze mobile session create call. Used to authenticate the request to Paze.
           examples:
-          - '2026-05-25T12:18:09Z'
+          - eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...
       additionalProperties: false
       type: object
       required:
-      - payloadId
-      - completeResponse
-      - securePayload
-      - clientContext
-      - ewSID
-      - timestampISO8601
-      title: PazeSessionComplete
+      - sessionId
+      - code
+      - accessToken
+      title: PazeSessionReviewRequest
     Error500:
       properties:
         type:
@@ -1018,7 +856,27 @@ components:
       additionalProperties: false
       type: object
       title: Error500
-    Error405:
+    PazeCobrandItem:
+      properties:
+        name:
+          type: string
+          maxLength: 100
+          title: Name
+          description: Product name of the cobrand card. Must match exactly with the card name from the network.
+          examples:
+          - Travel Rewards
+        benefitsOffered:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Benefitsoffered
+          description: Whether benefits are offered for this cobrand card.
+      additionalProperties: false
+      type: object
+      required:
+      - name
+      title: PazeCobrandItem
+    Error409:
       properties:
         type:
           type: string
@@ -1031,24 +889,24 @@ components:
         code:
           type: string
           title: Code
-          description: Always `method_not_allowed`
-          default: method_not_allowed
+          description: Always `duplicate_record`
+          default: duplicate_record
           examples:
-          - method_not_allowed
+          - duplicate_record
         status:
           type: integer
           title: Status
-          description: Always `405`.
-          default: 405
+          description: Always `409`.
+          default: 409
           examples:
-          - 405
+          - 409
         message:
           type: string
           title: Message
           description: A human readable message that provides more context to the error.
-          default: Method Not Allowed
+          default: Generic error
           examples:
-          - Method Not Allowed
+          - Request failed validation
         details:
           items:
             $ref: '#/components/schemas/ErrorDetail'
@@ -1056,9 +914,17 @@ components:
           title: Details
           description: A list of details that further ellaborate on the error.
           default: []
+        resource_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Resource Id
+          description: The ID of the conflicting resource.
+          examples:
+          - cdc70639-cb9c-4222-a73f-b8ce39f7821b
       additionalProperties: false
       type: object
-      title: Error405
+      title: Error409
     PazeConsumer:
       properties:
         firstName:
@@ -1120,26 +986,42 @@ components:
       - emailAddress
       - mobileNumber
       title: PazeConsumer
-    ApplePaySessionRequest:
+    ErrorDetail:
       properties:
-        validation_url:
-          type: string
-          title: Validation Url
-          description: The validation URL as provided by the Apple SDK when processing a payment.
+        location:
+          $ref: '#/components/schemas/ErrorLocation'
+          description: The part of the request where the property can be found that caused the error.
           examples:
-          - https://apple-pay-gateway-cert.apple.com
-        domain_name:
-          type: string
-          title: Domain Name
-          description: The domain on which Apple Pay is being loaded.
+          - body
+        pointer:
+          anyOf:
+          - type: string
+            format: json-pointer
+          - type: string
+          title: Pointer
+          description: A JSON pointer for the particular property that caused the error.
           examples:
-          - example.com
+          - /currency
+        message:
+          type: string
+          title: Message
+          description: A human-readdable explanation of the error.
+          examples:
+          - 'Unknown ISO 4217 currency code: USX'
+        type:
+          type: string
+          title: Type
+          description: The type of error that was raised for this property.
+          examples:
+          - value_error
       additionalProperties: false
       type: object
       required:
-      - validation_url
-      - domain_name
-      title: ApplePaySessionRequest
+      - location
+      - pointer
+      - message
+      - type
+      title: ErrorDetail
     PazeDigitalCardData:
       properties:
         artUri:
@@ -1167,139 +1049,64 @@ components:
       - artHeight
       - artWidth
       title: PazeDigitalCardData
-    PazeTravelData:
+    PazeShippingAddress:
       properties:
-        passengerName:
+        line1:
+          type: string
+          title: Line1
+          description: Line 1 of the address.
+          examples:
+          - 51551 Raynor Stream
+        line2:
           anyOf:
           - type: string
-            maxLength: 100
-            minLength: 1
           - type: 'null'
-          title: Passengername
-          description: Traveler name.
-          examples:
-          - Team Integrations
-        roundTrip:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Roundtrip
-          description: Whether departure and return trips are being purchased in the same transaction.
-          examples:
-          - true
-        departureDate:
+          title: Line2
+          description: Line 2 of the address.
+        line3:
           anyOf:
           - type: string
-            maxLength: 20
           - type: 'null'
-          title: Departuredate
-          description: Date and time of departure in ISO 8601 format.
+          title: Line3
+          description: Line 3 of the address.
+        city:
+          type: string
+          title: City
+          description: City.
           examples:
-          - '2026-06-01T08:00:00Z'
-        returnDate:
+          - East Kory
+        state:
+          type: string
+          title: State
+          description: State or region.
+          examples:
+          - ND
+        zip:
+          type: string
+          title: Zip
+          description: Postal code.
+          examples:
+          - '67137'
+        countryCode:
+          type: string
+          title: Countrycode
+          description: ISO 3166-1 alpha-2 country code.
+          examples:
+          - US
+        deliveryContactDetails:
           anyOf:
-          - type: string
-            maxLength: 20
+          - $ref: '#/components/schemas/PazeDeliveryContactDetails'
           - type: 'null'
-          title: Returndate
-          description: Date and time of return in ISO 8601 format.
-          examples:
-          - '2026-06-08T18:30:00Z'
-        departureLocation:
-          anyOf:
-          - $ref: '#/components/schemas/PazeLocationAddress'
-          - type: 'null'
-          description: Location from which the traveler departs.
-        returnLocation:
-          anyOf:
-          - $ref: '#/components/schemas/PazeLocationAddress'
-          - type: 'null'
-          description: Location to which the traveler returns.
-      additionalProperties: false
-      type: object
-      title: PazeTravelData
-    PazeMobileSession:
-      properties:
-        id:
-          type: string
-          title: Id
-          description: The Paze merchant data ID.
-          examples:
-          - W8GT9RLCNME754Z7025613H3PDM2T4HF2CSAOi9w2kkP3D4S0
-        name:
-          type: string
-          title: Name
-          description: The merchant display name.
-          examples:
-          - ACME
-        profileId:
-          type: string
-          title: Profileid
-          description: The Paze profile ID for the given domain.
-          examples:
-          - 550e8400-e29b-41d4-a716-446655440000
-        accessToken:
-          type: string
-          title: Accesstoken
-          description: The Paze OAuth access token. Returned only when `source` is `mobile`.
-          examples:
-          - eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...
-        sessionId:
-          type: string
-          title: Sessionid
-          description: The Paze session ID. Returned only when `source` is `mobile`.
-          examples:
-          - 550e8400-e29b-41d4-a716-446655440000
       additionalProperties: false
       type: object
       required:
-      - id
-      - name
-      - profileId
-      - accessToken
-      - sessionId
-      title: PazeMobileSession
-    Error404:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `not_found`
-          default: not_found
-          examples:
-          - not_found
-        status:
-          type: integer
-          title: Status
-          description: Always `404`.
-          default: 404
-          examples:
-          - 404
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: The resource could not be found
-          examples:
-          - The resource could not be found
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error404
+      - line1
+      - city
+      - state
+      - zip
+      - countryCode
+      - deliveryContactDetails
+      title: PazeShippingAddress
     PazeTransactionValue:
       properties:
         transactionCurrency:
@@ -1320,32 +1127,74 @@ components:
       - transactionCurrency
       - transactionAmount
       title: PazeTransactionValue
-    PazeMobileSessionCreate:
+    PazeWebSession:
       properties:
-        pazeCheckoutUrl:
+        id:
           type: string
-          title: Pazecheckouturl
-          description: Session URL for launching the Paze checkout UI from the native mobile app.
-        clientContext:
+          title: Id
+          description: The Paze merchant data ID.
+          examples:
+          - W8GT9RLCNME754Z7025613H3PDM2T4HF2CSAOi9w2kkP3D4S0
+        name:
           type: string
-          title: Clientcontext
-          description: Merchant-defined transaction identifier echoed from the request.
-        ewSID:
+          title: Name
+          description: The merchant display name.
+          examples:
+          - ACME
+        profileId:
           type: string
-          title: Ewsid
-          description: Globally unique session identifier generated by Paze.
-        timestampISO8601:
-          type: string
-          title: Timestampiso8601
-          description: Timestamp when the response was sent by Paze, in ISO 8601 format.
+          title: Profileid
+          description: The Paze profile ID for the given domain.
+          examples:
+          - 550e8400-e29b-41d4-a716-446655440000
       additionalProperties: false
       type: object
       required:
-      - pazeCheckoutUrl
-      - clientContext
-      - ewSID
-      - timestampISO8601
-      title: PazeMobileSessionCreate
+      - id
+      - name
+      - profileId
+      title: PazeWebSession
+    Error502:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `bad_gateway`
+          default: bad_gateway
+          examples:
+          - bad_gateway
+        status:
+          type: integer
+          title: Status
+          description: Always `502`.
+          default: 502
+          examples:
+          - 502
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error502
     PazeMobileSessionCreateRequest:
       properties:
         client:
@@ -1471,29 +1320,156 @@ components:
       - callbackURLScheme
       - intent
       title: PazeMobileSessionCreateRequest
-    PazeSessionRequest:
+    PazeEcomData:
       properties:
-        source:
-          type: string
-          enum:
-          - web
-          - mobile
-          title: Source
-          description: The platform that the Paze session is being created for. Defaults to `web`.
-          default: web
+        cartContainsGiftCard:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Cartcontainsgiftcard
+          description: Whether the current transaction includes a gift card purchase.
           examples:
-          - web
-        domain_name:
+          - false
+        orderForPickup:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Orderforpickup
+          description: Whether the consumer order will be picked up rather than shipped.
+          examples:
+          - false
+        orderHighestCost:
+          anyOf:
+          - type: string
+            maxLength: 32
+          - type: 'null'
+          title: Orderhighestcost
+          description: Dollar value of the most expensive item ordered.
+          examples:
+          - '99.99'
+        orderQuantity:
+          anyOf:
+          - type: string
+            maxLength: 32
+          - type: 'null'
+          title: Orderquantity
+          description: Number of items ordered.
+          examples:
+          - '3'
+        finalShippingAddress:
+          anyOf:
+          - $ref: '#/components/schemas/PazeShippingAddress'
+          - type: 'null'
+          description: The selected shipping address. Returned only when `shippingPreference` is not `NONE`.
+      additionalProperties: false
+      type: object
+      title: PazeEcomData
+    Error405:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `method_not_allowed`
+          default: method_not_allowed
+          examples:
+          - method_not_allowed
+        status:
+          type: integer
+          title: Status
+          description: Always `405`.
+          default: 405
+          examples:
+          - 405
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Method Not Allowed
+          examples:
+          - Method Not Allowed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error405
+    PazeSessionReviewLinks:
+      properties:
+        CHANGE_CARD:
           anyOf:
           - type: string
           - type: 'null'
-          title: Domain Name
-          description: The domain on which Paze is being loaded. Required when `source` is `web`.
+          title: Change Card
+          description: Follow-up link to change the selected card.
           examples:
-          - example.com
+          - https://checkout.wallet.uat.earlywarning.io/...
+        CHANGE_SHIPPING_ADDRESS:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Change Shipping Address
+          description: Follow-up link to change the shipping address.
+          examples:
+          - https://checkout.wallet.uat.earlywarning.io/...
       additionalProperties: false
       type: object
-      title: PazeSessionRequest
+      required:
+      - CHANGE_CARD
+      - CHANGE_SHIPPING_ADDRESS
+      title: PazeSessionReviewLinks
+    Error429:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `too_many_requests`
+          default: too_many_requests
+          examples:
+          - too_many_requests
+        status:
+          type: integer
+          title: Status
+          description: Always `429`.
+          default: 429
+          examples:
+          - 429
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error429
     Error425:
       properties:
         type:
@@ -1535,71 +1511,26 @@ components:
       additionalProperties: false
       type: object
       title: Error425
-    ErrorDetail:
+    ClickToPaySession:
       properties:
-        location:
-          $ref: '#/components/schemas/ErrorLocation'
-          description: The part of the request where the property can be found that caused the error.
-          examples:
-          - body
-        pointer:
-          anyOf:
-          - type: string
-            format: json-pointer
-          - type: string
-          title: Pointer
-          description: A JSON pointer for the particular property that caused the error.
-          examples:
-          - /currency
-        message:
+        digital_payment_application_id:
           type: string
-          title: Message
-          description: A human-readdable explanation of the error.
+          title: Digital Payment Application Id
+          description: The ID of the Click to Pay application.
           examples:
-          - 'Unknown ISO 4217 currency code: USX'
-        type:
+          - a0c3ef2e-9cdb-4cbf-aaff-5baac2928e1b
+        digital_payment_application_name:
           type: string
-          title: Type
-          description: The type of error that was raised for this property.
+          title: Digital Payment Application Name
+          description: The merchant name as configured ont he the Click to Pay wallet.
           examples:
-          - value_error
+          - ACME
       additionalProperties: false
       type: object
       required:
-      - location
-      - pointer
-      - message
-      - type
-      title: ErrorDetail
-    PazeSessionReviewRequest:
-      properties:
-        sessionId:
-          type: string
-          maxLength: 255
-          title: Sessionid
-          description: Session reference identifier generated by the merchant. Must match the value sent in the Paze session create call.
-          examples:
-          - 7c1cba03-d20e-4a3f-9d77-e5dc23a39ac2
-        code:
-          type: string
-          maxLength: 10240
-          title: Code
-          description: Opaque token issued by the Paze service in the response from the most recent Paze UX interaction (checkout, change card, or change shipping address).
-          examples:
-          - eyJhdWQiOm51bGwsImtpZCI6IjE3...
-        accessToken:
-          type: string
-          title: Accesstoken
-          description: The Paze OAuth access token returned by the Paze mobile session create call. Used to authenticate the request to Paze.
-          examples:
-          - eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...
-      additionalProperties: false
-      type: object
-      required:
-      - sessionId
-      - code
-      - accessToken
-      title: PazeSessionReviewRequest
+      - digital_payment_application_id
+      - digital_payment_application_name
+      title: ClickToPaySession
     PazeSessionCompleteRequest:
       properties:
         sessionId:
@@ -1667,211 +1598,7 @@ components:
       - accessToken
       - transactionType
       title: PazeSessionCompleteRequest
-    ApplePaySession:
-      properties: {}
-      additionalProperties: true
-      type: object
-      title: ApplePaySession
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    PazeLocationAddress:
-      properties:
-        name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Name
-          description: Name of the organization or entity at the address.
-        line1:
-          type: string
-          title: Line1
-          description: Line 1 of the address.
-        line2:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Line2
-          description: Line 2 of the address.
-        line3:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Line3
-          description: Line 3 of the address.
-        city:
-          type: string
-          title: City
-          description: City.
-        state:
-          type: string
-          title: State
-          description: State or region.
-        zip:
-          type: string
-          title: Zip
-          description: Postal code.
-        countryCode:
-          type: string
-          title: Countrycode
-          description: ISO 3166-1 alpha-2 country code.
-      additionalProperties: false
-      type: object
-      required:
-      - line1
-      - city
-      - state
-      - zip
-      - countryCode
-      title: PazeLocationAddress
-    PazeEcomData:
-      properties:
-        cartContainsGiftCard:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Cartcontainsgiftcard
-          description: Whether the current transaction includes a gift card purchase.
-          examples:
-          - false
-        orderForPickup:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Orderforpickup
-          description: Whether the consumer order will be picked up rather than shipped.
-          examples:
-          - false
-        orderHighestCost:
-          anyOf:
-          - type: string
-            maxLength: 32
-          - type: 'null'
-          title: Orderhighestcost
-          description: Dollar value of the most expensive item ordered.
-          examples:
-          - '99.99'
-        orderQuantity:
-          anyOf:
-          - type: string
-            maxLength: 32
-          - type: 'null'
-          title: Orderquantity
-          description: Number of items ordered.
-          examples:
-          - '3'
-        finalShippingAddress:
-          anyOf:
-          - $ref: '#/components/schemas/PazeShippingAddress'
-          - type: 'null'
-          description: The selected shipping address. Returned only when `shippingPreference` is not `NONE`.
-      additionalProperties: false
-      type: object
-      title: PazeEcomData
-    ClickToPaySession:
-      properties:
-        digital_payment_application_id:
-          type: string
-          title: Digital Payment Application Id
-          description: The ID of the Click to Pay application.
-          examples:
-          - a0c3ef2e-9cdb-4cbf-aaff-5baac2928e1b
-        digital_payment_application_name:
-          type: string
-          title: Digital Payment Application Name
-          description: The merchant name as configured ont he the Click to Pay wallet.
-          examples:
-          - ACME
-      additionalProperties: false
-      type: object
-      required:
-      - digital_payment_application_id
-      - digital_payment_application_name
-      title: ClickToPaySession
-    PazeWebSession:
-      properties:
-        id:
-          type: string
-          title: Id
-          description: The Paze merchant data ID.
-          examples:
-          - W8GT9RLCNME754Z7025613H3PDM2T4HF2CSAOi9w2kkP3D4S0
-        name:
-          type: string
-          title: Name
-          description: The merchant display name.
-          examples:
-          - ACME
-        profileId:
-          type: string
-          title: Profileid
-          description: The Paze profile ID for the given domain.
-          examples:
-          - 550e8400-e29b-41d4-a716-446655440000
-      additionalProperties: false
-      type: object
-      required:
-      - id
-      - name
-      - profileId
-      title: PazeWebSession
-    PazeSessionReviewLinks:
-      properties:
-        CHANGE_CARD:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Change Card
-          description: Follow-up link to change the selected card.
-          examples:
-          - https://checkout.wallet.uat.earlywarning.io/...
-        CHANGE_SHIPPING_ADDRESS:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Change Shipping Address
-          description: Follow-up link to change the shipping address.
-          examples:
-          - https://checkout.wallet.uat.earlywarning.io/...
-      additionalProperties: false
-      type: object
-      required:
-      - CHANGE_CARD
-      - CHANGE_SHIPPING_ADDRESS
-      title: PazeSessionReviewLinks
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    Error409:
+    Error401:
       properties:
         type:
           type: string
@@ -1884,24 +1611,24 @@ components:
         code:
           type: string
           title: Code
-          description: Always `duplicate_record`
-          default: duplicate_record
+          description: Always `unauthorized`
+          default: unauthorized
           examples:
-          - duplicate_record
+          - unauthorized
         status:
           type: integer
           title: Status
-          description: Always `409`.
-          default: 409
+          description: Always `401`.
+          default: 401
           examples:
-          - 409
+          - 401
         message:
           type: string
           title: Message
           description: A human readable message that provides more context to the error.
-          default: Generic error
+          default: No valid API authentication found
           examples:
-          - Request failed validation
+          - No valid API authentication found
         details:
           items:
             $ref: '#/components/schemas/ErrorDetail'
@@ -1909,103 +1636,9 @@ components:
           title: Details
           description: A list of details that further ellaborate on the error.
           default: []
-        resource_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Resource Id
-          description: The ID of the conflicting resource.
-          examples:
-          - cdc70639-cb9c-4222-a73f-b8ce39f7821b
       additionalProperties: false
       type: object
-      title: Error409
-    PazeCobrandItem:
-      properties:
-        name:
-          type: string
-          maxLength: 100
-          title: Name
-          description: Product name of the cobrand card. Must match exactly with the card name from the network.
-          examples:
-          - Travel Rewards
-        benefitsOffered:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Benefitsoffered
-          description: Whether benefits are offered for this cobrand card.
-      additionalProperties: false
-      type: object
-      required:
-      - name
-      title: PazeCobrandItem
-    ClickToPaySessionRequest:
-      properties:
-        checkout_session_id:
-          type: string
-          format: uuid
-          title: Checkout Session Id
-          description: The checkout session ID to create a Click to Pay session for.
-          examples:
-          - 4137b1cf-39ac-42a8-bad6-1c680d5dab6b
-      additionalProperties: false
-      type: object
-      required:
-      - checkout_session_id
-      title: ClickToPaySessionRequest
-    PazeMobileNumber:
-      properties:
-        countryCode:
-          type: string
-          title: Countrycode
-          description: ITU country dialing code.
-          examples:
-          - '1'
-        phoneNumber:
-          type: string
-          title: Phonenumber
-          description: Phone number without country code.
-          examples:
-          - '3213213211'
-      additionalProperties: false
-      type: object
-      required:
-      - countryCode
-      - phoneNumber
-      title: PazeMobileNumber
-    PazeClient:
-      properties:
-        id:
-          type: string
-          maxLength: 50
-          title: Id
-          description: Client identifier generated by Paze and shared during onboarding.
-          examples:
-          - 0UVAS9Y03YNJ39XXYIN313F4DZNCjIGmqs4Iw32EPnZV0800o
-        name:
-          anyOf:
-          - type: string
-            maxLength: 50
-          - type: 'null'
-          title: Name
-          description: Display name associated with the client for presentation purposes.
-          examples:
-          - Gr4vy Test
-        profileId:
-          anyOf:
-          - type: string
-            maxLength: 50
-          - type: 'null'
-          title: Profileid
-          description: Client profile to use during checkout.
-          examples:
-          - 8614d0be-192e-45a7-a509-eceb7343d377
-      additionalProperties: false
-      type: object
-      required:
-      - id
-      title: PazeClient
+      title: Error401
     PazeMaskedCard:
       properties:
         panLastFour:
@@ -2091,6 +1724,70 @@ components:
       - digitalCardData
       - billingAddress
       title: PazeMaskedCard
+    PazeSessionRequest:
+      properties:
+        source:
+          type: string
+          enum:
+          - web
+          - mobile
+          title: Source
+          description: The platform that the Paze session is being created for. Defaults to `web`.
+          default: web
+          examples:
+          - web
+        domain_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Domain Name
+          description: The domain on which Paze is being loaded. Required when `source` is `web`.
+          examples:
+          - example.com
+      additionalProperties: false
+      type: object
+      title: PazeSessionRequest
+    Error400:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `bad_request`
+          default: bad_request
+          examples:
+          - bad_request
+        status:
+          type: integer
+          title: Status
+          description: Always `400`.
+          default: 400
+          examples:
+          - 400
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error400
     GooglePaySession:
       properties:
         gateway_merchant_id:
@@ -2111,6 +1808,84 @@ components:
       - gateway_merchant_id
       - token
       title: GooglePaySession
+    PazeMobileSessionCreate:
+      properties:
+        pazeCheckoutUrl:
+          type: string
+          title: Pazecheckouturl
+          description: Session URL for launching the Paze checkout UI from the native mobile app.
+        clientContext:
+          type: string
+          title: Clientcontext
+          description: Merchant-defined transaction identifier echoed from the request.
+        ewSID:
+          type: string
+          title: Ewsid
+          description: Globally unique session identifier generated by Paze.
+        timestampISO8601:
+          type: string
+          title: Timestampiso8601
+          description: Timestamp when the response was sent by Paze, in ISO 8601 format.
+      additionalProperties: false
+      type: object
+      required:
+      - pazeCheckoutUrl
+      - clientContext
+      - ewSID
+      - timestampISO8601
+      title: PazeMobileSessionCreate
+    PazeSessionComplete:
+      properties:
+        payloadId:
+          type: string
+          title: Payloadid
+          description: Unique identifier generated by Paze to track and link the wallet transaction. Used as the wallet transaction identifier.
+          examples:
+          - 5C90F1500800f8dc1ce2-2b49-9d82-823e-111195cd4301
+        completeResponse:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Completeresponse
+          description: Opaque token returned by Paze for the completion call.
+          examples:
+          - eyJhdWQiOm51bGwsImtpZCI6IjE3...
+        securePayload:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Securepayload
+          description: Signed and encrypted payload containing the data necessary to process the payment. Returned when `payloadTypeIndicator` is PAYMENT.
+          examples:
+          - eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...
+        clientContext:
+          type: string
+          title: Clientcontext
+          description: Echo of the `clientContext` sent on the request. Returned by Paze for client-side tracing.
+          examples:
+          - 7c1cba03-d20e-4a3f-9d77-e5dc23a39ac2
+        ewSID:
+          type: string
+          title: Ewsid
+          description: Paze-issued session identifier returned for tracing.
+          examples:
+          - c4b5e9fa-9d35-4cf2-bfc2-2cb1b9f1f6ab
+        timestampISO8601:
+          type: string
+          title: Timestampiso8601
+          description: Server timestamp of the Paze response in ISO 8601 format. Returned for tracing.
+          examples:
+          - '2026-05-25T12:18:09Z'
+      additionalProperties: false
+      type: object
+      required:
+      - payloadId
+      - completeResponse
+      - securePayload
+      - clientContext
+      - ewSID
+      - timestampISO8601
+      title: PazeSessionComplete
     Error504:
       properties:
         type:
@@ -2149,6 +1924,194 @@ components:
       additionalProperties: false
       type: object
       title: Error504
+    PazeMobileSession:
+      properties:
+        id:
+          type: string
+          title: Id
+          description: The Paze merchant data ID.
+          examples:
+          - W8GT9RLCNME754Z7025613H3PDM2T4HF2CSAOi9w2kkP3D4S0
+        name:
+          type: string
+          title: Name
+          description: The merchant display name.
+          examples:
+          - ACME
+        profileId:
+          type: string
+          title: Profileid
+          description: The Paze profile ID for the given domain.
+          examples:
+          - 550e8400-e29b-41d4-a716-446655440000
+        accessToken:
+          type: string
+          title: Accesstoken
+          description: The Paze OAuth access token. Returned only when `source` is `mobile`.
+          examples:
+          - eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...
+        sessionId:
+          type: string
+          title: Sessionid
+          description: The Paze session ID. Returned only when `source` is `mobile`.
+          examples:
+          - 550e8400-e29b-41d4-a716-446655440000
+      additionalProperties: false
+      type: object
+      required:
+      - id
+      - name
+      - profileId
+      - accessToken
+      - sessionId
+      title: PazeMobileSession
+    ApplePaySession:
+      properties: {}
+      additionalProperties: true
+      type: object
+      title: ApplePaySession
+    PazeTravelData:
+      properties:
+        passengerName:
+          anyOf:
+          - type: string
+            maxLength: 100
+            minLength: 1
+          - type: 'null'
+          title: Passengername
+          description: Traveler name.
+          examples:
+          - Team Integrations
+        roundTrip:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Roundtrip
+          description: Whether departure and return trips are being purchased in the same transaction.
+          examples:
+          - true
+        departureDate:
+          anyOf:
+          - type: string
+            maxLength: 20
+          - type: 'null'
+          title: Departuredate
+          description: Date and time of departure in ISO 8601 format.
+          examples:
+          - '2026-06-01T08:00:00Z'
+        returnDate:
+          anyOf:
+          - type: string
+            maxLength: 20
+          - type: 'null'
+          title: Returndate
+          description: Date and time of return in ISO 8601 format.
+          examples:
+          - '2026-06-08T18:30:00Z'
+        departureLocation:
+          anyOf:
+          - $ref: '#/components/schemas/PazeLocationAddress'
+          - type: 'null'
+          description: Location from which the traveler departs.
+        returnLocation:
+          anyOf:
+          - $ref: '#/components/schemas/PazeLocationAddress'
+          - type: 'null'
+          description: Location to which the traveler returns.
+      additionalProperties: false
+      type: object
+      title: PazeTravelData
+    ApplePaySessionRequest:
+      properties:
+        validation_url:
+          type: string
+          title: Validation Url
+          description: The validation URL as provided by the Apple SDK when processing a payment.
+          examples:
+          - https://apple-pay-gateway-cert.apple.com
+        domain_name:
+          type: string
+          title: Domain Name
+          description: The domain on which Apple Pay is being loaded.
+          examples:
+          - example.com
+      additionalProperties: false
+      type: object
+      required:
+      - validation_url
+      - domain_name
+      title: ApplePaySessionRequest
+    PazeClient:
+      properties:
+        id:
+          type: string
+          maxLength: 50
+          title: Id
+          description: Client identifier generated by Paze and shared during onboarding.
+          examples:
+          - 0UVAS9Y03YNJ39XXYIN313F4DZNCjIGmqs4Iw32EPnZV0800o
+        name:
+          anyOf:
+          - type: string
+            maxLength: 50
+          - type: 'null'
+          title: Name
+          description: Display name associated with the client for presentation purposes.
+          examples:
+          - Gr4vy Test
+        profileId:
+          anyOf:
+          - type: string
+            maxLength: 50
+          - type: 'null'
+          title: Profileid
+          description: Client profile to use during checkout.
+          examples:
+          - 8614d0be-192e-45a7-a509-eceb7343d377
+      additionalProperties: false
+      type: object
+      required:
+      - id
+      title: PazeClient
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    GooglePaySessionRequest:
+      properties:
+        origin_domain:
+          type: string
+          title: Origin Domain
+          description: The domain on which Google Pay is being loaded.
+          examples:
+          - example.com
+      additionalProperties: false
+      type: object
+      required:
+      - origin_domain
+      title: GooglePaySessionRequest
     PazeBillingAddress:
       properties:
         name:
@@ -2199,7 +2162,7 @@ components:
       - state
       - zip
       title: PazeBillingAddress
-    Error502:
+    Error404:
       properties:
         type:
           type: string
@@ -2212,24 +2175,24 @@ components:
         code:
           type: string
           title: Code
-          description: Always `bad_gateway`
-          default: bad_gateway
+          description: Always `not_found`
+          default: not_found
           examples:
-          - bad_gateway
+          - not_found
         status:
           type: integer
           title: Status
-          description: Always `502`.
-          default: 502
+          description: Always `404`.
+          default: 404
           examples:
-          - 502
+          - 404
         message:
           type: string
           title: Message
           description: A human readable message that provides more context to the error.
-          default: Request could not be processed
+          default: The resource could not be found
           examples:
-          - Request could not be processed
+          - The resource could not be found
         details:
           items:
             $ref: '#/components/schemas/ErrorDetail'
@@ -2239,162 +2202,27 @@ components:
           default: []
       additionalProperties: false
       type: object
-      title: Error502
-    PazeShippingAddress:
+      title: Error404
+    PazeMobileNumber:
       properties:
-        line1:
-          type: string
-          title: Line1
-          description: Line 1 of the address.
-          examples:
-          - 51551 Raynor Stream
-        line2:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Line2
-          description: Line 2 of the address.
-        line3:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Line3
-          description: Line 3 of the address.
-        city:
-          type: string
-          title: City
-          description: City.
-          examples:
-          - East Kory
-        state:
-          type: string
-          title: State
-          description: State or region.
-          examples:
-          - ND
-        zip:
-          type: string
-          title: Zip
-          description: Postal code.
-          examples:
-          - '67137'
         countryCode:
           type: string
           title: Countrycode
-          description: ISO 3166-1 alpha-2 country code.
+          description: ITU country dialing code.
           examples:
-          - US
-        deliveryContactDetails:
-          anyOf:
-          - $ref: '#/components/schemas/PazeDeliveryContactDetails'
-          - type: 'null'
+          - '1'
+        phoneNumber:
+          type: string
+          title: Phonenumber
+          description: Phone number without country code.
+          examples:
+          - '3213213211'
       additionalProperties: false
       type: object
       required:
-      - line1
-      - city
-      - state
-      - zip
       - countryCode
-      - deliveryContactDetails
-      title: PazeShippingAddress
-    PazeEnhancedTransactionData:
-      properties:
-        ecomData:
-          anyOf:
-          - $ref: '#/components/schemas/PazeEcomData'
-          - type: 'null'
-          description: Details pertaining to electronic commerce purchases.
-        travelData:
-          anyOf:
-          - $ref: '#/components/schemas/PazeTravelData'
-          - type: 'null'
-          description: Details pertaining to travel bookings.
-      additionalProperties: false
-      type: object
-      title: PazeEnhancedTransactionData
-    Error429:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `too_many_requests`
-          default: too_many_requests
-          examples:
-          - too_many_requests
-        status:
-          type: integer
-          title: Status
-          description: Always `429`.
-          default: 429
-          examples:
-          - 429
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error429
-    Error400:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `bad_request`
-          default: bad_request
-          examples:
-          - bad_request
-        status:
-          type: integer
-          title: Status
-          description: Always `400`.
-          default: 400
-          examples:
-          - 400
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error400
+      - phoneNumber
+      title: PazeMobileNumber
     PazeDeliveryContactDetails:
       properties:
         contactFullName:
@@ -2415,19 +2243,191 @@ components:
       - contactFullName
       - contactPhoneNumber
       title: PazeDeliveryContactDetails
-    GooglePaySessionRequest:
+    PazeSessionReview:
       properties:
-        origin_domain:
+        consumer:
+          $ref: '#/components/schemas/PazeConsumer'
+        shippingAddress:
+          anyOf:
+          - $ref: '#/components/schemas/PazeShippingAddress'
+          - type: 'null'
+        maskedCard:
+          $ref: '#/components/schemas/PazeMaskedCard'
+        links:
+          $ref: '#/components/schemas/PazeSessionReviewLinks'
+        code:
           type: string
-          title: Origin Domain
-          description: The domain on which Google Pay is being loaded.
+          title: Code
+          description: Opaque token issued by the Paze service to be used in the next Paze interaction.
           examples:
-          - example.com
+          - eyJhdWQiOm51bGwsImtpZCI6IjE3...
       additionalProperties: false
       type: object
       required:
-      - origin_domain
-      title: GooglePaySessionRequest
+      - consumer
+      - shippingAddress
+      - maskedCard
+      - links
+      - code
+      title: PazeSessionReview
+    ErrorLocation:
+      type: string
+      enum:
+      - query
+      - body
+      - path
+      - header
+      - unknown
+      title: ErrorLocation
+    Error403:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `forbidden`
+          default: forbidden
+          examples:
+          - forbidden
+        status:
+          type: integer
+          title: Status
+          description: Always `403`.
+          default: 403
+          examples:
+          - 403
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error403
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    PazeEnhancedTransactionData:
+      properties:
+        ecomData:
+          anyOf:
+          - $ref: '#/components/schemas/PazeEcomData'
+          - type: 'null'
+          description: Details pertaining to electronic commerce purchases.
+        travelData:
+          anyOf:
+          - $ref: '#/components/schemas/PazeTravelData'
+          - type: 'null'
+          description: Details pertaining to travel bookings.
+      additionalProperties: false
+      type: object
+      title: PazeEnhancedTransactionData
+    PazeLocationAddress:
+      properties:
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+          description: Name of the organization or entity at the address.
+        line1:
+          type: string
+          title: Line1
+          description: Line 1 of the address.
+        line2:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Line2
+          description: Line 2 of the address.
+        line3:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Line3
+          description: Line 3 of the address.
+        city:
+          type: string
+          title: City
+          description: City.
+        state:
+          type: string
+          title: State
+          description: State or region.
+        zip:
+          type: string
+          title: Zip
+          description: Postal code.
+        countryCode:
+          type: string
+          title: Countrycode
+          description: ISO 3166-1 alpha-2 country code.
+      additionalProperties: false
+      type: object
+      required:
+      - line1
+      - city
+      - state
+      - zip
+      - countryCode
+      title: PazeLocationAddress
+    PazeTransactionOptions:
+      properties:
+        merchantCategoryCode:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Merchantcategorycode
+          description: Merchant Category Code (MCC) of the merchant.
+          examples:
+          - '2121'
+        billingPreference:
+          anyOf:
+          - type: string
+            enum:
+            - ALL
+            - NONE
+          - type: 'null'
+          title: Billingpreference
+          description: Verbosity of the billing address required by the merchant.
+          examples:
+          - ALL
+        payloadTypeIndicator:
+          anyOf:
+          - type: string
+            enum:
+            - ID
+            - PAYMENT
+          - type: 'null'
+          title: Payloadtypeindicator
+          description: ID returns `payloadId` only (default). PAYMENT returns `payloadId` and `securePayload`.
+          examples:
+          - PAYMENT
+      additionalProperties: false
+      type: object
+      title: PazeTransactionOptions
   securitySchemes:
     OAuth2PasswordBearer:
       type: oauth2

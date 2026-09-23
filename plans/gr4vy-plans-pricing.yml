@@ -1,6 +1,7 @@
 generated: '2026-09-20'
 method: searched
 source: https://gr4vy.com/
+name: Gr4vy API Plans
 sources:
 - https://gr4vy.com/pricing (HTTP 404)
 - https://gr4vy.com/plans (HTTP 404)

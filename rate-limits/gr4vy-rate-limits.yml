@@ -1,6 +1,7 @@
 generated: '2026-09-20'
 method: searched
 source: https://docs.gr4vy.com/guides/api/rate-limiting
+name: Gr4vy API Rate Limits
 sources:
 - https://docs.gr4vy.com/guides/api/rate-limiting
 published: true
