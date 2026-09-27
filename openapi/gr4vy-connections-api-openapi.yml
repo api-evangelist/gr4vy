@@ -58,46 +58,6 @@ paths:
                 $ref: '#/components/schemas/Error401Unauthorized'
 components:
   schemas:
-    Connection:
-      title: Connection
-      type: object
-      description: A configured connection.
-      x-tags:
-      - Discovery
-      properties:
-        id:
-          type: string
-          description: The ID of the connection.
-          example: 7b5e02bd-fa53-4ef0-b11e-1609d0f48cc5
-        type:
-          type: string
-          description: '`connection`.'
-          default: connection
-          example: connection
-        name:
-          type: string
-          description: The name of this connection.
-          example: My Connection
-        active:
-          type: boolean
-          example: true
-          description: 'Whether this connection is currently in use. Connections can
-
-            be deactivated to allow for them to be kept around and
-
-            re-activated at a later date.'
-        silent:
-          type: boolean
-          example: false
-          description: 'Defines if this service is currently running in silent mode. In silent
-
-            mode, a service''s decisions will be created but ignored when processing
-
-            a transaction, allowing for warm-up and comparison of new services
-
-            against the active service.'
-        definition:
-          $ref: '#/components/schemas/ConnectionDefinition'
     Error401Unauthorized:
       title: Unauthorized Error
       type: object
@@ -137,38 +97,6 @@ components:
           example: []
           items:
             $ref: '#/components/schemas/ErrorDetail'
-    ErrorDetail:
-      title: Error details
-      description: Additional detail about the part of a request body that caused an issue.
-      type: object
-      x-tags:
-      - Errors
-      properties:
-        location:
-          type: string
-          example: body
-          description: The location where the error caused an issue.
-          enum:
-          - query
-          - body
-          - path
-          - header
-        type:
-          type: string
-          example: value_error.missing
-          description: A unique identifier for the type of error that occurred.
-        pointer:
-          type: string
-          example: /payment_method/number
-          description: 'The exact item for which the validation did not succeed. This is a JSON
-
-            pointer for request bodies, while for query, path, and header parameters
-
-            it is the name of the parameter.'
-        message:
-          type: string
-          example: field required
-          description: A human readable message for this error detail.
     ConnectionDefinition:
       title: Connection Definition
       type: object
@@ -235,6 +163,78 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Connection'
+    Connection:
+      title: Connection
+      type: object
+      description: A configured connection.
+      x-tags:
+      - Discovery
+      properties:
+        id:
+          type: string
+          description: The ID of the connection.
+          example: 7b5e02bd-fa53-4ef0-b11e-1609d0f48cc5
+        type:
+          type: string
+          description: '`connection`.'
+          default: connection
+          example: connection
+        name:
+          type: string
+          description: The name of this connection.
+          example: My Connection
+        active:
+          type: boolean
+          example: true
+          description: 'Whether this connection is currently in use. Connections can
+
+            be deactivated to allow for them to be kept around and
+
+            re-activated at a later date.'
+        silent:
+          type: boolean
+          example: false
+          description: 'Defines if this service is currently running in silent mode. In silent
+
+            mode, a service''s decisions will be created but ignored when processing
+
+            a transaction, allowing for warm-up and comparison of new services
+
+            against the active service.'
+        definition:
+          $ref: '#/components/schemas/ConnectionDefinition'
+    ErrorDetail:
+      title: Error details
+      description: Additional detail about the part of a request body that caused an issue.
+      type: object
+      x-tags:
+      - Errors
+      properties:
+        location:
+          type: string
+          example: body
+          description: The location where the error caused an issue.
+          enum:
+          - query
+          - body
+          - path
+          - header
+        type:
+          type: string
+          example: value_error.missing
+          description: A unique identifier for the type of error that occurred.
+        pointer:
+          type: string
+          example: /payment_method/number
+          description: 'The exact item for which the validation did not succeed. This is a JSON
+
+            pointer for request bodies, while for query, path, and header parameters
+
+            it is the name of the parameter.'
+        message:
+          type: string
+          example: field required
+          description: A human readable message for this error detail.
   securitySchemes:
     bearerAuth:
       type: http

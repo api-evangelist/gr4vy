@@ -398,10 +398,162 @@ paths:
                 $ref: '#/components/schemas/Error409DuplicateRecord'
 components:
   schemas:
-    UserCurrentUpdate:
-      title: User (Update Current)
+    SetPasswordRequest:
+      title: Set Password (Create)
       type: object
-      description: A request to update the current user.
+      description: A request to set a password for a user.
+      x-tags:
+      - Users
+      properties:
+        reset_token:
+          type: string
+          description: Unique reset token valid for 7 days.
+          example: nXyWSHq2r5q_8F1_NXtppEStY7KbBHqwU9T8pdmOQa_LYJxpxxXcjOXL58xpHLy5gh1k6s0Myl3ygA6SnsxIjLXBKO3x1EZX3igq
+          minLength: 100
+          maxLength: 100
+        password:
+          type: string
+          description: The password the user to log in with.
+          example: this-is-n0t-a-secure-passw0rd
+    Error401Unauthorized:
+      title: Unauthorized Error
+      type: object
+      description: Unauthorized Error (HTTP 401).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`unauthorized`.'
+          example: unauthorized
+          enum:
+          - unauthorized
+        status:
+          type: integer
+          description: '`401`.'
+          example: 401
+          enum:
+          - 401
+        message:
+          type: string
+          description: No valid API authentication found.
+          example: No valid API authentication found
+          enum:
+          - No valid API authentication found
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    RolePermissions:
+      type: object
+      title: Role permissions
+      description: The permissions associated with a role.
+      x-tags:
+      - Roles
+      properties:
+        allow:
+          type: array
+          description: The list of permissions to allow for a role.
+          items:
+            type: string
+          example:
+          - buyers.read
+          - payment-methods.read
+          - transactions.read
+    UserRequest:
+      title: User (Create)
+      type: object
+      description: A request to create a user.
+      x-tags:
+      - Users
+      properties:
+        name:
+          type: string
+          description: The full name of the user which is used in the Gr4vy admin panel to give an user a human readable name.
+          example: John L.
+          minLength: 1
+          maxLength: 1000
+        email_address:
+          type: string
+          description: The email address for this user.
+          example: john@example.com
+          minLength: 1
+          maxLength: 200
+        role_ids:
+          type: array
+          minItems: 1
+          description: A list of role ids that will be assigned to the user being created. The creator must have `roles.write` or the role that is being assigned.
+          items:
+            type: string
+            format: uuid
+          example:
+          - 8d3fe99b-1422-42e6-bbb3-932d95ae5f79
+        merchant_account_ids:
+          type:
+          - array
+          - 'null'
+          description: A list of merchant account IDs that the user being created will be assigned to.
+          items:
+            type: string
+          example:
+          - default
+          - plantly-uk
+    Users:
+      title: User
+      type: object
+      x-tags:
+      - Users
+      x-internal: true
+      properties:
+        items:
+          type: array
+          description: A list of users.
+          items:
+            $ref: '#/components/schemas/User'
+        limit:
+          type: integer
+          description: 'The limit applied to request. This represents the number of items that are at
+
+            maximum returned by this request.'
+          format: int32
+          minimum: 1
+          maximum: 100
+          example: 1
+          default: 20
+        next_cursor:
+          type:
+          - string
+          - 'null'
+          description: 'The cursor that represents the next page of results. Use the `cursor` query
+
+            parameter to fetch this page of items.'
+          example: ZXhhbXBsZTE
+          minLength: 1
+          maxLength: 1000
+        previous_cursor:
+          type:
+          - string
+          - 'null'
+          description: 'The cursor that represents the next page of results. Use the `cursor` query
+
+            parameter to fetch this page of items.'
+          example: null
+          minLength: 1
+          maxLength: 1000
+    UserUpdate:
+      title: User (Update)
+      type: object
+      description: A request to update a user.
       x-tags:
       - Users
       properties:
@@ -411,6 +563,68 @@ components:
           example: John L.
           minLength: 1
           maxLength: 1000
+        role_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+          example:
+          - 46973e9d-88a7-44a6-abfe-be4ff0134ff4
+          description: The IDs of the roles to assign to the user. Sending an empty list will remove all roles assigned to the user.
+        merchant_account_ids:
+          type:
+          - array
+          - 'null'
+          description: A list of merchant account IDs that the user is assigned to.
+          items:
+            type: string
+          example:
+          - default
+          - plantly-uk
+    UserRole:
+      title: User Role
+      type: object
+      x-tags:
+      - Users
+      allOf:
+      - $ref: '#/components/schemas/Role'
+    Error409DuplicateRecord:
+      title: Duplicate Record Error
+      type: object
+      description: Duplicate Record Error (HTTP 409).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`duplicate_record`.'
+          example: duplicate_record
+          enum:
+          - duplicate_record
+        status:
+          type: integer
+          description: '`409`.'
+          example: 409
+          enum:
+          - 409
+        message:
+          type: string
+          description: Further details on the field that triggered the error.
+          example: A duplicate record exists with this external_identifier value
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
     Error404NotFound:
       title: Not Found Error
       type: object
@@ -449,10 +663,87 @@ components:
           example: []
           items:
             $ref: '#/components/schemas/ErrorDetail'
-    UserUpdate:
-      title: User (Update)
+    User:
+      title: User
       type: object
-      description: A request to update a user.
+      x-tags:
+      - Users
+      x-internal: true
+      properties:
+        type:
+          type: string
+          description: '`user`.'
+          example: user
+          enum:
+          - user
+        id:
+          type: string
+          example: fe26475d-ec3e-4884-9553-f7356683f7f9
+          description: The unique Gr4vy ID for this user.
+        name:
+          type: string
+          description: The full name of this user.
+          example: John Gravy
+        email_address:
+          type: string
+          description: The email address for this user.
+          example: john@example.com
+        has_valid_password:
+          type: boolean
+          description: The user has set a valid password.
+          example: true
+        category:
+          type: string
+          enum:
+          - sso
+          - email
+          description: The method by which this user authenticates.
+          example: email
+        is_staff:
+          type: boolean
+          example: false
+          description: Denotes whether this user is a Gr4vy staff member.
+        reset_token:
+          type:
+          - string
+          - 'null'
+          description: The token required when setting a password.
+          example: abc
+        reset_token_expires_at:
+          type:
+          - string
+          - 'null'
+          description: The expiration date for the reset token.
+          format: date-time
+          example: '2013-07-16T19:23:00.000+00:00'
+        last_logged_in_at:
+          type:
+          - string
+          - 'null'
+          description: The date that the user last logged in at.
+          format: date-time
+          example: '2013-07-16T19:23:00.000+00:00'
+        status:
+          type: string
+          description: The current status of this user.
+          example: active
+          enum:
+          - active
+          - pending
+        roles:
+          type: array
+          description: The roles this user has been assigned.
+          items:
+            $ref: '#/components/schemas/UserRole'
+        merchant_accounts:
+          type: array
+          description: A list of merchant accounts that the user is assigned to.
+          items:
+            $ref: '#/components/schemas/MerchantAccount'
+    UserCurrentUpdate:
+      title: User (Update Current)
+      type: object
+      description: A request to update the current user.
       x-tags:
       - Users
       properties:
@@ -462,51 +753,6 @@ components:
           example: John L.
           minLength: 1
           maxLength: 1000
-        role_ids:
-          type: array
-          items:
-            type: string
-            format: uuid
-          example:
-          - 46973e9d-88a7-44a6-abfe-be4ff0134ff4
-          description: The IDs of the roles to assign to the user. Sending an empty list will remove all roles assigned to the user.
-        merchant_account_ids:
-          type:
-          - array
-          - 'null'
-          description: A list of merchant account IDs that the user is assigned to.
-          items:
-            type: string
-          example:
-          - default
-          - plantly-uk
-    Role:
-      title: Role
-      type: object
-      x-tags:
-      - Roles
-      properties:
-        type:
-          type: string
-          description: The type of this resource. Always `role`.
-          example: role
-          enum:
-          - role
-        id:
-          type: string
-          format: uuid
-          description: The unique ID for this role.
-          example: 462ab2e2-3e29-44bd-b39f-e4d1293affbb
-        name:
-          type: string
-          description: The unique name for this role.
-          example: Support
-        description:
-          type: string
-          description: The description for this role.
-          example: Customer support agents
-        permissions:
-          $ref: '#/components/schemas/RolePermissions'
     MerchantAccount:
       title: Merchant Account
       type: object
@@ -761,178 +1007,6 @@ components:
           description: 'The maximum percentage allowed for over-capture, for example `25` to allow for an
 
             over-capture of 25% of the original transaction amount.'
-    User:
-      title: User
-      type: object
-      x-tags:
-      - Users
-      x-internal: true
-      properties:
-        type:
-          type: string
-          description: '`user`.'
-          example: user
-          enum:
-          - user
-        id:
-          type: string
-          example: fe26475d-ec3e-4884-9553-f7356683f7f9
-          description: The unique Gr4vy ID for this user.
-        name:
-          type: string
-          description: The full name of this user.
-          example: John Gravy
-        email_address:
-          type: string
-          description: The email address for this user.
-          example: john@example.com
-        has_valid_password:
-          type: boolean
-          description: The user has set a valid password.
-          example: true
-        category:
-          type: string
-          enum:
-          - sso
-          - email
-          description: The method by which this user authenticates.
-          example: email
-        is_staff:
-          type: boolean
-          example: false
-          description: Denotes whether this user is a Gr4vy staff member.
-        reset_token:
-          type:
-          - string
-          - 'null'
-          description: The token required when setting a password.
-          example: abc
-        reset_token_expires_at:
-          type:
-          - string
-          - 'null'
-          description: The expiration date for the reset token.
-          format: date-time
-          example: '2013-07-16T19:23:00.000+00:00'
-        last_logged_in_at:
-          type:
-          - string
-          - 'null'
-          description: The date that the user last logged in at.
-          format: date-time
-          example: '2013-07-16T19:23:00.000+00:00'
-        status:
-          type: string
-          description: The current status of this user.
-          example: active
-          enum:
-          - active
-          - pending
-        roles:
-          type: array
-          description: The roles this user has been assigned.
-          items:
-            $ref: '#/components/schemas/UserRole'
-        merchant_accounts:
-          type: array
-          description: A list of merchant accounts that the user is assigned to.
-          items:
-            $ref: '#/components/schemas/MerchantAccount'
-    SetPasswordRequest:
-      title: Set Password (Create)
-      type: object
-      description: A request to set a password for a user.
-      x-tags:
-      - Users
-      properties:
-        reset_token:
-          type: string
-          description: Unique reset token valid for 7 days.
-          example: nXyWSHq2r5q_8F1_NXtppEStY7KbBHqwU9T8pdmOQa_LYJxpxxXcjOXL58xpHLy5gh1k6s0Myl3ygA6SnsxIjLXBKO3x1EZX3igq
-          minLength: 100
-          maxLength: 100
-        password:
-          type: string
-          description: The password the user to log in with.
-          example: this-is-n0t-a-secure-passw0rd
-    UserRole:
-      title: User Role
-      type: object
-      x-tags:
-      - Users
-      allOf:
-      - $ref: '#/components/schemas/Role'
-    Error401Unauthorized:
-      title: Unauthorized Error
-      type: object
-      description: Unauthorized Error (HTTP 401).
-      x-tags:
-      - Errors
-      properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: '`unauthorized`.'
-          example: unauthorized
-          enum:
-          - unauthorized
-        status:
-          type: integer
-          description: '`401`.'
-          example: 401
-          enum:
-          - 401
-        message:
-          type: string
-          description: No valid API authentication found.
-          example: No valid API authentication found
-          enum:
-          - No valid API authentication found
-        details:
-          type: array
-          description: 'A list of detail objects that further clarify the reason for the error.
-
-            Not every error supports more detail.'
-          example: []
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-    ErrorDetail:
-      title: Error details
-      description: Additional detail about the part of a request body that caused an issue.
-      type: object
-      x-tags:
-      - Errors
-      properties:
-        location:
-          type: string
-          example: body
-          description: The location where the error caused an issue.
-          enum:
-          - query
-          - body
-          - path
-          - header
-        type:
-          type: string
-          example: value_error.missing
-          description: A unique identifier for the type of error that occurred.
-        pointer:
-          type: string
-          example: /payment_method/number
-          description: 'The exact item for which the validation did not succeed. This is a JSON
-
-            pointer for request bodies, while for query, path, and header parameters
-
-            it is the name of the parameter.'
-        message:
-          type: string
-          example: field required
-          description: A human readable message for this error detail.
     ResetPasswordRequest:
       title: Reset Password (Create)
       type: object
@@ -944,43 +1018,33 @@ components:
           type: string
           description: The email address of the user account to reset.
           example: john@example.com
-    Error409DuplicateRecord:
-      title: Duplicate Record Error
+    Role:
+      title: Role
       type: object
-      description: Duplicate Record Error (HTTP 409).
       x-tags:
-      - Errors
+      - Roles
       properties:
         type:
           type: string
-          description: '`error`.'
+          description: The type of this resource. Always `role`.
+          example: role
           enum:
-          - error
-          example: error
-        code:
+          - role
+        id:
           type: string
-          description: '`duplicate_record`.'
-          example: duplicate_record
-          enum:
-          - duplicate_record
-        status:
-          type: integer
-          description: '`409`.'
-          example: 409
-          enum:
-          - 409
-        message:
+          format: uuid
+          description: The unique ID for this role.
+          example: 462ab2e2-3e29-44bd-b39f-e4d1293affbb
+        name:
           type: string
-          description: Further details on the field that triggered the error.
-          example: A duplicate record exists with this external_identifier value
-        details:
-          type: array
-          description: 'A list of detail objects that further clarify the reason for the error.
-
-            Not every error supports more detail.'
-          example: []
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
+          description: The unique name for this role.
+          example: Support
+        description:
+          type: string
+          description: The description for this role.
+          example: Customer support agents
+        permissions:
+          $ref: '#/components/schemas/RolePermissions'
     Error400BadRequest:
       title: Bad Request
       type: object
@@ -1017,102 +1081,38 @@ components:
           description: A list of detail objects that further clarify the reason for the error.
           items:
             $ref: '#/components/schemas/ErrorDetail'
-    RolePermissions:
+    ErrorDetail:
+      title: Error details
+      description: Additional detail about the part of a request body that caused an issue.
       type: object
-      title: Role permissions
-      description: The permissions associated with a role.
       x-tags:
-      - Roles
+      - Errors
       properties:
-        allow:
-          type: array
-          description: The list of permissions to allow for a role.
-          items:
-            type: string
-          example:
-          - buyers.read
-          - payment-methods.read
-          - transactions.read
-    UserRequest:
-      title: User (Create)
-      type: object
-      description: A request to create a user.
-      x-tags:
-      - Users
-      properties:
-        name:
+        location:
           type: string
-          description: The full name of the user which is used in the Gr4vy admin panel to give an user a human readable name.
-          example: John L.
-          minLength: 1
-          maxLength: 1000
-        email_address:
+          example: body
+          description: The location where the error caused an issue.
+          enum:
+          - query
+          - body
+          - path
+          - header
+        type:
           type: string
-          description: The email address for this user.
-          example: john@example.com
-          minLength: 1
-          maxLength: 200
-        role_ids:
-          type: array
-          minItems: 1
-          description: A list of role ids that will be assigned to the user being created. The creator must have `roles.write` or the role that is being assigned.
-          items:
-            type: string
-            format: uuid
-          example:
-          - 8d3fe99b-1422-42e6-bbb3-932d95ae5f79
-        merchant_account_ids:
-          type:
-          - array
-          - 'null'
-          description: A list of merchant account IDs that the user being created will be assigned to.
-          items:
-            type: string
-          example:
-          - default
-          - plantly-uk
-    Users:
-      title: User
-      type: object
-      x-tags:
-      - Users
-      x-internal: true
-      properties:
-        items:
-          type: array
-          description: A list of users.
-          items:
-            $ref: '#/components/schemas/User'
-        limit:
-          type: integer
-          description: 'The limit applied to request. This represents the number of items that are at
+          example: value_error.missing
+          description: A unique identifier for the type of error that occurred.
+        pointer:
+          type: string
+          example: /payment_method/number
+          description: 'The exact item for which the validation did not succeed. This is a JSON
 
-            maximum returned by this request.'
-          format: int32
-          minimum: 1
-          maximum: 100
-          example: 1
-          default: 20
-        next_cursor:
-          type:
-          - string
-          - 'null'
-          description: 'The cursor that represents the next page of results. Use the `cursor` query
+            pointer for request bodies, while for query, path, and header parameters
 
-            parameter to fetch this page of items.'
-          example: ZXhhbXBsZTE
-          minLength: 1
-          maxLength: 1000
-        previous_cursor:
-          type:
-          - string
-          - 'null'
-          description: 'The cursor that represents the next page of results. Use the `cursor` query
-
-            parameter to fetch this page of items.'
-          example: null
-          minLength: 1
-          maxLength: 1000
+            it is the name of the parameter.'
+        message:
+          type: string
+          example: field required
+          description: A human readable message for this error detail.
   securitySchemes:
     bearerAuth:
       type: http

@@ -109,64 +109,6 @@ paths:
           description: The subdomain for your Gr4vy instance.
 components:
   schemas:
-    AccountUpdaterJobCreate:
-      title: Account Updater Job (Create)
-      type: object
-      description: A request to create an Account Updater job.
-      x-tags:
-      - Account Updater
-      required:
-      - payment_method_ids
-      properties:
-        payment_method_ids:
-          type: array
-          description: 'A list of unique payment method identifiers used to create the Account Updater job.
-
-            A payment method will be considered only if it qualifies for an inquiry.'
-          minItems: 1
-          maxItems: 100
-          items:
-            type: string
-            format: uuid
-          example:
-          - 497f6eca-6276-4993-bfeb-53cbbbba6f08
-    AccountUpdaterJob:
-      title: Account Updater Job
-      type: object
-      description: An Account Updater job.
-      x-tags:
-      - Account Updater
-      properties:
-        type:
-          type: string
-          description: The type of this resource. Is always `account-updater-job`.
-          example: account-updater-job
-          enum:
-          - account-updater-job
-        id:
-          type: string
-          description: The unique identifier for this Account Updater job.
-          format: uuid
-          example: fe26475d-ec3e-4884-9553-f7356683f7f9
-        merchant_account_id:
-          type: string
-          description: The unique ID for a merchant account.
-          example: default
-        created_at:
-          type: string
-          description: The date and time when this Account Updater job was created.
-          format: date-time
-          example: '2023-07-26T19:23:00.000+00:00'
-        updated_at:
-          type: string
-          description: The date and time when this Account Updater job was last updated.
-          format: date-time
-          example: '2023-07-26T19:23:00.000+00:00'
-        inquiries:
-          type: array
-          description: A list of inquiries associated with this Account Updater job.
-          items:
-            $ref: '#/components/schemas/AccountUpdaterInquirySummary'
     Error401Unauthorized:
       title: Unauthorized Error
       type: object
@@ -206,61 +148,64 @@ components:
           example: []
           items:
             $ref: '#/components/schemas/ErrorDetail'
-    ErrorDetail:
-      title: Error details
-      description: Additional detail about the part of a request body that caused an issue.
+    AccountUpdaterJob:
+      title: Account Updater Job
       type: object
-      x-tags:
-      - Errors
-      properties:
-        location:
-          type: string
-          example: body
-          description: The location where the error caused an issue.
-          enum:
-          - query
-          - body
-          - path
-          - header
-        type:
-          type: string
-          example: value_error.missing
-          description: A unique identifier for the type of error that occurred.
-        pointer:
-          type: string
-          example: /payment_method/number
-          description: 'The exact item for which the validation did not succeed. This is a JSON
-
-            pointer for request bodies, while for query, path, and header parameters
-
-            it is the name of the parameter.'
-        message:
-          type: string
-          example: field required
-          description: A human readable message for this error detail.
-    AccountUpdaterInquirySummary:
-      title: Account Updater Inquiry Summary
-      type: object
-      description: An Account Updater inquiry summary.
+      description: An Account Updater job.
       x-tags:
       - Account Updater
       properties:
         type:
           type: string
-          description: The type of this resource. Is always `account-updater-inquiry`.
-          example: account-updater-inquiry
+          description: The type of this resource. Is always `account-updater-job`.
+          example: account-updater-job
           enum:
-          - account-updater-inquiry
+          - account-updater-job
         id:
           type: string
-          description: The unique identifier for this Account Updater inquiry.
+          description: The unique identifier for this Account Updater job.
           format: uuid
-          example: d038f8bf-f1fd-45b3-9948-e1fbb58e8d62
-        payment_method_id:
+          example: fe26475d-ec3e-4884-9553-f7356683f7f9
+        merchant_account_id:
           type: string
-          description: The ID of the payment method associated with this Account Updater inquiry.
-          format: uuid
-          example: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+          description: The unique ID for a merchant account.
+          example: default
+        created_at:
+          type: string
+          description: The date and time when this Account Updater job was created.
+          format: date-time
+          example: '2023-07-26T19:23:00.000+00:00'
+        updated_at:
+          type: string
+          description: The date and time when this Account Updater job was last updated.
+          format: date-time
+          example: '2023-07-26T19:23:00.000+00:00'
+        inquiries:
+          type: array
+          description: A list of inquiries associated with this Account Updater job.
+          items:
+            $ref: '#/components/schemas/AccountUpdaterInquirySummary'
+    AccountUpdaterJobCreate:
+      title: Account Updater Job (Create)
+      type: object
+      description: A request to create an Account Updater job.
+      x-tags:
+      - Account Updater
+      required:
+      - payment_method_ids
+      properties:
+        payment_method_ids:
+          type: array
+          description: 'A list of unique payment method identifiers used to create the Account Updater job.
+
+            A payment method will be considered only if it qualifies for an inquiry.'
+          minItems: 1
+          maxItems: 100
+          items:
+            type: string
+            format: uuid
+          example:
+          - 497f6eca-6276-4993-bfeb-53cbbbba6f08
     Error400BadRequest:
       title: Bad Request
       type: object
@@ -297,7 +242,62 @@ components:
           description: A list of detail objects that further clarify the reason for the error.
           items:
             $ref: '#/components/schemas/ErrorDetail'
-    Error429:
+    AccountUpdaterInquirySummary:
+      title: Account Updater Inquiry Summary
+      type: object
+      description: An Account Updater inquiry summary.
+      x-tags:
+      - Account Updater
+      properties:
+        type:
+          type: string
+          description: The type of this resource. Is always `account-updater-inquiry`.
+          example: account-updater-inquiry
+          enum:
+          - account-updater-inquiry
+        id:
+          type: string
+          description: The unique identifier for this Account Updater inquiry.
+          format: uuid
+          example: d038f8bf-f1fd-45b3-9948-e1fbb58e8d62
+        payment_method_id:
+          type: string
+          description: The ID of the payment method associated with this Account Updater inquiry.
+          format: uuid
+          example: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+    ErrorDetail:
+      title: Error details
+      description: Additional detail about the part of a request body that caused an issue.
+      type: object
+      x-tags:
+      - Errors
+      properties:
+        location:
+          type: string
+          example: body
+          description: The location where the error caused an issue.
+          enum:
+          - query
+          - body
+          - path
+          - header
+        type:
+          type: string
+          example: value_error.missing
+          description: A unique identifier for the type of error that occurred.
+        pointer:
+          type: string
+          example: /payment_method/number
+          description: 'The exact item for which the validation did not succeed. This is a JSON
+
+            pointer for request bodies, while for query, path, and header parameters
+
+            it is the name of the parameter.'
+        message:
+          type: string
+          example: field required
+          description: A human readable message for this error detail.
+    Error502:
       properties:
         type:
           type: string
@@ -310,17 +310,99 @@ components:
         code:
           type: string
           title: Code
-          description: Always `too_many_requests`
-          default: too_many_requests
+          description: Always `bad_gateway`
+          default: bad_gateway
           examples:
-          - too_many_requests
+          - bad_gateway
         status:
           type: integer
           title: Status
-          description: Always `429`.
-          default: 429
+          description: Always `502`.
+          default: 502
           examples:
-          - 429
+          - 502
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error502
+    Error500:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `server_error`
+          default: server_error
+          examples:
+          - server_error
+        status:
+          type: integer
+          title: Status
+          description: Always `500`.
+          default: 500
+          examples:
+          - 500
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error500
+    Error409:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `duplicate_record`
+          default: duplicate_record
+          examples:
+          - duplicate_record
+        status:
+          type: integer
+          title: Status
+          description: Always `409`.
+          default: 409
+          examples:
+          - 409
         message:
           type: string
           title: Message
@@ -335,9 +417,26 @@ components:
           title: Details
           description: A list of details that further ellaborate on the error.
           default: []
+        resource_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Resource Id
+          description: The ID of the conflicting resource.
+          examples:
+          - cdc70639-cb9c-4222-a73f-b8ce39f7821b
       additionalProperties: false
       type: object
-      title: Error429
+      title: Error409
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     Error425:
       properties:
         type:
@@ -379,6 +478,170 @@ components:
       additionalProperties: false
       type: object
       title: Error425
+    Error401:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `unauthorized`
+          default: unauthorized
+          examples:
+          - unauthorized
+        status:
+          type: integer
+          title: Status
+          description: Always `401`.
+          default: 401
+          examples:
+          - 401
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: No valid API authentication found
+          examples:
+          - No valid API authentication found
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error401
+    Error405:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `method_not_allowed`
+          default: method_not_allowed
+          examples:
+          - method_not_allowed
+        status:
+          type: integer
+          title: Status
+          description: Always `405`.
+          default: 405
+          examples:
+          - 405
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Method Not Allowed
+          examples:
+          - Method Not Allowed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error405
+    Error404:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `not_found`
+          default: not_found
+          examples:
+          - not_found
+        status:
+          type: integer
+          title: Status
+          description: Always `404`.
+          default: 404
+          examples:
+          - 404
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: The resource could not be found
+          examples:
+          - The resource could not be found
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error404
+    Error400:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `bad_request`
+          default: bad_request
+          examples:
+          - bad_request
+        status:
+          type: integer
+          title: Status
+          description: Always `400`.
+          default: 400
+          examples:
+          - 400
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error400
     AccountUpdaterJob_2:
       properties:
         type:
@@ -431,7 +694,7 @@ components:
       - created_at
       - updated_at
       title: AccountUpdaterJob
-    Error401:
+    Error429:
       properties:
         type:
           type: string
@@ -444,24 +707,24 @@ components:
         code:
           type: string
           title: Code
-          description: Always `unauthorized`
-          default: unauthorized
+          description: Always `too_many_requests`
+          default: too_many_requests
           examples:
-          - unauthorized
+          - too_many_requests
         status:
           type: integer
           title: Status
-          description: Always `401`.
-          default: 401
+          description: Always `429`.
+          default: 429
           examples:
-          - 401
+          - 429
         message:
           type: string
           title: Message
           description: A human readable message that provides more context to the error.
-          default: No valid API authentication found
+          default: Generic error
           examples:
-          - No valid API authentication found
+          - Request failed validation
         details:
           items:
             $ref: '#/components/schemas/ErrorDetail_2'
@@ -471,8 +734,17 @@ components:
           default: []
       additionalProperties: false
       type: object
-      title: Error401
-    Error404:
+      title: Error429
+    ErrorLocation:
+      type: string
+      enum:
+      - query
+      - body
+      - path
+      - header
+      - unknown
+      title: ErrorLocation
+    Error504:
       properties:
         type:
           type: string
@@ -485,58 +757,14 @@ components:
         code:
           type: string
           title: Code
-          description: Always `not_found`
-          default: not_found
+          description: Always `gateway_timeout`
+          default: gateway_timeout
           examples:
-          - not_found
+          - gateway_timeout
         status:
           type: integer
           title: Status
-          description: Always `404`.
-          default: 404
-          examples:
-          - 404
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: The resource could not be found
-          examples:
-          - The resource could not be found
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error404
-    Error500:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `server_error`
-          default: server_error
-          examples:
-          - server_error
-        status:
-          type: integer
-          title: Status
-          description: Always `500`.
-          default: 500
-          examples:
-          - 500
+          default: 504
         message:
           type: string
           title: Message
@@ -553,126 +781,7 @@ components:
           default: []
       additionalProperties: false
       type: object
-      title: Error500
-    AccountUpdaterJobCreate_2:
-      properties:
-        payment_method_ids:
-          items:
-            type: string
-            format: uuid
-          type: array
-          maxItems: 100
-          minItems: 1
-          uniqueItems: true
-          title: Payment Method Ids
-          description: A list of payment method IDs to request an update for.
-          examples:
-          - - ef9496d8-53a5-4aad-8ca2-00eb68334389
-            - f29e886e-93cc-4714-b4a3-12b7a718e595
-      additionalProperties: false
-      type: object
-      required:
-      - payment_method_ids
-      title: AccountUpdaterJobCreate
-    Error400:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `bad_request`
-          default: bad_request
-          examples:
-          - bad_request
-        status:
-          type: integer
-          title: Status
-          description: Always `400`.
-          default: 400
-          examples:
-          - 400
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error400
-    ErrorLocation:
-      type: string
-      enum:
-      - query
-      - body
-      - path
-      - header
-      - unknown
-      title: ErrorLocation
-    Error409:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `duplicate_record`
-          default: duplicate_record
-          examples:
-          - duplicate_record
-        status:
-          type: integer
-          title: Status
-          description: Always `409`.
-          default: 409
-          examples:
-          - 409
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-        resource_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Resource Id
-          description: The ID of the conflicting resource.
-          examples:
-          - cdc70639-cb9c-4222-a73f-b8ce39f7821b
-      additionalProperties: false
-      type: object
-      title: Error409
+      title: Error504
     ValidationError:
       properties:
         loc:
@@ -699,6 +808,26 @@ components:
       - msg
       - type
       title: ValidationError
+    AccountUpdaterJobCreate_2:
+      properties:
+        payment_method_ids:
+          items:
+            type: string
+            format: uuid
+          type: array
+          maxItems: 100
+          minItems: 1
+          uniqueItems: true
+          title: Payment Method Ids
+          description: A list of payment method IDs to request an update for.
+          examples:
+          - - ef9496d8-53a5-4aad-8ca2-00eb68334389
+            - f29e886e-93cc-4714-b4a3-12b7a718e595
+      additionalProperties: false
+      type: object
+      required:
+      - payment_method_ids
+      title: AccountUpdaterJobCreate
     Error403:
       properties:
         type:
@@ -740,6 +869,36 @@ components:
       additionalProperties: false
       type: object
       title: Error403
+    AccountUpdaterInquirySummary_2:
+      properties:
+        type:
+          type: string
+          const: account-updater-inquiry
+          title: Type
+          description: Always `account-updater-inquiry`
+          default: account-updater-inquiry
+          examples:
+          - account-updater-inquiry
+        id:
+          type: string
+          format: uuid
+          title: Id
+          description: The ID for the account updater inquiry.
+          examples:
+          - aadb3ea8-5ad6-408b-8c3d-82da77c8d619
+        payment_method_id:
+          type: string
+          format: uuid
+          title: Payment Method Id
+          description: The ID of the payment method
+          examples:
+          - ef9496d8-53a5-4aad-8ca2-00eb68334389
+      additionalProperties: false
+      type: object
+      required:
+      - id
+      - payment_method_id
+      title: AccountUpdaterInquirySummary
     ErrorDetail_2:
       properties:
         location:
@@ -776,165 +935,6 @@ components:
       - message
       - type
       title: ErrorDetail
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    AccountUpdaterInquirySummary_2:
-      properties:
-        type:
-          type: string
-          const: account-updater-inquiry
-          title: Type
-          description: Always `account-updater-inquiry`
-          default: account-updater-inquiry
-          examples:
-          - account-updater-inquiry
-        id:
-          type: string
-          format: uuid
-          title: Id
-          description: The ID for the account updater inquiry.
-          examples:
-          - aadb3ea8-5ad6-408b-8c3d-82da77c8d619
-        payment_method_id:
-          type: string
-          format: uuid
-          title: Payment Method Id
-          description: The ID of the payment method
-          examples:
-          - ef9496d8-53a5-4aad-8ca2-00eb68334389
-      additionalProperties: false
-      type: object
-      required:
-      - id
-      - payment_method_id
-      title: AccountUpdaterInquirySummary
-    Error502:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `bad_gateway`
-          default: bad_gateway
-          examples:
-          - bad_gateway
-        status:
-          type: integer
-          title: Status
-          description: Always `502`.
-          default: 502
-          examples:
-          - 502
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Request could not be processed
-          examples:
-          - Request could not be processed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error502
-    Error504:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `gateway_timeout`
-          default: gateway_timeout
-          examples:
-          - gateway_timeout
-        status:
-          type: integer
-          title: Status
-          default: 504
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Request could not be processed
-          examples:
-          - Request could not be processed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error504
-    Error405:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `method_not_allowed`
-          default: method_not_allowed
-          examples:
-          - method_not_allowed
-        status:
-          type: integer
-          title: Status
-          description: Always `405`.
-          default: 405
-          examples:
-          - 405
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Method Not Allowed
-          examples:
-          - Method Not Allowed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error405
   securitySchemes:
     bearerAuth:
       type: http

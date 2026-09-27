@@ -497,47 +497,37 @@ paths:
       x-speakeasy-ignore: true
 components:
   schemas:
-    Error500:
+    MetricsExplorerPresetCreate:
       properties:
-        type:
+        display_name:
           type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
+          maxLength: 255
+          minLength: 1
+          title: Display Name
+          description: The display name for the preset.
           examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `server_error`
-          default: server_error
+          - UK transactions - Last 7 Days
+        metric:
+          $ref: '#/components/schemas/MetricsExplorerMetric'
+          description: The metric to calculate.
           examples:
-          - server_error
-        status:
-          type: integer
-          title: Status
-          description: Always `500`.
-          default: 500
+          - auth_rate
+          - transactions
+          - volume
+        filters:
+          $ref: '#/components/schemas/MetricsExplorerFiltersQueryParams'
+          description: The filters to apply on data.
           examples:
-          - 500
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Request could not be processed
-          examples:
-          - Request could not be processed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
+          - country:
+            - GB
+            datetime_range: P7D/hour_start
       additionalProperties: false
       type: object
-      title: Error500
+      required:
+      - display_name
+      - metric
+      - filters
+      title: MetricsExplorerPresetCreate
     Error409:
       properties:
         type:
@@ -587,247 +577,21 @@ components:
       additionalProperties: false
       type: object
       title: Error409
-    ErrorDetail:
+    MetricsExplorerPresetUpdate:
       properties:
-        location:
-          $ref: '#/components/schemas/ErrorLocation'
-          description: The part of the request where the property can be found that caused the error.
-          examples:
-          - body
-        pointer:
-          anyOf:
-          - type: string
-            format: json-pointer
-          - type: string
-          title: Pointer
-          description: A JSON pointer for the particular property that caused the error.
-          examples:
-          - /currency
-        message:
+        display_name:
           type: string
-          title: Message
-          description: A human-readdable explanation of the error.
+          maxLength: 255
+          minLength: 1
+          title: Display Name
+          description: The new display name to set on the preset.
           examples:
-          - 'Unknown ISO 4217 currency code: USX'
-        type:
-          type: string
-          title: Type
-          description: The type of error that was raised for this property.
-          examples:
-          - value_error
+          - UK card transactions - Last 7 Days
       additionalProperties: false
       type: object
       required:
-      - location
-      - pointer
-      - message
-      - type
-      title: ErrorDetail
-    Error502:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `bad_gateway`
-          default: bad_gateway
-          examples:
-          - bad_gateway
-        status:
-          type: integer
-          title: Status
-          description: Always `502`.
-          default: 502
-          examples:
-          - 502
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Request could not be processed
-          examples:
-          - Request could not be processed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error502
-    Error405:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `method_not_allowed`
-          default: method_not_allowed
-          examples:
-          - method_not_allowed
-        status:
-          type: integer
-          title: Status
-          description: Always `405`.
-          default: 405
-          examples:
-          - 405
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Method Not Allowed
-          examples:
-          - Method Not Allowed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error405
-    Error429:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `too_many_requests`
-          default: too_many_requests
-          examples:
-          - too_many_requests
-        status:
-          type: integer
-          title: Status
-          description: Always `429`.
-          default: 429
-          examples:
-          - 429
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error429
-    Error425:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `too_early`
-          default: too_early
-          examples:
-          - too_early
-        status:
-          type: integer
-          title: Status
-          description: Always `425`.
-          default: 425
-          examples:
-          - 425
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error425
-    Error401:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `unauthorized`
-          default: unauthorized
-          examples:
-          - unauthorized
-        status:
-          type: integer
-          title: Status
-          description: Always `401`.
-          default: 401
-          examples:
-          - 401
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: No valid API authentication found
-          examples:
-          - No valid API authentication found
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error401
+      - display_name
+      title: MetricsExplorerPresetUpdate
     Error400:
       properties:
         type:
@@ -869,125 +633,58 @@ components:
       additionalProperties: false
       type: object
       title: Error400
-    MetricsExplorerPresetCreate:
+    ErrorDetail:
       properties:
-        display_name:
+        location:
+          $ref: '#/components/schemas/ErrorLocation'
+          description: The part of the request where the property can be found that caused the error.
+          examples:
+          - body
+        pointer:
+          anyOf:
+          - type: string
+            format: json-pointer
+          - type: string
+          title: Pointer
+          description: A JSON pointer for the particular property that caused the error.
+          examples:
+          - /currency
+        message:
           type: string
-          maxLength: 255
-          minLength: 1
-          title: Display Name
-          description: The display name for the preset.
+          title: Message
+          description: A human-readdable explanation of the error.
           examples:
-          - UK transactions - Last 7 Days
-        metric:
-          $ref: '#/components/schemas/MetricsExplorerMetric'
-          description: The metric to calculate.
-          examples:
-          - auth_rate
-          - transactions
-          - volume
-        filters:
-          $ref: '#/components/schemas/MetricsExplorerFiltersQueryParams'
-          description: The filters to apply on data.
-          examples:
-          - country:
-            - GB
-            datetime_range: P7D/hour_start
-      additionalProperties: false
-      type: object
-      required:
-      - display_name
-      - metric
-      - filters
-      title: MetricsExplorerPresetCreate
-    MetricsExplorerPreset:
-      properties:
+          - 'Unknown ISO 4217 currency code: USX'
         type:
           type: string
-          const: metrics-explorer.preset
           title: Type
-          description: Always `metrics-explorer.preset`.
-          default: metrics-explorer.preset
+          description: The type of error that was raised for this property.
           examples:
-          - metrics-explorer.preset
-        id:
-          type: string
-          format: uuid
-          title: Id
-          description: The ID of the preset.
-          examples:
-          - 5d8444cb-bcc2-4ebb-b563-9c9e486f8876
-        merchant_account_id:
-          type: string
-          title: Merchant Account Id
-          description: The ID of the merchant account associated with the preset.
-          examples:
-          - default
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-          description: The date and time when the preset was created.
-          examples:
-          - '2025-03-25T00:00:00Z'
-        updated_at:
-          type: string
-          format: date-time
-          title: Updated At
-          description: The date and time when the preset was last updated.
-          examples:
-          - '2025-03-25T00:00:00Z'
-        display_name:
-          type: string
-          title: Display Name
-          description: The display name for the preset.
-          examples:
-          - Stripe (US) - Last 7 Days
-        source:
-          $ref: '#/components/schemas/MetricsExplorerSource'
-          description: The source of the data.
-          examples:
-          - authentication
-        metric:
-          $ref: '#/components/schemas/MetricsExplorerMetric'
-          description: The metric to calculate.
-          examples:
-          - auth_rate
-          - transactions
-          - volume
-        filters:
-          additionalProperties:
-            anyOf:
-            - type: string
-            - items:
-                type: string
-              type: array
-          type: object
-          title: Filters
-          description: The filters to apply on data.
-          examples:
-          - authentication_outcome:
-            - abandoned
-            datetime_range: P7D/hour_start
+          - value_error
       additionalProperties: false
       type: object
       required:
-      - id
-      - merchant_account_id
-      - created_at
-      - updated_at
-      - display_name
-      - source
-      - metric
-      - filters
-      title: MetricsExplorerPreset
-    MetricsExplorerMetric:
+      - location
+      - pointer
+      - message
+      - type
+      title: ErrorDetail
+    MetricsExplorerSource:
       type: string
       enum:
-      - volume
-      - transactions
-      - auth_rate
-      title: MetricsExplorerMetric
+      - authentication
+      - authorization
+      - monitoring
+      title: MetricsExplorerSource
+    ErrorLocation:
+      type: string
+      enum:
+      - query
+      - body
+      - path
+      - header
+      - unknown
+      title: ErrorLocation
     Error504:
       properties:
         type:
@@ -1026,145 +723,6 @@ components:
       additionalProperties: false
       type: object
       title: Error504
-    MetricsExplorerSource:
-      type: string
-      enum:
-      - authentication
-      - authorization
-      - monitoring
-      title: MetricsExplorerSource
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    MetricsExplorerPresetUpdate:
-      properties:
-        display_name:
-          type: string
-          maxLength: 255
-          minLength: 1
-          title: Display Name
-          description: The new display name to set on the preset.
-          examples:
-          - UK card transactions - Last 7 Days
-      additionalProperties: false
-      type: object
-      required:
-      - display_name
-      title: MetricsExplorerPresetUpdate
-    Error404:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `not_found`
-          default: not_found
-          examples:
-          - not_found
-        status:
-          type: integer
-          title: Status
-          description: Always `404`.
-          default: 404
-          examples:
-          - 404
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: The resource could not be found
-          examples:
-          - The resource could not be found
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error404
-    ErrorLocation:
-      type: string
-      enum:
-      - query
-      - body
-      - path
-      - header
-      - unknown
-      title: ErrorLocation
-    Error403:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `forbidden`
-          default: forbidden
-          examples:
-          - forbidden
-        status:
-          type: integer
-          title: Status
-          description: Always `403`.
-          default: 403
-          examples:
-          - 403
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error403
     MetricsExplorerFiltersQueryParams:
       properties:
         datetime_range:
@@ -1434,6 +992,258 @@ components:
       required:
       - datetime_range
       title: MetricsExplorerFiltersQueryParams
+    MetricsExplorerMetric:
+      type: string
+      enum:
+      - volume
+      - transactions
+      - auth_rate
+      title: MetricsExplorerMetric
+    Error502:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `bad_gateway`
+          default: bad_gateway
+          examples:
+          - bad_gateway
+        status:
+          type: integer
+          title: Status
+          description: Always `502`.
+          default: 502
+          examples:
+          - 502
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error502
+    Error500:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `server_error`
+          default: server_error
+          examples:
+          - server_error
+        status:
+          type: integer
+          title: Status
+          description: Always `500`.
+          default: 500
+          examples:
+          - 500
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error500
+    Error401:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `unauthorized`
+          default: unauthorized
+          examples:
+          - unauthorized
+        status:
+          type: integer
+          title: Status
+          description: Always `401`.
+          default: 401
+          examples:
+          - 401
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: No valid API authentication found
+          examples:
+          - No valid API authentication found
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error401
+    Error404:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `not_found`
+          default: not_found
+          examples:
+          - not_found
+        status:
+          type: integer
+          title: Status
+          description: Always `404`.
+          default: 404
+          examples:
+          - 404
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: The resource could not be found
+          examples:
+          - The resource could not be found
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error404
+    MetricsExplorerPreset:
+      properties:
+        type:
+          type: string
+          const: metrics-explorer.preset
+          title: Type
+          description: Always `metrics-explorer.preset`.
+          default: metrics-explorer.preset
+          examples:
+          - metrics-explorer.preset
+        id:
+          type: string
+          format: uuid
+          title: Id
+          description: The ID of the preset.
+          examples:
+          - 5d8444cb-bcc2-4ebb-b563-9c9e486f8876
+        merchant_account_id:
+          type: string
+          title: Merchant Account Id
+          description: The ID of the merchant account associated with the preset.
+          examples:
+          - default
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+          description: The date and time when the preset was created.
+          examples:
+          - '2025-03-25T00:00:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+          description: The date and time when the preset was last updated.
+          examples:
+          - '2025-03-25T00:00:00Z'
+        display_name:
+          type: string
+          title: Display Name
+          description: The display name for the preset.
+          examples:
+          - Stripe (US) - Last 7 Days
+        source:
+          $ref: '#/components/schemas/MetricsExplorerSource'
+          description: The source of the data.
+          examples:
+          - authentication
+        metric:
+          $ref: '#/components/schemas/MetricsExplorerMetric'
+          description: The metric to calculate.
+          examples:
+          - auth_rate
+          - transactions
+          - volume
+        filters:
+          additionalProperties:
+            anyOf:
+            - type: string
+            - items:
+                type: string
+              type: array
+          type: object
+          title: Filters
+          description: The filters to apply on data.
+          examples:
+          - authentication_outcome:
+            - abandoned
+            datetime_range: P7D/hour_start
+      additionalProperties: false
+      type: object
+      required:
+      - id
+      - merchant_account_id
+      - created_at
+      - updated_at
+      - display_name
+      - source
+      - metric
+      - filters
+      title: MetricsExplorerPreset
     HTTPValidationError:
       properties:
         detail:
@@ -1443,6 +1253,196 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
+    Error425:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `too_early`
+          default: too_early
+          examples:
+          - too_early
+        status:
+          type: integer
+          title: Status
+          description: Always `425`.
+          default: 425
+          examples:
+          - 425
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error425
+    Error405:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `method_not_allowed`
+          default: method_not_allowed
+          examples:
+          - method_not_allowed
+        status:
+          type: integer
+          title: Status
+          description: Always `405`.
+          default: 405
+          examples:
+          - 405
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Method Not Allowed
+          examples:
+          - Method Not Allowed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error405
+    Error429:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `too_many_requests`
+          default: too_many_requests
+          examples:
+          - too_many_requests
+        status:
+          type: integer
+          title: Status
+          description: Always `429`.
+          default: 429
+          examples:
+          - 429
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error429
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    Error403:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `forbidden`
+          default: forbidden
+          examples:
+          - forbidden
+        status:
+          type: integer
+          title: Status
+          description: Always `403`.
+          default: 403
+          examples:
+          - 403
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error403
   securitySchemes:
     OAuth2PasswordBearer:
       type: oauth2

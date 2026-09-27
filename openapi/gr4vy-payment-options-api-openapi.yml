@@ -174,343 +174,6 @@ paths:
           description: The subdomain for your Gr4vy instance.
 components:
   schemas:
-    PaymentOption:
-      title: Payment option
-      type: object
-      description: An available payment option for a locale.
-      x-tags:
-      - Payment Option
-      properties:
-        type:
-          type: string
-          description: '`payment-option`.'
-          example: payment-option
-          enum:
-          - payment-option
-        method:
-          description: The type of payment method that is available.
-          type: string
-          example: card
-          enum:
-          - affirm
-          - afterpay
-          - alipay
-          - alipayhk
-          - applepay
-          - bacs
-          - bancontact
-          - banked
-          - becs
-          - bitpay
-          - boleto
-          - boost
-          - card
-          - cashapp
-          - chaseorbital
-          - checkout-session
-          - clearpay
-          - click-to-pay
-          - dana
-          - dcb
-          - dlocal
-          - ebanx
-          - efecty
-          - eps
-          - everydaypay
-          - gcash
-          - gem
-          - gemds
-          - gift-card
-          - giropay
-          - givingblock
-          - gocardless
-          - googlepay
-          - googlepay_pan_only
-          - gopay
-          - grabpay
-          - id
-          - ideal
-          - kakaopay
-          - kcp
-          - klarna
-          - latitude
-          - latitudeds
-          - laybuy
-          - linepay
-          - linkaja
-          - maybankqrpay
-          - mercadopago
-          - multibanco
-          - multipago
-          - netbanking
-          - network-token
-          - oney_3x
-          - oney_4x
-          - oney_6x
-          - oney_10x
-          - oney_12x
-          - ovo
-          - oxxo
-          - payid
-          - paymaya
-          - paypal
-          - paypalpaylater
-          - payto
-          - venmo
-          - pix
-          - pse
-          - rabbitlinepay
-          - razorpay
-          - scalapay
-          - sepa
-          - shopeepay
-          - singteldash
-          - smartpay
-          - sofort
-          - spei
-          - stripedd
-          - thaiqr
-          - touchngo
-          - truemoney
-          - trustly
-          - trustlyeurope
-          - upi
-          - vipps
-          - waave
-          - webpay
-          - wechat
-          - zippay
-        icon_url:
-          type:
-          - string
-          - 'null'
-          description: An icon to display for the payment option.
-          example: https://cdn.gr4vy.app/card.svg
-        mode:
-          description: The mode to use with this payment option.
-          type: string
-          example: card
-          enum:
-          - card
-          - redirect
-          - applepay
-          - googlepay
-          - click-to-pay
-          - checkout-session
-        label:
-          type: string
-          description: 'A label that describes this payment option. This label is returned in the
-
-            language defined by the `locale` query parameter. The label can be used
-
-            to display a list of payment options to the buyer in their language.'
-          example: Pay by Card
-        can_store_payment_method:
-          type: boolean
-          description: A flag to indicate if storing the payment method is supported.
-        can_delay_capture:
-          type: boolean
-          description: A flag to indicate if delayed capture is supported.
-        context:
-          type: object
-          description: 'Additional context specific to the payment option.
-
-            This is currently only returned for Apple Pay and Google Pay.'
-          properties:
-            gateway:
-              type: string
-              description: Gateway used for Google Pay payments.
-            gateway_merchant_id:
-              type: string
-              description: Gateway merchant identifier used for Google Pay payments.
-            merchant_name:
-              type: string
-              description: 'Display name of the merchant as registered with the digital wallet
-
-                provider.'
-            supported_schemes:
-              type: array
-              description: Card schemes supported by the digital wallet provider.
-              items:
-                $ref: '#/components/schemas/PaymentOptionCardScheme'
-            approval_ui:
-              $ref: '#/components/schemas/PaymentOptionApprovalUI'
-            required_fields:
-              $ref: '#/components/schemas/RequiredFields'
-    PaymentOptionsRequest:
-      title: Payment Options (List)
-      type: object
-      description: A request to get list of payment options.
-      x-tags:
-      - Request Bodies
-      properties:
-        amount:
-          description: 'The monetary amount to create an authorization for, in the smallest
-
-            currency unit for the given currency, for example `1299` cents to create
-
-            an authorization for `$12.99`.
-
-
-            If the `intent` is set to `capture`, an amount greater than zero must
-
-            be supplied.'
-          type:
-          - integer
-          - 'null'
-          example: 1299
-        locale:
-          type:
-          - string
-          - 'null'
-          example: en-US
-          pattern: ^[a-z]{2}(?:-[A-Z]{2})?$
-          default: en
-          description: 'An ISO 639-1 Language Code and optional ISO 3166 Country Code. This locale
-
-            determines the language for the labels returned for every payment option.'
-        currency:
-          type:
-          - string
-          - 'null'
-          example: USD
-          description: 'A supported ISO-4217 currency code.
-
-
-            For redirect requests, this value must match the one specified for
-
-            `currency` in `payment_method`.
-
-            '
-        country:
-          type:
-          - string
-          - 'null'
-          example: US
-          description: 'Filters the results to only the items which support this country code. A
-
-            country is formatted as 2-letter ISO country code.
-
-            '
-        metadata:
-          description: 'Used by the Flow engine to filter available options based on various
-
-            client-defined parameters. If present, this must be a string representing
-
-            a valid JSON dictionary.'
-          type:
-          - object
-          - 'null'
-          maxProperties: 20
-          additionalProperties:
-            type: string
-          example:
-            key: value
-        cart_items:
-          type:
-          - array
-          - 'null'
-          description: An array of cart items that represents the line items of a transaction.
-          items:
-            $ref: '#/components/schemas/CartItem'
-          maxItems: 249
-    PaymentOptionCardScheme:
-      type: string
-      title: The scheme of the transaction
-    RequiredFields:
-      title: Required Fields
-      type: object
-      description: The fields that are required to process a transaction for this payment option.
-      properties:
-        first_name:
-          type: boolean
-          description: The first (given) name of the buyer.
-          readOnly: true
-        last_name:
-          type: boolean
-          description: The last (family) name of the buyer.
-          readOnly: true
-        email_address:
-          type: boolean
-          description: The email address of the buyer.
-          readOnly: true
-        phone_number:
-          type: boolean
-          description: The phone number of the buyer.
-          readOnly: true
-        address:
-          type: object
-          description: The billing address of the buyer.
-          properties:
-            city:
-              type: boolean
-              description: The city for the billing address.
-              readOnly: true
-            country:
-              type: boolean
-              description: The country for the billing address.
-              readOnly: true
-            postal_code:
-              type: boolean
-              description: The postal code or zip code for the billing address.
-              readOnly: true
-            state:
-              type: boolean
-              description: The state, county, or province for the billing address.
-              readOnly: true
-            house_number_or_name:
-              type: boolean
-              description: 'The house number or name for the billing address. Not all payment
-
-                services use this field but some do.'
-              readOnly: true
-            line1:
-              type: boolean
-              description: The first line of the billing address.
-              readOnly: true
-        tax_id:
-          type: boolean
-          description: The tax id code associated with the billing details.
-          readOnly: true
-    Error401Unauthorized:
-      title: Unauthorized Error
-      type: object
-      description: Unauthorized Error (HTTP 401).
-      x-tags:
-      - Errors
-      properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: '`unauthorized`.'
-          example: unauthorized
-          enum:
-          - unauthorized
-        status:
-          type: integer
-          description: '`401`.'
-          example: 401
-          enum:
-          - 401
-        message:
-          type: string
-          description: No valid API authentication found.
-          example: No valid API authentication found
-          enum:
-          - No valid API authentication found
-        details:
-          type: array
-          description: 'A list of detail objects that further clarify the reason for the error.
-
-            Not every error supports more detail.'
-          example: []
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
     CartItem:
       title: Cart Item
       type: object
@@ -708,38 +371,208 @@ components:
             seller transaction to meet Marketplace reporting requirements.'
           example: US
           pattern: ^[A-Z]{2}$
-    ErrorDetail:
-      title: Error details
-      description: Additional detail about the part of a request body that caused an issue.
+    Error401Unauthorized:
+      title: Unauthorized Error
       type: object
+      description: Unauthorized Error (HTTP 401).
       x-tags:
       - Errors
       properties:
-        location:
-          type: string
-          example: body
-          description: The location where the error caused an issue.
-          enum:
-          - query
-          - body
-          - path
-          - header
         type:
           type: string
-          example: value_error.missing
-          description: A unique identifier for the type of error that occurred.
-        pointer:
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
           type: string
-          example: /payment_method/number
-          description: 'The exact item for which the validation did not succeed. This is a JSON
-
-            pointer for request bodies, while for query, path, and header parameters
-
-            it is the name of the parameter.'
+          description: '`unauthorized`.'
+          example: unauthorized
+          enum:
+          - unauthorized
+        status:
+          type: integer
+          description: '`401`.'
+          example: 401
+          enum:
+          - 401
         message:
           type: string
-          example: field required
-          description: A human readable message for this error detail.
+          description: No valid API authentication found.
+          example: No valid API authentication found
+          enum:
+          - No valid API authentication found
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    PaymentOption:
+      title: Payment option
+      type: object
+      description: An available payment option for a locale.
+      x-tags:
+      - Payment Option
+      properties:
+        type:
+          type: string
+          description: '`payment-option`.'
+          example: payment-option
+          enum:
+          - payment-option
+        method:
+          description: The type of payment method that is available.
+          type: string
+          example: card
+          enum:
+          - affirm
+          - afterpay
+          - alipay
+          - alipayhk
+          - applepay
+          - bacs
+          - bancontact
+          - banked
+          - becs
+          - bitpay
+          - boleto
+          - boost
+          - card
+          - cashapp
+          - chaseorbital
+          - checkout-session
+          - clearpay
+          - click-to-pay
+          - dana
+          - dcb
+          - dlocal
+          - ebanx
+          - efecty
+          - eps
+          - everydaypay
+          - gcash
+          - gem
+          - gemds
+          - gift-card
+          - giropay
+          - givingblock
+          - gocardless
+          - googlepay
+          - googlepay_pan_only
+          - gopay
+          - grabpay
+          - id
+          - ideal
+          - kakaopay
+          - kcp
+          - klarna
+          - latitude
+          - latitudeds
+          - laybuy
+          - linepay
+          - linkaja
+          - maybankqrpay
+          - mercadopago
+          - multibanco
+          - multipago
+          - netbanking
+          - network-token
+          - oney_3x
+          - oney_4x
+          - oney_6x
+          - oney_10x
+          - oney_12x
+          - ovo
+          - oxxo
+          - payid
+          - paymaya
+          - paypal
+          - paypalpaylater
+          - payto
+          - venmo
+          - pix
+          - pse
+          - rabbitlinepay
+          - razorpay
+          - scalapay
+          - sepa
+          - shopeepay
+          - singteldash
+          - smartpay
+          - sofort
+          - spei
+          - stripedd
+          - thaiqr
+          - touchngo
+          - truemoney
+          - trustly
+          - trustlyeurope
+          - upi
+          - vipps
+          - waave
+          - webpay
+          - wechat
+          - zippay
+        icon_url:
+          type:
+          - string
+          - 'null'
+          description: An icon to display for the payment option.
+          example: https://cdn.gr4vy.app/card.svg
+        mode:
+          description: The mode to use with this payment option.
+          type: string
+          example: card
+          enum:
+          - card
+          - redirect
+          - applepay
+          - googlepay
+          - click-to-pay
+          - checkout-session
+        label:
+          type: string
+          description: 'A label that describes this payment option. This label is returned in the
+
+            language defined by the `locale` query parameter. The label can be used
+
+            to display a list of payment options to the buyer in their language.'
+          example: Pay by Card
+        can_store_payment_method:
+          type: boolean
+          description: A flag to indicate if storing the payment method is supported.
+        can_delay_capture:
+          type: boolean
+          description: A flag to indicate if delayed capture is supported.
+        context:
+          type: object
+          description: 'Additional context specific to the payment option.
+
+            This is currently only returned for Apple Pay and Google Pay.'
+          properties:
+            gateway:
+              type: string
+              description: Gateway used for Google Pay payments.
+            gateway_merchant_id:
+              type: string
+              description: Gateway merchant identifier used for Google Pay payments.
+            merchant_name:
+              type: string
+              description: 'Display name of the merchant as registered with the digital wallet
+
+                provider.'
+            supported_schemes:
+              type: array
+              description: Card schemes supported by the digital wallet provider.
+              items:
+                $ref: '#/components/schemas/PaymentOptionCardScheme'
+            approval_ui:
+              $ref: '#/components/schemas/PaymentOptionApprovalUI'
+            required_fields:
+              $ref: '#/components/schemas/RequiredFields'
     PaymentOptions:
       title: A list of payment options
       type: object
@@ -751,19 +584,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/PaymentOption'
-    PaymentOptionApprovalUI:
-      title: Payment Option Approval UI
-      type: object
-      description: Configuration for the approval interface that should be shown to the buyer.
-      properties:
-        height:
-          type: string
-          description: Height of the approval interface in either pixels or view height (vh).
-          example: 300px
-        width:
-          type: string
-          description: Width of the approval interface in either pixels or view width (vw).
-          example: 300px
     Error400BadRequest:
       title: Bad Request
       type: object
@@ -800,106 +620,186 @@ components:
           description: A list of detail objects that further clarify the reason for the error.
           items:
             $ref: '#/components/schemas/ErrorDetail'
-    PaymentOption_2:
-      properties:
-        type:
-          type: string
-          const: payment-option
-          title: Type
-          default: payment-option
-        method:
-          type: string
-          title: Method
-        icon_url:
-          anyOf:
-          - type: string
-            maxLength: 1500
-            minLength: 1
-          - type: 'null'
-          title: Icon Url
-        mode:
-          $ref: '#/components/schemas/Mode'
-        label:
-          anyOf:
-          - type: string
-            maxLength: 200
-            minLength: 1
-          - type: 'null'
-          title: Label
-        can_store_payment_method:
-          type: boolean
-          title: Can Store Payment Method
-        can_delay_capture:
-          type: boolean
-          title: Can Delay Capture
-        context:
-          anyOf:
-          - $ref: '#/components/schemas/WalletPaymentOptionContext'
-          - $ref: '#/components/schemas/GooglePayPaymentOptionContext'
-          - $ref: '#/components/schemas/PaymentOptionContext'
-          - type: 'null'
-          title: Context
-      additionalProperties: false
+    RequiredFields:
+      title: Required Fields
       type: object
-      required:
-      - method
-      - mode
-      - can_store_payment_method
-      - can_delay_capture
-      title: PaymentOption
-    Error500:
+      description: The fields that are required to process a transaction for this payment option.
       properties:
+        first_name:
+          type: boolean
+          description: The first (given) name of the buyer.
+          readOnly: true
+        last_name:
+          type: boolean
+          description: The last (family) name of the buyer.
+          readOnly: true
+        email_address:
+          type: boolean
+          description: The email address of the buyer.
+          readOnly: true
+        phone_number:
+          type: boolean
+          description: The phone number of the buyer.
+          readOnly: true
+        address:
+          type: object
+          description: The billing address of the buyer.
+          properties:
+            city:
+              type: boolean
+              description: The city for the billing address.
+              readOnly: true
+            country:
+              type: boolean
+              description: The country for the billing address.
+              readOnly: true
+            postal_code:
+              type: boolean
+              description: The postal code or zip code for the billing address.
+              readOnly: true
+            state:
+              type: boolean
+              description: The state, county, or province for the billing address.
+              readOnly: true
+            house_number_or_name:
+              type: boolean
+              description: 'The house number or name for the billing address. Not all payment
+
+                services use this field but some do.'
+              readOnly: true
+            line1:
+              type: boolean
+              description: The first line of the billing address.
+              readOnly: true
+        tax_id:
+          type: boolean
+          description: The tax id code associated with the billing details.
+          readOnly: true
+    PaymentOptionCardScheme:
+      type: string
+      title: The scheme of the transaction
+    PaymentOptionApprovalUI:
+      title: Payment Option Approval UI
+      type: object
+      description: Configuration for the approval interface that should be shown to the buyer.
+      properties:
+        height:
+          type: string
+          description: Height of the approval interface in either pixels or view height (vh).
+          example: 300px
+        width:
+          type: string
+          description: Width of the approval interface in either pixels or view width (vw).
+          example: 300px
+    PaymentOptionsRequest:
+      title: Payment Options (List)
+      type: object
+      description: A request to get list of payment options.
+      x-tags:
+      - Request Bodies
+      properties:
+        amount:
+          description: 'The monetary amount to create an authorization for, in the smallest
+
+            currency unit for the given currency, for example `1299` cents to create
+
+            an authorization for `$12.99`.
+
+
+            If the `intent` is set to `capture`, an amount greater than zero must
+
+            be supplied.'
+          type:
+          - integer
+          - 'null'
+          example: 1299
+        locale:
+          type:
+          - string
+          - 'null'
+          example: en-US
+          pattern: ^[a-z]{2}(?:-[A-Z]{2})?$
+          default: en
+          description: 'An ISO 639-1 Language Code and optional ISO 3166 Country Code. This locale
+
+            determines the language for the labels returned for every payment option.'
+        currency:
+          type:
+          - string
+          - 'null'
+          example: USD
+          description: 'A supported ISO-4217 currency code.
+
+
+            For redirect requests, this value must match the one specified for
+
+            `currency` in `payment_method`.
+
+            '
+        country:
+          type:
+          - string
+          - 'null'
+          example: US
+          description: 'Filters the results to only the items which support this country code. A
+
+            country is formatted as 2-letter ISO country code.
+
+            '
+        metadata:
+          description: 'Used by the Flow engine to filter available options based on various
+
+            client-defined parameters. If present, this must be a string representing
+
+            a valid JSON dictionary.'
+          type:
+          - object
+          - 'null'
+          maxProperties: 20
+          additionalProperties:
+            type: string
+          example:
+            key: value
+        cart_items:
+          type:
+          - array
+          - 'null'
+          description: An array of cart items that represents the line items of a transaction.
+          items:
+            $ref: '#/components/schemas/CartItem'
+          maxItems: 249
+    ErrorDetail:
+      title: Error details
+      description: Additional detail about the part of a request body that caused an issue.
+      type: object
+      x-tags:
+      - Errors
+      properties:
+        location:
+          type: string
+          example: body
+          description: The location where the error caused an issue.
+          enum:
+          - query
+          - body
+          - path
+          - header
         type:
           type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
+          example: value_error.missing
+          description: A unique identifier for the type of error that occurred.
+        pointer:
           type: string
-          title: Code
-          description: Always `server_error`
-          default: server_error
-          examples:
-          - server_error
-        status:
-          type: integer
-          title: Status
-          description: Always `500`.
-          default: 500
-          examples:
-          - 500
+          example: /payment_method/number
+          description: 'The exact item for which the validation did not succeed. This is a JSON
+
+            pointer for request bodies, while for query, path, and header parameters
+
+            it is the name of the parameter.'
         message:
           type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Request could not be processed
-          examples:
-          - Request could not be processed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error500
-    ProductType:
-      type: string
-      enum:
-      - physical
-      - discount
-      - shipping_fee
-      - sales_tax
-      - digital
-      - gift_card
-      - store_credit
-      - surcharge
-      title: ProductType
+          example: field required
+          description: A human readable message for this error detail.
     Error409:
       properties:
         type:
@@ -949,21 +849,153 @@ components:
       additionalProperties: false
       type: object
       title: Error409
-    PaymentOptionContextApprovalUI:
+    PaymentOption_2:
       properties:
-        height:
+        type:
+          type: string
+          const: payment-option
+          title: Type
+          default: payment-option
+        method:
+          type: string
+          title: Method
+        icon_url:
           anyOf:
           - type: string
+            maxLength: 1500
+            minLength: 1
           - type: 'null'
-          title: Height
-        width:
+          title: Icon Url
+        mode:
+          $ref: '#/components/schemas/Mode'
+        label:
           anyOf:
           - type: string
+            maxLength: 200
+            minLength: 1
           - type: 'null'
-          title: Width
+          title: Label
+        can_store_payment_method:
+          type: boolean
+          title: Can Store Payment Method
+        can_delay_capture:
+          type: boolean
+          title: Can Delay Capture
+        context:
+          anyOf:
+          - $ref: '#/components/schemas/WalletPaymentOptionContext'
+          - $ref: '#/components/schemas/GooglePayPaymentOptionContext'
+          - $ref: '#/components/schemas/PaymentOptionContext'
+          - type: 'null'
+          title: Context
       additionalProperties: false
       type: object
-      title: PaymentOptionContextApprovalUI
+      required:
+      - method
+      - mode
+      - can_store_payment_method
+      - can_delay_capture
+      title: PaymentOption
+    PaymentOptionContext:
+      properties:
+        approval_ui:
+          anyOf:
+          - $ref: '#/components/schemas/PaymentOptionContextApprovalUI'
+          - type: 'null'
+        required_fields:
+          anyOf:
+          - additionalProperties:
+              anyOf:
+              - type: boolean
+              - additionalProperties:
+                  anyOf:
+                  - type: boolean
+                  - {}
+                type: object
+            type: object
+          - type: 'null'
+          title: Required Fields
+        redirect_requires_popup:
+          type: boolean
+          title: Redirect Requires Popup
+        requires_tokenized_redirect_popup:
+          type: boolean
+          title: Requires Tokenized Redirect Popup
+      additionalProperties: false
+      type: object
+      required:
+      - redirect_requires_popup
+      - requires_tokenized_redirect_popup
+      title: PaymentOptionContext
+    WalletPaymentOptionContext:
+      properties:
+        merchant_name:
+          type: string
+          title: Merchant Name
+        supported_schemes:
+          items:
+            type: string
+          type: array
+          title: Supported Schemes
+      additionalProperties: false
+      type: object
+      required:
+      - merchant_name
+      - supported_schemes
+      title: WalletPaymentOptionContext
+    Error400:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `bad_request`
+          default: bad_request
+          examples:
+          - bad_request
+        status:
+          type: integer
+          title: Status
+          description: Always `400`.
+          default: 400
+          examples:
+          - 400
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error400
+    ProductType:
+      type: string
+      enum:
+      - physical
+      - discount
+      - shipping_fee
+      - sales_tax
+      - digital
+      - gift_card
+      - store_credit
+      - surcharge
+      title: ProductType
     ErrorDetail_2:
       properties:
         location:
@@ -1000,6 +1032,93 @@ components:
       - message
       - type
       title: ErrorDetail
+    PaymentOptionContextApprovalUI:
+      properties:
+        height:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Height
+        width:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Width
+      additionalProperties: false
+      type: object
+      title: PaymentOptionContextApprovalUI
+    PaymentOptions_2:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/PaymentOption_2'
+          type: array
+          title: Items
+          description: A list of items returned for this request.
+      type: object
+      required:
+      - items
+      title: PaymentOptions
+    ErrorLocation:
+      type: string
+      enum:
+      - query
+      - body
+      - path
+      - header
+      - unknown
+      title: ErrorLocation
+    Error504:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `gateway_timeout`
+          default: gateway_timeout
+          examples:
+          - gateway_timeout
+        status:
+          type: integer
+          title: Status
+          default: 504
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error504
+    Mode:
+      type: string
+      enum:
+      - card
+      - redirect
+      - applepay
+      - googlepay
+      - checkout-session
+      - click-to-pay
+      - gift-card
+      - bank
+      - paze
+      title: Mode
     CartItem_2:
       properties:
         name:
@@ -1259,6 +1378,203 @@ components:
       additionalProperties: false
       type: object
       title: Error502
+    Error500:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `server_error`
+          default: server_error
+          examples:
+          - server_error
+        status:
+          type: integer
+          title: Status
+          description: Always `500`.
+          default: 500
+          examples:
+          - 500
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error500
+    Error401:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `unauthorized`
+          default: unauthorized
+          examples:
+          - unauthorized
+        status:
+          type: integer
+          title: Status
+          description: Always `401`.
+          default: 401
+          examples:
+          - 401
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: No valid API authentication found
+          examples:
+          - No valid API authentication found
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error401
+    Error404:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `not_found`
+          default: not_found
+          examples:
+          - not_found
+        status:
+          type: integer
+          title: Status
+          description: Always `404`.
+          default: 404
+          examples:
+          - 404
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: The resource could not be found
+          examples:
+          - The resource could not be found
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error404
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    Error425:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `too_early`
+          default: too_early
+          examples:
+          - too_early
+        status:
+          type: integer
+          title: Status
+          description: Always `425`.
+          default: 425
+          examples:
+          - 425
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error425
+    GooglePayPaymentOptionContext:
+      properties:
+        merchant_name:
+          type: string
+          title: Merchant Name
+        supported_schemes:
+          items:
+            type: string
+          type: array
+          title: Supported Schemes
+        gateway:
+          type: string
+          title: Gateway
+        gateway_merchant_id:
+          type: string
+          title: Gateway Merchant Id
+      additionalProperties: false
+      type: object
+      required:
+      - merchant_name
+      - supported_schemes
+      - gateway
+      - gateway_merchant_id
+      title: GooglePayPaymentOptionContext
     Error405:
       properties:
         type:
@@ -1341,219 +1657,32 @@ components:
       additionalProperties: false
       type: object
       title: Error429
-    Error425:
+    ValidationError:
       properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `too_early`
-          default: too_early
-          examples:
-          - too_early
-        status:
-          type: integer
-          title: Status
-          description: Always `425`.
-          default: 425
-          examples:
-          - 425
-        message:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
           type: string
           title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error425
-    Error401:
-      properties:
         type:
           type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `unauthorized`
-          default: unauthorized
-          examples:
-          - unauthorized
-        status:
-          type: integer
-          title: Status
-          description: Always `401`.
-          default: 401
-          examples:
-          - 401
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: No valid API authentication found
-          examples:
-          - No valid API authentication found
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error401
-    GooglePayPaymentOptionContext:
-      properties:
-        merchant_name:
-          type: string
-          title: Merchant Name
-        supported_schemes:
-          items:
-            type: string
-          type: array
-          title: Supported Schemes
-        gateway:
-          type: string
-          title: Gateway
-        gateway_merchant_id:
-          type: string
-          title: Gateway Merchant Id
-      additionalProperties: false
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
       type: object
       required:
-      - merchant_name
-      - supported_schemes
-      - gateway
-      - gateway_merchant_id
-      title: GooglePayPaymentOptionContext
-    Error400:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `bad_request`
-          default: bad_request
-          examples:
-          - bad_request
-        status:
-          type: integer
-          title: Status
-          description: Always `400`.
-          default: 400
-          examples:
-          - 400
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error400
-    WalletPaymentOptionContext:
-      properties:
-        merchant_name:
-          type: string
-          title: Merchant Name
-        supported_schemes:
-          items:
-            type: string
-          type: array
-          title: Supported Schemes
-      additionalProperties: false
-      type: object
-      required:
-      - merchant_name
-      - supported_schemes
-      title: WalletPaymentOptionContext
-    PaymentOptions_2:
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/PaymentOption_2'
-          type: array
-          title: Items
-          description: A list of items returned for this request.
-      type: object
-      required:
-      - items
-      title: PaymentOptions
-    Error504:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `gateway_timeout`
-          default: gateway_timeout
-          examples:
-          - gateway_timeout
-        status:
-          type: integer
-          title: Status
-          default: 504
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Request could not be processed
-          examples:
-          - Request could not be processed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error504
+      - loc
+      - msg
+      - type
+      title: ValidationError
     PaymentOptionRequest:
       properties:
         metadata:
@@ -1620,126 +1749,6 @@ components:
       additionalProperties: false
       type: object
       title: PaymentOptionRequest
-    PaymentOptionContext:
-      properties:
-        approval_ui:
-          anyOf:
-          - $ref: '#/components/schemas/PaymentOptionContextApprovalUI'
-          - type: 'null'
-        required_fields:
-          anyOf:
-          - additionalProperties:
-              anyOf:
-              - type: boolean
-              - additionalProperties:
-                  anyOf:
-                  - type: boolean
-                  - {}
-                type: object
-            type: object
-          - type: 'null'
-          title: Required Fields
-        redirect_requires_popup:
-          type: boolean
-          title: Redirect Requires Popup
-        requires_tokenized_redirect_popup:
-          type: boolean
-          title: Requires Tokenized Redirect Popup
-      additionalProperties: false
-      type: object
-      required:
-      - redirect_requires_popup
-      - requires_tokenized_redirect_popup
-      title: PaymentOptionContext
-    Mode:
-      type: string
-      enum:
-      - card
-      - redirect
-      - applepay
-      - googlepay
-      - checkout-session
-      - click-to-pay
-      - gift-card
-      - bank
-      - paze
-      title: Mode
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    Error404:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `not_found`
-          default: not_found
-          examples:
-          - not_found
-        status:
-          type: integer
-          title: Status
-          description: Always `404`.
-          default: 404
-          examples:
-          - 404
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: The resource could not be found
-          examples:
-          - The resource could not be found
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error404
-    ErrorLocation:
-      type: string
-      enum:
-      - query
-      - body
-      - path
-      - header
-      - unknown
-      title: ErrorLocation
     Error403:
       properties:
         type:
@@ -1781,15 +1790,6 @@ components:
       additionalProperties: false
       type: object
       title: Error403
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
   securitySchemes:
     bearerAuth:
       type: http

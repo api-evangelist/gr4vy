@@ -124,47 +124,19 @@ paths:
       x-speakeasy-group: transactions.actions
 components:
   schemas:
-    Error500:
+    TransactionActions:
       properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `server_error`
-          default: server_error
-          examples:
-          - server_error
-        status:
-          type: integer
-          title: Status
-          description: Always `500`.
-          default: 500
-          examples:
-          - 500
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Request could not be processed
-          examples:
-          - Request could not be processed
-        details:
+        items:
           items:
-            $ref: '#/components/schemas/ErrorDetail'
+            $ref: '#/components/schemas/TransactionAction'
           type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
+          title: Items
+          description: The list of actions triggered for a transaction.
       additionalProperties: false
       type: object
-      title: Error500
+      required:
+      - items
+      title: TransactionActions
     Error409:
       properties:
         type:
@@ -214,6 +186,55 @@ components:
       additionalProperties: false
       type: object
       title: Error409
+    Error400:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `bad_request`
+          default: bad_request
+          examples:
+          - bad_request
+        status:
+          type: integer
+          title: Status
+          description: Always `400`.
+          default: 400
+          examples:
+          - 400
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error400
+    FlowAction:
+      type: string
+      enum:
+      - select-payment-options
+      - route-transaction
+      - decline-early
+      - skip-3ds
+      title: FlowAction
     ErrorDetail:
       properties:
         location:
@@ -250,6 +271,108 @@ components:
       - message
       - type
       title: ErrorDetail
+    ErrorLocation:
+      type: string
+      enum:
+      - query
+      - body
+      - path
+      - header
+      - unknown
+      title: ErrorLocation
+    Error504:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `gateway_timeout`
+          default: gateway_timeout
+          examples:
+          - gateway_timeout
+        status:
+          type: integer
+          title: Status
+          default: 504
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error504
+    TransactionAction:
+      properties:
+        type:
+          type: string
+          const: action
+          title: Type
+          description: Always `action`.
+          default: action
+          examples:
+          - action
+        id:
+          $ref: '#/components/schemas/FlowAction'
+          description: The action that was triggered.
+          examples:
+          - route-transaction
+        flow:
+          $ref: '#/components/schemas/Flow'
+          description: The flow that the action belongs to.
+          examples:
+          - card-transaction
+        rule_id:
+          type: string
+          format: uuid
+          title: Rule Id
+          description: The ID of the rule that triggered this action.
+          examples:
+          - f133a3b7-e67e-4d83-bcd3-3e438fedf348
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+          description: The date this action was created at.
+          examples:
+          - '2013-07-16T19:23:00.000+00:00'
+        outcome:
+          additionalProperties: true
+          type: object
+          title: Outcome
+          description: The outcome of the action.
+          examples:
+          - result:
+            - instrument: pan
+              payment_service_id: ce26a7d7-fec0-4d47-8efa-044a32b09bc6
+              transformations: []
+            type: card-routing
+            version: 2
+      additionalProperties: false
+      type: object
+      required:
+      - id
+      - flow
+      - rule_id
+      - created_at
+      - outcome
+      title: TransactionAction
     Error502:
       properties:
         type:
@@ -291,6 +414,187 @@ components:
       additionalProperties: false
       type: object
       title: Error502
+    Error500:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `server_error`
+          default: server_error
+          examples:
+          - server_error
+        status:
+          type: integer
+          title: Status
+          description: Always `500`.
+          default: 500
+          examples:
+          - 500
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error500
+    Error401:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `unauthorized`
+          default: unauthorized
+          examples:
+          - unauthorized
+        status:
+          type: integer
+          title: Status
+          description: Always `401`.
+          default: 401
+          examples:
+          - 401
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: No valid API authentication found
+          examples:
+          - No valid API authentication found
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error401
+    Error404:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `not_found`
+          default: not_found
+          examples:
+          - not_found
+        status:
+          type: integer
+          title: Status
+          description: Always `404`.
+          default: 404
+          examples:
+          - 404
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: The resource could not be found
+          examples:
+          - The resource could not be found
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error404
+    Flow:
+      type: string
+      enum:
+      - checkout
+      - card-transaction
+      - non-card-transaction
+      - redirect-transaction
+      title: Flow
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    Error425:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `too_early`
+          default: too_early
+          examples:
+          - too_early
+        status:
+          type: integer
+          title: Status
+          description: Always `425`.
+          default: 425
+          examples:
+          - 425
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error425
     Error405:
       properties:
         type:
@@ -373,243 +677,6 @@ components:
       additionalProperties: false
       type: object
       title: Error429
-    Error425:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `too_early`
-          default: too_early
-          examples:
-          - too_early
-        status:
-          type: integer
-          title: Status
-          description: Always `425`.
-          default: 425
-          examples:
-          - 425
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error425
-    TransactionAction:
-      properties:
-        type:
-          type: string
-          const: action
-          title: Type
-          description: Always `action`.
-          default: action
-          examples:
-          - action
-        id:
-          $ref: '#/components/schemas/FlowAction'
-          description: The action that was triggered.
-          examples:
-          - route-transaction
-        flow:
-          $ref: '#/components/schemas/Flow'
-          description: The flow that the action belongs to.
-          examples:
-          - card-transaction
-        rule_id:
-          type: string
-          format: uuid
-          title: Rule Id
-          description: The ID of the rule that triggered this action.
-          examples:
-          - f133a3b7-e67e-4d83-bcd3-3e438fedf348
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-          description: The date this action was created at.
-          examples:
-          - '2013-07-16T19:23:00.000+00:00'
-        outcome:
-          additionalProperties: true
-          type: object
-          title: Outcome
-          description: The outcome of the action.
-          examples:
-          - result:
-            - instrument: pan
-              payment_service_id: ce26a7d7-fec0-4d47-8efa-044a32b09bc6
-              transformations: []
-            type: card-routing
-            version: 2
-      additionalProperties: false
-      type: object
-      required:
-      - id
-      - flow
-      - rule_id
-      - created_at
-      - outcome
-      title: TransactionAction
-    Error401:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `unauthorized`
-          default: unauthorized
-          examples:
-          - unauthorized
-        status:
-          type: integer
-          title: Status
-          description: Always `401`.
-          default: 401
-          examples:
-          - 401
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: No valid API authentication found
-          examples:
-          - No valid API authentication found
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error401
-    Error400:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `bad_request`
-          default: bad_request
-          examples:
-          - bad_request
-        status:
-          type: integer
-          title: Status
-          description: Always `400`.
-          default: 400
-          examples:
-          - 400
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error400
-    Error504:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `gateway_timeout`
-          default: gateway_timeout
-          examples:
-          - gateway_timeout
-        status:
-          type: integer
-          title: Status
-          default: 504
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Request could not be processed
-          examples:
-          - Request could not be processed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error504
-    TransactionActions:
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/TransactionAction'
-          type: array
-          title: Items
-          description: The list of actions triggered for a transaction.
-      additionalProperties: false
-      type: object
-      required:
-      - items
-      title: TransactionActions
-    FlowAction:
-      type: string
-      enum:
-      - select-payment-options
-      - route-transaction
-      - decline-early
-      - skip-3ds
-      title: FlowAction
     ValidationError:
       properties:
         loc:
@@ -636,64 +703,6 @@ components:
       - msg
       - type
       title: ValidationError
-    Error404:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `not_found`
-          default: not_found
-          examples:
-          - not_found
-        status:
-          type: integer
-          title: Status
-          description: Always `404`.
-          default: 404
-          examples:
-          - 404
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: The resource could not be found
-          examples:
-          - The resource could not be found
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error404
-    ErrorLocation:
-      type: string
-      enum:
-      - query
-      - body
-      - path
-      - header
-      - unknown
-      title: ErrorLocation
-    Flow:
-      type: string
-      enum:
-      - checkout
-      - card-transaction
-      - non-card-transaction
-      - redirect-transaction
-      title: Flow
     Error403:
       properties:
         type:
@@ -735,15 +744,6 @@ components:
       additionalProperties: false
       type: object
       title: Error403
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
   securitySchemes:
     OAuth2PasswordBearer:
       type: oauth2

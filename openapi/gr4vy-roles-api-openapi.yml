@@ -269,6 +269,100 @@ paths:
           description: The subdomain for your Gr4vy instance.
 components:
   schemas:
+    RoleAssignmentRequest:
+      title: Role Assignment (Create)
+      description: A request to create a role assignment.
+      type: object
+      x-tags:
+      - Roles
+      required:
+      - role
+      - assignee
+      properties:
+        role:
+          type: object
+          description: The role to associate with the role assignment.
+          required:
+          - id
+          properties:
+            id:
+              type: string
+              format: uuid
+              description: The ID of the role to associate with the role assignment.
+              example: 462ab2e2-3e29-44bd-b39f-e4d1293affbb
+        assignee:
+          type: object
+          description: The assignee to associate with the role assignment.
+          required:
+          - type
+          - id
+          properties:
+            type:
+              type: string
+              description: The type of the assignee to associate with the role assignment.
+              example: user
+              enum:
+              - user
+            id:
+              type: string
+              format: uuid
+              description: The ID of the assignee to associate with the role assignment.
+              example: 42aae896-8ce2-4a60-b80a-5f6ae1dfbbd4
+    Error401Unauthorized:
+      title: Unauthorized Error
+      type: object
+      description: Unauthorized Error (HTTP 401).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`unauthorized`.'
+          example: unauthorized
+          enum:
+          - unauthorized
+        status:
+          type: integer
+          description: '`401`.'
+          example: 401
+          enum:
+          - 401
+        message:
+          type: string
+          description: No valid API authentication found.
+          example: No valid API authentication found
+          enum:
+          - No valid API authentication found
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    RolePermissions:
+      type: object
+      title: Role permissions
+      description: The permissions associated with a role.
+      x-tags:
+      - Roles
+      properties:
+        allow:
+          type: array
+          description: The list of permissions to allow for a role.
+          items:
+            type: string
+          example:
+          - buyers.read
+          - payment-methods.read
+          - transactions.read
     RoleAssignment:
       title: Role Assignment
       type: object
@@ -303,6 +397,43 @@ components:
               format: uuid
               description: The unique ID of the assignee.
               example: 42aae896-8ce2-4a60-b80a-5f6ae1dfbbd4
+    Error409DuplicateRecord:
+      title: Duplicate Record Error
+      type: object
+      description: Duplicate Record Error (HTTP 409).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`duplicate_record`.'
+          example: duplicate_record
+          enum:
+          - duplicate_record
+        status:
+          type: integer
+          description: '`409`.'
+          example: 409
+          enum:
+          - 409
+        message:
+          type: string
+          description: Further details on the field that triggered the error.
+          example: A duplicate record exists with this external_identifier value
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
     Error404NotFound:
       title: Not Found Error
       type: object
@@ -368,205 +499,6 @@ components:
           example: Customer support agents
         permissions:
           $ref: '#/components/schemas/RolePermissions'
-    Error409DuplicateRecord:
-      title: Duplicate Record Error
-      type: object
-      description: Duplicate Record Error (HTTP 409).
-      x-tags:
-      - Errors
-      properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: '`duplicate_record`.'
-          example: duplicate_record
-          enum:
-          - duplicate_record
-        status:
-          type: integer
-          description: '`409`.'
-          example: 409
-          enum:
-          - 409
-        message:
-          type: string
-          description: Further details on the field that triggered the error.
-          example: A duplicate record exists with this external_identifier value
-        details:
-          type: array
-          description: 'A list of detail objects that further clarify the reason for the error.
-
-            Not every error supports more detail.'
-          example: []
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-    Error401Unauthorized:
-      title: Unauthorized Error
-      type: object
-      description: Unauthorized Error (HTTP 401).
-      x-tags:
-      - Errors
-      properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: '`unauthorized`.'
-          example: unauthorized
-          enum:
-          - unauthorized
-        status:
-          type: integer
-          description: '`401`.'
-          example: 401
-          enum:
-          - 401
-        message:
-          type: string
-          description: No valid API authentication found.
-          example: No valid API authentication found
-          enum:
-          - No valid API authentication found
-        details:
-          type: array
-          description: 'A list of detail objects that further clarify the reason for the error.
-
-            Not every error supports more detail.'
-          example: []
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-    RoleAssignmentRequest:
-      title: Role Assignment (Create)
-      description: A request to create a role assignment.
-      type: object
-      x-tags:
-      - Roles
-      required:
-      - role
-      - assignee
-      properties:
-        role:
-          type: object
-          description: The role to associate with the role assignment.
-          required:
-          - id
-          properties:
-            id:
-              type: string
-              format: uuid
-              description: The ID of the role to associate with the role assignment.
-              example: 462ab2e2-3e29-44bd-b39f-e4d1293affbb
-        assignee:
-          type: object
-          description: The assignee to associate with the role assignment.
-          required:
-          - type
-          - id
-          properties:
-            type:
-              type: string
-              description: The type of the assignee to associate with the role assignment.
-              example: user
-              enum:
-              - user
-            id:
-              type: string
-              format: uuid
-              description: The ID of the assignee to associate with the role assignment.
-              example: 42aae896-8ce2-4a60-b80a-5f6ae1dfbbd4
-    ErrorDetail:
-      title: Error details
-      description: Additional detail about the part of a request body that caused an issue.
-      type: object
-      x-tags:
-      - Errors
-      properties:
-        location:
-          type: string
-          example: body
-          description: The location where the error caused an issue.
-          enum:
-          - query
-          - body
-          - path
-          - header
-        type:
-          type: string
-          example: value_error.missing
-          description: A unique identifier for the type of error that occurred.
-        pointer:
-          type: string
-          example: /payment_method/number
-          description: 'The exact item for which the validation did not succeed. This is a JSON
-
-            pointer for request bodies, while for query, path, and header parameters
-
-            it is the name of the parameter.'
-        message:
-          type: string
-          example: field required
-          description: A human readable message for this error detail.
-    Error400BadRequest:
-      title: Bad Request
-      type: object
-      description: Bad Request (HTTP 400).
-      x-tags:
-      - Errors
-      properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: A short code that describes the reason for the error.
-          example: bad_request
-          enum:
-          - bad_request
-          - incorrect_json
-          - invalid_credentials
-        status:
-          type: integer
-          description: '`400`.'
-          example: 400
-          enum:
-          - 400
-        message:
-          type: string
-          description: A human-readable reason for the error.
-          example: Missing '****' field
-        details:
-          type: array
-          description: A list of detail objects that further clarify the reason for the error.
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-    RolePermissions:
-      type: object
-      title: Role permissions
-      description: The permissions associated with a role.
-      x-tags:
-      - Roles
-      properties:
-        allow:
-          type: array
-          description: The list of permissions to allow for a role.
-          items:
-            type: string
-          example:
-          - buyers.read
-          - payment-methods.read
-          - transactions.read
     RoleAssignments:
       title: Role Assignments
       type: object
@@ -609,6 +541,42 @@ components:
           example: null
           minLength: 1
           maxLength: 1000
+    Error400BadRequest:
+      title: Bad Request
+      type: object
+      description: Bad Request (HTTP 400).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: A short code that describes the reason for the error.
+          example: bad_request
+          enum:
+          - bad_request
+          - incorrect_json
+          - invalid_credentials
+        status:
+          type: integer
+          description: '`400`.'
+          example: 400
+          enum:
+          - 400
+        message:
+          type: string
+          description: A human-readable reason for the error.
+          example: Missing '****' field
+        details:
+          type: array
+          description: A list of detail objects that further clarify the reason for the error.
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
     Roles:
       title: Roles
       type: object
@@ -651,47 +619,55 @@ components:
           example: null
           minLength: 1
           maxLength: 1000
-    Error500:
+    ErrorDetail:
+      title: Error details
+      description: Additional detail about the part of a request body that caused an issue.
+      type: object
+      x-tags:
+      - Errors
       properties:
+        location:
+          type: string
+          example: body
+          description: The location where the error caused an issue.
+          enum:
+          - query
+          - body
+          - path
+          - header
         type:
           type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
+          example: value_error.missing
+          description: A unique identifier for the type of error that occurred.
+        pointer:
           type: string
-          title: Code
-          description: Always `server_error`
-          default: server_error
-          examples:
-          - server_error
-        status:
-          type: integer
-          title: Status
-          description: Always `500`.
-          default: 500
-          examples:
-          - 500
+          example: /payment_method/number
+          description: 'The exact item for which the validation did not succeed. This is a JSON
+
+            pointer for request bodies, while for query, path, and header parameters
+
+            it is the name of the parameter.'
         message:
           type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Request could not be processed
-          examples:
-          - Request could not be processed
-        details:
+          example: field required
+          description: A human readable message for this error detail.
+    PermissionSet:
+      properties:
+        allow:
           items:
-            $ref: '#/components/schemas/ErrorDetail_2'
+            type: string
           type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
+          title: Allow
+          description: The scopes granted by this role.
+          examples:
+          - - transactions.read
+            - reports.read
       additionalProperties: false
       type: object
-      title: Error500
+      required:
+      - allow
+      title: PermissionSet
+      description: The permissions granted by a role.
     Error409:
       properties:
         type:
@@ -741,6 +717,89 @@ components:
       additionalProperties: false
       type: object
       title: Error409
+    Error400:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `bad_request`
+          default: bad_request
+          examples:
+          - bad_request
+        status:
+          type: integer
+          title: Status
+          description: Always `400`.
+          default: 400
+          examples:
+          - 400
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error400
+    Collection_Role_:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/Role_2'
+          type: array
+          title: Items
+          description: A list of items returned for this request.
+        limit:
+          type: integer
+          maximum: 100.0
+          minimum: 1.0
+          title: Limit
+          description: The number of items for this page.
+          default: 20
+          examples:
+          - 20
+        next_cursor:
+          anyOf:
+          - type: string
+            maxLength: 1000
+            minLength: 1
+          - type: 'null'
+          title: Next Cursor
+          description: The cursor pointing at the next page of items.
+          examples:
+          - ZXhhbXBsZTE
+        previous_cursor:
+          anyOf:
+          - type: string
+            maxLength: 1000
+            minLength: 1
+          - type: 'null'
+          title: Previous Cursor
+          description: The cursor pointing at the previous page of items.
+          examples:
+          - Xkjss7asS
+      additionalProperties: false
+      type: object
+      required:
+      - items
+      title: Collection[Role]
     ErrorDetail_2:
       properties:
         location:
@@ -777,6 +836,119 @@ components:
       - message
       - type
       title: ErrorDetail
+    Role_2:
+      properties:
+        type:
+          type: string
+          const: role
+          title: Type
+          description: Always `role`.
+          default: role
+          examples:
+          - role
+        id:
+          type: string
+          format: uuid
+          title: Id
+          description: The unique ID for the role.
+          examples:
+          - fe26475d-ec3e-4884-9553-f7356683f7f9
+        name:
+          type: string
+          title: Name
+          description: The human-readable name of the role.
+          examples:
+          - Administrator
+        slug:
+          type: string
+          title: Slug
+          description: The unique, human-readable identifier for the role.
+          examples:
+          - administrator
+        description:
+          type: string
+          title: Description
+          description: A description of the access this role grants.
+          examples:
+          - Full read and write access.
+        permissions:
+          $ref: '#/components/schemas/PermissionSet'
+          description: The permissions granted by this role.
+        assignable_to:
+          items:
+            $ref: '#/components/schemas/RoleAssigneeType'
+          type: array
+          title: Assignable To
+          description: The types of resource this role can be assigned to.
+        applies_to:
+          items:
+            type: string
+          type: array
+          title: Applies To
+          description: The slugs of the roles this role is an add-on of. Empty when this role is not an add-on.
+        is_standalone_assignable:
+          type: boolean
+          title: Is Standalone Assignable
+          description: Whether this role can be assigned on its own, without being combined with another role.
+      additionalProperties: false
+      type: object
+      required:
+      - id
+      - name
+      - slug
+      - description
+      - permissions
+      - assignable_to
+      - applies_to
+      - is_standalone_assignable
+      title: Role
+    ErrorLocation:
+      type: string
+      enum:
+      - query
+      - body
+      - path
+      - header
+      - unknown
+      title: ErrorLocation
+    Error504:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `gateway_timeout`
+          default: gateway_timeout
+          examples:
+          - gateway_timeout
+        status:
+          type: integer
+          title: Status
+          default: 504
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error504
     Error502:
       properties:
         type:
@@ -818,6 +990,179 @@ components:
       additionalProperties: false
       type: object
       title: Error502
+    Error500:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `server_error`
+          default: server_error
+          examples:
+          - server_error
+        status:
+          type: integer
+          title: Status
+          description: Always `500`.
+          default: 500
+          examples:
+          - 500
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error500
+    Error401:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `unauthorized`
+          default: unauthorized
+          examples:
+          - unauthorized
+        status:
+          type: integer
+          title: Status
+          description: Always `401`.
+          default: 401
+          examples:
+          - 401
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: No valid API authentication found
+          examples:
+          - No valid API authentication found
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error401
+    Error404:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `not_found`
+          default: not_found
+          examples:
+          - not_found
+        status:
+          type: integer
+          title: Status
+          description: Always `404`.
+          default: 404
+          examples:
+          - 404
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: The resource could not be found
+          examples:
+          - The resource could not be found
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error404
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    Error425:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `too_early`
+          default: too_early
+          examples:
+          - too_early
+        status:
+          type: integer
+          title: Status
+          description: Always `425`.
+          default: 425
+          examples:
+          - 425
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error425
     Error405:
       properties:
         type:
@@ -900,281 +1245,6 @@ components:
       additionalProperties: false
       type: object
       title: Error429
-    Error425:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `too_early`
-          default: too_early
-          examples:
-          - too_early
-        status:
-          type: integer
-          title: Status
-          description: Always `425`.
-          default: 425
-          examples:
-          - 425
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error425
-    Error401:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `unauthorized`
-          default: unauthorized
-          examples:
-          - unauthorized
-        status:
-          type: integer
-          title: Status
-          description: Always `401`.
-          default: 401
-          examples:
-          - 401
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: No valid API authentication found
-          examples:
-          - No valid API authentication found
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error401
-    Error400:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `bad_request`
-          default: bad_request
-          examples:
-          - bad_request
-        status:
-          type: integer
-          title: Status
-          description: Always `400`.
-          default: 400
-          examples:
-          - 400
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error400
-    Role_2:
-      properties:
-        type:
-          type: string
-          const: role
-          title: Type
-          description: Always `role`.
-          default: role
-          examples:
-          - role
-        id:
-          type: string
-          format: uuid
-          title: Id
-          description: The unique ID for the role.
-          examples:
-          - fe26475d-ec3e-4884-9553-f7356683f7f9
-        name:
-          type: string
-          title: Name
-          description: The human-readable name of the role.
-          examples:
-          - Administrator
-        slug:
-          type: string
-          title: Slug
-          description: The unique, human-readable identifier for the role.
-          examples:
-          - administrator
-        description:
-          type: string
-          title: Description
-          description: A description of the access this role grants.
-          examples:
-          - Full read and write access.
-        permissions:
-          $ref: '#/components/schemas/PermissionSet'
-          description: The permissions granted by this role.
-        assignable_to:
-          items:
-            $ref: '#/components/schemas/RoleAssigneeType'
-          type: array
-          title: Assignable To
-          description: The types of resource this role can be assigned to.
-        applies_to:
-          items:
-            type: string
-          type: array
-          title: Applies To
-          description: The slugs of the roles this role is an add-on of. Empty when this role is not an add-on.
-        is_standalone_assignable:
-          type: boolean
-          title: Is Standalone Assignable
-          description: Whether this role can be assigned on its own, without being combined with another role.
-      additionalProperties: false
-      type: object
-      required:
-      - id
-      - name
-      - slug
-      - description
-      - permissions
-      - assignable_to
-      - applies_to
-      - is_standalone_assignable
-      title: Role
-    Error504:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `gateway_timeout`
-          default: gateway_timeout
-          examples:
-          - gateway_timeout
-        status:
-          type: integer
-          title: Status
-          default: 504
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Request could not be processed
-          examples:
-          - Request could not be processed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error504
-    RoleAssigneeType:
-      type: string
-      enum:
-      - user
-      - api-key-pair
-      title: RoleAssigneeType
-    Collection_Role_:
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/Role_2'
-          type: array
-          title: Items
-          description: A list of items returned for this request.
-        limit:
-          type: integer
-          maximum: 100.0
-          minimum: 1.0
-          title: Limit
-          description: The number of items for this page.
-          default: 20
-          examples:
-          - 20
-        next_cursor:
-          anyOf:
-          - type: string
-            maxLength: 1000
-            minLength: 1
-          - type: 'null'
-          title: Next Cursor
-          description: The cursor pointing at the next page of items.
-          examples:
-          - ZXhhbXBsZTE
-        previous_cursor:
-          anyOf:
-          - type: string
-            maxLength: 1000
-            minLength: 1
-          - type: 'null'
-          title: Previous Cursor
-          description: The cursor pointing at the previous page of items.
-          examples:
-          - Xkjss7asS
-      additionalProperties: false
-      type: object
-      required:
-      - items
-      title: Collection[Role]
     ValidationError:
       properties:
         loc:
@@ -1201,73 +1271,12 @@ components:
       - msg
       - type
       title: ValidationError
-    Error404:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `not_found`
-          default: not_found
-          examples:
-          - not_found
-        status:
-          type: integer
-          title: Status
-          description: Always `404`.
-          default: 404
-          examples:
-          - 404
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: The resource could not be found
-          examples:
-          - The resource could not be found
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error404
-    PermissionSet:
-      properties:
-        allow:
-          items:
-            type: string
-          type: array
-          title: Allow
-          description: The scopes granted by this role.
-          examples:
-          - - transactions.read
-            - reports.read
-      additionalProperties: false
-      type: object
-      required:
-      - allow
-      title: PermissionSet
-      description: The permissions granted by a role.
-    ErrorLocation:
+    RoleAssigneeType:
       type: string
       enum:
-      - query
-      - body
-      - path
-      - header
-      - unknown
-      title: ErrorLocation
+      - user
+      - api-key-pair
+      title: RoleAssigneeType
     Error403:
       properties:
         type:
@@ -1309,15 +1318,6 @@ components:
       additionalProperties: false
       type: object
       title: Error403
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
   securitySchemes:
     bearerAuth:
       type: http

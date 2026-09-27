@@ -173,6 +173,42 @@ components:
           type: string
           example: field required
           description: A human readable message for this error detail.
+    Error400BadRequest:
+      title: Bad Request
+      type: object
+      description: Bad Request (HTTP 400).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: A short code that describes the reason for the error.
+          example: bad_request
+          enum:
+          - bad_request
+          - incorrect_json
+          - invalid_credentials
+        status:
+          type: integer
+          description: '`400`.'
+          example: 400
+          enum:
+          - 400
+        message:
+          type: string
+          description: A human-readable reason for the error.
+          example: Missing '****' field
+        details:
+          type: array
+          description: A list of detail objects that further clarify the reason for the error.
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
     Error401Unauthorized:
       title: Unauthorized Error
       type: object
@@ -210,42 +246,6 @@ components:
 
             Not every error supports more detail.'
           example: []
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-    Error400BadRequest:
-      title: Bad Request
-      type: object
-      description: Bad Request (HTTP 400).
-      x-tags:
-      - Errors
-      properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: A short code that describes the reason for the error.
-          example: bad_request
-          enum:
-          - bad_request
-          - incorrect_json
-          - invalid_credentials
-        status:
-          type: integer
-          description: '`400`.'
-          example: 400
-          enum:
-          - 400
-        message:
-          type: string
-          description: A human-readable reason for the error.
-          example: Missing '****' field
-        details:
-          type: array
-          description: A list of detail objects that further clarify the reason for the error.
           items:
             $ref: '#/components/schemas/ErrorDetail'
   securitySchemes:

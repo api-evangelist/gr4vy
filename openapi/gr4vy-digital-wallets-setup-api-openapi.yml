@@ -802,47 +802,19 @@ paths:
       x-speakeasy-group: digital-wallets.domains
 components:
   schemas:
-    Error500:
+    DigitalWalletDomain:
       properties:
-        type:
+        domain_name:
           type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
+          title: Domain Name
+          description: The domain to add or remove.
           examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `server_error`
-          default: server_error
-          examples:
-          - server_error
-        status:
-          type: integer
-          title: Status
-          description: Always `500`.
-          default: 500
-          examples:
-          - 500
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Request could not be processed
-          examples:
-          - Request could not be processed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
+          - example.com
       additionalProperties: false
       type: object
-      title: Error500
+      required:
+      - domain_name
+      title: DigitalWalletDomain
     Error409:
       properties:
         type:
@@ -892,6 +864,109 @@ components:
       additionalProperties: false
       type: object
       title: Error409
+    Error400:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `bad_request`
+          default: bad_request
+          examples:
+          - bad_request
+        status:
+          type: integer
+          title: Status
+          description: Always `400`.
+          default: 400
+          examples:
+          - 400
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error400
+    DigitalWalletCreate:
+      properties:
+        provider:
+          $ref: '#/components/schemas/DigitalWalletProvider'
+        merchant_name:
+          type: string
+          maxLength: 1024
+          title: Merchant Name
+        merchant_display_name:
+          anyOf:
+          - type: string
+            maxLength: 1024
+          - type: 'null'
+          title: Merchant Display Name
+        merchant_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Merchant Url
+        merchant_country_code:
+          anyOf:
+          - type: string
+            pattern: ^[A-Z]{2}$
+            examples:
+            - DE
+            - GB
+            - US
+          - type: 'null'
+          title: Merchant Country Code
+        merchant_category_code:
+          anyOf:
+          - type: string
+            maxLength: 4
+            minLength: 4
+          - type: 'null'
+          title: Merchant Category Code
+        address:
+          anyOf:
+          - $ref: '#/components/schemas/DigitalWalletAddress'
+          - type: 'null'
+        extra_configuration:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Extra Configuration
+        domain_names:
+          items:
+            type: string
+          type: array
+          title: Domain Names
+        accept_terms_and_conditions:
+          type: boolean
+          title: Accept Terms And Conditions
+      additionalProperties: false
+      type: object
+      required:
+      - provider
+      - merchant_name
+      - accept_terms_and_conditions
+      title: DigitalWalletCreate
+      description: Request body for registering a new digital wallet
     ErrorDetail:
       properties:
         location:
@@ -928,59 +1003,6 @@ components:
       - message
       - type
       title: ErrorDetail
-    Error502:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `bad_gateway`
-          default: bad_gateway
-          examples:
-          - bad_gateway
-        status:
-          type: integer
-          title: Status
-          description: Always `502`.
-          default: 502
-          examples:
-          - 502
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Request could not be processed
-          examples:
-          - Request could not be processed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error502
-    DigitalWallets:
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/DigitalWallet'
-          type: array
-          title: Items
-          description: A list of items returned for this request.
-      type: object
-      required:
-      - items
-      title: DigitalWallets
     DigitalWalletAddress:
       properties:
         line1:
@@ -1033,7 +1055,16 @@ components:
       - state_code
       - postal_code
       title: DigitalWalletAddress
-    Error405:
+    ErrorLocation:
+      type: string
+      enum:
+      - query
+      - body
+      - path
+      - header
+      - unknown
+      title: ErrorLocation
+    Error504:
       properties:
         type:
           type: string
@@ -1046,24 +1077,21 @@ components:
         code:
           type: string
           title: Code
-          description: Always `method_not_allowed`
-          default: method_not_allowed
+          description: Always `gateway_timeout`
+          default: gateway_timeout
           examples:
-          - method_not_allowed
+          - gateway_timeout
         status:
           type: integer
           title: Status
-          description: Always `405`.
-          default: 405
-          examples:
-          - 405
+          default: 504
         message:
           type: string
           title: Message
           description: A human readable message that provides more context to the error.
-          default: Method Not Allowed
+          default: Request could not be processed
           examples:
-          - Method Not Allowed
+          - Request could not be processed
         details:
           items:
             $ref: '#/components/schemas/ErrorDetail'
@@ -1073,8 +1101,16 @@ components:
           default: []
       additionalProperties: false
       type: object
-      title: Error405
-    Error429:
+      title: Error504
+    DigitalWalletProvider:
+      type: string
+      enum:
+      - apple
+      - google
+      - click-to-pay
+      - paze
+      title: DigitalWalletProvider
+    Error502:
       properties:
         type:
           type: string
@@ -1087,24 +1123,24 @@ components:
         code:
           type: string
           title: Code
-          description: Always `too_many_requests`
-          default: too_many_requests
+          description: Always `bad_gateway`
+          default: bad_gateway
           examples:
-          - too_many_requests
+          - bad_gateway
         status:
           type: integer
           title: Status
-          description: Always `429`.
-          default: 429
+          description: Always `502`.
+          default: 502
           examples:
-          - 429
+          - 502
         message:
           type: string
           title: Message
           description: A human readable message that provides more context to the error.
-          default: Generic error
+          default: Request could not be processed
           examples:
-          - Request failed validation
+          - Request could not be processed
         details:
           items:
             $ref: '#/components/schemas/ErrorDetail'
@@ -1114,21 +1150,8 @@ components:
           default: []
       additionalProperties: false
       type: object
-      title: Error429
-    DigitalWalletDomain:
-      properties:
-        domain_name:
-          type: string
-          title: Domain Name
-          description: The domain to add or remove.
-          examples:
-          - example.com
-      additionalProperties: false
-      type: object
-      required:
-      - domain_name
-      title: DigitalWalletDomain
-    Error425:
+      title: Error502
+    Error500:
       properties:
         type:
           type: string
@@ -1141,24 +1164,24 @@ components:
         code:
           type: string
           title: Code
-          description: Always `too_early`
-          default: too_early
+          description: Always `server_error`
+          default: server_error
           examples:
-          - too_early
+          - server_error
         status:
           type: integer
           title: Status
-          description: Always `425`.
-          default: 425
+          description: Always `500`.
+          default: 500
           examples:
-          - 425
+          - 500
         message:
           type: string
           title: Message
           description: A human readable message that provides more context to the error.
-          default: Generic error
+          default: Request could not be processed
           examples:
-          - Request failed validation
+          - Request could not be processed
         details:
           items:
             $ref: '#/components/schemas/ErrorDetail'
@@ -1168,7 +1191,7 @@ components:
           default: []
       additionalProperties: false
       type: object
-      title: Error425
+      title: Error500
     Error401:
       properties:
         type:
@@ -1210,7 +1233,7 @@ components:
       additionalProperties: false
       type: object
       title: Error401
-    Error400:
+    Error404:
       properties:
         type:
           type: string
@@ -1223,24 +1246,24 @@ components:
         code:
           type: string
           title: Code
-          description: Always `bad_request`
-          default: bad_request
+          description: Always `not_found`
+          default: not_found
           examples:
-          - bad_request
+          - not_found
         status:
           type: integer
           title: Status
-          description: Always `400`.
-          default: 400
+          description: Always `404`.
+          default: 404
           examples:
-          - 400
+          - 404
         message:
           type: string
           title: Message
           description: A human readable message that provides more context to the error.
-          default: Generic error
+          default: The resource could not be found
           examples:
-          - Request failed validation
+          - The resource could not be found
         details:
           items:
             $ref: '#/components/schemas/ErrorDetail'
@@ -1250,7 +1273,19 @@ components:
           default: []
       additionalProperties: false
       type: object
-      title: Error400
+      title: Error404
+    DigitalWallets:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/DigitalWallet'
+          type: array
+          title: Items
+          description: A list of items returned for this request.
+      type: object
+      required:
+      - items
+      title: DigitalWallets
     DigitalWallet:
       properties:
         type:
@@ -1458,7 +1493,7 @@ components:
       type: object
       title: DigitalWalletUpdate
       description: Request body for editing a registered digital wallet
-    Error504:
+    Error425:
       properties:
         type:
           type: string
@@ -1471,21 +1506,24 @@ components:
         code:
           type: string
           title: Code
-          description: Always `gateway_timeout`
-          default: gateway_timeout
+          description: Always `too_early`
+          default: too_early
           examples:
-          - gateway_timeout
+          - too_early
         status:
           type: integer
           title: Status
-          default: 504
+          description: Always `425`.
+          default: 425
+          examples:
+          - 425
         message:
           type: string
           title: Message
           description: A human readable message that provides more context to the error.
-          default: Request could not be processed
+          default: Generic error
           examples:
-          - Request could not be processed
+          - Request failed validation
         details:
           items:
             $ref: '#/components/schemas/ErrorDetail'
@@ -1495,15 +1533,98 @@ components:
           default: []
       additionalProperties: false
       type: object
-      title: Error504
-    DigitalWalletProvider:
-      type: string
-      enum:
-      - apple
-      - google
-      - click-to-pay
-      - paze
-      title: DigitalWalletProvider
+      title: Error425
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    Error405:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `method_not_allowed`
+          default: method_not_allowed
+          examples:
+          - method_not_allowed
+        status:
+          type: integer
+          title: Status
+          description: Always `405`.
+          default: 405
+          examples:
+          - 405
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Method Not Allowed
+          examples:
+          - Method Not Allowed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error405
+    Error429:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `too_many_requests`
+          default: too_many_requests
+          examples:
+          - too_many_requests
+        status:
+          type: integer
+          title: Status
+          description: Always `429`.
+          default: 429
+          examples:
+          - 429
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error429
     ValidationError:
       properties:
         loc:
@@ -1530,56 +1651,6 @@ components:
       - msg
       - type
       title: ValidationError
-    Error404:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `not_found`
-          default: not_found
-          examples:
-          - not_found
-        status:
-          type: integer
-          title: Status
-          description: Always `404`.
-          default: 404
-          examples:
-          - 404
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: The resource could not be found
-          examples:
-          - The resource could not be found
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error404
-    ErrorLocation:
-      type: string
-      enum:
-      - query
-      - body
-      - path
-      - header
-      - unknown
-      title: ErrorLocation
     Error403:
       properties:
         type:
@@ -1621,77 +1692,6 @@ components:
       additionalProperties: false
       type: object
       title: Error403
-    DigitalWalletCreate:
-      properties:
-        provider:
-          $ref: '#/components/schemas/DigitalWalletProvider'
-        merchant_name:
-          type: string
-          maxLength: 1024
-          title: Merchant Name
-        merchant_display_name:
-          anyOf:
-          - type: string
-            maxLength: 1024
-          - type: 'null'
-          title: Merchant Display Name
-        merchant_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Merchant Url
-        merchant_country_code:
-          anyOf:
-          - type: string
-            pattern: ^[A-Z]{2}$
-            examples:
-            - DE
-            - GB
-            - US
-          - type: 'null'
-          title: Merchant Country Code
-        merchant_category_code:
-          anyOf:
-          - type: string
-            maxLength: 4
-            minLength: 4
-          - type: 'null'
-          title: Merchant Category Code
-        address:
-          anyOf:
-          - $ref: '#/components/schemas/DigitalWalletAddress'
-          - type: 'null'
-        extra_configuration:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Extra Configuration
-        domain_names:
-          items:
-            type: string
-          type: array
-          title: Domain Names
-        accept_terms_and_conditions:
-          type: boolean
-          title: Accept Terms And Conditions
-      additionalProperties: false
-      type: object
-      required:
-      - provider
-      - merchant_name
-      - accept_terms_and_conditions
-      title: DigitalWalletCreate
-      description: Request body for registering a new digital wallet
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
   securitySchemes:
     OAuth2PasswordBearer:
       type: oauth2

@@ -86,6 +86,44 @@ components:
           type: string
           example: field required
           description: A human readable message for this error detail.
+    PaymentMethodDefinitions:
+      title: Payment Method Definitions
+      type: object
+      description: A list of available payment method definitions.
+      x-tags:
+      - Payment Method Definitions
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentMethodDefinition'
+    PaymentMethodDefinition:
+      title: Payment Method Definition
+      type: object
+      description: Definitions of a payment method including icon, label, etc.
+      x-tags:
+      - Payment Method Definitions
+      properties:
+        id:
+          type: string
+          description: The mode of this payment method.
+          example: bank
+        icon_url:
+          type: string
+          description: The icon for this payment method.
+          example: https://api.sandbox.example.gr4vy.app/assets/payment-method-definitions/bank.svg
+        display_name:
+          type: string
+          description: The display name of this payment method.
+          example: Bank
+        long_display_name:
+          type: string
+          description: The long display name of this payment method.
+          example: Bank (BACS)
+        method:
+          type: string
+          description: The method, or type, for this payment method.
+          example: BACS
     Error401Unauthorized:
       title: Unauthorized Error
       type: object
@@ -125,44 +163,6 @@ components:
           example: []
           items:
             $ref: '#/components/schemas/ErrorDetail'
-    PaymentMethodDefinition:
-      title: Payment Method Definition
-      type: object
-      description: Definitions of a payment method including icon, label, etc.
-      x-tags:
-      - Payment Method Definitions
-      properties:
-        id:
-          type: string
-          description: The mode of this payment method.
-          example: bank
-        icon_url:
-          type: string
-          description: The icon for this payment method.
-          example: https://api.sandbox.example.gr4vy.app/assets/payment-method-definitions/bank.svg
-        display_name:
-          type: string
-          description: The display name of this payment method.
-          example: Bank
-        long_display_name:
-          type: string
-          description: The long display name of this payment method.
-          example: Bank (BACS)
-        method:
-          type: string
-          description: The method, or type, for this payment method.
-          example: BACS
-    PaymentMethodDefinitions:
-      title: Payment Method Definitions
-      type: object
-      description: A list of available payment method definitions.
-      x-tags:
-      - Payment Method Definitions
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/PaymentMethodDefinition'
   securitySchemes:
     bearerAuth:
       type: http

@@ -881,292 +881,103 @@ paths:
       x-gr4vy-docs-ignore: true
 components:
   schemas:
-    Airline:
-      title: Airline Addendum
+    TransactionBuyerRequest:
+      title: Buyer
       type: object
-      description: Information about an airline travel.
-      properties:
-        passenger_name_record:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 50
-          description: The Passenger Name Record (PNR) in the airline reservation system.
-          example: JOHN L
-        booking_code:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 50
-          description: The unique identifier of the reservation in the global distribution system.
-          example: X36Q9C
-        ticket_number:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 50
-          description: The airline's unique ticket number.
-          example: 123-1234-151555
-        ticket_delivery_method:
-          type:
-          - string
-          - 'null'
-          enum:
-          - electronic
-          - other
-          default: electronic
-          description: The delivery method of the ticket.
-          example: other
-        issued_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: 'The date that the ticket was last issued in the airline reservation
-
-            system.'
-          example: '2013-07-16T19:23:00.000+00:00'
-        issued_address:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 255
-          description: The address of the place/agency that issued the ticket.
-          example: 123 Broadway, New York
-        travel_agency_code:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 50
-          description: The IATA travel agency code.
-          example: '12345'
-        travel_agency_name:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 200
-          description: The name of the travel agency.
-          example: Agency name
-        travel_agency_invoice_number:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 50
-          description: 'The reference number of the invoice that was issued by the
-
-            travel agency.'
-          example: EG15555155
-        travel_agency_plan_name:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 200
-          description: The name of the travel agency plan.
-          example: B733
-        restricted_ticket:
-          type:
-          - boolean
-          - 'null'
-          description: Indicates whether the ticket is restricted (refundable).
-          example: false
-        issuing_carrier_code:
-          type:
-          - string
-          - 'null'
-          minLength: 2
-          maxLength: 3
-          description: 'For airline aggregators, two-character IATA code of the airline issuing
-
-            the ticket.'
-          example: A3
-        issuing_carrier_name:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 100
-          description: The name of the airline issuing the ticket.
-          example: Aegean Airlines
-        issuing_iata_designator:
-          type:
-          - string
-          - 'null'
-          minLength: 2
-          maxLength: 2
-          description: 2 character IATA code of the airline issuing the ticket.
-          example: A3
-        issuing_icao_code:
-          type:
-          - string
-          - 'null'
-          minLength: 3
-          maxLength: 3
-          description: 3 character ICAO code of the airline issuing the ticket.
-          example: AEE
-        reservation_system:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 200
-          description: The name of the reservation system.
-          example: Amadeus
-        is_cardholder_traveling:
-          type:
-          - boolean
-          - 'null'
-          description: Indicates whether the cardholder is present in the flight.
-          example: false
-        passengers:
-          description: An array of the travelling passengers.
-          items:
-            $ref: '#/components/schemas/AirlinePassenger'
-          maxLength: 20
-          type:
-          - array
-          - 'null'
-        legs:
-          description: 'An array of separate trip segments. Each leg contains detailed
-
-            itinerary information.'
-          items:
-            $ref: '#/components/schemas/AirlineLeg'
-          maxLength: 20
-          type:
-          - array
-          - 'null'
-    AirlinePassenger:
-      title: Airline Addendum Passenger
-      type: object
-      description: Information of the travelling passenger.
-      properties:
-        title:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 50
-          description: Title of the passenger.
-          example: Mr.
-        first_name:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 255
-          description: The first name(s) or given name of the passenger.
-          example: John
-        last_name:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 255
-          description: The last name, or family name, of the passenger.
-          example: Lunn
-        email_address:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 320
-          description: The email address of the passenger.
-          example: john@example.com
-        phone_number:
-          type:
-          - string
-          - 'null'
-          pattern: ^\+[1-9]\d{1,14}$
-          minLength: 1
-          maxLength: 50
-          description: 'The phone number of the passenger. This number is formatted according to the
-
-            [E164 number standard](https://www.twilio.com/docs/glossary/what-e164).'
-          example: '+1234567890'
-        passport_number:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 50
-          description: The passenger's unique passport number.
-          example: '7700225'
-        ticket_number:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 50
-          description: The ticket number for a flight.
-          example: LH1236699999
-        frequent_flyer_number:
-          type:
-          - string
-          - 'null'
-          minLength: 5
-          maxLength: 50
-          description: The passenger's frequent flyer number.
-          example: '15885566'
-        date_of_birth:
-          type:
-          - string
-          - 'null'
-          description: The passenger's date of birth.
-          format: date
-          example: '2013-07-16'
-        age_group:
-          type:
-          - string
-          - 'null'
-          enum:
-          - adult
-          - infant
-          example: adult
-    CheckoutSessionUpdateRequest:
-      title: Checkout Session (Update)
-      type: object
-      description: A request to update a checkout session.
+      description: Guest buyer details.
       x-tags:
-      - Checkout
+      - Request Bodies
       properties:
-        cart_items:
+        external_identifier:
           type:
-          - array
+          - string
           - 'null'
-          description: An array of cart items that represents the line items of a transaction.
-          items:
-            $ref: '#/components/schemas/CartItem'
-        metadata:
-          description: 'Any additional information about the transaction that you would like to
-
-            store as key-value pairs. This data is passed to payment service
-
-            providers that support it.'
+          description: An external identifier that can be used to match the buyer against your own records. This value needs to be unique for all buyers.
+          example: user-789123
+          minLength: 1
+          maxLength: 200
+        display_name:
           type:
-          - object
+          - string
           - 'null'
-          maxProperties: 20
-          additionalProperties:
-            type: string
-          example:
-            key: value
-        airline:
+          description: A unique name for this buyer which is used in the Gr4vy admin panel to give a buyer a human readable name.
+          example: John L.
+          minLength: 1
+          maxLength: 200
+        billing_details:
           type:
           - object
           - 'null'
+          description: The optional billing details for the a buyer.
           allOf:
-          - $ref: '#/components/schemas/Airline'
-          description: 'The airline addendum data which describes the airline booking
+          - $ref: '#/components/schemas/BillingDetailsRequest'
+        shipping_details:
+          type:
+          - object
+          - 'null'
+          description: The optional shipping details for the buyer.
+          allOf:
+          - $ref: '#/components/schemas/ShippingDetail'
+        account_number:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 255
+          example: '1234567'
+          description: The source account number to perform an account funding transaction.
+    CheckoutSessionSecureFieldsUpdate:
+      title: Checkout Session Secure Fields (Update)
+      type: object
+      description: A request to update the secure fields of a checkout session.
+      x-tags:
+      - Checkout Sessions
+      x-internal: true
+      properties:
+        payment_method:
+          oneOf:
+          - $ref: '#/components/schemas/CheckoutSessionFieldsCardPaymentMethod'
+          - $ref: '#/components/schemas/CheckoutSessionFieldsClickToPayPaymentMethod'
+          - $ref: '#/components/schemas/CheckoutSessionFieldsIdPaymentMethod'
+    Error401Unauthorized:
+      title: Unauthorized Error
+      type: object
+      description: Unauthorized Error (HTTP 401).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`unauthorized`.'
+          example: unauthorized
+          enum:
+          - unauthorized
+        status:
+          type: integer
+          description: '`401`.'
+          example: 401
+          enum:
+          - 401
+        message:
+          type: string
+          description: No valid API authentication found.
+          example: No valid API authentication found
+          enum:
+          - No valid API authentication found
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
 
-            associated with this transaction.'
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
     Error404NotFound:
       title: Not Found Error
       type: object
@@ -1205,68 +1016,91 @@ components:
           example: []
           items:
             $ref: '#/components/schemas/ErrorDetail'
-    BillingDetailsRequest:
-      title: Billing details (Create)
+    Error429TooManyRequests:
+      title: Too Many Requests Error
       type: object
-      description: Billing details to use associated to a buyer.
+      description: Too Many Requests Error (HTTP 429).
       x-tags:
-      - Buyers
+      - Errors
       properties:
-        first_name:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 255
-          description: The first name(s) or given name for the buyer.
-          example: John
-        last_name:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 255
-          example: Lunn
-          description: The last name, or family name, of the buyer.
-        email_address:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 320
-          description: The email address for the buyer.
-          example: john@example.com
-        phone_number:
-          type:
-          - string
-          - 'null'
-          pattern: ^\+[1-9]\d{1,14}$
-          minLength: 1
-          maxLength: 50
-          description: 'The phone number for the buyer which should be formatted according to the
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`too_many_requests`.'
+          example: too_many_requests
+          enum:
+          - too_many_requests
+        status:
+          type: integer
+          description: '`429`.'
+          example: 429
+          enum:
+          - 429
+        message:
+          type: string
+          description: Further details on the field that triggered the error.
+          example: Too many requests
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
 
-            [E164 number standard](https://www.twilio.com/docs/glossary/what-e164).'
-          example: '+1234567890'
-        address:
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    CheckoutSessionFieldsCardPaymentMethod:
+      title: Card Payment Method
+      type: object
+      description: Details to store a new card payment method.
+      x-tags:
+      - Request Bodies
+      x-internal: true
+      required:
+      - method
+      properties:
+        method:
+          type: string
+          description: '`card`.'
+          example: card
+          enum:
+          - card
+        number:
+          type: string
+          minLength: 13
+          maxLength: 19
+          example: '4111111111111111'
+          pattern: ^[0-9]{13,19}$
+          description: 'The 13-19 digit number for this card as it can be found on the
+
+            front of the card.'
+        expiration_date:
+          type: string
+          description: The expiration date of the card, formatted `MM/YY`.
+          example: 11/25
+          pattern: ^\d{2}/\d{2}$
+          minLength: 5
+          maxLength: 5
+        security_code:
           type:
-          - object
+          - string
           - 'null'
-          description: The billing address for the buyer.
-          allOf:
-          - $ref: '#/components/schemas/Address'
-          - required:
-            - line1
-            - city
-            - state
-            - postal_code
-            - country
-        tax_id:
-          type:
-          - object
-          - 'null'
-          description: The tax ID information associated with the billing details.
-          allOf:
-          - $ref: '#/components/schemas/TaxId'
+          description: 'The 3 or 4 digit security code often found on the card. This often
+
+            referred to as the CVV or CVD.
+
+
+            The security code can only be set if the stored payment method
+
+            represents a card.'
+          pattern: ^\d{3,4}$
+          minLength: 3
+          maxLength: 4
+          example: '123'
     CartItem:
       title: Cart Item
       type: object
@@ -1464,246 +1298,71 @@ components:
             seller transaction to meet Marketplace reporting requirements.'
           example: US
           pattern: ^[A-Z]{2}$
-    ErrorDetail:
-      title: Error details
-      description: Additional detail about the part of a request body that caused an issue.
+    ShippingDetail:
+      title: Shipping detail
       type: object
+      description: Shipping detail for a buyer.
       x-tags:
-      - Errors
+      - Buyers
       properties:
-        location:
-          type: string
-          example: body
-          description: The location where the error caused an issue.
-          enum:
-          - query
-          - body
-          - path
-          - header
         type:
           type: string
-          example: value_error.missing
-          description: A unique identifier for the type of error that occurred.
-        pointer:
-          type: string
-          example: /payment_method/number
-          description: 'The exact item for which the validation did not succeed. This is a JSON
-
-            pointer for request bodies, while for query, path, and header parameters
-
-            it is the name of the parameter.'
-        message:
-          type: string
-          example: field required
-          description: A human readable message for this error detail.
-    TransactionBuyerRequest:
-      title: Buyer
-      type: object
-      description: Guest buyer details.
-      x-tags:
-      - Request Bodies
-      properties:
-        external_identifier:
-          type:
-          - string
-          - 'null'
-          description: An external identifier that can be used to match the buyer against your own records. This value needs to be unique for all buyers.
-          example: user-789123
-          minLength: 1
-          maxLength: 200
-        display_name:
-          type:
-          - string
-          - 'null'
-          description: A unique name for this buyer which is used in the Gr4vy admin panel to give a buyer a human readable name.
-          example: John L.
-          minLength: 1
-          maxLength: 200
-        billing_details:
-          type:
-          - object
-          - 'null'
-          description: The optional billing details for the a buyer.
-          allOf:
-          - $ref: '#/components/schemas/BillingDetailsRequest'
-        shipping_details:
-          type:
-          - object
-          - 'null'
-          description: The optional shipping details for the buyer.
-          allOf:
-          - $ref: '#/components/schemas/ShippingDetail'
-        account_number:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 255
-          example: '1234567'
-          description: The source account number to perform an account funding transaction.
-    Address:
-      title: Address
-      type: object
-      description: An address for the buyer.
-      x-tags:
-      - Buyers
-      properties:
-        city:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 100
-          description: The city for the address.
-          example: London
-        country:
-          type:
-          - string
-          - 'null'
-          minLength: 2
-          maxLength: 2
-          description: The country for the address in ISO 3166 format.
-          example: GB
-        postal_code:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 50
-          description: The postal code or zip code for the address.
-          example: '789123'
-        state:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 255
-          description: The state, county, or province for the address.
-          example: Greater London
-        state_code:
-          type:
-          - string
-          - 'null'
-          minLength: 4
-          maxLength: 6
-          description: 'The code of state, county, or province for the address in
-
-            ISO 3166-2 format.'
-          example: GB-LND
-        house_number_or_name:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 255
-          description: 'The house number or name for the address. Not all payment
-
-            services use this field but some do.'
-          example: '10'
-        line1:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 255
-          description: The first line of the address.
-          example: 10 Oxford Street
-        line2:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 255
-          description: The second line of the address.
-          example: New Oxford Court
-        organization:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 255
-          description: 'The optional name of the company or organisation to add
-
-            to the address.'
-          example: Gr4vy
-    TaxId:
-      title: Tax ID
-      type: object
-      description: The tax ID information associated to a buyer.
-      x-tags:
-      - Buyers
-      required:
-      - kind
-      - value
-      properties:
-        value:
-          type: string
-          minLength: 1
-          maxLength: 50
-          description: The tax ID for the buyer.
-          example: '12345678931'
-        kind:
-          type: string
-          description: The kind of tax ID.
-          example: gb.vat
+          description: The type of this resource. Is always `shipping-details`.
+          example: shipping-details
           enum:
-          - ae.trn
-          - au.abn
-          - ar.dni
-          - ar.cuil
-          - ar.cuit
-          - br.cnpj
-          - br.cpf
-          - ca.bn
-          - ca.gst_hst
-          - ca.pst_bc
-          - ca.pst_mb
-          - ca.pst_sk
-          - ca.qst
-          - ch.vat
-          - cl.tin
-          - es.cif
-          - eu.vat
-          - gb.vat
-          - hk.br
-          - id.nik
-          - id.npwp
-          - in.gst
-          - jp.cn
-          - jp.rn
-          - kr.brn
-          - li.uid
-          - mx.curp
-          - my.frp
-          - my.itn
-          - my.nric
-          - my.sst
-          - no.vat
-          - nz.gst
-          - ph.tin
-          - ru.inn
-          - ru.kpp
-          - sa.vat
-          - sg.gst
-          - sg.uen
-          - th.id
-          - th.vat
-          - tw.vat
-          - us.ein
-          - za.vat
-    CheckoutSessionSecureFieldsUpdate:
-      title: Checkout Session Secure Fields (Update)
-      type: object
-      description: A request to update the secure fields of a checkout session.
-      x-tags:
-      - Checkout Sessions
-      x-internal: true
-      properties:
-        payment_method:
-          oneOf:
-          - $ref: '#/components/schemas/CheckoutSessionFieldsCardPaymentMethod'
-          - $ref: '#/components/schemas/CheckoutSessionFieldsClickToPayPaymentMethod'
-          - $ref: '#/components/schemas/CheckoutSessionFieldsIdPaymentMethod'
+          - shipping-details
+        id:
+          type: string
+          format: uuid
+          description: The unique ID for a buyer's shipping detail.
+          example: 8724fd24-5489-4a5d-90fd-0604df7d3b83
+        buyer_id:
+          type: string
+          format: uuid
+          description: The unique ID for a buyer.
+          example: 8724fd24-5489-4a5d-90fd-0604df7d3b83
+        first_name:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 255
+          description: The first name(s) or given name of the buyer.
+          example: John
+        last_name:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 255
+          example: Lunn
+          description: The last name, or family name, of the buyer.
+        email_address:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 320
+          description: The email address of the buyer.
+          example: john@example.com
+        phone_number:
+          type:
+          - string
+          - 'null'
+          pattern: ^\+[1-9]\d{1,14}$
+          minLength: 1
+          maxLength: 50
+          description: 'The phone number of the buyer. This number is formatted according to the
+
+            [E164 number standard](https://www.twilio.com/docs/glossary/what-e164).'
+          example: '+1234567890'
+        address:
+          type:
+          - object
+          - 'null'
+          description: The physical shipping address associated to this buyer.
+          allOf:
+          - $ref: '#/components/schemas/Address'
     CheckoutSessionFieldsClickToPayPaymentMethod:
       title: Click to Pay Payment Method
       type: object
@@ -1734,128 +1393,168 @@ components:
           type: string
           example: 34f4a24c.977cf2c2-3cv1-489e-b024-188a11a07491
           description: Unique identifier generated by an SRC System.
-    Error400BadRequest:
-      title: Bad Request
+    Airline:
+      title: Airline Addendum
       type: object
-      description: Bad Request (HTTP 400).
-      x-tags:
-      - Errors
+      description: Information about an airline travel.
       properties:
-        type:
-          type: string
-          description: '`error`.'
+        passenger_name_record:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 50
+          description: The Passenger Name Record (PNR) in the airline reservation system.
+          example: JOHN L
+        booking_code:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 50
+          description: The unique identifier of the reservation in the global distribution system.
+          example: X36Q9C
+        ticket_number:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 50
+          description: The airline's unique ticket number.
+          example: 123-1234-151555
+        ticket_delivery_method:
+          type:
+          - string
+          - 'null'
           enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: A short code that describes the reason for the error.
-          example: bad_request
-          enum:
-          - bad_request
-          - incorrect_json
-          - invalid_credentials
-        status:
-          type: integer
-          description: '`400`.'
-          example: 400
-          enum:
-          - 400
-        message:
-          type: string
-          description: A human-readable reason for the error.
-          example: Missing '****' field
-        details:
-          type: array
-          description: A list of detail objects that further clarify the reason for the error.
+          - electronic
+          - other
+          default: electronic
+          description: The delivery method of the ticket.
+          example: other
+        issued_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: 'The date that the ticket was last issued in the airline reservation
+
+            system.'
+          example: '2013-07-16T19:23:00.000+00:00'
+        issued_address:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 255
+          description: The address of the place/agency that issued the ticket.
+          example: 123 Broadway, New York
+        travel_agency_code:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 50
+          description: The IATA travel agency code.
+          example: '12345'
+        travel_agency_name:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 200
+          description: The name of the travel agency.
+          example: Agency name
+        travel_agency_invoice_number:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 50
+          description: 'The reference number of the invoice that was issued by the
+
+            travel agency.'
+          example: EG15555155
+        travel_agency_plan_name:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 200
+          description: The name of the travel agency plan.
+          example: B733
+        restricted_ticket:
+          type:
+          - boolean
+          - 'null'
+          description: Indicates whether the ticket is restricted (refundable).
+          example: false
+        issuing_carrier_code:
+          type:
+          - string
+          - 'null'
+          minLength: 2
+          maxLength: 3
+          description: 'For airline aggregators, two-character IATA code of the airline issuing
+
+            the ticket.'
+          example: A3
+        issuing_carrier_name:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 100
+          description: The name of the airline issuing the ticket.
+          example: Aegean Airlines
+        issuing_iata_designator:
+          type:
+          - string
+          - 'null'
+          minLength: 2
+          maxLength: 2
+          description: 2 character IATA code of the airline issuing the ticket.
+          example: A3
+        issuing_icao_code:
+          type:
+          - string
+          - 'null'
+          minLength: 3
+          maxLength: 3
+          description: 3 character ICAO code of the airline issuing the ticket.
+          example: AEE
+        reservation_system:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 200
+          description: The name of the reservation system.
+          example: Amadeus
+        is_cardholder_traveling:
+          type:
+          - boolean
+          - 'null'
+          description: Indicates whether the cardholder is present in the flight.
+          example: false
+        passengers:
+          description: An array of the travelling passengers.
           items:
-            $ref: '#/components/schemas/ErrorDetail'
-    CheckoutSessionFieldsCardPaymentMethod:
-      title: Card Payment Method
-      type: object
-      description: Details to store a new card payment method.
-      x-tags:
-      - Request Bodies
-      x-internal: true
-      required:
-      - method
-      properties:
-        method:
-          type: string
-          description: '`card`.'
-          example: card
-          enum:
-          - card
-        number:
-          type: string
-          minLength: 13
-          maxLength: 19
-          example: '4111111111111111'
-          pattern: ^[0-9]{13,19}$
-          description: 'The 13-19 digit number for this card as it can be found on the
-
-            front of the card.'
-        expiration_date:
-          type: string
-          description: The expiration date of the card, formatted `MM/YY`.
-          example: 11/25
-          pattern: ^\d{2}/\d{2}$
-          minLength: 5
-          maxLength: 5
-        security_code:
+            $ref: '#/components/schemas/AirlinePassenger'
+          maxLength: 20
           type:
-          - string
+          - array
           - 'null'
-          description: 'The 3 or 4 digit security code often found on the card. This often
+        legs:
+          description: 'An array of separate trip segments. Each leg contains detailed
 
-            referred to as the CVV or CVD.
-
-
-            The security code can only be set if the stored payment method
-
-            represents a card.'
-          pattern: ^\d{3,4}$
-          minLength: 3
-          maxLength: 4
-          example: '123'
-    CheckoutSessionFieldsIdPaymentMethod:
-      title: ID Payment Method
-      type: object
-      description: Details to use a stored card payment method.
-      x-tags:
-      - Request Bodies
-      x-internal: true
-      required:
-      - method
-      - id
-      properties:
-        method:
-          type: string
-          description: '`id`.'
-          example: id
-          enum:
-          - id
-        id:
-          type: string
-          description: The unique ID of the payment method.
-          format: uuid
-          example: 77a76f7e-d2de-4bbc-ada9-d6a0015e6bd5
-        security_code:
+            itinerary information.'
+          items:
+            $ref: '#/components/schemas/AirlineLeg'
+          maxLength: 20
           type:
-          - string
+          - array
           - 'null'
-          description: 'The 3 or 4 digit security code often found on the card. This often
-
-            referred to as the CVV or CVD.
-
-
-            The security code can only be set if the stored payment method
-
-            represents a card.'
-          pattern: ^\d{3,4}$
-          minLength: 3
-          maxLength: 4
-          example: '123'
     CheckoutSession:
       title: Checkout Session
       type: object
@@ -2004,200 +1703,78 @@ components:
               - 'null'
               description: The unique hash derived from the payment method identifier (e.g. card number).
               example: 20eb353620155d2b5fc864cc46a73ea77cb92c725238650839da1813fa987a17
-    Error409DuplicateRecord:
-      title: Duplicate Record Error
+    TaxId:
+      title: Tax ID
       type: object
-      description: Duplicate Record Error (HTTP 409).
-      x-tags:
-      - Errors
-      properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: '`duplicate_record`.'
-          example: duplicate_record
-          enum:
-          - duplicate_record
-        status:
-          type: integer
-          description: '`409`.'
-          example: 409
-          enum:
-          - 409
-        message:
-          type: string
-          description: Further details on the field that triggered the error.
-          example: A duplicate record exists with this external_identifier value
-        details:
-          type: array
-          description: 'A list of detail objects that further clarify the reason for the error.
-
-            Not every error supports more detail.'
-          example: []
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-    Error429TooManyRequests:
-      title: Too Many Requests Error
-      type: object
-      description: Too Many Requests Error (HTTP 429).
-      x-tags:
-      - Errors
-      properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: '`too_many_requests`.'
-          example: too_many_requests
-          enum:
-          - too_many_requests
-        status:
-          type: integer
-          description: '`429`.'
-          example: 429
-          enum:
-          - 429
-        message:
-          type: string
-          description: Further details on the field that triggered the error.
-          example: Too many requests
-        details:
-          type: array
-          description: 'A list of detail objects that further clarify the reason for the error.
-
-            Not every error supports more detail.'
-          example: []
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-    ShippingDetail:
-      title: Shipping detail
-      type: object
-      description: Shipping detail for a buyer.
+      description: The tax ID information associated to a buyer.
       x-tags:
       - Buyers
+      required:
+      - kind
+      - value
       properties:
-        type:
+        value:
           type: string
-          description: The type of this resource. Is always `shipping-details`.
-          example: shipping-details
-          enum:
-          - shipping-details
-        id:
-          type: string
-          format: uuid
-          description: The unique ID for a buyer's shipping detail.
-          example: 8724fd24-5489-4a5d-90fd-0604df7d3b83
-        buyer_id:
-          type: string
-          format: uuid
-          description: The unique ID for a buyer.
-          example: 8724fd24-5489-4a5d-90fd-0604df7d3b83
-        first_name:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 255
-          description: The first name(s) or given name of the buyer.
-          example: John
-        last_name:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 255
-          example: Lunn
-          description: The last name, or family name, of the buyer.
-        email_address:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 320
-          description: The email address of the buyer.
-          example: john@example.com
-        phone_number:
-          type:
-          - string
-          - 'null'
-          pattern: ^\+[1-9]\d{1,14}$
           minLength: 1
           maxLength: 50
-          description: 'The phone number of the buyer. This number is formatted according to the
-
-            [E164 number standard](https://www.twilio.com/docs/glossary/what-e164).'
-          example: '+1234567890'
-        address:
-          type:
-          - object
-          - 'null'
-          description: The physical shipping address associated to this buyer.
-          allOf:
-          - $ref: '#/components/schemas/Address'
-    Error401Unauthorized:
-      title: Unauthorized Error
+          description: The tax ID for the buyer.
+          example: '12345678931'
+        kind:
+          type: string
+          description: The kind of tax ID.
+          example: gb.vat
+          enum:
+          - ae.trn
+          - au.abn
+          - ar.dni
+          - ar.cuil
+          - ar.cuit
+          - br.cnpj
+          - br.cpf
+          - ca.bn
+          - ca.gst_hst
+          - ca.pst_bc
+          - ca.pst_mb
+          - ca.pst_sk
+          - ca.qst
+          - ch.vat
+          - cl.tin
+          - es.cif
+          - eu.vat
+          - gb.vat
+          - hk.br
+          - id.nik
+          - id.npwp
+          - in.gst
+          - jp.cn
+          - jp.rn
+          - kr.brn
+          - li.uid
+          - mx.curp
+          - my.frp
+          - my.itn
+          - my.nric
+          - my.sst
+          - no.vat
+          - nz.gst
+          - ph.tin
+          - ru.inn
+          - ru.kpp
+          - sa.vat
+          - sg.gst
+          - sg.uen
+          - th.id
+          - th.vat
+          - tw.vat
+          - us.ein
+          - za.vat
+    CheckoutSessionUpdateRequest:
+      title: Checkout Session (Update)
       type: object
-      description: Unauthorized Error (HTTP 401).
-      x-tags:
-      - Errors
-      properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: '`unauthorized`.'
-          example: unauthorized
-          enum:
-          - unauthorized
-        status:
-          type: integer
-          description: '`401`.'
-          example: 401
-          enum:
-          - 401
-        message:
-          type: string
-          description: No valid API authentication found.
-          example: No valid API authentication found
-          enum:
-          - No valid API authentication found
-        details:
-          type: array
-          description: 'A list of detail objects that further clarify the reason for the error.
-
-            Not every error supports more detail.'
-          example: []
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-    CheckoutSessionCreateRequest:
-      title: Checkout Session (Create)
-      type: object
-      description: A request to create a checkout session.
+      description: A request to update a checkout session.
       x-tags:
       - Checkout
       properties:
-        expires_in:
-          type: integer
-          minimum: 3600
-          maximum: 86400
-          default: 3600
-          example: 7200
-          description: 'Defines when the checkout session will expire (in seconds). Defaults to an
-
-            hour (3600 seconds).'
         cart_items:
           type:
           - array
@@ -2228,16 +1805,6 @@ components:
           description: 'The airline addendum data which describes the airline booking
 
             associated with this transaction.'
-        buyer:
-          description: 'Provide buyer details for the transaction. No buyer resource will be
-
-            created on Gr4vy when used.'
-          oneOf:
-          - $ref: '#/components/schemas/TransactionBuyerRequest'
-          type:
-          - object
-          - 'null'
-          x-model-name: TransactionBuyerRequest
     AirlineLeg:
       title: Airline Addendum Leg
       type: object
@@ -2428,385 +1995,439 @@ components:
           maxLength: 5
           description: Indicates seat class (first class, business class, etc.).
           example: F
-    TransactionPaymentSource:
-      type: string
-      enum:
-      - ecommerce
-      - moto
-      - recurring
-      - installment
-      - card_on_file
-      title: TransactionPaymentSource
-      description: The way payment method information made it to this transaction.
-    Airline_2:
-      properties:
-        booking_code:
-          anyOf:
-          - type: string
-            maxLength: 50
-            minLength: 1
-          - type: 'null'
-          title: Booking Code
-          description: The unique identifier of the reservation in the global distribution system.
-          examples:
-          - X36Q9C
-        is_cardholder_traveling:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Is Cardholder Traveling
-          description: Indicates whether the cardholder is traveling.
-          examples:
-          - true
-        issued_address:
-          anyOf:
-          - type: string
-            maxLength: 255
-            minLength: 1
-          - type: 'null'
-          title: Issued Address
-          description: The address of the place/agency that issued the ticket.
-          examples:
-          - 123 Broadway, New York
-        issued_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Issued At
-          description: The date that the ticket was last issued in the airline reservation system.
-          examples:
-          - '2013-07-16T19:23:00.000+00:00'
-        issuing_carrier_code:
-          anyOf:
-          - type: string
-            maxLength: 3
-            minLength: 2
-          - type: 'null'
-          title: Issuing Carrier Code
-          description: For airline aggregators, three-character IATA code of the airline issuing the ticket.
-          examples:
-          - '649'
-        issuing_carrier_name:
-          anyOf:
-          - type: string
-            minLength: 1
-          - type: 'null'
-          title: Issuing Carrier Name
-          description: For airline aggregators, name of the airline issuing the ticket.
-          examples:
-          - Air Transat A.T. Inc
-        issuing_iata_designator:
-          anyOf:
-          - type: string
-            maxLength: 2
-            minLength: 2
-          - type: 'null'
-          title: Issuing Iata Designator
-          description: For airline aggregators, two-character IATA code of the airline issuing the ticket.
-          examples:
-          - TS
-        issuing_icao_code:
-          anyOf:
-          - type: string
-            maxLength: 3
-            minLength: 3
-          - type: 'null'
-          title: Issuing Icao Code
-          description: For airline aggregators, three-character ICAO code of the airline issuing the ticket.
-          examples:
-          - TSC
-        legs:
-          anyOf:
-          - items:
-              $ref: '#/components/schemas/AirlineLeg_2'
-            type: array
-            maxItems: 20
-          - type: 'null'
-          title: Legs
-          description: An array of separate trip segments. Each leg contains detailed itinerary information.
-        passenger_name_record:
-          anyOf:
-          - type: string
-            maxLength: 50
-            minLength: 1
-          - type: 'null'
-          title: Passenger Name Record
-          description: The Passenger Name Record (PNR) in the airline reservation system.
-          examples:
-          - JOHN L
-        passengers:
-          anyOf:
-          - items:
-              $ref: '#/components/schemas/AirlinePassenger_2'
-            type: array
-            maxItems: 20
-          - type: 'null'
-          title: Passengers
-          description: An array of the travelling passengers.
-        reservation_system:
-          anyOf:
-          - type: string
-            maxLength: 200
-            minLength: 1
-          - type: 'null'
-          title: Reservation System
-          description: The name of the reservation system.
-          examples:
-          - Amadeus
-        restricted_ticket:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Restricted Ticket
-          description: Indicates whether the ticket is restricted (refundable).
-          examples:
-          - false
-        ticket_delivery_method:
-          anyOf:
-          - type: string
-            enum:
-            - electronic
-            - other
-          - type: 'null'
-          title: Ticket Delivery Method
-          description: The delivery method of the ticket.
-          default: electronic
-          examples:
-          - electronic
-        ticket_number:
-          anyOf:
-          - type: string
-            maxLength: 50
-            minLength: 1
-          - type: 'null'
-          title: Ticket Number
-          description: The airline's unique ticket number.
-          examples:
-          - 123-1234-151555
-        travel_agency_code:
-          anyOf:
-          - type: string
-            maxLength: 50
-            minLength: 1
-          - type: 'null'
-          title: Travel Agency Code
-          description: The IATA travel agency code.
-          examples:
-          - '12345'
-        travel_agency_invoice_number:
-          anyOf:
-          - type: string
-            maxLength: 50
-            minLength: 1
-          - type: 'null'
-          title: Travel Agency Invoice Number
-          description: The reference number of the invoice that was issued by the travel agency.
-          examples:
-          - EG15555155
-        travel_agency_name:
-          anyOf:
-          - type: string
-            maxLength: 200
-            minLength: 1
-          - type: 'null'
-          title: Travel Agency Name
-          description: The name of the travel agency.
-          examples:
-          - ACME Agency
-        travel_agency_plan_name:
-          anyOf:
-          - type: string
-            maxLength: 200
-            minLength: 1
-          - type: 'null'
-          title: Travel Agency Plan Name
-          description: The name of the travel agency plan.
-          examples:
-          - B733
-      additionalProperties: false
+    Error400BadRequest:
+      title: Bad Request
       type: object
-      title: Airline
-      description: Information about an airline travel.
-    AirlinePassenger_2:
-      properties:
-        age_group:
-          anyOf:
-          - type: string
-            enum:
-            - adult
-            - infant
-          - type: 'null'
-          title: Age Group
-          description: The age group for the passenger.
-          examples:
-          - adult
-        date_of_birth:
-          anyOf:
-          - type: string
-            format: date
-          - type: 'null'
-          title: Date Of Birth
-          description: The passenger's date of birth in YYYY-MM-YY format.
-          examples:
-          - '2013-07-16'
-        email_address:
-          anyOf:
-          - type: string
-            maxLength: 320
-            minLength: 1
-          - type: 'null'
-          title: Email Address
-          description: The email address of the passenger.
-          examples:
-          - john@example.com
-        first_name:
-          anyOf:
-          - type: string
-            maxLength: 255
-            minLength: 1
-          - type: 'null'
-          title: First Name
-          description: The first name(s) or given name of the passenger.
-          examples:
-          - John
-        frequent_flyer_number:
-          anyOf:
-          - type: string
-            maxLength: 50
-            minLength: 5
-          - type: 'null'
-          title: Frequent Flyer Number
-          description: The passenger's frequent flyer number.
-          examples:
-          - '15885566'
-        last_name:
-          anyOf:
-          - type: string
-            maxLength: 255
-            minLength: 1
-          - type: 'null'
-          title: Last Name
-          description: The last name, or family name, of the passenger.
-          examples:
-          - Luhn
-        passport_number:
-          anyOf:
-          - type: string
-            maxLength: 50
-            minLength: 1
-          - type: 'null'
-          title: Passport Number
-          description: The passenger's unique passport number.
-          examples:
-          - '11117700225'
-        phone_number:
-          anyOf:
-          - type: string
-            pattern: ^\+[1-9]\d{1,14}$
-            examples:
-            - '+14155552671'
-            - '+442071838750'
-          - type: 'null'
-          title: Phone Number
-          description: The phone number of the passenger. This number is formatted according to the E164 number standard.
-          examples:
-          - '+1234567890'
-        ticket_number:
-          anyOf:
-          - type: string
-            maxLength: 50
-            minLength: 1
-          - type: 'null'
-          title: Ticket Number
-          description: The ticket number for a flight.
-          examples:
-          - BA1236699999
-        title:
-          anyOf:
-          - type: string
-            maxLength: 50
-            minLength: 1
-          - type: 'null'
-          title: Title
-          description: Title of the passenger.
-          examples:
-          - Mr.
-        country_code:
-          anyOf:
-          - type: string
-            pattern: ^[A-Z]{2}$
-            examples:
-            - DE
-            - GB
-            - US
-          - type: 'null'
-          title: Country Code
-          description: The country of residence of the passenger
-          examples:
-          - US
-      additionalProperties: false
-      type: object
-      title: AirlinePassenger
-    Error500:
+      description: Bad Request (HTTP 400).
+      x-tags:
+      - Errors
       properties:
         type:
           type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
+          description: '`error`.'
+          enum:
           - error
+          example: error
         code:
           type: string
-          title: Code
-          description: Always `server_error`
-          default: server_error
-          examples:
-          - server_error
+          description: A short code that describes the reason for the error.
+          example: bad_request
+          enum:
+          - bad_request
+          - incorrect_json
+          - invalid_credentials
         status:
           type: integer
-          title: Status
-          description: Always `500`.
-          default: 500
-          examples:
-          - 500
+          description: '`400`.'
+          example: 400
+          enum:
+          - 400
         message:
           type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Request could not be processed
-          examples:
-          - Request could not be processed
+          description: A human-readable reason for the error.
+          example: Missing '****' field
         details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
           type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
+          description: A list of detail objects that further clarify the reason for the error.
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    CheckoutSessionCreateRequest:
+      title: Checkout Session (Create)
       type: object
-      title: Error500
-    TransactionIntent:
-      type: string
-      enum:
-      - authorize
-      - capture
-      title: TransactionIntent
-    ProductType:
-      type: string
-      enum:
-      - physical
-      - discount
-      - shipping_fee
-      - sales_tax
-      - digital
-      - gift_card
-      - store_credit
-      - surcharge
-      title: ProductType
+      description: A request to create a checkout session.
+      x-tags:
+      - Checkout
+      properties:
+        expires_in:
+          type: integer
+          minimum: 3600
+          maximum: 86400
+          default: 3600
+          example: 7200
+          description: 'Defines when the checkout session will expire (in seconds). Defaults to an
+
+            hour (3600 seconds).'
+        cart_items:
+          type:
+          - array
+          - 'null'
+          description: An array of cart items that represents the line items of a transaction.
+          items:
+            $ref: '#/components/schemas/CartItem'
+        metadata:
+          description: 'Any additional information about the transaction that you would like to
+
+            store as key-value pairs. This data is passed to payment service
+
+            providers that support it.'
+          type:
+          - object
+          - 'null'
+          maxProperties: 20
+          additionalProperties:
+            type: string
+          example:
+            key: value
+        airline:
+          type:
+          - object
+          - 'null'
+          allOf:
+          - $ref: '#/components/schemas/Airline'
+          description: 'The airline addendum data which describes the airline booking
+
+            associated with this transaction.'
+        buyer:
+          description: 'Provide buyer details for the transaction. No buyer resource will be
+
+            created on Gr4vy when used.'
+          oneOf:
+          - $ref: '#/components/schemas/TransactionBuyerRequest'
+          type:
+          - object
+          - 'null'
+          x-model-name: TransactionBuyerRequest
+    BillingDetailsRequest:
+      title: Billing details (Create)
+      type: object
+      description: Billing details to use associated to a buyer.
+      x-tags:
+      - Buyers
+      properties:
+        first_name:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 255
+          description: The first name(s) or given name for the buyer.
+          example: John
+        last_name:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 255
+          example: Lunn
+          description: The last name, or family name, of the buyer.
+        email_address:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 320
+          description: The email address for the buyer.
+          example: john@example.com
+        phone_number:
+          type:
+          - string
+          - 'null'
+          pattern: ^\+[1-9]\d{1,14}$
+          minLength: 1
+          maxLength: 50
+          description: 'The phone number for the buyer which should be formatted according to the
+
+            [E164 number standard](https://www.twilio.com/docs/glossary/what-e164).'
+          example: '+1234567890'
+        address:
+          type:
+          - object
+          - 'null'
+          description: The billing address for the buyer.
+          allOf:
+          - $ref: '#/components/schemas/Address'
+          - required:
+            - line1
+            - city
+            - state
+            - postal_code
+            - country
+        tax_id:
+          type:
+          - object
+          - 'null'
+          description: The tax ID information associated with the billing details.
+          allOf:
+          - $ref: '#/components/schemas/TaxId'
+    Error409DuplicateRecord:
+      title: Duplicate Record Error
+      type: object
+      description: Duplicate Record Error (HTTP 409).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`duplicate_record`.'
+          example: duplicate_record
+          enum:
+          - duplicate_record
+        status:
+          type: integer
+          description: '`409`.'
+          example: 409
+          enum:
+          - 409
+        message:
+          type: string
+          description: Further details on the field that triggered the error.
+          example: A duplicate record exists with this external_identifier value
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    AirlinePassenger:
+      title: Airline Addendum Passenger
+      type: object
+      description: Information of the travelling passenger.
+      properties:
+        title:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 50
+          description: Title of the passenger.
+          example: Mr.
+        first_name:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 255
+          description: The first name(s) or given name of the passenger.
+          example: John
+        last_name:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 255
+          description: The last name, or family name, of the passenger.
+          example: Lunn
+        email_address:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 320
+          description: The email address of the passenger.
+          example: john@example.com
+        phone_number:
+          type:
+          - string
+          - 'null'
+          pattern: ^\+[1-9]\d{1,14}$
+          minLength: 1
+          maxLength: 50
+          description: 'The phone number of the passenger. This number is formatted according to the
+
+            [E164 number standard](https://www.twilio.com/docs/glossary/what-e164).'
+          example: '+1234567890'
+        passport_number:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 50
+          description: The passenger's unique passport number.
+          example: '7700225'
+        ticket_number:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 50
+          description: The ticket number for a flight.
+          example: LH1236699999
+        frequent_flyer_number:
+          type:
+          - string
+          - 'null'
+          minLength: 5
+          maxLength: 50
+          description: The passenger's frequent flyer number.
+          example: '15885566'
+        date_of_birth:
+          type:
+          - string
+          - 'null'
+          description: The passenger's date of birth.
+          format: date
+          example: '2013-07-16'
+        age_group:
+          type:
+          - string
+          - 'null'
+          enum:
+          - adult
+          - infant
+          example: adult
+    Address:
+      title: Address
+      type: object
+      description: An address for the buyer.
+      x-tags:
+      - Buyers
+      properties:
+        city:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 100
+          description: The city for the address.
+          example: London
+        country:
+          type:
+          - string
+          - 'null'
+          minLength: 2
+          maxLength: 2
+          description: The country for the address in ISO 3166 format.
+          example: GB
+        postal_code:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 50
+          description: The postal code or zip code for the address.
+          example: '789123'
+        state:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 255
+          description: The state, county, or province for the address.
+          example: Greater London
+        state_code:
+          type:
+          - string
+          - 'null'
+          minLength: 4
+          maxLength: 6
+          description: 'The code of state, county, or province for the address in
+
+            ISO 3166-2 format.'
+          example: GB-LND
+        house_number_or_name:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 255
+          description: 'The house number or name for the address. Not all payment
+
+            services use this field but some do.'
+          example: '10'
+        line1:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 255
+          description: The first line of the address.
+          example: 10 Oxford Street
+        line2:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 255
+          description: The second line of the address.
+          example: New Oxford Court
+        organization:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 255
+          description: 'The optional name of the company or organisation to add
+
+            to the address.'
+          example: Gr4vy
+    CheckoutSessionFieldsIdPaymentMethod:
+      title: ID Payment Method
+      type: object
+      description: Details to use a stored card payment method.
+      x-tags:
+      - Request Bodies
+      x-internal: true
+      required:
+      - method
+      - id
+      properties:
+        method:
+          type: string
+          description: '`id`.'
+          example: id
+          enum:
+          - id
+        id:
+          type: string
+          description: The unique ID of the payment method.
+          format: uuid
+          example: 77a76f7e-d2de-4bbc-ada9-d6a0015e6bd5
+        security_code:
+          type:
+          - string
+          - 'null'
+          description: 'The 3 or 4 digit security code often found on the card. This often
+
+            referred to as the CVV or CVD.
+
+
+            The security code can only be set if the stored payment method
+
+            represents a card.'
+          pattern: ^\d{3,4}$
+          minLength: 3
+          maxLength: 4
+          example: '123'
+    ErrorDetail:
+      title: Error details
+      description: Additional detail about the part of a request body that caused an issue.
+      type: object
+      x-tags:
+      - Errors
+      properties:
+        location:
+          type: string
+          example: body
+          description: The location where the error caused an issue.
+          enum:
+          - query
+          - body
+          - path
+          - header
+        type:
+          type: string
+          example: value_error.missing
+          description: A unique identifier for the type of error that occurred.
+        pointer:
+          type: string
+          example: /payment_method/number
+          description: 'The exact item for which the validation did not succeed. This is a JSON
+
+            pointer for request bodies, while for query, path, and header parameters
+
+            it is the name of the parameter.'
+        message:
+          type: string
+          example: field required
+          description: A human readable message for this error detail.
     Error409:
       properties:
         type:
@@ -2856,6 +2477,465 @@ components:
       additionalProperties: false
       type: object
       title: Error409
+    CheckoutSessionCardPaymentMethod:
+      properties:
+        method:
+          type: string
+          const: card
+          title: Method
+          description: Always `card`.
+          default: card
+          examples:
+          - card
+        number:
+          type: string
+          maxLength: 19
+          minLength: 13
+          pattern: ^\d+$
+          title: Number
+          description: The 13-19 digit number for this card.
+          examples:
+          - '4111111111111111'
+        expiration_date:
+          type: string
+          maxLength: 5
+          minLength: 5
+          pattern: ^\d{2}/\d{2}$
+          title: Expiration Date
+          description: The expiration date of the card, formatted `MM/YY`.
+          examples:
+          - 12/30
+        security_code:
+          anyOf:
+          - type: string
+            maxLength: 4
+            minLength: 3
+            pattern: ^\d+$
+          - type: 'null'
+          title: Security Code
+          description: The 3 or 4 digit security code often found on the card. This often referred to as the CVV or CVD.
+          examples:
+          - '123'
+      additionalProperties: false
+      type: object
+      required:
+      - number
+      - expiration_date
+      title: CheckoutSessionCardPaymentMethod
+    TransactionPaymentSource:
+      type: string
+      enum:
+      - ecommerce
+      - moto
+      - recurring
+      - installment
+      - card_on_file
+      title: TransactionPaymentSource
+      description: The way payment method information made it to this transaction.
+    CardScheme:
+      type: string
+      enum:
+      - accel
+      - amex
+      - bancontact
+      - carte-bancaire
+      - cirrus
+      - culiance
+      - dankort
+      - diners-club
+      - discover
+      - eftpos-australia
+      - elo
+      - hipercard
+      - jcb
+      - maestro
+      - mastercard
+      - mir
+      - nyce
+      - other
+      - pulse
+      - qcard
+      - rupay
+      - star
+      - uatp
+      - unionpay
+      - visa
+      title: CardScheme
+    Error400:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `bad_request`
+          default: bad_request
+          examples:
+          - bad_request
+        status:
+          type: integer
+          title: Status
+          description: Always `400`.
+          default: 400
+          examples:
+          - 400
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error400
+    CheckoutSessionCardDetails:
+      properties:
+        bin:
+          type: string
+          title: Bin
+          description: The card BIN provided in the request.
+          examples:
+          - '41111111'
+        card_type:
+          anyOf:
+          - $ref: '#/components/schemas/CardType'
+          - type: 'null'
+          description: The type of the card.
+          examples:
+          - debit
+        scheme:
+          anyOf:
+          - $ref: '#/components/schemas/CardScheme'
+          - type: 'null'
+          description: The scheme of the card.
+          examples:
+          - visa
+        scheme_icon_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scheme Icon Url
+          description: URL to the card scheme's icon.
+          examples:
+          - https://cdn.example.gr4vy.app/assets/icons/card-schemes/mastercard.svg
+        additional_schemes:
+          items:
+            $ref: '#/components/schemas/CardScheme'
+          type: array
+          title: Additional Schemes
+          description: Additional card schemes associated with the BIN.
+          examples:
+          - - visa-debit
+            - electron
+        country:
+          anyOf:
+          - type: string
+            pattern: ^[A-Z]{2}$
+            examples:
+            - DE
+            - GB
+            - US
+          - type: 'null'
+          title: Country
+          description: The country the card was issued in.
+          examples:
+          - US
+      additionalProperties: false
+      type: object
+      required:
+      - bin
+      title: CheckoutSessionCardDetails
+    GuestBuyer:
+      properties:
+        display_name:
+          anyOf:
+          - type: string
+            maxLength: 200
+            minLength: 1
+          - type: 'null'
+          title: Display Name
+          description: The display name for the buyer.
+          examples:
+          - John Doe
+        external_identifier:
+          anyOf:
+          - type: string
+            maxLength: 200
+            minLength: 1
+          - type: 'null'
+          title: External Identifier
+          description: The merchant identifier for this buyer.
+          examples:
+          - buyer-12345
+        billing_details:
+          anyOf:
+          - $ref: '#/components/schemas/BillingDetails'
+          - type: 'null'
+          description: The billing name, address, email, and other fields for this buyer.
+        account_number:
+          anyOf:
+          - type: string
+            maxLength: 200
+            minLength: 1
+          - type: 'null'
+          title: Account Number
+          description: The buyer account number
+        shipping_details:
+          anyOf:
+          - $ref: '#/components/schemas/ShippingDetailsCreate'
+          - type: 'null'
+          description: The optional shipping details for this buyer.
+      additionalProperties: false
+      type: object
+      title: GuestBuyer
+    BillingDetails:
+      properties:
+        first_name:
+          anyOf:
+          - type: string
+            maxLength: 255
+            minLength: 1
+          - type: 'null'
+          title: First Name
+          description: The first name(s) or given name for the buyer.
+          examples:
+          - John
+        last_name:
+          anyOf:
+          - type: string
+            maxLength: 255
+            minLength: 1
+          - type: 'null'
+          title: Last Name
+          description: The last name, or family name, of the buyer.
+          examples:
+          - Doe
+        email_address:
+          anyOf:
+          - type: string
+            maxLength: 320
+            minLength: 1
+          - type: 'null'
+          title: Email Address
+          description: The email address for the buyer.
+          examples:
+          - john@example.com
+        phone_number:
+          anyOf:
+          - type: string
+            pattern: ^\+[1-9]\d{1,14}$
+            examples:
+            - '+14155552671'
+            - '+442071838750'
+          - type: 'null'
+          title: Phone Number
+          description: The phone number for the buyer which should be formatted according to the E164 number standard.
+          examples:
+          - '+1234567890'
+        address:
+          anyOf:
+          - $ref: '#/components/schemas/Address_2'
+          - type: 'null'
+          description: The billing address for the buyer.
+        tax_id:
+          anyOf:
+          - $ref: '#/components/schemas/TaxId_2'
+          - type: 'null'
+          description: The tax ID information associated with the billing details.
+      additionalProperties: false
+      type: object
+      title: BillingDetails
+    CheckoutSessionIdPaymentMethod:
+      properties:
+        method:
+          type: string
+          const: id
+          title: Method
+          description: Always `id`.
+          default: id
+          examples:
+          - id
+        id:
+          type: string
+          format: uuid
+          title: Id
+          description: The ID of the payment method to associate to the session.
+          examples:
+          - ef9496d8-53a5-4aad-8ca2-00eb68334389
+        security_code:
+          anyOf:
+          - type: string
+            maxLength: 4
+            minLength: 3
+            pattern: ^\d+$
+          - type: 'null'
+          title: Security Code
+          description: The 3 or 4 digit security code often found on the card. This often referred to as the CVV or CVD.
+          examples:
+          - '123'
+      additionalProperties: false
+      type: object
+      required:
+      - id
+      title: CheckoutSessionIdPaymentMethod
+    ProductType:
+      type: string
+      enum:
+      - physical
+      - discount
+      - shipping_fee
+      - sales_tax
+      - digital
+      - gift_card
+      - store_credit
+      - surcharge
+      title: ProductType
+    CheckoutSessionUpdate:
+      properties:
+        cart_items:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/CartItem_2'
+            type: array
+          - type: 'null'
+          title: Cart Items
+          description: An array of cart items that represents the line items of a transaction.
+        metadata:
+          anyOf:
+          - additionalProperties:
+              type: string
+            type: object
+          - type: 'null'
+          title: Metadata
+          description: Any additional information about the transaction that you would like to store as key-value pairs. This data is passed to payment service providers that support it.
+          examples:
+          - cohort: cohort-a
+            order_id: order-12345
+        buyer:
+          anyOf:
+          - $ref: '#/components/schemas/GuestBuyer'
+          - type: 'null'
+          description: Provide buyer details for the transaction. No buyer resource will be created on Gr4vy when used.
+        airline:
+          anyOf:
+          - $ref: '#/components/schemas/Airline_2'
+          - type: 'null'
+          description: The airline addendum data which describes the airline booking associated with this transaction.
+        amount:
+          anyOf:
+          - type: integer
+            maximum: 99999999.0
+            minimum: 0.0
+          - type: 'null'
+          title: Amount
+          description: The total amount for this transaction.
+          x-gr4vy-docs-ignore: true
+        currency:
+          anyOf:
+          - type: string
+            pattern: ^[A-Z]{3}$
+            examples:
+            - EUR
+            - GBP
+            - USD
+          - type: 'null'
+          title: Currency
+          description: The currency code for this transaction.
+          x-gr4vy-docs-ignore: true
+        payment_service_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Payment Service Id
+          description: The unique identifier of an existing payment service. When provided, the created transaction will be processed by the given payment service and any routing rules will be skipped.
+          x-gr4vy-docs-ignore: true
+        expires_in:
+          type: number
+          maximum: 86400.0
+          minimum: 3600.0
+          title: Expires In
+          description: The time in seconds when this checkout session expires.
+          default: 3600
+        country:
+          anyOf:
+          - type: string
+            pattern: ^[A-Z]{2}$
+            examples:
+            - DE
+            - GB
+            - US
+          - type: 'null'
+          title: Country
+          description: The 2-letter ISO 3166-1 alpha-2 country code for the transaction. Used to filter payment services for processing.
+          examples:
+          - US
+          x-gr4vy-docs-ignore: true
+          x-speakeasy-ignore: true
+        is_subsequent_payment:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Subsequent Payment
+          description: 'Indicates whether the transaction represents a subsequent payment coming from a setup recurring payment. Please note there are some restrictions on how this flag may be used.
+
+
+            The flag can only be `false` (or not set) when the transaction meets one of the following criteria:
+
+
+            * It is not `merchant_initiated`.
+
+            * `payment_source` is set to `card_on_file`.
+
+
+            The flag can only be set to `true` when the transaction meets one of the following criteria:
+
+            * It is not `merchant_initiated`.
+
+            * `payment_source` is set to `recurring` or `installment` and `merchant_initiated` is set to `true`.
+
+            * `payment_source` is set to `card_on_file`.'
+          x-gr4vy-docs-ignore: true
+          x-speakeasy-ignore: true
+        merchant_initiated:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Merchant Initiated
+          description: Indicates whether the transaction was initiated by the merchant (true) or customer (false).
+          x-gr4vy-docs-ignore: true
+          x-speakeasy-ignore: true
+        payment_source:
+          anyOf:
+          - $ref: '#/components/schemas/TransactionPaymentSource'
+          - type: 'null'
+          description: The use-case for the the transaction.
+          x-gr4vy-docs-ignore: true
+          x-speakeasy-ignore: true
+        intent:
+          anyOf:
+          - $ref: '#/components/schemas/TransactionIntent'
+          - type: 'null'
+          description: Defines the intent to apply to transactions created via this checkout session. This determines the desired initial state of the transaction.
+          x-gr4vy-docs-ignore: true
+          x-speakeasy-ignore: true
+      additionalProperties: false
+      type: object
+      title: CheckoutSessionUpdate
     ErrorDetail_2:
       properties:
         location:
@@ -2892,6 +2972,273 @@ components:
       - message
       - type
       title: ErrorDetail
+    ShippingDetailsCreate:
+      properties:
+        first_name:
+          anyOf:
+          - type: string
+            maxLength: 255
+            minLength: 1
+          - type: 'null'
+          title: First Name
+          description: The first name(s) or given name for the buyer.
+          examples:
+          - John
+        last_name:
+          anyOf:
+          - type: string
+            maxLength: 255
+            minLength: 1
+          - type: 'null'
+          title: Last Name
+          description: The last name, or family name, of the buyer.
+          examples:
+          - Doe
+        email_address:
+          anyOf:
+          - type: string
+            maxLength: 320
+            minLength: 1
+          - type: 'null'
+          title: Email Address
+          description: The email address for the buyer.
+          examples:
+          - john@example.com
+        phone_number:
+          anyOf:
+          - type: string
+            pattern: ^\+[1-9]\d{1,14}$
+            examples:
+            - '+14155552671'
+            - '+442071838750'
+          - type: 'null'
+          title: Phone Number
+          description: The phone number for the buyer which should be formatted according to the E164 number standard.
+          examples:
+          - '+1234567890'
+        address:
+          anyOf:
+          - $ref: '#/components/schemas/Address_2'
+          - type: 'null'
+          description: The billing address for the buyer.
+      additionalProperties: false
+      type: object
+      title: ShippingDetailsCreate
+    TaxIdKind:
+      type: string
+      enum:
+      - ae.trn
+      - au.abn
+      - ar.dni
+      - ar.cuil
+      - ar.cuit
+      - br.cnpj
+      - br.cpf
+      - ca.bn
+      - ca.gst_hst
+      - ca.pst_bc
+      - ca.pst_mb
+      - ca.pst_sk
+      - ca.qst
+      - ch.vat
+      - cl.tin
+      - co.itin
+      - co.nit
+      - co.cc
+      - co.ce
+      - co.de
+      - co.rc
+      - co.ti
+      - co.passport
+      - es.cif
+      - eu.vat
+      - gb.vat
+      - hk.br
+      - id.nik
+      - id.npwp
+      - in.gst
+      - in.pan
+      - jp.cn
+      - jp.rn
+      - kr.brn
+      - li.uid
+      - mx.curp
+      - mx.rfc
+      - my.frp
+      - my.itn
+      - my.nric
+      - my.sst
+      - no.vat
+      - nz.gst
+      - pe.ruc
+      - ph.tin
+      - ru.inn
+      - ru.kpp
+      - sa.vat
+      - sg.gst
+      - sg.uen
+      - th.id
+      - th.vat
+      - tw.vat
+      - us.ein
+      - za.vat
+      - bo.ci
+      - uy.rut
+      - uy.ci
+      title: TaxIdKind
+    CheckoutSessionPaymentMethod:
+      properties:
+        type:
+          type: string
+          const: payment-method
+          title: Type
+          description: Always `payment-method`
+          default: payment-method
+          examples:
+          - payment-method
+        id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Id
+          description: The ID of the payment method.
+          examples:
+          - ef9496d8-53a5-4aad-8ca2-00eb68334389
+        details:
+          anyOf:
+          - $ref: '#/components/schemas/CheckoutSessionPaymentMethodDetails'
+          - type: 'null'
+          description: Details for credit or debit card payment method.
+        label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Label
+          description: The last 4 digits of the the card.
+          examples:
+          - '1234'
+        method:
+          type: string
+          const: card
+          title: Method
+          description: Always `card`
+          default: card
+          examples:
+          - card
+        scheme:
+          anyOf:
+          - $ref: '#/components/schemas/CardScheme'
+          - type: 'null'
+          description: The scheme of the card.
+          examples:
+          - visa
+        fingerprint:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Fingerprint
+          description: The unique hash derived from the card number.
+          examples:
+          - a50b85c200ee0795d6fd33a5c66f37a4564f554355c5b46a756aac485dd168a4
+      additionalProperties: false
+      type: object
+      title: CheckoutSessionPaymentMethod
+    CardType:
+      type: string
+      enum:
+      - credit
+      - debit
+      - prepaid
+      title: CardType
+    ErrorLocation:
+      type: string
+      enum:
+      - query
+      - body
+      - path
+      - header
+      - unknown
+      title: ErrorLocation
+    Error504:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `gateway_timeout`
+          default: gateway_timeout
+          examples:
+          - gateway_timeout
+        status:
+          type: integer
+          title: Status
+          default: 504
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error504
+    CheckoutSessionPaymentMethodDetails:
+      properties:
+        bin:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Bin
+          description: The first 6 digit of the card.
+          examples:
+          - '411111'
+        card_country:
+          anyOf:
+          - type: string
+            pattern: ^[A-Z]{2}$
+            examples:
+            - DE
+            - GB
+            - US
+          - type: 'null'
+          title: Card Country
+          description: The country of the card issuer.
+          examples:
+          - US
+        card_type:
+          anyOf:
+          - $ref: '#/components/schemas/CardType'
+          - type: 'null'
+          description: The payment scheme of the card.
+          examples:
+          - credit
+        card_issuer_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Card Issuer Name
+          description: The card issuer.
+          examples:
+          - Bank of America NA
+      additionalProperties: false
+      type: object
+      title: CheckoutSessionPaymentMethodDetails
     CartItem_2:
       properties:
         name:
@@ -3151,106 +3498,47 @@ components:
       additionalProperties: false
       type: object
       title: Error502
-    Address_2:
+    Error500:
       properties:
-        city:
-          anyOf:
-          - type: string
-            maxLength: 100
-            minLength: 1
-          - type: 'null'
-          title: City
-          description: The city for the address.
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
           examples:
-          - San Jose
-        country:
-          anyOf:
-          - type: string
-            pattern: ^[A-Z]{2}$
-            examples:
-            - DE
-            - GB
-            - US
-          - type: 'null'
-          title: Country
-          description: The country for the address in ISO 3166 format.
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `server_error`
+          default: server_error
           examples:
-          - US
-        postal_code:
-          anyOf:
-          - type: string
-            maxLength: 50
-            minLength: 1
-          - type: 'null'
-          title: Postal Code
-          description: The postal code or zip code for the address.
+          - server_error
+        status:
+          type: integer
+          title: Status
+          description: Always `500`.
+          default: 500
           examples:
-          - '94560'
-        state:
-          anyOf:
-          - type: string
-            maxLength: 255
-            minLength: 1
-          - type: 'null'
-          title: State
-          description: The state, county, or province for the address.
+          - 500
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
           examples:
-          - California
-        state_code:
-          anyOf:
-          - type: string
-            pattern: ^[A-Z]{2}-[A-Z0-9]{1,3}$
-            examples:
-            - GB-LND
-            - US-CA
-          - type: 'null'
-          title: State Code
-          description: The code of state, county, or province for the address in ISO 3166-2 format.
-          examples:
-          - US-CA
-        house_number_or_name:
-          anyOf:
-          - type: string
-            maxLength: 255
-            minLength: 1
-          - type: 'null'
-          title: House Number Or Name
-          description: The house number or name for the address. Not all payment services use this field but some do.
-          examples:
-          - '10'
-        line1:
-          anyOf:
-          - type: string
-            maxLength: 255
-            minLength: 1
-          - type: 'null'
-          title: Line1
-          description: The first line of the address.
-          examples:
-          - Stafford Appartments
-        line2:
-          anyOf:
-          - type: string
-            maxLength: 255
-            minLength: 1
-          - type: 'null'
-          title: Line2
-          description: The second line of the address.
-          examples:
-          - 29th Street
-        organization:
-          anyOf:
-          - type: string
-            maxLength: 255
-            minLength: 1
-          - type: 'null'
-          title: Organization
-          description: The optional name of the company or organisation to add to the address.
-          examples:
-          - Gr4vy
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
       additionalProperties: false
       type: object
-      title: Address
+      title: Error500
     CheckoutSessionSecureFields:
       properties:
         payment_method:
@@ -3281,552 +3569,196 @@ components:
       required:
       - payment_method
       title: CheckoutSessionSecureFields
-    BaseModel:
-      properties: {}
-      additionalProperties: false
-      type: object
-      title: BaseModel
-    Error405:
+    Airline_2:
       properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `method_not_allowed`
-          default: method_not_allowed
-          examples:
-          - method_not_allowed
-        status:
-          type: integer
-          title: Status
-          description: Always `405`.
-          default: 405
-          examples:
-          - 405
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Method Not Allowed
-          examples:
-          - Method Not Allowed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error405
-    CheckoutSessionIdPaymentMethod:
-      properties:
-        method:
-          type: string
-          const: id
-          title: Method
-          description: Always `id`.
-          default: id
-          examples:
-          - id
-        id:
-          type: string
-          format: uuid
-          title: Id
-          description: The ID of the payment method to associate to the session.
-          examples:
-          - ef9496d8-53a5-4aad-8ca2-00eb68334389
-        security_code:
+        booking_code:
           anyOf:
           - type: string
-            maxLength: 4
+            maxLength: 50
+            minLength: 1
+          - type: 'null'
+          title: Booking Code
+          description: The unique identifier of the reservation in the global distribution system.
+          examples:
+          - X36Q9C
+        is_cardholder_traveling:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Cardholder Traveling
+          description: Indicates whether the cardholder is traveling.
+          examples:
+          - true
+        issued_address:
+          anyOf:
+          - type: string
+            maxLength: 255
+            minLength: 1
+          - type: 'null'
+          title: Issued Address
+          description: The address of the place/agency that issued the ticket.
+          examples:
+          - 123 Broadway, New York
+        issued_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Issued At
+          description: The date that the ticket was last issued in the airline reservation system.
+          examples:
+          - '2013-07-16T19:23:00.000+00:00'
+        issuing_carrier_code:
+          anyOf:
+          - type: string
+            maxLength: 3
+            minLength: 2
+          - type: 'null'
+          title: Issuing Carrier Code
+          description: For airline aggregators, three-character IATA code of the airline issuing the ticket.
+          examples:
+          - '649'
+        issuing_carrier_name:
+          anyOf:
+          - type: string
+            minLength: 1
+          - type: 'null'
+          title: Issuing Carrier Name
+          description: For airline aggregators, name of the airline issuing the ticket.
+          examples:
+          - Air Transat A.T. Inc
+        issuing_iata_designator:
+          anyOf:
+          - type: string
+            maxLength: 2
+            minLength: 2
+          - type: 'null'
+          title: Issuing Iata Designator
+          description: For airline aggregators, two-character IATA code of the airline issuing the ticket.
+          examples:
+          - TS
+        issuing_icao_code:
+          anyOf:
+          - type: string
+            maxLength: 3
             minLength: 3
-            pattern: ^\d+$
           - type: 'null'
-          title: Security Code
-          description: The 3 or 4 digit security code often found on the card. This often referred to as the CVV or CVD.
+          title: Issuing Icao Code
+          description: For airline aggregators, three-character ICAO code of the airline issuing the ticket.
           examples:
-          - '123'
-      additionalProperties: false
-      type: object
-      required:
-      - id
-      title: CheckoutSessionIdPaymentMethod
-    Error429:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `too_many_requests`
-          default: too_many_requests
-          examples:
-          - too_many_requests
-        status:
-          type: integer
-          title: Status
-          description: Always `429`.
-          default: 429
-          examples:
-          - 429
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error429
-    Error425:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `too_early`
-          default: too_early
-          examples:
-          - too_early
-        status:
-          type: integer
-          title: Status
-          description: Always `425`.
-          default: 425
-          examples:
-          - 425
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error425
-    Error401:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `unauthorized`
-          default: unauthorized
-          examples:
-          - unauthorized
-        status:
-          type: integer
-          title: Status
-          description: Always `401`.
-          default: 401
-          examples:
-          - 401
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: No valid API authentication found
-          examples:
-          - No valid API authentication found
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error401
-    CheckoutSessionClickToPayPaymentMethod:
-      properties:
-        method:
-          type: string
-          const: click-to-pay
-          title: Method
-          description: Always `click-to-pay`.
-          default: click-to-pay
-          examples:
-          - click-to-pay
-        merchant_transaction_id:
-          type: string
-          title: Merchant Transaction Id
-          description: The merchant transaction ID as provided by the C2P SDK.
-          examples:
-          - 1a1e7b31-c13a-4d31-a4dd-2198aa42ce65
-        src_correlation_id:
-          type: string
-          title: Src Correlation Id
-          description: The SRC correlation ID as provided by the C2P SDK.
-          examples:
-          - c878b3f1-0582-428b-8a3d-9033fc9e0048
-        src_dpa_id:
-          type: string
-          title: Src Dpa Id
-          description: The DPA ID as provided by the C2P SDK.
-          examples:
-          - d2fc460b-1182-4cdc-ad47-c38baa9ad73c
-        src_cx_flow_id:
+          - TSC
+        legs:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/AirlineLeg_2'
+            type: array
+            maxItems: 20
+          - type: 'null'
+          title: Legs
+          description: An array of separate trip segments. Each leg contains detailed itinerary information.
+        passenger_name_record:
           anyOf:
           - type: string
-          - type: 'null'
-          title: Src Cx Flow Id
-          description: The CX Flow ID as provided by the C2P SDK
-          examples:
-          - 4241871b-c4f7-43e7-a943-6a87f1b2feae
-      additionalProperties: false
-      type: object
-      required:
-      - merchant_transaction_id
-      - src_correlation_id
-      - src_dpa_id
-      title: CheckoutSessionClickToPayPaymentMethod
-    Error400:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `bad_request`
-          default: bad_request
-          examples:
-          - bad_request
-        status:
-          type: integer
-          title: Status
-          description: Always `400`.
-          default: 400
-          examples:
-          - 400
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error400
-    TaxId_2:
-      properties:
-        value:
-          type: string
-          maxLength: 50
-          minLength: 1
-          title: Value
-          description: The tax ID for the buyer.
-          examples:
-          - '12345678931'
-        kind:
-          $ref: '#/components/schemas/TaxIdKind'
-          description: The kind of tax ID
-          examples:
-          - us.ein
-      additionalProperties: false
-      type: object
-      required:
-      - value
-      - kind
-      title: TaxId
-    CardScheme:
-      type: string
-      enum:
-      - accel
-      - amex
-      - bancontact
-      - carte-bancaire
-      - cirrus
-      - culiance
-      - dankort
-      - diners-club
-      - discover
-      - eftpos-australia
-      - elo
-      - hipercard
-      - jcb
-      - maestro
-      - mastercard
-      - mir
-      - nyce
-      - other
-      - pulse
-      - qcard
-      - rupay
-      - star
-      - uatp
-      - unionpay
-      - visa
-      title: CardScheme
-    BillingDetails:
-      properties:
-        first_name:
-          anyOf:
-          - type: string
-            maxLength: 255
+            maxLength: 50
             minLength: 1
           - type: 'null'
-          title: First Name
-          description: The first name(s) or given name for the buyer.
+          title: Passenger Name Record
+          description: The Passenger Name Record (PNR) in the airline reservation system.
           examples:
-          - John
-        last_name:
+          - JOHN L
+        passengers:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/AirlinePassenger_2'
+            type: array
+            maxItems: 20
+          - type: 'null'
+          title: Passengers
+          description: An array of the travelling passengers.
+        reservation_system:
           anyOf:
           - type: string
-            maxLength: 255
+            maxLength: 200
             minLength: 1
           - type: 'null'
-          title: Last Name
-          description: The last name, or family name, of the buyer.
+          title: Reservation System
+          description: The name of the reservation system.
           examples:
-          - Doe
-        email_address:
+          - Amadeus
+        restricted_ticket:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Restricted Ticket
+          description: Indicates whether the ticket is restricted (refundable).
+          examples:
+          - false
+        ticket_delivery_method:
           anyOf:
           - type: string
-            maxLength: 320
+            enum:
+            - electronic
+            - other
+          - type: 'null'
+          title: Ticket Delivery Method
+          description: The delivery method of the ticket.
+          default: electronic
+          examples:
+          - electronic
+        ticket_number:
+          anyOf:
+          - type: string
+            maxLength: 50
             minLength: 1
           - type: 'null'
-          title: Email Address
-          description: The email address for the buyer.
+          title: Ticket Number
+          description: The airline's unique ticket number.
           examples:
-          - john@example.com
-        phone_number:
+          - 123-1234-151555
+        travel_agency_code:
           anyOf:
           - type: string
-            pattern: ^\+[1-9]\d{1,14}$
-            examples:
-            - '+14155552671'
-            - '+442071838750'
+            maxLength: 50
+            minLength: 1
           - type: 'null'
-          title: Phone Number
-          description: The phone number for the buyer which should be formatted according to the E164 number standard.
+          title: Travel Agency Code
+          description: The IATA travel agency code.
           examples:
-          - '+1234567890'
-        address:
+          - '12345'
+        travel_agency_invoice_number:
           anyOf:
-          - $ref: '#/components/schemas/Address_2'
+          - type: string
+            maxLength: 50
+            minLength: 1
           - type: 'null'
-          description: The billing address for the buyer.
-        tax_id:
+          title: Travel Agency Invoice Number
+          description: The reference number of the invoice that was issued by the travel agency.
+          examples:
+          - EG15555155
+        travel_agency_name:
           anyOf:
-          - $ref: '#/components/schemas/TaxId_2'
+          - type: string
+            maxLength: 200
+            minLength: 1
           - type: 'null'
-          description: The tax ID information associated with the billing details.
+          title: Travel Agency Name
+          description: The name of the travel agency.
+          examples:
+          - ACME Agency
+        travel_agency_plan_name:
+          anyOf:
+          - type: string
+            maxLength: 200
+            minLength: 1
+          - type: 'null'
+          title: Travel Agency Plan Name
+          description: The name of the travel agency plan.
+          examples:
+          - B733
       additionalProperties: false
       type: object
-      title: BillingDetails
-    Error504:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `gateway_timeout`
-          default: gateway_timeout
-          examples:
-          - gateway_timeout
-        status:
-          type: integer
-          title: Status
-          default: 504
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Request could not be processed
-          examples:
-          - Request could not be processed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error504
-    CheckoutSessionPaymentMethod:
-      properties:
-        type:
-          type: string
-          const: payment-method
-          title: Type
-          description: Always `payment-method`
-          default: payment-method
-          examples:
-          - payment-method
-        id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Id
-          description: The ID of the payment method.
-          examples:
-          - ef9496d8-53a5-4aad-8ca2-00eb68334389
-        details:
-          anyOf:
-          - $ref: '#/components/schemas/CheckoutSessionPaymentMethodDetails'
-          - type: 'null'
-          description: Details for credit or debit card payment method.
-        label:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Label
-          description: The last 4 digits of the the card.
-          examples:
-          - '1234'
-        method:
-          type: string
-          const: card
-          title: Method
-          description: Always `card`
-          default: card
-          examples:
-          - card
-        scheme:
-          anyOf:
-          - $ref: '#/components/schemas/CardScheme'
-          - type: 'null'
-          description: The scheme of the card.
-          examples:
-          - visa
-        fingerprint:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Fingerprint
-          description: The unique hash derived from the card number.
-          examples:
-          - a50b85c200ee0795d6fd33a5c66f37a4564f554355c5b46a756aac485dd168a4
-      additionalProperties: false
-      type: object
-      title: CheckoutSessionPaymentMethod
-    CheckoutSessionPaymentMethodDetails:
-      properties:
-        bin:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Bin
-          description: The first 6 digit of the card.
-          examples:
-          - '411111'
-        card_country:
-          anyOf:
-          - type: string
-            pattern: ^[A-Z]{2}$
-            examples:
-            - DE
-            - GB
-            - US
-          - type: 'null'
-          title: Card Country
-          description: The country of the card issuer.
-          examples:
-          - US
-        card_type:
-          anyOf:
-          - $ref: '#/components/schemas/CardType'
-          - type: 'null'
-          description: The payment scheme of the card.
-          examples:
-          - credit
-        card_issuer_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Card Issuer Name
-          description: The card issuer.
-          examples:
-          - Bank of America NA
-      additionalProperties: false
-      type: object
-      title: CheckoutSessionPaymentMethodDetails
-    CheckoutSessionCardDetailsRequest:
-      properties:
-        bin:
-          type: string
-          maxLength: 8
-          minLength: 6
-          pattern: ^\d+$
-          title: Bin
-          description: The first 6 to 8 digits of a card number.
-          examples:
-          - '41111111'
-      additionalProperties: false
-      type: object
-      required:
-      - bin
-      title: CheckoutSessionCardDetailsRequest
+      title: Airline
+      description: Information about an airline travel.
     CheckoutSession_2:
       properties:
         cart_items:
@@ -3920,196 +3852,11 @@ components:
       - id
       - expires_at
       title: CheckoutSession
-    CheckoutSessionCardDetails:
-      properties:
-        bin:
-          type: string
-          title: Bin
-          description: The card BIN provided in the request.
-          examples:
-          - '41111111'
-        card_type:
-          anyOf:
-          - $ref: '#/components/schemas/CardType'
-          - type: 'null'
-          description: The type of the card.
-          examples:
-          - debit
-        scheme:
-          anyOf:
-          - $ref: '#/components/schemas/CardScheme'
-          - type: 'null'
-          description: The scheme of the card.
-          examples:
-          - visa
-        scheme_icon_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Scheme Icon Url
-          description: URL to the card scheme's icon.
-          examples:
-          - https://cdn.example.gr4vy.app/assets/icons/card-schemes/mastercard.svg
-        additional_schemes:
-          items:
-            $ref: '#/components/schemas/CardScheme'
-          type: array
-          title: Additional Schemes
-          description: Additional card schemes associated with the BIN.
-          examples:
-          - - visa-debit
-            - electron
-        country:
-          anyOf:
-          - type: string
-            pattern: ^[A-Z]{2}$
-            examples:
-            - DE
-            - GB
-            - US
-          - type: 'null'
-          title: Country
-          description: The country the card was issued in.
-          examples:
-          - US
+    BaseModel:
+      properties: {}
       additionalProperties: false
       type: object
-      required:
-      - bin
-      title: CheckoutSessionCardDetails
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    TaxIdKind:
-      type: string
-      enum:
-      - ae.trn
-      - au.abn
-      - ar.dni
-      - ar.cuil
-      - ar.cuit
-      - br.cnpj
-      - br.cpf
-      - ca.bn
-      - ca.gst_hst
-      - ca.pst_bc
-      - ca.pst_mb
-      - ca.pst_sk
-      - ca.qst
-      - ch.vat
-      - cl.tin
-      - co.itin
-      - co.nit
-      - co.cc
-      - co.ce
-      - co.de
-      - co.rc
-      - co.ti
-      - co.passport
-      - es.cif
-      - eu.vat
-      - gb.vat
-      - hk.br
-      - id.nik
-      - id.npwp
-      - in.gst
-      - in.pan
-      - jp.cn
-      - jp.rn
-      - kr.brn
-      - li.uid
-      - mx.curp
-      - mx.rfc
-      - my.frp
-      - my.itn
-      - my.nric
-      - my.sst
-      - no.vat
-      - nz.gst
-      - pe.ruc
-      - ph.tin
-      - ru.inn
-      - ru.kpp
-      - sa.vat
-      - sg.gst
-      - sg.uen
-      - th.id
-      - th.vat
-      - tw.vat
-      - us.ein
-      - za.vat
-      - bo.ci
-      - uy.rut
-      - uy.ci
-      title: TaxIdKind
-    CheckoutSessionCardPaymentMethod:
-      properties:
-        method:
-          type: string
-          const: card
-          title: Method
-          description: Always `card`.
-          default: card
-          examples:
-          - card
-        number:
-          type: string
-          maxLength: 19
-          minLength: 13
-          pattern: ^\d+$
-          title: Number
-          description: The 13-19 digit number for this card.
-          examples:
-          - '4111111111111111'
-        expiration_date:
-          type: string
-          maxLength: 5
-          minLength: 5
-          pattern: ^\d{2}/\d{2}$
-          title: Expiration Date
-          description: The expiration date of the card, formatted `MM/YY`.
-          examples:
-          - 12/30
-        security_code:
-          anyOf:
-          - type: string
-            maxLength: 4
-            minLength: 3
-            pattern: ^\d+$
-          - type: 'null'
-          title: Security Code
-          description: The 3 or 4 digit security code often found on the card. This often referred to as the CVV or CVD.
-          examples:
-          - '123'
-      additionalProperties: false
-      type: object
-      required:
-      - number
-      - expiration_date
-      title: CheckoutSessionCardPaymentMethod
+      title: BaseModel
     Error404:
       properties:
         type:
@@ -4151,118 +3898,28 @@ components:
       additionalProperties: false
       type: object
       title: Error404
-    ErrorLocation:
-      type: string
-      enum:
-      - query
-      - body
-      - path
-      - header
-      - unknown
-      title: ErrorLocation
-    CardType:
-      type: string
-      enum:
-      - credit
-      - debit
-      - prepaid
-      title: CardType
-    GuestBuyer:
+    TaxId_2:
       properties:
-        display_name:
-          anyOf:
-          - type: string
-            maxLength: 200
-            minLength: 1
-          - type: 'null'
-          title: Display Name
-          description: The display name for the buyer.
+        value:
+          type: string
+          maxLength: 50
+          minLength: 1
+          title: Value
+          description: The tax ID for the buyer.
           examples:
-          - John Doe
-        external_identifier:
-          anyOf:
-          - type: string
-            maxLength: 200
-            minLength: 1
-          - type: 'null'
-          title: External Identifier
-          description: The merchant identifier for this buyer.
+          - '12345678931'
+        kind:
+          $ref: '#/components/schemas/TaxIdKind'
+          description: The kind of tax ID
           examples:
-          - buyer-12345
-        billing_details:
-          anyOf:
-          - $ref: '#/components/schemas/BillingDetails'
-          - type: 'null'
-          description: The billing name, address, email, and other fields for this buyer.
-        account_number:
-          anyOf:
-          - type: string
-            maxLength: 200
-            minLength: 1
-          - type: 'null'
-          title: Account Number
-          description: The buyer account number
-        shipping_details:
-          anyOf:
-          - $ref: '#/components/schemas/ShippingDetailsCreate'
-          - type: 'null'
-          description: The optional shipping details for this buyer.
+          - us.ein
       additionalProperties: false
       type: object
-      title: GuestBuyer
-    ShippingDetailsCreate:
-      properties:
-        first_name:
-          anyOf:
-          - type: string
-            maxLength: 255
-            minLength: 1
-          - type: 'null'
-          title: First Name
-          description: The first name(s) or given name for the buyer.
-          examples:
-          - John
-        last_name:
-          anyOf:
-          - type: string
-            maxLength: 255
-            minLength: 1
-          - type: 'null'
-          title: Last Name
-          description: The last name, or family name, of the buyer.
-          examples:
-          - Doe
-        email_address:
-          anyOf:
-          - type: string
-            maxLength: 320
-            minLength: 1
-          - type: 'null'
-          title: Email Address
-          description: The email address for the buyer.
-          examples:
-          - john@example.com
-        phone_number:
-          anyOf:
-          - type: string
-            pattern: ^\+[1-9]\d{1,14}$
-            examples:
-            - '+14155552671'
-            - '+442071838750'
-          - type: 'null'
-          title: Phone Number
-          description: The phone number for the buyer which should be formatted according to the E164 number standard.
-          examples:
-          - '+1234567890'
-        address:
-          anyOf:
-          - $ref: '#/components/schemas/Address_2'
-          - type: 'null'
-          description: The billing address for the buyer.
-      additionalProperties: false
-      type: object
-      title: ShippingDetailsCreate
-    Error403:
+      required:
+      - value
+      - kind
+      title: TaxId
+    Error401:
       properties:
         type:
           type: string
@@ -4275,24 +3932,24 @@ components:
         code:
           type: string
           title: Code
-          description: Always `forbidden`
-          default: forbidden
+          description: Always `unauthorized`
+          default: unauthorized
           examples:
-          - forbidden
+          - unauthorized
         status:
           type: integer
           title: Status
-          description: Always `403`.
-          default: 403
+          description: Always `401`.
+          default: 401
           examples:
-          - 403
+          - 401
         message:
           type: string
           title: Message
           description: A human readable message that provides more context to the error.
-          default: Generic error
+          default: No valid API authentication found
           examples:
-          - Request failed validation
+          - No valid API authentication found
         details:
           items:
             $ref: '#/components/schemas/ErrorDetail_2'
@@ -4302,148 +3959,13 @@ components:
           default: []
       additionalProperties: false
       type: object
-      title: Error403
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    CheckoutSessionUpdate:
-      properties:
-        cart_items:
-          anyOf:
-          - items:
-              $ref: '#/components/schemas/CartItem_2'
-            type: array
-          - type: 'null'
-          title: Cart Items
-          description: An array of cart items that represents the line items of a transaction.
-        metadata:
-          anyOf:
-          - additionalProperties:
-              type: string
-            type: object
-          - type: 'null'
-          title: Metadata
-          description: Any additional information about the transaction that you would like to store as key-value pairs. This data is passed to payment service providers that support it.
-          examples:
-          - cohort: cohort-a
-            order_id: order-12345
-        buyer:
-          anyOf:
-          - $ref: '#/components/schemas/GuestBuyer'
-          - type: 'null'
-          description: Provide buyer details for the transaction. No buyer resource will be created on Gr4vy when used.
-        airline:
-          anyOf:
-          - $ref: '#/components/schemas/Airline_2'
-          - type: 'null'
-          description: The airline addendum data which describes the airline booking associated with this transaction.
-        amount:
-          anyOf:
-          - type: integer
-            maximum: 99999999.0
-            minimum: 0.0
-          - type: 'null'
-          title: Amount
-          description: The total amount for this transaction.
-          x-gr4vy-docs-ignore: true
-        currency:
-          anyOf:
-          - type: string
-            pattern: ^[A-Z]{3}$
-            examples:
-            - EUR
-            - GBP
-            - USD
-          - type: 'null'
-          title: Currency
-          description: The currency code for this transaction.
-          x-gr4vy-docs-ignore: true
-        payment_service_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Payment Service Id
-          description: The unique identifier of an existing payment service. When provided, the created transaction will be processed by the given payment service and any routing rules will be skipped.
-          x-gr4vy-docs-ignore: true
-        expires_in:
-          type: number
-          maximum: 86400.0
-          minimum: 3600.0
-          title: Expires In
-          description: The time in seconds when this checkout session expires.
-          default: 3600
-        country:
-          anyOf:
-          - type: string
-            pattern: ^[A-Z]{2}$
-            examples:
-            - DE
-            - GB
-            - US
-          - type: 'null'
-          title: Country
-          description: The 2-letter ISO 3166-1 alpha-2 country code for the transaction. Used to filter payment services for processing.
-          examples:
-          - US
-          x-gr4vy-docs-ignore: true
-          x-speakeasy-ignore: true
-        is_subsequent_payment:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Is Subsequent Payment
-          description: 'Indicates whether the transaction represents a subsequent payment coming from a setup recurring payment. Please note there are some restrictions on how this flag may be used.
-
-
-            The flag can only be `false` (or not set) when the transaction meets one of the following criteria:
-
-
-            * It is not `merchant_initiated`.
-
-            * `payment_source` is set to `card_on_file`.
-
-
-            The flag can only be set to `true` when the transaction meets one of the following criteria:
-
-            * It is not `merchant_initiated`.
-
-            * `payment_source` is set to `recurring` or `installment` and `merchant_initiated` is set to `true`.
-
-            * `payment_source` is set to `card_on_file`.'
-          x-gr4vy-docs-ignore: true
-          x-speakeasy-ignore: true
-        merchant_initiated:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Merchant Initiated
-          description: Indicates whether the transaction was initiated by the merchant (true) or customer (false).
-          x-gr4vy-docs-ignore: true
-          x-speakeasy-ignore: true
-        payment_source:
-          anyOf:
-          - $ref: '#/components/schemas/TransactionPaymentSource'
-          - type: 'null'
-          description: The use-case for the the transaction.
-          x-gr4vy-docs-ignore: true
-          x-speakeasy-ignore: true
-        intent:
-          anyOf:
-          - $ref: '#/components/schemas/TransactionIntent'
-          - type: 'null'
-          description: Defines the intent to apply to transactions created via this checkout session. This determines the desired initial state of the transaction.
-          x-gr4vy-docs-ignore: true
-          x-speakeasy-ignore: true
-      additionalProperties: false
-      type: object
-      title: CheckoutSessionUpdate
+      title: Error401
+    TransactionIntent:
+      type: string
+      enum:
+      - authorize
+      - capture
+      title: TransactionIntent
     AirlineLeg_2:
       properties:
         arrival_airport:
@@ -4681,6 +4203,484 @@ components:
       additionalProperties: false
       type: object
       title: AirlineLeg
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    Error425:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `too_early`
+          default: too_early
+          examples:
+          - too_early
+        status:
+          type: integer
+          title: Status
+          description: Always `425`.
+          default: 425
+          examples:
+          - 425
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error425
+    Error405:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `method_not_allowed`
+          default: method_not_allowed
+          examples:
+          - method_not_allowed
+        status:
+          type: integer
+          title: Status
+          description: Always `405`.
+          default: 405
+          examples:
+          - 405
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Method Not Allowed
+          examples:
+          - Method Not Allowed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error405
+    AirlinePassenger_2:
+      properties:
+        age_group:
+          anyOf:
+          - type: string
+            enum:
+            - adult
+            - infant
+          - type: 'null'
+          title: Age Group
+          description: The age group for the passenger.
+          examples:
+          - adult
+        date_of_birth:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Date Of Birth
+          description: The passenger's date of birth in YYYY-MM-YY format.
+          examples:
+          - '2013-07-16'
+        email_address:
+          anyOf:
+          - type: string
+            maxLength: 320
+            minLength: 1
+          - type: 'null'
+          title: Email Address
+          description: The email address of the passenger.
+          examples:
+          - john@example.com
+        first_name:
+          anyOf:
+          - type: string
+            maxLength: 255
+            minLength: 1
+          - type: 'null'
+          title: First Name
+          description: The first name(s) or given name of the passenger.
+          examples:
+          - John
+        frequent_flyer_number:
+          anyOf:
+          - type: string
+            maxLength: 50
+            minLength: 5
+          - type: 'null'
+          title: Frequent Flyer Number
+          description: The passenger's frequent flyer number.
+          examples:
+          - '15885566'
+        last_name:
+          anyOf:
+          - type: string
+            maxLength: 255
+            minLength: 1
+          - type: 'null'
+          title: Last Name
+          description: The last name, or family name, of the passenger.
+          examples:
+          - Luhn
+        passport_number:
+          anyOf:
+          - type: string
+            maxLength: 50
+            minLength: 1
+          - type: 'null'
+          title: Passport Number
+          description: The passenger's unique passport number.
+          examples:
+          - '11117700225'
+        phone_number:
+          anyOf:
+          - type: string
+            pattern: ^\+[1-9]\d{1,14}$
+            examples:
+            - '+14155552671'
+            - '+442071838750'
+          - type: 'null'
+          title: Phone Number
+          description: The phone number of the passenger. This number is formatted according to the E164 number standard.
+          examples:
+          - '+1234567890'
+        ticket_number:
+          anyOf:
+          - type: string
+            maxLength: 50
+            minLength: 1
+          - type: 'null'
+          title: Ticket Number
+          description: The ticket number for a flight.
+          examples:
+          - BA1236699999
+        title:
+          anyOf:
+          - type: string
+            maxLength: 50
+            minLength: 1
+          - type: 'null'
+          title: Title
+          description: Title of the passenger.
+          examples:
+          - Mr.
+        country_code:
+          anyOf:
+          - type: string
+            pattern: ^[A-Z]{2}$
+            examples:
+            - DE
+            - GB
+            - US
+          - type: 'null'
+          title: Country Code
+          description: The country of residence of the passenger
+          examples:
+          - US
+      additionalProperties: false
+      type: object
+      title: AirlinePassenger
+    Error429:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `too_many_requests`
+          default: too_many_requests
+          examples:
+          - too_many_requests
+        status:
+          type: integer
+          title: Status
+          description: Always `429`.
+          default: 429
+          examples:
+          - 429
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error429
+    CheckoutSessionClickToPayPaymentMethod:
+      properties:
+        method:
+          type: string
+          const: click-to-pay
+          title: Method
+          description: Always `click-to-pay`.
+          default: click-to-pay
+          examples:
+          - click-to-pay
+        merchant_transaction_id:
+          type: string
+          title: Merchant Transaction Id
+          description: The merchant transaction ID as provided by the C2P SDK.
+          examples:
+          - 1a1e7b31-c13a-4d31-a4dd-2198aa42ce65
+        src_correlation_id:
+          type: string
+          title: Src Correlation Id
+          description: The SRC correlation ID as provided by the C2P SDK.
+          examples:
+          - c878b3f1-0582-428b-8a3d-9033fc9e0048
+        src_dpa_id:
+          type: string
+          title: Src Dpa Id
+          description: The DPA ID as provided by the C2P SDK.
+          examples:
+          - d2fc460b-1182-4cdc-ad47-c38baa9ad73c
+        src_cx_flow_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Src Cx Flow Id
+          description: The CX Flow ID as provided by the C2P SDK
+          examples:
+          - 4241871b-c4f7-43e7-a943-6a87f1b2feae
+      additionalProperties: false
+      type: object
+      required:
+      - merchant_transaction_id
+      - src_correlation_id
+      - src_dpa_id
+      title: CheckoutSessionClickToPayPaymentMethod
+    CheckoutSessionCardDetailsRequest:
+      properties:
+        bin:
+          type: string
+          maxLength: 8
+          minLength: 6
+          pattern: ^\d+$
+          title: Bin
+          description: The first 6 to 8 digits of a card number.
+          examples:
+          - '41111111'
+      additionalProperties: false
+      type: object
+      required:
+      - bin
+      title: CheckoutSessionCardDetailsRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    Address_2:
+      properties:
+        city:
+          anyOf:
+          - type: string
+            maxLength: 100
+            minLength: 1
+          - type: 'null'
+          title: City
+          description: The city for the address.
+          examples:
+          - San Jose
+        country:
+          anyOf:
+          - type: string
+            pattern: ^[A-Z]{2}$
+            examples:
+            - DE
+            - GB
+            - US
+          - type: 'null'
+          title: Country
+          description: The country for the address in ISO 3166 format.
+          examples:
+          - US
+        postal_code:
+          anyOf:
+          - type: string
+            maxLength: 50
+            minLength: 1
+          - type: 'null'
+          title: Postal Code
+          description: The postal code or zip code for the address.
+          examples:
+          - '94560'
+        state:
+          anyOf:
+          - type: string
+            maxLength: 255
+            minLength: 1
+          - type: 'null'
+          title: State
+          description: The state, county, or province for the address.
+          examples:
+          - California
+        state_code:
+          anyOf:
+          - type: string
+            pattern: ^[A-Z]{2}-[A-Z0-9]{1,3}$
+            examples:
+            - GB-LND
+            - US-CA
+          - type: 'null'
+          title: State Code
+          description: The code of state, county, or province for the address in ISO 3166-2 format.
+          examples:
+          - US-CA
+        house_number_or_name:
+          anyOf:
+          - type: string
+            maxLength: 255
+            minLength: 1
+          - type: 'null'
+          title: House Number Or Name
+          description: The house number or name for the address. Not all payment services use this field but some do.
+          examples:
+          - '10'
+        line1:
+          anyOf:
+          - type: string
+            maxLength: 255
+            minLength: 1
+          - type: 'null'
+          title: Line1
+          description: The first line of the address.
+          examples:
+          - Stafford Appartments
+        line2:
+          anyOf:
+          - type: string
+            maxLength: 255
+            minLength: 1
+          - type: 'null'
+          title: Line2
+          description: The second line of the address.
+          examples:
+          - 29th Street
+        organization:
+          anyOf:
+          - type: string
+            maxLength: 255
+            minLength: 1
+          - type: 'null'
+          title: Organization
+          description: The optional name of the company or organisation to add to the address.
+          examples:
+          - Gr4vy
+      additionalProperties: false
+      type: object
+      title: Address
+    Error403:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `forbidden`
+          default: forbidden
+          examples:
+          - forbidden
+        status:
+          type: integer
+          title: Status
+          description: Always `403`.
+          default: 403
+          examples:
+          - 403
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error403
   securitySchemes:
     bearerAuth:
       type: http

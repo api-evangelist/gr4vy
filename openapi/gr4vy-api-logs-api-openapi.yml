@@ -89,18 +89,6 @@ components:
           type: string
           example: field required
           description: A human readable message for this error detail.
-    ApiLogs:
-      title: API Logs
-      type: object
-      description: A list of API log entries.
-      x-tags:
-      - API Logs
-      properties:
-        items:
-          type: array
-          description: A list of API log entries.
-          items:
-            $ref: '#/components/schemas/ApiLog'
     ApiLog:
       title: API Log
       type: object
@@ -181,6 +169,18 @@ components:
           format: date-time
           description: date-time of when the response was sent.
           example: '2022-01-01T00:00:10+00:00'
+    ApiLogs:
+      title: API Logs
+      type: object
+      description: A list of API log entries.
+      x-tags:
+      - API Logs
+      properties:
+        items:
+          type: array
+          description: A list of API log entries.
+          items:
+            $ref: '#/components/schemas/ApiLog'
     Error401Unauthorized:
       title: Unauthorized Error
       type: object

@@ -59,6 +59,46 @@ paths:
                 $ref: '#/components/schemas/Error401Unauthorized'
 components:
   schemas:
+    PCIForwardDefinitions:
+      title: Vault Forward definitions
+      type: object
+      description: A definitions list of all the PCI endpoints that we can send card data to.
+      x-internal: true
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/PCIForwardDefinition'
+        limit:
+          type: integer
+          description: 'The limit applied to request. This represents the number of items that are at
+
+            maximum returned by this request.'
+          format: int32
+          minimum: 1
+          maximum: 100
+          example: 1
+          default: 20
+        next_cursor:
+          type:
+          - string
+          - 'null'
+          description: 'The cursor that represents the next page of results. Use the `cursor` query
+
+            parameter to fetch this page of items.'
+          example: ZXhhbXBsZTE
+          minLength: 1
+          maxLength: 1000
+        previous_cursor:
+          type:
+          - string
+          - 'null'
+          description: 'The cursor that represents the next page of results. Use the `cursor` query
+
+            parameter to fetch this page of items.'
+          example: null
+          minLength: 1
+          maxLength: 1000
     PCIForwardDefinition:
       title: Vault Forward Definition
       type: object
@@ -93,6 +133,45 @@ components:
           minItems: 1
           items:
             $ref: '#/components/schemas/PCIForwardAuthenticationDefinition'
+    Error401Unauthorized:
+      title: Unauthorized Error
+      type: object
+      description: Unauthorized Error (HTTP 401).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`unauthorized`.'
+          example: unauthorized
+          enum:
+          - unauthorized
+        status:
+          type: integer
+          description: '`401`.'
+          example: 401
+          enum:
+          - 401
+        message:
+          type: string
+          description: No valid API authentication found.
+          example: No valid API authentication found
+          enum:
+          - No valid API authentication found
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
     PCIForwardAuthenticationDefinition:
       title: Vault Forward Authentication Definition
       type: object
@@ -165,85 +244,6 @@ components:
                 description: 'Defines if this field is secret. When `true` the field is not
 
                   returned when querying the authentication method.'
-    Error401Unauthorized:
-      title: Unauthorized Error
-      type: object
-      description: Unauthorized Error (HTTP 401).
-      x-tags:
-      - Errors
-      properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: '`unauthorized`.'
-          example: unauthorized
-          enum:
-          - unauthorized
-        status:
-          type: integer
-          description: '`401`.'
-          example: 401
-          enum:
-          - 401
-        message:
-          type: string
-          description: No valid API authentication found.
-          example: No valid API authentication found
-          enum:
-          - No valid API authentication found
-        details:
-          type: array
-          description: 'A list of detail objects that further clarify the reason for the error.
-
-            Not every error supports more detail.'
-          example: []
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-    PCIForwardDefinitions:
-      title: Vault Forward definitions
-      type: object
-      description: A definitions list of all the PCI endpoints that we can send card data to.
-      x-internal: true
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/PCIForwardDefinition'
-        limit:
-          type: integer
-          description: 'The limit applied to request. This represents the number of items that are at
-
-            maximum returned by this request.'
-          format: int32
-          minimum: 1
-          maximum: 100
-          example: 1
-          default: 20
-        next_cursor:
-          type:
-          - string
-          - 'null'
-          description: 'The cursor that represents the next page of results. Use the `cursor` query
-
-            parameter to fetch this page of items.'
-          example: ZXhhbXBsZTE
-          minLength: 1
-          maxLength: 1000
-        previous_cursor:
-          type:
-          - string
-          - 'null'
-          description: 'The cursor that represents the next page of results. Use the `cursor` query
-
-            parameter to fetch this page of items.'
-          example: null
-          minLength: 1
-          maxLength: 1000
     ErrorDetail:
       title: Error details
       description: Additional detail about the part of a request body that caused an issue.

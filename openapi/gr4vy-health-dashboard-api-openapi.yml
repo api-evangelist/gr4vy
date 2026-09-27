@@ -326,6 +326,80 @@ paths:
                 $ref: '#/components/schemas/Error404NotFound'
 components:
   schemas:
+    HealthDashboardStatus:
+      title: Health Dashboard status
+      type: object
+      description: Health Dashboard status summary.
+      x-tags:
+      - Health Dashboard
+      x-internal: true
+      properties:
+        type:
+          type: string
+          description: The type of this resource.
+          example: health-dashboard.status
+          enum:
+          - health-dashboard.status
+        latest_execution:
+          type:
+          - object
+          - 'null'
+          description: Information about the latest execution to process data for the Health Dashboard. This value is null if the data has not been fully processed for the first time yet.
+          properties:
+            timestamp:
+              type: string
+              format: date-time
+              description: The date and time when the data was last processed.
+              example: '2023-07-26T19:23:00.000Z'
+        currencies:
+          type:
+          - array
+          - 'null'
+          description: The list of currencies that were transacted within the last 60+ days in ISO 4217 currency code format. This value is null if the data has not been fully processed for the first time yet.
+          items:
+            type: string
+          example:
+          - USD
+          - GBP
+    Error401Unauthorized:
+      title: Unauthorized Error
+      type: object
+      description: Unauthorized Error (HTTP 401).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`unauthorized`.'
+          example: unauthorized
+          enum:
+          - unauthorized
+        status:
+          type: integer
+          description: '`401`.'
+          example: 401
+          enum:
+          - 401
+        message:
+          type: string
+          description: No valid API authentication found.
+          example: No valid API authentication found
+          enum:
+          - No valid API authentication found
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
     HealthDashboardTotalVolume:
       title: Health Dashboard total volume
       type: object
@@ -526,77 +600,49 @@ components:
           example: []
           items:
             $ref: '#/components/schemas/ErrorDetail'
-    Error401Unauthorized:
-      title: Unauthorized Error
+    HealthDashboardConnections:
+      title: Health Dashboard connections
       type: object
-      description: Unauthorized Error (HTTP 401).
+      description: Health Dashboard connections table data.
       x-tags:
-      - Errors
+      - Health Dashboard
+      x-internal: true
       properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: '`unauthorized`.'
-          example: unauthorized
-          enum:
-          - unauthorized
-        status:
-          type: integer
-          description: '`401`.'
-          example: 401
-          enum:
-          - 401
-        message:
-          type: string
-          description: No valid API authentication found.
-          example: No valid API authentication found
-          enum:
-          - No valid API authentication found
-        details:
+        items:
           type: array
-          description: 'A list of detail objects that further clarify the reason for the error.
-
-            Not every error supports more detail.'
-          example: []
+          description: A list of connection summaries.
           items:
-            $ref: '#/components/schemas/ErrorDetail'
-    ErrorDetail:
-      title: Error details
-      description: Additional detail about the part of a request body that caused an issue.
-      type: object
-      x-tags:
-      - Errors
-      properties:
-        location:
-          type: string
-          example: body
-          description: The location where the error caused an issue.
-          enum:
-          - query
-          - body
-          - path
-          - header
-        type:
-          type: string
-          example: value_error.missing
-          description: A unique identifier for the type of error that occurred.
-        pointer:
-          type: string
-          example: /payment_method/number
-          description: 'The exact item for which the validation did not succeed. This is a JSON
+            $ref: '#/components/schemas/HealthDashboardConnection'
+        limit:
+          type: integer
+          description: 'The limit applied to request. This represents the number of items that are at
 
-            pointer for request bodies, while for query, path, and header parameters
+            maximum returned by this request.'
+          format: int32
+          minimum: 1
+          maximum: 100
+          example: 1
+          default: 20
+        next_cursor:
+          type:
+          - string
+          - 'null'
+          description: 'The cursor that represents the next page of results. Use the `cursor` query
 
-            it is the name of the parameter.'
-        message:
-          type: string
-          example: field required
-          description: A human readable message for this error detail.
+            parameter to fetch this page of items.'
+          example: ZXhhbXBsZTE
+          minLength: 1
+          maxLength: 1000
+        previous_cursor:
+          type:
+          - string
+          - 'null'
+          description: 'The cursor that represents the next page of results. Use the `cursor` query
+
+            parameter to fetch this page of items.'
+          example: null
+          minLength: 1
+          maxLength: 1000
     HealthDashboardConnection:
       title: Health Dashboard connection
       type: object
@@ -674,41 +720,6 @@ components:
 
                 this payment service.'
               example: 70
-    HealthDashboardStatus:
-      title: Health Dashboard status
-      type: object
-      description: Health Dashboard status summary.
-      x-tags:
-      - Health Dashboard
-      x-internal: true
-      properties:
-        type:
-          type: string
-          description: The type of this resource.
-          example: health-dashboard.status
-          enum:
-          - health-dashboard.status
-        latest_execution:
-          type:
-          - object
-          - 'null'
-          description: Information about the latest execution to process data for the Health Dashboard. This value is null if the data has not been fully processed for the first time yet.
-          properties:
-            timestamp:
-              type: string
-              format: date-time
-              description: The date and time when the data was last processed.
-              example: '2023-07-26T19:23:00.000Z'
-        currencies:
-          type:
-          - array
-          - 'null'
-          description: The list of currencies that were transacted within the last 60+ days in ISO 4217 currency code format. This value is null if the data has not been fully processed for the first time yet.
-          items:
-            type: string
-          example:
-          - USD
-          - GBP
     Error400BadRequest:
       title: Bad Request
       type: object
@@ -903,49 +914,38 @@ components:
                   - 168
                   - 201
                   - 182
-    HealthDashboardConnections:
-      title: Health Dashboard connections
+    ErrorDetail:
+      title: Error details
+      description: Additional detail about the part of a request body that caused an issue.
       type: object
-      description: Health Dashboard connections table data.
       x-tags:
-      - Health Dashboard
-      x-internal: true
+      - Errors
       properties:
-        items:
-          type: array
-          description: A list of connection summaries.
-          items:
-            $ref: '#/components/schemas/HealthDashboardConnection'
-        limit:
-          type: integer
-          description: 'The limit applied to request. This represents the number of items that are at
+        location:
+          type: string
+          example: body
+          description: The location where the error caused an issue.
+          enum:
+          - query
+          - body
+          - path
+          - header
+        type:
+          type: string
+          example: value_error.missing
+          description: A unique identifier for the type of error that occurred.
+        pointer:
+          type: string
+          example: /payment_method/number
+          description: 'The exact item for which the validation did not succeed. This is a JSON
 
-            maximum returned by this request.'
-          format: int32
-          minimum: 1
-          maximum: 100
-          example: 1
-          default: 20
-        next_cursor:
-          type:
-          - string
-          - 'null'
-          description: 'The cursor that represents the next page of results. Use the `cursor` query
+            pointer for request bodies, while for query, path, and header parameters
 
-            parameter to fetch this page of items.'
-          example: ZXhhbXBsZTE
-          minLength: 1
-          maxLength: 1000
-        previous_cursor:
-          type:
-          - string
-          - 'null'
-          description: 'The cursor that represents the next page of results. Use the `cursor` query
-
-            parameter to fetch this page of items.'
-          example: null
-          minLength: 1
-          maxLength: 1000
+            it is the name of the parameter.'
+        message:
+          type: string
+          example: field required
+          description: A human readable message for this error detail.
   securitySchemes:
     bearerAuth:
       type: http
