@@ -373,386 +373,6 @@ paths:
                 $ref: '#/components/schemas/Error404NotFound'
 components:
   schemas:
-    Error401Unauthorized:
-      title: Unauthorized Error
-      type: object
-      description: Unauthorized Error (HTTP 401).
-      x-tags:
-      - Errors
-      properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: '`unauthorized`.'
-          example: unauthorized
-          enum:
-          - unauthorized
-        status:
-          type: integer
-          description: '`401`.'
-          example: 401
-          enum:
-          - 401
-        message:
-          type: string
-          description: No valid API authentication found.
-          example: No valid API authentication found
-          enum:
-          - No valid API authentication found
-        details:
-          type: array
-          description: 'A list of detail objects that further clarify the reason for the error.
-
-            Not every error supports more detail.'
-          example: []
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-    PCIForwardConfig:
-      title: A Vault Forward configuration
-      type: object
-      description: A configured Vault Forward configuration.
-      x-internal: true
-      properties:
-        type:
-          type: string
-          description: The type of this resource. It is always `vault-forward-config`.
-          default: vault-forward-config
-          example: vault-forward-config
-        id:
-          type: string
-          format: uuid
-          description: The ID of this Vault Forward configuration.
-          example: faaad066-30b4-4997-a438-242b0752d7e1
-        created_at:
-          type: string
-          format: date-time
-          example: '2012-12-12T10:53:43+00:00'
-          description: The date and time when this configuration was created.
-        updated_at:
-          type: string
-          format: date-time
-          example: '2012-12-12T10:53:43+00:00'
-          description: The date and time when this configuration was last updated.
-        merchant_account_id:
-          type: string
-          description: The unique ID for a merchant account.
-          example: default
-        definition_id:
-          type: string
-          description: The ID of the Vault Forward definition.
-          example: amadeus
-        display_name:
-          type: string
-          description: The display name for this configuration.
-          example: Amadeus
-        hosts:
-          type: array
-          description: The hosts where Vault Forward requests are allowed for this definition.
-          minItems: 1
-          items:
-            type: string
-          example:
-          - https://api.amadeus.com
-          - https://test.api.amadeus.com
-        authentications:
-          type: array
-          description: Authentication methods that can be applied in Vault Forward requests.
-          minItems: 0
-          items:
-            $ref: '#/components/schemas/PCIForwardConfigAuthentication'
-        creator:
-          type:
-          - object
-          - 'null'
-          description: The user who created the Vault Forward configuration.
-          properties:
-            id:
-              type: string
-              format: uuid
-              description: The ID of the user.
-              example: 77a76f7e-d2de-4bbc-ada9-d6a0015e6bd5
-            name:
-              type: string
-              description: The name of the user.
-              example: John L
-            email_address:
-              type: string
-              description: The email address for this user.
-              example: john@example.com
-    PCIForwardConfigAuthentications:
-      title: Vault Forward authentication methods
-      type: object
-      description: A list of configured Vault Forward authentication methods.
-      x-internal: true
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/PCIForwardConfigAuthentication'
-    Error409DuplicateRecord:
-      title: Duplicate Record Error
-      type: object
-      description: Duplicate Record Error (HTTP 409).
-      x-tags:
-      - Errors
-      properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: '`duplicate_record`.'
-          example: duplicate_record
-          enum:
-          - duplicate_record
-        status:
-          type: integer
-          description: '`409`.'
-          example: 409
-          enum:
-          - 409
-        message:
-          type: string
-          description: Further details on the field that triggered the error.
-          example: A duplicate record exists with this external_identifier value
-        details:
-          type: array
-          description: 'A list of detail objects that further clarify the reason for the error.
-
-            Not every error supports more detail.'
-          example: []
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-    PCIForwardConfigAuthenticationUpdate:
-      title: Vault Forward authentication method (Update)
-      type: object
-      description: Request body to update a Vault Forward authentication method.
-      x-internal: true
-      x-tags:
-      - Request Bodies
-      properties:
-        display_name:
-          type: string
-          description: A custom name for the authentication method. This will be shown in the Admin UI.
-          example: My Message Level Encryption
-          minLength: 1
-          maxLength: 50
-        fields:
-          type: array
-          description: 'A list of fields, each containing a key-value pair for each field defined
-
-            by the definition for this authentication method.'
-          items:
-            type: object
-            description: 'A key-value pair that represents a field defined in the definition for
-
-              this authentication method.'
-            required:
-            - key
-            - value
-            properties:
-              key:
-                type: string
-                description: The key of the field to set a value for.
-                example: private_key
-                minLength: 1
-                maxLength: 50
-              value:
-                type: string
-                description: 'The value of a field to set; you can unset optional fields by
-
-                  setting this to an empty string `""`.'
-                example: REDACTED_STRIPE_KEY
-                minLength: 0
-                maxLength: 5000
-    Error404NotFound:
-      title: Not Found Error
-      type: object
-      description: Not Found Error (HTTP 404).
-      x-tags:
-      - Errors
-      properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: The reason code for the error.
-          example: not_found
-          enum:
-          - not_found
-          - pending_creation
-        status:
-          type: integer
-          description: '`404`.'
-          example: 404
-          enum:
-          - 404
-        message:
-          type: string
-          description: The human readable reason for the error.
-          example: The resource could not be found
-        details:
-          type: array
-          description: 'A list of detail objects that further clarify the reason for the error.
-
-            Not every error supports more detail.'
-          example: []
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-    PCIForwardConfigRequest:
-      title: Vault Forward configuration (Create)
-      type: object
-      description: Request body to create a Vault Forward configuration.
-      x-internal: true
-      required:
-      - definition_id
-      properties:
-        definition_id:
-          type: string
-          description: The ID of the Vault Forward definition to configure.
-          example: amadeus
-    PCIForwardConfigAuthenticationRequest:
-      title: Vault Forward authentication method (Create)
-      type: object
-      description: Request body to create a Vault Forward authentication method.
-      x-internal: true
-      x-tags:
-      - Request Bodies
-      required:
-      - kind
-      - display_name
-      - fields
-      properties:
-        kind:
-          type: string
-          description: 'The kind of authentication to be used in a Vault Forward request.
-
-            '
-          enum:
-          - mle
-          - mtls
-          - signature
-          example: mle
-        display_name:
-          type: string
-          description: A custom name for the authentication method. This will be shown in the Admin UI.
-          example: My Message Level Encryption
-          minLength: 1
-          maxLength: 50
-        fields:
-          type: array
-          description: 'A list of fields, each containing a key-value pair for each field defined
-
-            by the definition for this authentication method.'
-          items:
-            type: object
-            description: 'A key-value pair that represents a field defined in the definition for
-
-              this authentication method.'
-            required:
-            - key
-            - value
-            properties:
-              key:
-                type: string
-                description: The key of the field to set a value for.
-                example: private_key
-                minLength: 1
-                maxLength: 50
-              value:
-                type: string
-                description: The value of a field to set.
-                example: REDACTED_STRIPE_KEY
-                minLength: 0
-                maxLength: 5000
-    PCIForwardConfigs:
-      title: Vault Forward configurations
-      type: object
-      description: A list of available Vault Forward configurations.
-      x-internal: true
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/PCIForwardConfig'
-        limit:
-          type: integer
-          description: 'The limit applied to request. This represents the number of items that are at
-
-            maximum returned by this request.'
-          format: int32
-          minimum: 1
-          maximum: 100
-          example: 1
-          default: 20
-        next_cursor:
-          type:
-          - string
-          - 'null'
-          description: 'The cursor that represents the next page of results. Use the `cursor` query
-
-            parameter to fetch this page of items.'
-          example: ZXhhbXBsZTE
-          minLength: 1
-          maxLength: 1000
-        previous_cursor:
-          type:
-          - string
-          - 'null'
-          description: 'The cursor that represents the next page of results. Use the `cursor` query
-
-            parameter to fetch this page of items.'
-          example: null
-          minLength: 1
-          maxLength: 1000
-    Error400BadRequest:
-      title: Bad Request
-      type: object
-      description: Bad Request (HTTP 400).
-      x-tags:
-      - Errors
-      properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: A short code that describes the reason for the error.
-          example: bad_request
-          enum:
-          - bad_request
-          - incorrect_json
-          - invalid_credentials
-        status:
-          type: integer
-          description: '`400`.'
-          example: 400
-          enum:
-          - 400
-        message:
-          type: string
-          description: A human-readable reason for the error.
-          example: Missing '****' field
-        details:
-          type: array
-          description: A list of detail objects that further clarify the reason for the error.
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
     PCIForwardConfigAuthentication:
       title: A Vault Forward authentication method
       type: object
@@ -838,6 +458,124 @@ components:
               type: string
               description: The email address for this user.
               example: john@example.com
+    Error400BadRequest:
+      title: Bad Request
+      type: object
+      description: Bad Request (HTTP 400).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: A short code that describes the reason for the error.
+          example: bad_request
+          enum:
+          - bad_request
+          - incorrect_json
+          - invalid_credentials
+        status:
+          type: integer
+          description: '`400`.'
+          example: 400
+          enum:
+          - 400
+        message:
+          type: string
+          description: A human-readable reason for the error.
+          example: Missing '****' field
+        details:
+          type: array
+          description: A list of detail objects that further clarify the reason for the error.
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    PCIForwardConfigs:
+      title: Vault Forward configurations
+      type: object
+      description: A list of available Vault Forward configurations.
+      x-internal: true
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/PCIForwardConfig'
+        limit:
+          type: integer
+          description: 'The limit applied to request. This represents the number of items that are at
+
+            maximum returned by this request.'
+          format: int32
+          minimum: 1
+          maximum: 100
+          example: 1
+          default: 20
+        next_cursor:
+          type:
+          - string
+          - 'null'
+          description: 'The cursor that represents the next page of results. Use the `cursor` query
+
+            parameter to fetch this page of items.'
+          example: ZXhhbXBsZTE
+          minLength: 1
+          maxLength: 1000
+        previous_cursor:
+          type:
+          - string
+          - 'null'
+          description: 'The cursor that represents the next page of results. Use the `cursor` query
+
+            parameter to fetch this page of items.'
+          example: null
+          minLength: 1
+          maxLength: 1000
+    PCIForwardConfigAuthenticationUpdate:
+      title: Vault Forward authentication method (Update)
+      type: object
+      description: Request body to update a Vault Forward authentication method.
+      x-internal: true
+      x-tags:
+      - Request Bodies
+      properties:
+        display_name:
+          type: string
+          description: A custom name for the authentication method. This will be shown in the Admin UI.
+          example: My Message Level Encryption
+          minLength: 1
+          maxLength: 50
+        fields:
+          type: array
+          description: 'A list of fields, each containing a key-value pair for each field defined
+
+            by the definition for this authentication method.'
+          items:
+            type: object
+            description: 'A key-value pair that represents a field defined in the definition for
+
+              this authentication method.'
+            required:
+            - key
+            - value
+            properties:
+              key:
+                type: string
+                description: The key of the field to set a value for.
+                example: private_key
+                minLength: 1
+                maxLength: 50
+              value:
+                type: string
+                description: 'The value of a field to set; you can unset optional fields by
+
+                  setting this to an empty string `""`.'
+                example: REDACTED_STRIPE_KEY
+                minLength: 0
+                maxLength: 5000
     ErrorDetail:
       title: Error details
       description: Additional detail about the part of a request body that caused an issue.
@@ -870,6 +608,268 @@ components:
           type: string
           example: field required
           description: A human readable message for this error detail.
+    PCIForwardConfigAuthenticationRequest:
+      title: Vault Forward authentication method (Create)
+      type: object
+      description: Request body to create a Vault Forward authentication method.
+      x-internal: true
+      x-tags:
+      - Request Bodies
+      required:
+      - kind
+      - display_name
+      - fields
+      properties:
+        kind:
+          type: string
+          description: 'The kind of authentication to be used in a Vault Forward request.
+
+            '
+          enum:
+          - mle
+          - mtls
+          - signature
+          example: mle
+        display_name:
+          type: string
+          description: A custom name for the authentication method. This will be shown in the Admin UI.
+          example: My Message Level Encryption
+          minLength: 1
+          maxLength: 50
+        fields:
+          type: array
+          description: 'A list of fields, each containing a key-value pair for each field defined
+
+            by the definition for this authentication method.'
+          items:
+            type: object
+            description: 'A key-value pair that represents a field defined in the definition for
+
+              this authentication method.'
+            required:
+            - key
+            - value
+            properties:
+              key:
+                type: string
+                description: The key of the field to set a value for.
+                example: private_key
+                minLength: 1
+                maxLength: 50
+              value:
+                type: string
+                description: The value of a field to set.
+                example: REDACTED_STRIPE_KEY
+                minLength: 0
+                maxLength: 5000
+    PCIForwardConfigAuthentications:
+      title: Vault Forward authentication methods
+      type: object
+      description: A list of configured Vault Forward authentication methods.
+      x-internal: true
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/PCIForwardConfigAuthentication'
+    Error401Unauthorized:
+      title: Unauthorized Error
+      type: object
+      description: Unauthorized Error (HTTP 401).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`unauthorized`.'
+          example: unauthorized
+          enum:
+          - unauthorized
+        status:
+          type: integer
+          description: '`401`.'
+          example: 401
+          enum:
+          - 401
+        message:
+          type: string
+          description: No valid API authentication found.
+          example: No valid API authentication found
+          enum:
+          - No valid API authentication found
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    PCIForwardConfigRequest:
+      title: Vault Forward configuration (Create)
+      type: object
+      description: Request body to create a Vault Forward configuration.
+      x-internal: true
+      required:
+      - definition_id
+      properties:
+        definition_id:
+          type: string
+          description: The ID of the Vault Forward definition to configure.
+          example: amadeus
+    Error409DuplicateRecord:
+      title: Duplicate Record Error
+      type: object
+      description: Duplicate Record Error (HTTP 409).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`duplicate_record`.'
+          example: duplicate_record
+          enum:
+          - duplicate_record
+        status:
+          type: integer
+          description: '`409`.'
+          example: 409
+          enum:
+          - 409
+        message:
+          type: string
+          description: Further details on the field that triggered the error.
+          example: A duplicate record exists with this external_identifier value
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    Error404NotFound:
+      title: Not Found Error
+      type: object
+      description: Not Found Error (HTTP 404).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: The reason code for the error.
+          example: not_found
+          enum:
+          - not_found
+          - pending_creation
+        status:
+          type: integer
+          description: '`404`.'
+          example: 404
+          enum:
+          - 404
+        message:
+          type: string
+          description: The human readable reason for the error.
+          example: The resource could not be found
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    PCIForwardConfig:
+      title: A Vault Forward configuration
+      type: object
+      description: A configured Vault Forward configuration.
+      x-internal: true
+      properties:
+        type:
+          type: string
+          description: The type of this resource. It is always `vault-forward-config`.
+          default: vault-forward-config
+          example: vault-forward-config
+        id:
+          type: string
+          format: uuid
+          description: The ID of this Vault Forward configuration.
+          example: faaad066-30b4-4997-a438-242b0752d7e1
+        created_at:
+          type: string
+          format: date-time
+          example: '2012-12-12T10:53:43+00:00'
+          description: The date and time when this configuration was created.
+        updated_at:
+          type: string
+          format: date-time
+          example: '2012-12-12T10:53:43+00:00'
+          description: The date and time when this configuration was last updated.
+        merchant_account_id:
+          type: string
+          description: The unique ID for a merchant account.
+          example: default
+        definition_id:
+          type: string
+          description: The ID of the Vault Forward definition.
+          example: amadeus
+        display_name:
+          type: string
+          description: The display name for this configuration.
+          example: Amadeus
+        hosts:
+          type: array
+          description: The hosts where Vault Forward requests are allowed for this definition.
+          minItems: 1
+          items:
+            type: string
+          example:
+          - https://api.amadeus.com
+          - https://test.api.amadeus.com
+        authentications:
+          type: array
+          description: Authentication methods that can be applied in Vault Forward requests.
+          minItems: 0
+          items:
+            $ref: '#/components/schemas/PCIForwardConfigAuthentication'
+        creator:
+          type:
+          - object
+          - 'null'
+          description: The user who created the Vault Forward configuration.
+          properties:
+            id:
+              type: string
+              format: uuid
+              description: The ID of the user.
+              example: 77a76f7e-d2de-4bbc-ada9-d6a0015e6bd5
+            name:
+              type: string
+              description: The name of the user.
+              example: John L
+            email_address:
+              type: string
+              description: The email address for this user.
+              example: john@example.com
   securitySchemes:
     bearerAuth:
       type: http

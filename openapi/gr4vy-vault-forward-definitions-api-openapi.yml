@@ -59,6 +59,149 @@ paths:
                 $ref: '#/components/schemas/Error401Unauthorized'
 components:
   schemas:
+    ErrorDetail:
+      title: Error details
+      description: Additional detail about the part of a request body that caused an issue.
+      type: object
+      x-tags:
+      - Errors
+      properties:
+        location:
+          type: string
+          example: body
+          description: The location where the error caused an issue.
+          enum:
+          - query
+          - body
+          - path
+          - header
+        type:
+          type: string
+          example: value_error.missing
+          description: A unique identifier for the type of error that occurred.
+        pointer:
+          type: string
+          example: /payment_method/number
+          description: 'The exact item for which the validation did not succeed. This is a JSON
+
+            pointer for request bodies, while for query, path, and header parameters
+
+            it is the name of the parameter.'
+        message:
+          type: string
+          example: field required
+          description: A human readable message for this error detail.
+    PCIForwardAuthenticationDefinition:
+      title: Vault Forward Authentication Definition
+      type: object
+      x-internal: true
+      description: An available Vault Forward authentication definition that can be configured.
+      properties:
+        type:
+          type: string
+          description: 'The type of this resource. It is always
+
+            `vault-forward-authentication-definition`.'
+          default: vault-forward-authentication-definition
+          example: vault-forward-authentication-definition
+        kind:
+          type: string
+          description: 'The kind of authentication to be used in a Vault Forward request.
+
+            '
+          enum:
+          - mle
+          - mtls
+          - signature
+          example: mle
+        title:
+          type: string
+          description: The title of this authentication definition.
+          example: Message Level Encryption
+        description:
+          type: string
+          description: The description of this authentication definition.
+          example: A way to set up payload encryption
+        fields:
+          type: array
+          description: 'A list of fields that can to be submitted when activating the
+
+            authentication method.'
+          minItems: 1
+          items:
+            type: object
+            description: 'A single field that can be submitted for an authentication method when
+
+              it is created.'
+            properties:
+              key:
+                type: string
+                example: private_api_key
+                description: The key of a field that can be submitted.
+              display_name:
+                type: string
+                example: Private API key
+                description: The name to display for a field in the dashboard.
+              required:
+                type: boolean
+                example: true
+                description: 'Defines if this field is required when the authentication method
+
+                  is created.'
+              format:
+                type: string
+                example: text
+                description: Defines the type of input that needs to be rendered for this field.
+                enum:
+                - text
+                - multiline
+                - file
+                - number
+              secret:
+                type: boolean
+                example: true
+                description: 'Defines if this field is secret. When `true` the field is not
+
+                  returned when querying the authentication method.'
+    Error401Unauthorized:
+      title: Unauthorized Error
+      type: object
+      description: Unauthorized Error (HTTP 401).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`unauthorized`.'
+          example: unauthorized
+          enum:
+          - unauthorized
+        status:
+          type: integer
+          description: '`401`.'
+          example: 401
+          enum:
+          - 401
+        message:
+          type: string
+          description: No valid API authentication found.
+          example: No valid API authentication found
+          enum:
+          - No valid API authentication found
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
     PCIForwardDefinitions:
       title: Vault Forward definitions
       type: object
@@ -133,149 +276,6 @@ components:
           minItems: 1
           items:
             $ref: '#/components/schemas/PCIForwardAuthenticationDefinition'
-    Error401Unauthorized:
-      title: Unauthorized Error
-      type: object
-      description: Unauthorized Error (HTTP 401).
-      x-tags:
-      - Errors
-      properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: '`unauthorized`.'
-          example: unauthorized
-          enum:
-          - unauthorized
-        status:
-          type: integer
-          description: '`401`.'
-          example: 401
-          enum:
-          - 401
-        message:
-          type: string
-          description: No valid API authentication found.
-          example: No valid API authentication found
-          enum:
-          - No valid API authentication found
-        details:
-          type: array
-          description: 'A list of detail objects that further clarify the reason for the error.
-
-            Not every error supports more detail.'
-          example: []
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-    PCIForwardAuthenticationDefinition:
-      title: Vault Forward Authentication Definition
-      type: object
-      x-internal: true
-      description: An available Vault Forward authentication definition that can be configured.
-      properties:
-        type:
-          type: string
-          description: 'The type of this resource. It is always
-
-            `vault-forward-authentication-definition`.'
-          default: vault-forward-authentication-definition
-          example: vault-forward-authentication-definition
-        kind:
-          type: string
-          description: 'The kind of authentication to be used in a Vault Forward request.
-
-            '
-          enum:
-          - mle
-          - mtls
-          - signature
-          example: mle
-        title:
-          type: string
-          description: The title of this authentication definition.
-          example: Message Level Encryption
-        description:
-          type: string
-          description: The description of this authentication definition.
-          example: A way to set up payload encryption
-        fields:
-          type: array
-          description: 'A list of fields that can to be submitted when activating the
-
-            authentication method.'
-          minItems: 1
-          items:
-            type: object
-            description: 'A single field that can be submitted for an authentication method when
-
-              it is created.'
-            properties:
-              key:
-                type: string
-                example: private_api_key
-                description: The key of a field that can be submitted.
-              display_name:
-                type: string
-                example: Private API key
-                description: The name to display for a field in the dashboard.
-              required:
-                type: boolean
-                example: true
-                description: 'Defines if this field is required when the authentication method
-
-                  is created.'
-              format:
-                type: string
-                example: text
-                description: Defines the type of input that needs to be rendered for this field.
-                enum:
-                - text
-                - multiline
-                - file
-                - number
-              secret:
-                type: boolean
-                example: true
-                description: 'Defines if this field is secret. When `true` the field is not
-
-                  returned when querying the authentication method.'
-    ErrorDetail:
-      title: Error details
-      description: Additional detail about the part of a request body that caused an issue.
-      type: object
-      x-tags:
-      - Errors
-      properties:
-        location:
-          type: string
-          example: body
-          description: The location where the error caused an issue.
-          enum:
-          - query
-          - body
-          - path
-          - header
-        type:
-          type: string
-          example: value_error.missing
-          description: A unique identifier for the type of error that occurred.
-        pointer:
-          type: string
-          example: /payment_method/number
-          description: 'The exact item for which the validation did not succeed. This is a JSON
-
-            pointer for request bodies, while for query, path, and header parameters
-
-            it is the name of the parameter.'
-        message:
-          type: string
-          example: field required
-          description: A human readable message for this error detail.
   securitySchemes:
     bearerAuth:
       type: http

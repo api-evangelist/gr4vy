@@ -443,100 +443,6 @@ paths:
                 $ref: '#/components/schemas/Error401Unauthorized'
 components:
   schemas:
-    FlowRedirectTransactionRoutingOutcome:
-      title: Redirect Transactions/Routing Outcome
-      type: object
-      description: 'Outcome for redirect transactions flow/routing action.
-
-        Each option is a Gr4vy payment service object.'
-      x-tags:
-      - Flow
-      x-internal: true
-      properties:
-        type:
-          type: string
-          description: The type of this resource. Is always `outcome`.
-          example: outcome
-          enum:
-          - outcome
-        id:
-          type: string
-          example: 24c8211d-b9d9-4b06-8aa9-f350fd0ffd15
-          description: Payment service identifier.
-        label:
-          type: string
-          description: The display name of the payment service.
-          example: Stripe
-        active:
-          type: boolean
-          description: The status of the payment service.
-        icon_url:
-          type:
-          - string
-          - 'null'
-          format: uri
-          description: Payment service icon URL.
-        countries:
-          type: array
-          items:
-            type: string
-          description: Accepted currency ISO codes for the payment service.
-          example:
-          - US
-          - GB
-        currencies:
-          type: array
-          items:
-            type: string
-          description: Accepted country ISO codes for the payment service.
-          example:
-          - USD
-          - GBP
-    FlowProductTypesCondition:
-      title: Flow product types condition
-      type: object
-      description: Cart items' product types conditions with a name, operator, and value.
-      x-tags:
-      - Flow
-      x-internal: true
-      required:
-      - name
-      - operator
-      - value
-      properties:
-        name:
-          type: string
-          description: The type of match made for this rule.
-          example: product_types
-          enum:
-          - product_types
-        operator:
-          type: string
-          description: The comparison to make on the `value`.
-          example: includes_all
-          enum:
-          - includes_all
-          - includes_at_least_one
-          - includes_none
-        value:
-          type: array
-          items:
-            type: string
-            example: physical
-            enum:
-            - physical
-            - discount
-            - shipping_fee
-            - sales_tax
-            - digital
-            - gift_card
-            - store_credit
-            - surcharge
-            - null
-          example:
-          - shipping_fee
-          - sales_tax
-          description: Cart items' product types to compare the transaction to.
     FlowAntiFraudDecisionCondition:
       title: Flow anti-fraud decision condition
       type: object
@@ -577,35 +483,10 @@ components:
             - review
             - exception
             - skipped
-    FlowRuleThreeDSecureOutcome:
-      title: 3DS outcome
+    FlowMerchantInitiatedCondition:
+      title: Flow merchant initiated condition
       type: object
-      description: Defines the outcome of a rule in a flow for 3DS.
-      x-tags:
-      - Flow
-      required:
-      - type
-      - result
-      x-internal: true
-      properties:
-        type:
-          type: string
-          description: The type of action outcome for the given rule.
-          example: three-d-secure
-          enum:
-          - three-d-secure
-        result:
-          type: string
-          description: Result for a given flow action.
-          example: attempt
-          enum:
-          - attempt
-          - force
-          - skip
-    FlowCardSchemeCondition:
-      title: Flow card scheme condition
-      type: object
-      description: Card scheme conditions with a name, operator, and value.
+      description: '`merchant_initiated` flag conditions with a name, operator, and value.'
       x-tags:
       - Flow
       x-internal: true
@@ -617,263 +498,55 @@ components:
         name:
           type: string
           description: The type of match made for this rule.
-          example: card_scheme
+          example: merchant_initiated
           enum:
-          - card_scheme
+          - merchant_initiated
         operator:
           type: string
-          description: The comparison to make on the `value`.
-          example: is_one_of
+          description: The comparison to make on the `merchant_initiated` flag `value`.
+          example: equal_to
           enum:
-          - is_one_of
-          - is_not_one_of
+          - equal_to
         value:
-          type: array
-          description: Card scheme(s) to compare the transaction to.
-          example:
-          - visa
-          - mastercard
-          items:
-            type: string
-            example: visa
-            enum:
-            - accel
-            - amex
-            - bancontact
-            - carte-bancaire
-            - cirrus
-            - culiance
-            - dankort
-            - diners-club
-            - discover
-            - eftpos-australia
-            - elo
-            - hipercard
-            - jcb
-            - maestro
-            - mastercard
-            - mir
-            - nyce
-            - other
-            - pulse
-            - rupay
-            - star
-            - uatp
-            - unionpay
-            - visa
-            - null
-    FlowRuleServiceOutcome:
-      title: Payment service outcome
+          type: boolean
+          description: '`merchant_initiated` flag value to compare the transaction to.'
+          example: true
+    Error400BadRequest:
+      title: Bad Request
       type: object
-      description: 'Defines the outcome of a rule in a flow where the result
-
-        is a list of dictionaries that define the payment service,
-
-        instrument and transformation to be used to process a
-
-        transaction.'
+      description: Bad Request (HTTP 400).
       x-tags:
-      - Flow
-      required:
-      - type
-      - result
-      - version
-      x-internal: true
+      - Errors
       properties:
         type:
           type: string
-          description: The type of action outcome for the given rule.
-          example: card-routing
+          description: '`error`.'
           enum:
-          - card-routing
-        result:
-          type: array
-          description: Results for a given flow action.
-          items:
-            type: object
-            properties:
-              payment_service_id:
-                type: string
-                description: ID of the payment service to be used when processing the transaction.
-                example: fe26475d-ec3e-4884-9553-f7356683f7f9
-                format: uuid
-              instrument:
-                type: string
-                description: 'The name of the instrument to be used to process the transaction.
-
-                  For `pan`, if a Payment Service token is available, the API will use that
-
-                  for stored payment methods.
-
-                  '
-                enum:
-                - network_token
-                - pan
-                example: network_token
-              transformations:
-                type: array
-                description: List of transformations to apply when processing the transaction.
-                items:
-                  type: object
-                  properties:
-                    name:
-                      type: string
-                      description: Name of the transformation.
-                      example: force_mit
-                      enum:
-                      - force_mit
-                      - use_additional_scheme
-          example:
-          - payment_service_id: fe26475d-ec3e-4884-9553-f7356683f7f9
-            instrument": network_token
-            transformations: []
-          - payment_service_id: d88aca32-07fb-46cd-a43f-86da02b73c21
-            instrument: pan
-            transformations:
-            - name: force_mit
-        version:
+          - error
+          example: error
+        code:
+          type: string
+          description: A short code that describes the reason for the error.
+          example: bad_request
+          enum:
+          - bad_request
+          - incorrect_json
+          - invalid_credentials
+        status:
           type: integer
-          description: Version of the rule outcome. Current version is `2`.
-          example: 2
+          description: '`400`.'
+          example: 400
           enum:
-          - 2
-    FlowRule:
-      title: Flow rule
-      type: object
-      x-tags:
-      - Flow
-      x-internal: true
-      properties:
-        type:
+          - 400
+        message:
           type: string
-          description: The type of this resource. Is always `rule`.
-          example: rule
-          enum:
-          - rule
-        id:
-          type: string
-          example: fe26475d-ec3e-4884-9553-f7356683f7f9
-          description: The unique Gr4vy ID for this rule.
-          format: uuid
-        merchant_account_id:
-          type: string
-          description: The unique ID for a merchant account.
-          example: default
-        description:
-          type:
-          - string
-          - 'null'
-          description: Description of the flow rule.
-          example: example rule.
-          minLength: 1
-          maxLength: 200
-        flow:
-          type: string
-          description: The name of the Flow.
-          example: checkout
-          enum:
-          - checkout
-          - card-transaction
-          - non-card-transaction
-          - redirect-transaction
-        action:
-          type: string
-          description: 'Action for the given rule. Actions can only be used in
-
-            flows that support them.
-
-
-            * The `checkout` flow only supports the
-
-            `select-payment-options` action.
-
-            * The `card-transaction` supports the `route-transaction`,
-
-            `skip-3ds`, and `decline-early` actions.
-
-            * The `non-card-transaction` flow only supports the
-
-            `decline-early` action.
-
-            * The `redirect-transaction` flow only supports
-
-            the `route-transaction` action.
-
-            '
-          example: select-payment-options
-          enum:
-          - select-payment-options
-          - decline-early
-          - route-transaction
-          - skip-3ds
-        conditions:
+          description: A human-readable reason for the error.
+          example: Missing '****' field
+        details:
           type: array
-          description: 'One or more conditions that apply for this rule. Each condition
-
-            needs to match for this rule to go into effect.'
+          description: A list of detail objects that further clarify the reason for the error.
           items:
-            oneOf:
-            - $ref: '#/components/schemas/FlowAmountCondition'
-            - $ref: '#/components/schemas/FlowAmountRangeCondition'
-            - $ref: '#/components/schemas/FlowAmountZeroCondition'
-            - $ref: '#/components/schemas/FlowAntiFraudDecisionCondition'
-            - $ref: '#/components/schemas/FlowBINRangeCondition'
-            - $ref: '#/components/schemas/FlowBrowserLanguageCondition'
-            - $ref: '#/components/schemas/FlowCardCountryCondition'
-            - $ref: '#/components/schemas/FlowCardIssuerNameCondition'
-            - $ref: '#/components/schemas/FlowCardProductNameCondition'
-            - $ref: '#/components/schemas/FlowCardSchemeCondition'
-            - $ref: '#/components/schemas/FlowCardSourceCondition'
-            - $ref: '#/components/schemas/FlowCardTypeCondition'
-            - $ref: '#/components/schemas/FlowCountryCondition'
-            - $ref: '#/components/schemas/FlowCurrencyCondition'
-            - $ref: '#/components/schemas/FlowIsSubsequentPaymentCondition'
-            - $ref: '#/components/schemas/FlowMetadataCondition'
-            - $ref: '#/components/schemas/FlowMetadataNumericCondition'
-            - $ref: '#/components/schemas/FlowMerchantInitiatedCondition'
-            - $ref: '#/components/schemas/FlowPaymentMethodCondition'
-            - $ref: '#/components/schemas/FlowPaymentMethodsCondition'
-            - $ref: '#/components/schemas/FlowPaymentSourceCondition'
-            - $ref: '#/components/schemas/FlowProductCategoriesCondition'
-            - $ref: '#/components/schemas/FlowProductTypesCondition'
-            - $ref: '#/components/schemas/FlowSKUsCondition'
-            - $ref: '#/components/schemas/FlowSplitRoutingCondition'
-        outcome:
-          oneOf:
-          - $ref: '#/components/schemas/FlowRuleServiceOutcome'
-          - $ref: '#/components/schemas/FlowRuleMethodOutcome'
-          - $ref: '#/components/schemas/FlowRuleBooleanOutcome'
-          - $ref: '#/components/schemas/FlowRuleUUIDsListOutcome'
-          - $ref: '#/components/schemas/FlowRuleThreeDSecureOutcome'
-        position:
-          description: The position of the rule in the flow.
-          type: number
-          example: 2
-        created_at:
-          type: string
-          description: 'The date and time
-
-            when this buyer was created in our system.'
-          format: date-time
-          example: '2013-07-16T19:23:00.000+00:00'
-        updated_at:
-          type: string
-          description: 'The date and time
-
-            when this buyer was last updated in our system.'
-          format: date-time
-          example: '2013-07-16T19:23:00.000+00:00'
-        error_code:
-          type:
-          - string
-          - 'null'
-          description: 'A custom error code returned when this rule is triggered. This only applies
-
-            to `"decline-early"` rule actions. The value must have a `flow_` prefix.'
-          example: flow_error_code
-          minLength: 1
-          maxLength: 255
-          pattern: ^flow_[a-z_]+$
+            $ref: '#/components/schemas/ErrorDetail'
     FlowMetadataNumericCondition:
       title: Flow metadata numeric condition
       type: object
@@ -916,907 +589,6 @@ components:
               type: number
               example: 100
               description: The numeric value to compare against.
-    FlowCardIssuerNameCondition:
-      title: Flow card issuer name condition
-      type: object
-      description: Card issuer name condition with a name, operator, and value.
-      x-tags:
-      - Flow
-      x-internal: true
-      required:
-      - name
-      - operator
-      - value
-      properties:
-        name:
-          type: string
-          description: The type of match made for this rule.
-          example: card_issuer_name
-          enum:
-          - card_issuer_name
-        operator:
-          type: string
-          description: The comparison to make on the `value`.
-          example: like_one_of
-          enum:
-          - like_one_of
-          - unlike_any_of
-        value:
-          type: array
-          items:
-            type: string
-          description: 'Issuer name(s) to compare the card issuer name to.
-
-            Values can be a part of the full card''s issuer name.
-
-            The comparison is case-insensitive.
-
-            For example, `Hsbc Uk Bank Plc` and `Pt Bank Hsbc Indonesia` will match `HSBC`.'
-          example:
-          - HSBC
-          - Barclays
-    FlowSKUsCondition:
-      title: Flow SKUs condition
-      type: object
-      description: Cart items' SKUs conditions with a name, operator, and value.
-      x-tags:
-      - Flow
-      x-internal: true
-      required:
-      - name
-      - operator
-      - value
-      properties:
-        name:
-          type: string
-          description: The type of match made for this rule.
-          example: skus
-          enum:
-          - skus
-        operator:
-          type: string
-          description: The comparison to make on the `value`.
-          example: includes_all
-          enum:
-          - includes_all
-          - includes_at_least_one
-          - includes_none
-        value:
-          type: array
-          items:
-            type: string
-            minLength: 1
-          description: Cart items' SKU values to compare the transaction to.
-          example:
-          - YZ1234
-          - AB2345
-          - TU4567
-    Error401Unauthorized:
-      title: Unauthorized Error
-      type: object
-      description: Unauthorized Error (HTTP 401).
-      x-tags:
-      - Errors
-      properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: '`unauthorized`.'
-          example: unauthorized
-          enum:
-          - unauthorized
-        status:
-          type: integer
-          description: '`401`.'
-          example: 401
-          enum:
-          - 401
-        message:
-          type: string
-          description: No valid API authentication found.
-          example: No valid API authentication found
-          enum:
-          - No valid API authentication found
-        details:
-          type: array
-          description: 'A list of detail objects that further clarify the reason for the error.
-
-            Not every error supports more detail.'
-          example: []
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-    UseAdditionalSchemeTransformationOutcome:
-      title: Use additional scheme transformation
-      type: object
-      description: 'Transformation to be applied when for card transaction
-
-        flow/routing action outcome.
-
-
-        This transformation forces the processing of a
-
-        transaction to use the first additional scheme
-
-        of the card instead of it''s main scheme.
-
-
-        If the card doesn''t have any additional schemes,
-
-        this outcome would be skipped.'
-      x-tags:
-      - Flow
-      x-internal: true
-      properties:
-        name:
-          type: string
-          description: The name of the transformation. This will always be `use_additional_scheme`.
-          example: use_additional_scheme
-          enum:
-          - use_additional_scheme
-    FlowCurrencyCondition:
-      title: Flow currency condition
-      type: object
-      description: Currency conditions with a name, operator, and value.
-      x-tags:
-      - Flow
-      x-internal: true
-      required:
-      - name
-      - operator
-      - value
-      properties:
-        name:
-          type: string
-          description: The type of match made for this rule.
-          example: currency
-          enum:
-          - currency
-        operator:
-          type: string
-          description: The comparison to make on the currency code `value`.
-          example: is_one_of
-          enum:
-          - is_one_of
-          - is_not_one_of
-        value:
-          type: array
-          items:
-            type: string
-            minLength: 1
-          description: Currency ISO codes to compare the transaction to.
-          example:
-          - USD
-          - EUR
-          - GBP
-    FlowSplitRoutingCondition:
-      title: Flow split routing condition
-      type: object
-      description: Split routing condition with a name, operator, and numeric value.
-      x-tags:
-      - Flow
-      x-internal: true
-      required:
-      - name
-      - operator
-      - value
-      properties:
-        name:
-          type: string
-          description: The unique name of this condition.
-          example: split_routing
-          enum:
-          - split_routing
-        operator:
-          type: string
-          description: The numeric comparison to evaluate.
-          example: less_than_or_equal_to
-          enum:
-          - less_than_or_equal_to
-        value:
-          type: integer
-          description: The probability percentage of this condition to be triggered.
-          minimum: 1
-          maximum: 99
-          example: 50
-    FlowCardTransactionRoutingOutcome:
-      title: Card Transactions/Routing Outcome
-      type: object
-      description: 'Outcome for card transactions flow/routing action.
-
-        Each option is a Gr4vy payment service object.'
-      x-tags:
-      - Flow
-      x-internal: true
-      properties:
-        type:
-          type: string
-          description: The type of this resource. Is always `transaction-route`.
-          example: transaction-route
-          enum:
-          - transaction-route
-        id:
-          type: string
-          example: 24c8211d-b9d9-4b06-8aa9-f350fd0ffd15
-          description: Payment service identifier.
-        label:
-          type: string
-          description: The display name of the payment service.
-          example: Stripe
-        active:
-          type: boolean
-          description: The status of the payment service.
-        icon_url:
-          type:
-          - string
-          - 'null'
-          format: uri
-          description: Payment service icon URL.
-        countries:
-          type: array
-          items:
-            type: string
-          description: Accepted currency ISO codes for the payment service.
-          example:
-          - US
-          - GB
-        currencies:
-          type: array
-          items:
-            type: string
-          description: Accepted country ISO codes for the payment service.
-          example:
-          - USD
-          - GBP
-        instruments:
-          type: array
-          description: 'Valid instruments that can be used for the payment service.
-
-
-            Only instruments supported by the payment service will appear in the list.'
-          items:
-            type: string
-            description: 'The name of the instrument to be used to process the transaction.
-
-              For `pan`, if a Payment Service token is available, the API will use that
-
-              for stored payment methods.
-
-              '
-            enum:
-            - network_token
-            - pan
-            example: network_token
-        transformations:
-          type: array
-          description: Valid transformations that can be used for the payment service.
-          items:
-            oneOf:
-            - $ref: '#/components/schemas/ForceMITTransformationOutcome'
-            - $ref: '#/components/schemas/UseAdditionalSchemeTransformationOutcome'
-        network_tokens_enabled:
-          type: boolean
-          description: Indicates if Network Tokens are enabled for the payment service.
-          example: false
-        network_tokens_setup_for_merchant:
-          type: boolean
-          description: Indicates if Network Tokens feature is enabled for at least one scheme for the merchant account.
-          example: true
-        open_loop:
-          type: boolean
-          description: Indicates if the payment service is open loop or not.
-          example: true
-    Error404NotFound:
-      title: Not Found Error
-      type: object
-      description: Not Found Error (HTTP 404).
-      x-tags:
-      - Errors
-      properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: The reason code for the error.
-          example: not_found
-          enum:
-          - not_found
-          - pending_creation
-        status:
-          type: integer
-          description: '`404`.'
-          example: 404
-          enum:
-          - 404
-        message:
-          type: string
-          description: The human readable reason for the error.
-          example: The resource could not be found
-        details:
-          type: array
-          description: 'A list of detail objects that further clarify the reason for the error.
-
-            Not every error supports more detail.'
-          example: []
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-    FlowBINRangeCondition:
-      title: Flow BIN range condition
-      type: object
-      description: BIN range conditions with a name, operator, and value.
-      x-tags:
-      - Flow
-      x-internal: true
-      required:
-      - name
-      - operator
-      - value
-      properties:
-        name:
-          type: string
-          description: The type of match made for this rule.
-          example: card_bin
-          enum:
-          - card_bin
-        operator:
-          type: string
-          description: The comparison to make on the `card_bin` `value`.
-          example: is_one_of
-          enum:
-          - is_one_of
-          - is_not_one_of
-        value:
-          type: array
-          items:
-            type: string
-            minLength: 1
-          description: 'BIN range to compare with the transaction. A card BIN is
-
-            8 characters long at maximum.'
-          example:
-          - 41410000-42429999
-    FlowCardCountryCondition:
-      title: Flow card country condition
-      type: object
-      description: Card country condition with a name, operator, and value.
-      x-tags:
-      - Flow
-      x-internal: true
-      required:
-      - name
-      - operator
-      - value
-      properties:
-        name:
-          type: string
-          description: The type of match made for this rule.
-          example: card_country
-          enum:
-          - card_country
-        operator:
-          type: string
-          description: The comparison to make on the `value`.
-          example: is_one_of
-          enum:
-          - is_one_of
-          - is_not_one_of
-        value:
-          type: array
-          description: 'Countries to compare the card originating country to
-
-            in `ISO-3166` 2 character format.'
-          example:
-          - ES
-          - GB
-          items:
-            type: string
-            minLength: 2
-            maxLength: 2
-    FlowRuleOutcomes:
-      title: Flow rule outcome
-      type: object
-      description: 'Defines the outcome of a rule in a flow.
-
-        Currently the outcomes can be a boolean value, or a list of string
-
-        values. The meaning of this outcome depends on the `action` this rule
-
-        is triggered for.'
-      x-tags:
-      - Flow
-      x-internal: true
-      properties:
-        items:
-          type: array
-          description: A list of outcomes.
-          items:
-            oneOf:
-            - $ref: '#/components/schemas/FlowPaymentOptionOutcome'
-            - $ref: '#/components/schemas/FlowCardTransactionRoutingOutcome'
-            - $ref: '#/components/schemas/FlowRedirectTransactionRoutingOutcome'
-    FlowMetadataCondition:
-      title: Flow metadata condition
-      type: object
-      description: Metadata conditions with a name, operator, and value.
-      x-tags:
-      - Flow
-      x-internal: true
-      required:
-      - name
-      - operator
-      - value
-      properties:
-        name:
-          type: string
-          description: The type of match made for this rule.
-          example: metadata
-          enum:
-          - metadata
-        operator:
-          type: string
-          description: The comparison to make on the currency code `value`.
-          example: includes
-          enum:
-          - includes
-          - excludes
-        value:
-          type: object
-          description: The metadata to compare the transaction to.
-          properties:
-            key:
-              type: string
-              minLength: 1
-              maxLength: 255
-              example: product
-              description: Key to metadata value to compare transaction to.
-            value:
-              oneOf:
-              - type: array
-                items:
-                  type: string
-                  minLength: 1
-                  maxLength: 255
-                minLength: 1
-                maxLength: 128
-                example:
-                - value1
-                - value2
-                description: List of metadata values to compare transaction to.
-              - type: string
-                minLength: 1
-                maxLength: 255
-                example: phone
-                description: Value of metadata to compare transaction to.
-    FlowRuleCreateRequest:
-      title: Create flow rule
-      type: object
-      description: A request to create a flow rule.
-      x-tags:
-      - Flow
-      x-internal: true
-      properties:
-        description:
-          type: string
-          description: Description of the flow rule.
-          example: example rule.
-          minLength: 1
-          maxLength: 200
-        conditions:
-          type: array
-          description: One or more conditions that apply for this rule. Each condition needs to match for this rule to go into effect.
-          items:
-            oneOf:
-            - $ref: '#/components/schemas/FlowAmountCondition'
-            - $ref: '#/components/schemas/FlowAmountRangeCondition'
-            - $ref: '#/components/schemas/FlowAmountZeroCondition'
-            - $ref: '#/components/schemas/FlowAntiFraudDecisionCondition'
-            - $ref: '#/components/schemas/FlowBINRangeCondition'
-            - $ref: '#/components/schemas/FlowBrowserLanguageCondition'
-            - $ref: '#/components/schemas/FlowCardCountryCondition'
-            - $ref: '#/components/schemas/FlowCardIssuerNameCondition'
-            - $ref: '#/components/schemas/FlowCardProductNameCondition'
-            - $ref: '#/components/schemas/FlowCardSchemeCondition'
-            - $ref: '#/components/schemas/FlowCardSourceCondition'
-            - $ref: '#/components/schemas/FlowCardTypeCondition'
-            - $ref: '#/components/schemas/FlowCountryCondition'
-            - $ref: '#/components/schemas/FlowCurrencyCondition'
-            - $ref: '#/components/schemas/FlowGiftCardBINCondition'
-            - $ref: '#/components/schemas/FlowHasGiftCardsCondition'
-            - $ref: '#/components/schemas/FlowIsSubsequentPaymentCondition'
-            - $ref: '#/components/schemas/FlowMetadataCondition'
-            - $ref: '#/components/schemas/FlowMetadataNumericCondition'
-            - $ref: '#/components/schemas/FlowMerchantInitiatedCondition'
-            - $ref: '#/components/schemas/FlowPaymentMethodCondition'
-            - $ref: '#/components/schemas/FlowPaymentMethodsCondition'
-            - $ref: '#/components/schemas/FlowPaymentSourceCondition'
-            - $ref: '#/components/schemas/FlowProductCategoriesCondition'
-            - $ref: '#/components/schemas/FlowProductTypesCondition'
-            - $ref: '#/components/schemas/FlowSKUsCondition'
-            - $ref: '#/components/schemas/FlowSplitRoutingCondition'
-        outcome:
-          oneOf:
-          - $ref: '#/components/schemas/FlowRuleBooleanOutcome'
-          - $ref: '#/components/schemas/FlowRuleMethodOutcome'
-          - $ref: '#/components/schemas/FlowRuleServiceOutcome'
-          - $ref: '#/components/schemas/FlowRuleUUIDsListOutcome'
-          - $ref: '#/components/schemas/FlowRuleThreeDSecureOutcome'
-        error_code:
-          type:
-          - string
-          - 'null'
-          example: flow_error_code
-          description: 'A custom error code returned when this rule is triggered. This only applies
-
-            to `"decline-early"` rule actions. The value must have a `flow_` prefix.'
-          minLength: 1
-          maxLength: 255
-          pattern: ^flow_[a-z_]+$
-    FlowCountryCondition:
-      title: Flow country condition
-      type: object
-      description: Country conditions with a name, operator, and value.
-      x-tags:
-      - Flow
-      x-internal: true
-      required:
-      - name
-      - operator
-      - value
-      properties:
-        name:
-          type: string
-          description: The type of match made for this rule.
-          example: country
-          enum:
-          - country
-        operator:
-          type: string
-          description: The comparison to make on the country code `value`.
-          example: is_one_of
-          enum:
-          - is_one_of
-          - is_not_one_of
-        value:
-          type: array
-          description: Country two-letter ISO codes to compare the transaction to.
-          example:
-          - US
-          - DE
-          items:
-            type: string
-            minLength: 2
-            maxLength: 2
-    FlowRuleUUIDsListOutcome:
-      title: UUIDs list outcome
-      type: object
-      description: 'Defines the outcome of a rule in a flow where the result
-
-        is a list of UUIDs.
-
-
-        Depending on the flow and action where this outcome is used, the UUIDs
-
-        may have an important meaning like the ID of a payment service to be
-
-        used (this is the case for `redirect-transaction` flow and
-
-        `route-transaction` action).'
-      x-tags:
-      - Flow
-      required:
-      - type
-      - result
-      x-internal: true
-      properties:
-        type:
-          type: string
-          description: The type of action outcome for the given rule.
-          example: list
-          enum:
-          - list
-        result:
-          type: array
-          description: Results for a given flow action.
-          items:
-            type: string
-            example: fe26475d-ec3e-4884-9553-f7356683f7f9
-            format: uuid
-          example:
-          - fe26475d-ec3e-4884-9553-f7356683f7f9
-          - d88aca32-07fb-46cd-a43f-86da02b73c21
-    FlowHasGiftCardsCondition:
-      title: Flow has gift cards condition
-      type: object
-      description: '`has_gift_cards` flag conditions with a name, operator, and value.'
-      x-tags:
-      - Flow
-      x-internal: true
-      required:
-      - name
-      - operator
-      - value
-      properties:
-        name:
-          type: string
-          description: The type of match made for this rule.
-          example: has_gift_cards
-          enum:
-          - has_gift_cards
-        operator:
-          type: string
-          description: The comparison to make on the `has_gift_cards` flag `value`.
-          example: equal_to
-          enum:
-          - equal_to
-        value:
-          type: boolean
-          description: '`has_gift_cards` flag value to compare the transaction to.'
-          example: true
-    FlowGiftCardBINCondition:
-      title: Flow gift card BIN range condition
-      type: object
-      description: Gift card BIN range conditions with a name, operator, and value.
-      x-tags:
-      - Flow
-      x-internal: true
-      required:
-      - name
-      - operator
-      - value
-      properties:
-        name:
-          type: string
-          description: The type of match made for this rule.
-          example: gift_card_bin
-          enum:
-          - gift_card_bin
-        operator:
-          type: string
-          description: The comparison to make on the `gift_card_bin` `value`.
-          example: is_one_of
-          enum:
-          - is_one_of
-          - is_not_one_of
-        value:
-          type: array
-          items:
-            type: string
-            minLength: 1
-          description: 'Gift card BIN range to compare with gift card numbers used in
-
-            the transaction to. A gift card BIN is 9 characters long at maximum.'
-          example:
-          - 414100000-424299999
-    FlowRuleUpdateRequest:
-      title: Rule Update
-      type: object
-      description: A request to update a rule.
-      x-tags:
-      - Flow
-      x-internal: true
-      required:
-      - position
-      allOf:
-      - $ref: '#/components/schemas/FlowRuleCreateRequest'
-      - properties:
-          position:
-            description: The position of the rule in the flow.
-            type: number
-            example: 2
-    FlowAmountRangeCondition:
-      title: Flow amount range condition
-      type: object
-      description: Amount range conditions with a name, operator, and value.
-      x-tags:
-      - Flow
-      x-internal: true
-      required:
-      - name
-      - operator
-      - value
-      properties:
-        name:
-          type: string
-          description: The type of match made for this rule.
-          example: amount
-          enum:
-          - amount
-        operator:
-          type: string
-          description: The comparison to make on the currency code `value`.
-          example: is_between
-          enum:
-          - is_between
-        value:
-          type: object
-          description: Amount value compare the transaction to.
-          properties:
-            currency:
-              type: string
-              example: USD
-              description: Currency ISO codes to compare the transaction to.
-            min:
-              type: number
-              example: 1
-              minimum: 0
-              description: Minimum value to compare transaction value to.
-            max:
-              type: number
-              example: 200
-              minimum: 0
-              description: Maximum value to compare transaction value to.
-          example:
-            Amount condition value:
-              value:
-                description: example amount value.
-                currency: USD
-                min: 1
-                max: 200
-    FlowCardTypeCondition:
-      title: Flow card type condition
-      type: object
-      description: Card type condition with a name, operator, and value.
-      x-tags:
-      - Flow
-      x-internal: true
-      required:
-      - name
-      - operator
-      - value
-      properties:
-        name:
-          type: string
-          description: The type of match made for this rule.
-          example: card_type
-          enum:
-          - card_type
-        operator:
-          type: string
-          description: The comparison to make on the `value`.
-          example: is_one_of
-          enum:
-          - is_one_of
-          - is_not_one_of
-        value:
-          type: array
-          description: Card type to compare the transaction to.
-          example:
-          - credit
-          items:
-            type: string
-            minLength: 1
-            maxLength: 50
-            enum:
-            - credit
-            - debit
-            - prepaid
-    FlowPaymentMethodCondition:
-      title: Flow payment method condition
-      type: object
-      description: 'Payment method conditions with a name, operator, and value. This
-
-        condition is only for use with the `route-transaction` action.'
-      x-tags:
-      - Flow
-      x-internal: true
-      required:
-      - name
-      - operator
-      - value
-      properties:
-        name:
-          type: string
-          description: The type of match made for this rule.
-          example: payment_method
-          enum:
-          - payment_method
-        operator:
-          type: string
-          description: The comparison to make on the `value`.
-          example: equal_to
-          enum:
-          - equal_to
-        value:
-          description: The payment method to compare the transaction to.
-          example: card
-          type: string
-          enum:
-          - affirm
-          - afterpay
-          - alipay
-          - alipayhk
-          - applepay
-          - bacs
-          - bancontact
-          - banked
-          - becs
-          - bitpay
-          - boleto
-          - boost
-          - card
-          - cashapp
-          - chaseorbital
-          - checkout-session
-          - clearpay
-          - click-to-pay
-          - dana
-          - dcb
-          - dlocal
-          - ebanx
-          - efecty
-          - eps
-          - everydaypay
-          - gcash
-          - gem
-          - gemds
-          - gift-card
-          - giropay
-          - givingblock
-          - gocardless
-          - googlepay
-          - googlepay_pan_only
-          - gopay
-          - grabpay
-          - id
-          - ideal
-          - kakaopay
-          - kcp
-          - klarna
-          - latitude
-          - latitudeds
-          - laybuy
-          - linepay
-          - linkaja
-          - maybankqrpay
-          - mercadopago
-          - multibanco
-          - multipago
-          - netbanking
-          - network-token
-          - oney_3x
-          - oney_4x
-          - oney_6x
-          - oney_10x
-          - oney_12x
-          - ovo
-          - oxxo
-          - payid
-          - paymaya
-          - paypal
-          - paypalpaylater
-          - payto
-          - venmo
-          - pix
-          - pse
-          - rabbitlinepay
-          - razorpay
-          - scalapay
-          - sepa
-          - shopeepay
-          - singteldash
-          - smartpay
-          - sofort
-          - spei
-          - stripedd
-          - thaiqr
-          - touchngo
-          - truemoney
-          - trustly
-          - trustlyeurope
-          - upi
-          - vipps
-          - waave
-          - webpay
-          - wechat
-          - zippay
     FlowRuleMethodOutcome:
       title: Payment method outcome
       type: object
@@ -1962,159 +734,6 @@ components:
           type: number
           description: The value of the transaction must be 0.
           example: 0
-    FlowCardProductNameCondition:
-      title: Flow card product name condition
-      type: object
-      description: Card product name condition with a name, operator, and value.
-      x-tags:
-      - Flow
-      x-internal: true
-      required:
-      - name
-      - operator
-      - value
-      properties:
-        name:
-          type: string
-          description: The type of match made for this rule.
-          example: card_product_name
-          enum:
-          - card_product_name
-        operator:
-          type: string
-          description: The comparison to make on the `value`.
-          example: like_one_of
-          enum:
-          - like_one_of
-          - unlike_any_of
-        value:
-          type: array
-          items:
-            type: string
-          description: 'Product name(s) to compare the card product name to.
-
-            Values can be a part of the full card''s product name.
-
-            The comparison is case-insensitive.
-
-            For example, `Platinum MasterCard` and `Visa Platinum` will match `platinum`.'
-          example:
-          - Electron
-          - MasterCard Black
-    FlowCardSourceCondition:
-      title: Flow card source condition
-      type: object
-      description: Card source conditions with a name, operator, and value.
-      x-tags:
-      - Flow
-      x-internal: true
-      required:
-      - name
-      - operator
-      - value
-      properties:
-        name:
-          type: string
-          description: The type of match made for this rule.
-          example: card_source
-          enum:
-          - card_source
-        operator:
-          type: string
-          description: The comparison to make on the `value`.
-          example: is_one_of
-          enum:
-          - is_one_of
-          - is_not_one_of
-        value:
-          type: array
-          items:
-            type: string
-            minLength: 1
-            maxLength: 50
-            description: Card sources to compare the transaction to.
-            enum:
-            - applepay
-            - googlepay
-            - network-token
-            - raw
-            - token
-          example:
-          - raw
-          - applepay
-    Error400BadRequest:
-      title: Bad Request
-      type: object
-      description: Bad Request (HTTP 400).
-      x-tags:
-      - Errors
-      properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: A short code that describes the reason for the error.
-          example: bad_request
-          enum:
-          - bad_request
-          - incorrect_json
-          - invalid_credentials
-        status:
-          type: integer
-          description: '`400`.'
-          example: 400
-          enum:
-          - 400
-        message:
-          type: string
-          description: A human-readable reason for the error.
-          example: Missing '****' field
-        details:
-          type: array
-          description: A list of detail objects that further clarify the reason for the error.
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-    FlowRuleBooleanOutcome:
-      title: Boolean outcome
-      type: object
-      description: 'Defines the outcome of a rule in a flow where the result
-
-        is a boolean.'
-      x-tags:
-      - Flow
-      required:
-      - type
-      - result
-      x-internal: true
-      properties:
-        type:
-          type: string
-          description: The type of action outcome for the given rule.
-          example: boolean
-          enum:
-          - boolean
-        result:
-          type: boolean
-          description: Results for a given flow action.
-          enum:
-          - true
-    FlowRules:
-      title: Flow rules
-      type: object
-      description: A list of rule in a flow.
-      x-tags:
-      - Flow
-      x-internal: true
-      properties:
-        items:
-          type: array
-          description: A list of rules.
-          items:
-            $ref: '#/components/schemas/FlowRule'
     FlowPaymentMethodsCondition:
       title: Flow payment methods condition
       type: object
@@ -2240,10 +859,42 @@ components:
           - paypal
           - shopeepay
           description: Payment method(s) to compare the transaction to.
-    FlowIsSubsequentPaymentCondition:
-      title: Flow is subsequent payment condition
+    ErrorDetail:
+      title: Error details
+      description: Additional detail about the part of a request body that caused an issue.
       type: object
-      description: '`is_subsequent_payment` flag conditions with a name, operator, and value.'
+      x-tags:
+      - Errors
+      properties:
+        location:
+          type: string
+          example: body
+          description: The location where the error caused an issue.
+          enum:
+          - query
+          - body
+          - path
+          - header
+        type:
+          type: string
+          example: value_error.missing
+          description: A unique identifier for the type of error that occurred.
+        pointer:
+          type: string
+          example: /payment_method/number
+          description: 'The exact item for which the validation did not succeed. This is a JSON
+
+            pointer for request bodies, while for query, path, and header parameters
+
+            it is the name of the parameter.'
+        message:
+          type: string
+          example: field required
+          description: A human readable message for this error detail.
+    FlowMetadataCondition:
+      title: Flow metadata condition
+      type: object
+      description: Metadata conditions with a name, operator, and value.
       x-tags:
       - Flow
       x-internal: true
@@ -2255,19 +906,221 @@ components:
         name:
           type: string
           description: The type of match made for this rule.
-          example: is_subsequent_payment
+          example: metadata
           enum:
-          - is_subsequent_payment
+          - metadata
         operator:
           type: string
-          description: The comparison to make on the `is_subsequent_payment` flag `value`.
-          example: equal_to
+          description: The comparison to make on the currency code `value`.
+          example: includes
           enum:
-          - equal_to
+          - includes
+          - excludes
         value:
-          type: boolean
-          description: '`is_subsequent_payment` flag value to compare the transaction to.'
-          example: true
+          type: object
+          description: The metadata to compare the transaction to.
+          properties:
+            key:
+              type: string
+              minLength: 1
+              maxLength: 255
+              example: product
+              description: Key to metadata value to compare transaction to.
+            value:
+              oneOf:
+              - type: array
+                items:
+                  type: string
+                  minLength: 1
+                  maxLength: 255
+                minLength: 1
+                maxLength: 128
+                example:
+                - value1
+                - value2
+                description: List of metadata values to compare transaction to.
+              - type: string
+                minLength: 1
+                maxLength: 255
+                example: phone
+                description: Value of metadata to compare transaction to.
+    FlowBINRangeCondition:
+      title: Flow BIN range condition
+      type: object
+      description: BIN range conditions with a name, operator, and value.
+      x-tags:
+      - Flow
+      x-internal: true
+      required:
+      - name
+      - operator
+      - value
+      properties:
+        name:
+          type: string
+          description: The type of match made for this rule.
+          example: card_bin
+          enum:
+          - card_bin
+        operator:
+          type: string
+          description: The comparison to make on the `card_bin` `value`.
+          example: is_one_of
+          enum:
+          - is_one_of
+          - is_not_one_of
+        value:
+          type: array
+          items:
+            type: string
+            minLength: 1
+          description: 'BIN range to compare with the transaction. A card BIN is
+
+            8 characters long at maximum.'
+          example:
+          - 41410000-42429999
+    FlowSKUsCondition:
+      title: Flow SKUs condition
+      type: object
+      description: Cart items' SKUs conditions with a name, operator, and value.
+      x-tags:
+      - Flow
+      x-internal: true
+      required:
+      - name
+      - operator
+      - value
+      properties:
+        name:
+          type: string
+          description: The type of match made for this rule.
+          example: skus
+          enum:
+          - skus
+        operator:
+          type: string
+          description: The comparison to make on the `value`.
+          example: includes_all
+          enum:
+          - includes_all
+          - includes_at_least_one
+          - includes_none
+        value:
+          type: array
+          items:
+            type: string
+            minLength: 1
+          description: Cart items' SKU values to compare the transaction to.
+          example:
+          - YZ1234
+          - AB2345
+          - TU4567
+    FlowSplitRoutingCondition:
+      title: Flow split routing condition
+      type: object
+      description: Split routing condition with a name, operator, and numeric value.
+      x-tags:
+      - Flow
+      x-internal: true
+      required:
+      - name
+      - operator
+      - value
+      properties:
+        name:
+          type: string
+          description: The unique name of this condition.
+          example: split_routing
+          enum:
+          - split_routing
+        operator:
+          type: string
+          description: The numeric comparison to evaluate.
+          example: less_than_or_equal_to
+          enum:
+          - less_than_or_equal_to
+        value:
+          type: integer
+          description: The probability percentage of this condition to be triggered.
+          minimum: 1
+          maximum: 99
+          example: 50
+    FlowRuleUpdateRequest:
+      title: Rule Update
+      type: object
+      description: A request to update a rule.
+      x-tags:
+      - Flow
+      x-internal: true
+      required:
+      - position
+      allOf:
+      - $ref: '#/components/schemas/FlowRuleCreateRequest'
+      - properties:
+          position:
+            description: The position of the rule in the flow.
+            type: number
+            example: 2
+    FlowCardSchemeCondition:
+      title: Flow card scheme condition
+      type: object
+      description: Card scheme conditions with a name, operator, and value.
+      x-tags:
+      - Flow
+      x-internal: true
+      required:
+      - name
+      - operator
+      - value
+      properties:
+        name:
+          type: string
+          description: The type of match made for this rule.
+          example: card_scheme
+          enum:
+          - card_scheme
+        operator:
+          type: string
+          description: The comparison to make on the `value`.
+          example: is_one_of
+          enum:
+          - is_one_of
+          - is_not_one_of
+        value:
+          type: array
+          description: Card scheme(s) to compare the transaction to.
+          example:
+          - visa
+          - mastercard
+          items:
+            type: string
+            example: visa
+            enum:
+            - accel
+            - amex
+            - bancontact
+            - carte-bancaire
+            - cirrus
+            - culiance
+            - dankort
+            - diners-club
+            - discover
+            - eftpos-australia
+            - elo
+            - hipercard
+            - jcb
+            - maestro
+            - mastercard
+            - mir
+            - nyce
+            - other
+            - pulse
+            - rupay
+            - star
+            - uatp
+            - unionpay
+            - visa
+            - null
     FlowPaymentOptionOutcome:
       title: Checkout/Payment Option Outcome
       type: object
@@ -2307,6 +1160,660 @@ components:
           type: string
           format: uri
           description: Payment option icon URL.
+    FlowPaymentMethodCondition:
+      title: Flow payment method condition
+      type: object
+      description: 'Payment method conditions with a name, operator, and value. This
+
+        condition is only for use with the `route-transaction` action.'
+      x-tags:
+      - Flow
+      x-internal: true
+      required:
+      - name
+      - operator
+      - value
+      properties:
+        name:
+          type: string
+          description: The type of match made for this rule.
+          example: payment_method
+          enum:
+          - payment_method
+        operator:
+          type: string
+          description: The comparison to make on the `value`.
+          example: equal_to
+          enum:
+          - equal_to
+        value:
+          description: The payment method to compare the transaction to.
+          example: card
+          type: string
+          enum:
+          - affirm
+          - afterpay
+          - alipay
+          - alipayhk
+          - applepay
+          - bacs
+          - bancontact
+          - banked
+          - becs
+          - bitpay
+          - boleto
+          - boost
+          - card
+          - cashapp
+          - chaseorbital
+          - checkout-session
+          - clearpay
+          - click-to-pay
+          - dana
+          - dcb
+          - dlocal
+          - ebanx
+          - efecty
+          - eps
+          - everydaypay
+          - gcash
+          - gem
+          - gemds
+          - gift-card
+          - giropay
+          - givingblock
+          - gocardless
+          - googlepay
+          - googlepay_pan_only
+          - gopay
+          - grabpay
+          - id
+          - ideal
+          - kakaopay
+          - kcp
+          - klarna
+          - latitude
+          - latitudeds
+          - laybuy
+          - linepay
+          - linkaja
+          - maybankqrpay
+          - mercadopago
+          - multibanco
+          - multipago
+          - netbanking
+          - network-token
+          - oney_3x
+          - oney_4x
+          - oney_6x
+          - oney_10x
+          - oney_12x
+          - ovo
+          - oxxo
+          - payid
+          - paymaya
+          - paypal
+          - paypalpaylater
+          - payto
+          - venmo
+          - pix
+          - pse
+          - rabbitlinepay
+          - razorpay
+          - scalapay
+          - sepa
+          - shopeepay
+          - singteldash
+          - smartpay
+          - sofort
+          - spei
+          - stripedd
+          - thaiqr
+          - touchngo
+          - truemoney
+          - trustly
+          - trustlyeurope
+          - upi
+          - vipps
+          - waave
+          - webpay
+          - wechat
+          - zippay
+    FlowRuleServiceOutcome:
+      title: Payment service outcome
+      type: object
+      description: 'Defines the outcome of a rule in a flow where the result
+
+        is a list of dictionaries that define the payment service,
+
+        instrument and transformation to be used to process a
+
+        transaction.'
+      x-tags:
+      - Flow
+      required:
+      - type
+      - result
+      - version
+      x-internal: true
+      properties:
+        type:
+          type: string
+          description: The type of action outcome for the given rule.
+          example: card-routing
+          enum:
+          - card-routing
+        result:
+          type: array
+          description: Results for a given flow action.
+          items:
+            type: object
+            properties:
+              payment_service_id:
+                type: string
+                description: ID of the payment service to be used when processing the transaction.
+                example: fe26475d-ec3e-4884-9553-f7356683f7f9
+                format: uuid
+              instrument:
+                type: string
+                description: 'The name of the instrument to be used to process the transaction.
+
+                  For `pan`, if a Payment Service token is available, the API will use that
+
+                  for stored payment methods.
+
+                  '
+                enum:
+                - network_token
+                - pan
+                example: network_token
+              transformations:
+                type: array
+                description: List of transformations to apply when processing the transaction.
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      description: Name of the transformation.
+                      example: force_mit
+                      enum:
+                      - force_mit
+                      - use_additional_scheme
+          example:
+          - payment_service_id: fe26475d-ec3e-4884-9553-f7356683f7f9
+            instrument": network_token
+            transformations: []
+          - payment_service_id: d88aca32-07fb-46cd-a43f-86da02b73c21
+            instrument: pan
+            transformations:
+            - name: force_mit
+        version:
+          type: integer
+          description: Version of the rule outcome. Current version is `2`.
+          example: 2
+          enum:
+          - 2
+    FlowPaymentSourceCondition:
+      title: Flow payment source condition
+      type: object
+      description: Payment source conditions with a name, operator, and value.
+      x-tags:
+      - Flow
+      x-internal: true
+      required:
+      - name
+      - operator
+      - value
+      properties:
+        name:
+          type: string
+          description: The type of match made for this rule.
+          example: payment_source
+          enum:
+          - payment_source
+        operator:
+          type: string
+          description: The comparison to make on the payment source `value`.
+          example: is_one_of
+          enum:
+          - is_one_of
+          - is_not_one_of
+        value:
+          type: array
+          items:
+            type: string
+            example: recurring
+            enum:
+            - ecommerce
+            - moto
+            - recurring
+            - installment
+            - card_on_file
+          example:
+          - recurring
+          - installment
+          description: Payment sources to compare the transaction to.
+    FlowCardProductNameCondition:
+      title: Flow card product name condition
+      type: object
+      description: Card product name condition with a name, operator, and value.
+      x-tags:
+      - Flow
+      x-internal: true
+      required:
+      - name
+      - operator
+      - value
+      properties:
+        name:
+          type: string
+          description: The type of match made for this rule.
+          example: card_product_name
+          enum:
+          - card_product_name
+        operator:
+          type: string
+          description: The comparison to make on the `value`.
+          example: like_one_of
+          enum:
+          - like_one_of
+          - unlike_any_of
+        value:
+          type: array
+          items:
+            type: string
+          description: 'Product name(s) to compare the card product name to.
+
+            Values can be a part of the full card''s product name.
+
+            The comparison is case-insensitive.
+
+            For example, `Platinum MasterCard` and `Visa Platinum` will match `platinum`.'
+          example:
+          - Electron
+          - MasterCard Black
+    FlowCardTypeCondition:
+      title: Flow card type condition
+      type: object
+      description: Card type condition with a name, operator, and value.
+      x-tags:
+      - Flow
+      x-internal: true
+      required:
+      - name
+      - operator
+      - value
+      properties:
+        name:
+          type: string
+          description: The type of match made for this rule.
+          example: card_type
+          enum:
+          - card_type
+        operator:
+          type: string
+          description: The comparison to make on the `value`.
+          example: is_one_of
+          enum:
+          - is_one_of
+          - is_not_one_of
+        value:
+          type: array
+          description: Card type to compare the transaction to.
+          example:
+          - credit
+          items:
+            type: string
+            minLength: 1
+            maxLength: 50
+            enum:
+            - credit
+            - debit
+            - prepaid
+    FlowProductCategoriesCondition:
+      title: Flow product categories condition
+      type: object
+      description: Cart items' product categories conditions with a name, operator, and value.
+      x-tags:
+      - Flow
+      x-internal: true
+      required:
+      - name
+      - operator
+      - value
+      properties:
+        name:
+          type: string
+          description: The type of match made for this rule.
+          example: product_categories
+          enum:
+          - product_categories
+        operator:
+          type: string
+          description: The comparison to make on the `value`.
+          example: includes_all
+          enum:
+          - includes_all
+          - includes_at_least_one
+          - includes_none
+        value:
+          type: array
+          items:
+            type: string
+            minLength: 1
+          description: Cart items' product categories to compare the transaction to.
+          example:
+          - electronics
+          - printers
+    FlowRule:
+      title: Flow rule
+      type: object
+      x-tags:
+      - Flow
+      x-internal: true
+      properties:
+        type:
+          type: string
+          description: The type of this resource. Is always `rule`.
+          example: rule
+          enum:
+          - rule
+        id:
+          type: string
+          example: fe26475d-ec3e-4884-9553-f7356683f7f9
+          description: The unique Gr4vy ID for this rule.
+          format: uuid
+        merchant_account_id:
+          type: string
+          description: The unique ID for a merchant account.
+          example: default
+        description:
+          type:
+          - string
+          - 'null'
+          description: Description of the flow rule.
+          example: example rule.
+          minLength: 1
+          maxLength: 200
+        flow:
+          type: string
+          description: The name of the Flow.
+          example: checkout
+          enum:
+          - checkout
+          - card-transaction
+          - non-card-transaction
+          - redirect-transaction
+        action:
+          type: string
+          description: 'Action for the given rule. Actions can only be used in
+
+            flows that support them.
+
+
+            * The `checkout` flow only supports the
+
+            `select-payment-options` action.
+
+            * The `card-transaction` supports the `route-transaction`,
+
+            `skip-3ds`, and `decline-early` actions.
+
+            * The `non-card-transaction` flow only supports the
+
+            `decline-early` action.
+
+            * The `redirect-transaction` flow only supports
+
+            the `route-transaction` action.
+
+            '
+          example: select-payment-options
+          enum:
+          - select-payment-options
+          - decline-early
+          - route-transaction
+          - skip-3ds
+        conditions:
+          type: array
+          description: 'One or more conditions that apply for this rule. Each condition
+
+            needs to match for this rule to go into effect.'
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/FlowAmountCondition'
+            - $ref: '#/components/schemas/FlowAmountRangeCondition'
+            - $ref: '#/components/schemas/FlowAmountZeroCondition'
+            - $ref: '#/components/schemas/FlowAntiFraudDecisionCondition'
+            - $ref: '#/components/schemas/FlowBINRangeCondition'
+            - $ref: '#/components/schemas/FlowBrowserLanguageCondition'
+            - $ref: '#/components/schemas/FlowCardCountryCondition'
+            - $ref: '#/components/schemas/FlowCardIssuerNameCondition'
+            - $ref: '#/components/schemas/FlowCardProductNameCondition'
+            - $ref: '#/components/schemas/FlowCardSchemeCondition'
+            - $ref: '#/components/schemas/FlowCardSourceCondition'
+            - $ref: '#/components/schemas/FlowCardTypeCondition'
+            - $ref: '#/components/schemas/FlowCountryCondition'
+            - $ref: '#/components/schemas/FlowCurrencyCondition'
+            - $ref: '#/components/schemas/FlowIsSubsequentPaymentCondition'
+            - $ref: '#/components/schemas/FlowMetadataCondition'
+            - $ref: '#/components/schemas/FlowMetadataNumericCondition'
+            - $ref: '#/components/schemas/FlowMerchantInitiatedCondition'
+            - $ref: '#/components/schemas/FlowPaymentMethodCondition'
+            - $ref: '#/components/schemas/FlowPaymentMethodsCondition'
+            - $ref: '#/components/schemas/FlowPaymentSourceCondition'
+            - $ref: '#/components/schemas/FlowProductCategoriesCondition'
+            - $ref: '#/components/schemas/FlowProductTypesCondition'
+            - $ref: '#/components/schemas/FlowSKUsCondition'
+            - $ref: '#/components/schemas/FlowSplitRoutingCondition'
+        outcome:
+          oneOf:
+          - $ref: '#/components/schemas/FlowRuleServiceOutcome'
+          - $ref: '#/components/schemas/FlowRuleMethodOutcome'
+          - $ref: '#/components/schemas/FlowRuleBooleanOutcome'
+          - $ref: '#/components/schemas/FlowRuleUUIDsListOutcome'
+          - $ref: '#/components/schemas/FlowRuleThreeDSecureOutcome'
+        position:
+          description: The position of the rule in the flow.
+          type: number
+          example: 2
+        created_at:
+          type: string
+          description: 'The date and time
+
+            when this buyer was created in our system.'
+          format: date-time
+          example: '2013-07-16T19:23:00.000+00:00'
+        updated_at:
+          type: string
+          description: 'The date and time
+
+            when this buyer was last updated in our system.'
+          format: date-time
+          example: '2013-07-16T19:23:00.000+00:00'
+        error_code:
+          type:
+          - string
+          - 'null'
+          description: 'A custom error code returned when this rule is triggered. This only applies
+
+            to `"decline-early"` rule actions. The value must have a `flow_` prefix.'
+          example: flow_error_code
+          minLength: 1
+          maxLength: 255
+          pattern: ^flow_[a-z_]+$
+    FlowProductTypesCondition:
+      title: Flow product types condition
+      type: object
+      description: Cart items' product types conditions with a name, operator, and value.
+      x-tags:
+      - Flow
+      x-internal: true
+      required:
+      - name
+      - operator
+      - value
+      properties:
+        name:
+          type: string
+          description: The type of match made for this rule.
+          example: product_types
+          enum:
+          - product_types
+        operator:
+          type: string
+          description: The comparison to make on the `value`.
+          example: includes_all
+          enum:
+          - includes_all
+          - includes_at_least_one
+          - includes_none
+        value:
+          type: array
+          items:
+            type: string
+            example: physical
+            enum:
+            - physical
+            - discount
+            - shipping_fee
+            - sales_tax
+            - digital
+            - gift_card
+            - store_credit
+            - surcharge
+            - null
+          example:
+          - shipping_fee
+          - sales_tax
+          description: Cart items' product types to compare the transaction to.
+    UseAdditionalSchemeTransformationOutcome:
+      title: Use additional scheme transformation
+      type: object
+      description: 'Transformation to be applied when for card transaction
+
+        flow/routing action outcome.
+
+
+        This transformation forces the processing of a
+
+        transaction to use the first additional scheme
+
+        of the card instead of it''s main scheme.
+
+
+        If the card doesn''t have any additional schemes,
+
+        this outcome would be skipped.'
+      x-tags:
+      - Flow
+      x-internal: true
+      properties:
+        name:
+          type: string
+          description: The name of the transformation. This will always be `use_additional_scheme`.
+          example: use_additional_scheme
+          enum:
+          - use_additional_scheme
+    FlowBrowserLanguageCondition:
+      title: Flow browser language condition
+      type: object
+      description: Browser language conditions with a name, operator, and value.
+      x-tags:
+      - Flow
+      x-internal: true
+      required:
+      - name
+      - operator
+      - value
+      properties:
+        name:
+          type: string
+          description: The type of match made for this rule.
+          example: browser_language
+          enum:
+          - browser_language
+        operator:
+          type: string
+          description: The comparison to make on the browser language `value`.
+          example: is_one_of
+          enum:
+          - is_one_of
+          - is_not_one_of
+        value:
+          type: array
+          description: Browser language two-letter ISO 639-1 codes to compare the transaction to.
+          example:
+          - en
+          - de
+          - fr
+          items:
+            type: string
+            minLength: 2
+            maxLength: 2
+    FlowRules:
+      title: Flow rules
+      type: object
+      description: A list of rule in a flow.
+      x-tags:
+      - Flow
+      x-internal: true
+      properties:
+        items:
+          type: array
+          description: A list of rules.
+          items:
+            $ref: '#/components/schemas/FlowRule'
+    FlowRedirectTransactionRoutingOutcome:
+      title: Redirect Transactions/Routing Outcome
+      type: object
+      description: 'Outcome for redirect transactions flow/routing action.
+
+        Each option is a Gr4vy payment service object.'
+      x-tags:
+      - Flow
+      x-internal: true
+      properties:
+        type:
+          type: string
+          description: The type of this resource. Is always `outcome`.
+          example: outcome
+          enum:
+          - outcome
+        id:
+          type: string
+          example: 24c8211d-b9d9-4b06-8aa9-f350fd0ffd15
+          description: Payment service identifier.
+        label:
+          type: string
+          description: The display name of the payment service.
+          example: Stripe
+        active:
+          type: boolean
+          description: The status of the payment service.
+        icon_url:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: Payment service icon URL.
+        countries:
+          type: array
+          items:
+            type: string
+          description: Accepted currency ISO codes for the payment service.
+          example:
+          - US
+          - GB
+        currencies:
+          type: array
+          items:
+            type: string
+          description: Accepted country ISO codes for the payment service.
+          example:
+          - USD
+          - GBP
     ForceMITTransformationOutcome:
       title: Force MIT transformation
       type: object
@@ -2335,10 +1842,10 @@ components:
           example: force_mit
           enum:
           - force_mit
-    FlowMerchantInitiatedCondition:
-      title: Flow merchant initiated condition
+    FlowCardIssuerNameCondition:
+      title: Flow card issuer name condition
       type: object
-      description: '`merchant_initiated` flag conditions with a name, operator, and value.'
+      description: Card issuer name condition with a name, operator, and value.
       x-tags:
       - Flow
       x-internal: true
@@ -2350,18 +1857,190 @@ components:
         name:
           type: string
           description: The type of match made for this rule.
-          example: merchant_initiated
+          example: card_issuer_name
           enum:
-          - merchant_initiated
+          - card_issuer_name
         operator:
           type: string
-          description: The comparison to make on the `merchant_initiated` flag `value`.
+          description: The comparison to make on the `value`.
+          example: like_one_of
+          enum:
+          - like_one_of
+          - unlike_any_of
+        value:
+          type: array
+          items:
+            type: string
+          description: 'Issuer name(s) to compare the card issuer name to.
+
+            Values can be a part of the full card''s issuer name.
+
+            The comparison is case-insensitive.
+
+            For example, `Hsbc Uk Bank Plc` and `Pt Bank Hsbc Indonesia` will match `HSBC`.'
+          example:
+          - HSBC
+          - Barclays
+    FlowCardTransactionRoutingOutcome:
+      title: Card Transactions/Routing Outcome
+      type: object
+      description: 'Outcome for card transactions flow/routing action.
+
+        Each option is a Gr4vy payment service object.'
+      x-tags:
+      - Flow
+      x-internal: true
+      properties:
+        type:
+          type: string
+          description: The type of this resource. Is always `transaction-route`.
+          example: transaction-route
+          enum:
+          - transaction-route
+        id:
+          type: string
+          example: 24c8211d-b9d9-4b06-8aa9-f350fd0ffd15
+          description: Payment service identifier.
+        label:
+          type: string
+          description: The display name of the payment service.
+          example: Stripe
+        active:
+          type: boolean
+          description: The status of the payment service.
+        icon_url:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: Payment service icon URL.
+        countries:
+          type: array
+          items:
+            type: string
+          description: Accepted currency ISO codes for the payment service.
+          example:
+          - US
+          - GB
+        currencies:
+          type: array
+          items:
+            type: string
+          description: Accepted country ISO codes for the payment service.
+          example:
+          - USD
+          - GBP
+        instruments:
+          type: array
+          description: 'Valid instruments that can be used for the payment service.
+
+
+            Only instruments supported by the payment service will appear in the list.'
+          items:
+            type: string
+            description: 'The name of the instrument to be used to process the transaction.
+
+              For `pan`, if a Payment Service token is available, the API will use that
+
+              for stored payment methods.
+
+              '
+            enum:
+            - network_token
+            - pan
+            example: network_token
+        transformations:
+          type: array
+          description: Valid transformations that can be used for the payment service.
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/ForceMITTransformationOutcome'
+            - $ref: '#/components/schemas/UseAdditionalSchemeTransformationOutcome'
+        network_tokens_enabled:
+          type: boolean
+          description: Indicates if Network Tokens are enabled for the payment service.
+          example: false
+        network_tokens_setup_for_merchant:
+          type: boolean
+          description: Indicates if Network Tokens feature is enabled for at least one scheme for the merchant account.
+          example: true
+        open_loop:
+          type: boolean
+          description: Indicates if the payment service is open loop or not.
+          example: true
+    FlowRuleBooleanOutcome:
+      title: Boolean outcome
+      type: object
+      description: 'Defines the outcome of a rule in a flow where the result
+
+        is a boolean.'
+      x-tags:
+      - Flow
+      required:
+      - type
+      - result
+      x-internal: true
+      properties:
+        type:
+          type: string
+          description: The type of action outcome for the given rule.
+          example: boolean
+          enum:
+          - boolean
+        result:
+          type: boolean
+          description: Results for a given flow action.
+          enum:
+          - true
+    FlowRuleOutcomes:
+      title: Flow rule outcome
+      type: object
+      description: 'Defines the outcome of a rule in a flow.
+
+        Currently the outcomes can be a boolean value, or a list of string
+
+        values. The meaning of this outcome depends on the `action` this rule
+
+        is triggered for.'
+      x-tags:
+      - Flow
+      x-internal: true
+      properties:
+        items:
+          type: array
+          description: A list of outcomes.
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/FlowPaymentOptionOutcome'
+            - $ref: '#/components/schemas/FlowCardTransactionRoutingOutcome'
+            - $ref: '#/components/schemas/FlowRedirectTransactionRoutingOutcome'
+    FlowIsSubsequentPaymentCondition:
+      title: Flow is subsequent payment condition
+      type: object
+      description: '`is_subsequent_payment` flag conditions with a name, operator, and value.'
+      x-tags:
+      - Flow
+      x-internal: true
+      required:
+      - name
+      - operator
+      - value
+      properties:
+        name:
+          type: string
+          description: The type of match made for this rule.
+          example: is_subsequent_payment
+          enum:
+          - is_subsequent_payment
+        operator:
+          type: string
+          description: The comparison to make on the `is_subsequent_payment` flag `value`.
           example: equal_to
           enum:
           - equal_to
         value:
           type: boolean
-          description: '`merchant_initiated` flag value to compare the transaction to.'
+          description: '`is_subsequent_payment` flag value to compare the transaction to.'
           example: true
     FlowAmountCondition:
       title: Flow amount condition
@@ -2407,10 +2086,10 @@ components:
                 description: example amount value.
                 currency: USD
                 value: 100
-    FlowProductCategoriesCondition:
-      title: Flow product categories condition
+    FlowAmountRangeCondition:
+      title: Flow amount range condition
       type: object
-      description: Cart items' product categories conditions with a name, operator, and value.
+      description: Amount range conditions with a name, operator, and value.
       x-tags:
       - Flow
       x-internal: true
@@ -2422,30 +2101,271 @@ components:
         name:
           type: string
           description: The type of match made for this rule.
-          example: product_categories
+          example: amount
           enum:
-          - product_categories
+          - amount
+        operator:
+          type: string
+          description: The comparison to make on the currency code `value`.
+          example: is_between
+          enum:
+          - is_between
+        value:
+          type: object
+          description: Amount value compare the transaction to.
+          properties:
+            currency:
+              type: string
+              example: USD
+              description: Currency ISO codes to compare the transaction to.
+            min:
+              type: number
+              example: 1
+              minimum: 0
+              description: Minimum value to compare transaction value to.
+            max:
+              type: number
+              example: 200
+              minimum: 0
+              description: Maximum value to compare transaction value to.
+          example:
+            Amount condition value:
+              value:
+                description: example amount value.
+                currency: USD
+                min: 1
+                max: 200
+    FlowCardCountryCondition:
+      title: Flow card country condition
+      type: object
+      description: Card country condition with a name, operator, and value.
+      x-tags:
+      - Flow
+      x-internal: true
+      required:
+      - name
+      - operator
+      - value
+      properties:
+        name:
+          type: string
+          description: The type of match made for this rule.
+          example: card_country
+          enum:
+          - card_country
         operator:
           type: string
           description: The comparison to make on the `value`.
-          example: includes_all
+          example: is_one_of
           enum:
-          - includes_all
-          - includes_at_least_one
-          - includes_none
+          - is_one_of
+          - is_not_one_of
+        value:
+          type: array
+          description: 'Countries to compare the card originating country to
+
+            in `ISO-3166` 2 character format.'
+          example:
+          - ES
+          - GB
+          items:
+            type: string
+            minLength: 2
+            maxLength: 2
+    FlowHasGiftCardsCondition:
+      title: Flow has gift cards condition
+      type: object
+      description: '`has_gift_cards` flag conditions with a name, operator, and value.'
+      x-tags:
+      - Flow
+      x-internal: true
+      required:
+      - name
+      - operator
+      - value
+      properties:
+        name:
+          type: string
+          description: The type of match made for this rule.
+          example: has_gift_cards
+          enum:
+          - has_gift_cards
+        operator:
+          type: string
+          description: The comparison to make on the `has_gift_cards` flag `value`.
+          example: equal_to
+          enum:
+          - equal_to
+        value:
+          type: boolean
+          description: '`has_gift_cards` flag value to compare the transaction to.'
+          example: true
+    FlowRuleThreeDSecureOutcome:
+      title: 3DS outcome
+      type: object
+      description: Defines the outcome of a rule in a flow for 3DS.
+      x-tags:
+      - Flow
+      required:
+      - type
+      - result
+      x-internal: true
+      properties:
+        type:
+          type: string
+          description: The type of action outcome for the given rule.
+          example: three-d-secure
+          enum:
+          - three-d-secure
+        result:
+          type: string
+          description: Result for a given flow action.
+          example: attempt
+          enum:
+          - attempt
+          - force
+          - skip
+    FlowCurrencyCondition:
+      title: Flow currency condition
+      type: object
+      description: Currency conditions with a name, operator, and value.
+      x-tags:
+      - Flow
+      x-internal: true
+      required:
+      - name
+      - operator
+      - value
+      properties:
+        name:
+          type: string
+          description: The type of match made for this rule.
+          example: currency
+          enum:
+          - currency
+        operator:
+          type: string
+          description: The comparison to make on the currency code `value`.
+          example: is_one_of
+          enum:
+          - is_one_of
+          - is_not_one_of
         value:
           type: array
           items:
             type: string
             minLength: 1
-          description: Cart items' product categories to compare the transaction to.
+          description: Currency ISO codes to compare the transaction to.
           example:
-          - electronics
-          - printers
-    FlowBrowserLanguageCondition:
-      title: Flow browser language condition
+          - USD
+          - EUR
+          - GBP
+    FlowRuleCreateRequest:
+      title: Create flow rule
       type: object
-      description: Browser language conditions with a name, operator, and value.
+      description: A request to create a flow rule.
+      x-tags:
+      - Flow
+      x-internal: true
+      properties:
+        description:
+          type: string
+          description: Description of the flow rule.
+          example: example rule.
+          minLength: 1
+          maxLength: 200
+        conditions:
+          type: array
+          description: One or more conditions that apply for this rule. Each condition needs to match for this rule to go into effect.
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/FlowAmountCondition'
+            - $ref: '#/components/schemas/FlowAmountRangeCondition'
+            - $ref: '#/components/schemas/FlowAmountZeroCondition'
+            - $ref: '#/components/schemas/FlowAntiFraudDecisionCondition'
+            - $ref: '#/components/schemas/FlowBINRangeCondition'
+            - $ref: '#/components/schemas/FlowBrowserLanguageCondition'
+            - $ref: '#/components/schemas/FlowCardCountryCondition'
+            - $ref: '#/components/schemas/FlowCardIssuerNameCondition'
+            - $ref: '#/components/schemas/FlowCardProductNameCondition'
+            - $ref: '#/components/schemas/FlowCardSchemeCondition'
+            - $ref: '#/components/schemas/FlowCardSourceCondition'
+            - $ref: '#/components/schemas/FlowCardTypeCondition'
+            - $ref: '#/components/schemas/FlowCountryCondition'
+            - $ref: '#/components/schemas/FlowCurrencyCondition'
+            - $ref: '#/components/schemas/FlowGiftCardBINCondition'
+            - $ref: '#/components/schemas/FlowHasGiftCardsCondition'
+            - $ref: '#/components/schemas/FlowIsSubsequentPaymentCondition'
+            - $ref: '#/components/schemas/FlowMetadataCondition'
+            - $ref: '#/components/schemas/FlowMetadataNumericCondition'
+            - $ref: '#/components/schemas/FlowMerchantInitiatedCondition'
+            - $ref: '#/components/schemas/FlowPaymentMethodCondition'
+            - $ref: '#/components/schemas/FlowPaymentMethodsCondition'
+            - $ref: '#/components/schemas/FlowPaymentSourceCondition'
+            - $ref: '#/components/schemas/FlowProductCategoriesCondition'
+            - $ref: '#/components/schemas/FlowProductTypesCondition'
+            - $ref: '#/components/schemas/FlowSKUsCondition'
+            - $ref: '#/components/schemas/FlowSplitRoutingCondition'
+        outcome:
+          oneOf:
+          - $ref: '#/components/schemas/FlowRuleBooleanOutcome'
+          - $ref: '#/components/schemas/FlowRuleMethodOutcome'
+          - $ref: '#/components/schemas/FlowRuleServiceOutcome'
+          - $ref: '#/components/schemas/FlowRuleUUIDsListOutcome'
+          - $ref: '#/components/schemas/FlowRuleThreeDSecureOutcome'
+        error_code:
+          type:
+          - string
+          - 'null'
+          example: flow_error_code
+          description: 'A custom error code returned when this rule is triggered. This only applies
+
+            to `"decline-early"` rule actions. The value must have a `flow_` prefix.'
+          minLength: 1
+          maxLength: 255
+          pattern: ^flow_[a-z_]+$
+    FlowRuleUUIDsListOutcome:
+      title: UUIDs list outcome
+      type: object
+      description: 'Defines the outcome of a rule in a flow where the result
+
+        is a list of UUIDs.
+
+
+        Depending on the flow and action where this outcome is used, the UUIDs
+
+        may have an important meaning like the ID of a payment service to be
+
+        used (this is the case for `redirect-transaction` flow and
+
+        `route-transaction` action).'
+      x-tags:
+      - Flow
+      required:
+      - type
+      - result
+      x-internal: true
+      properties:
+        type:
+          type: string
+          description: The type of action outcome for the given rule.
+          example: list
+          enum:
+          - list
+        result:
+          type: array
+          description: Results for a given flow action.
+          items:
+            type: string
+            example: fe26475d-ec3e-4884-9553-f7356683f7f9
+            format: uuid
+          example:
+          - fe26475d-ec3e-4884-9553-f7356683f7f9
+          - d88aca32-07fb-46cd-a43f-86da02b73c21
+    FlowCountryCondition:
+      title: Flow country condition
+      type: object
+      description: Country conditions with a name, operator, and value.
       x-tags:
       - Flow
       x-internal: true
@@ -2457,31 +2377,69 @@ components:
         name:
           type: string
           description: The type of match made for this rule.
-          example: browser_language
+          example: country
           enum:
-          - browser_language
+          - country
         operator:
           type: string
-          description: The comparison to make on the browser language `value`.
+          description: The comparison to make on the country code `value`.
           example: is_one_of
           enum:
           - is_one_of
           - is_not_one_of
         value:
           type: array
-          description: Browser language two-letter ISO 639-1 codes to compare the transaction to.
+          description: Country two-letter ISO codes to compare the transaction to.
           example:
-          - en
-          - de
-          - fr
+          - US
+          - DE
           items:
             type: string
             minLength: 2
             maxLength: 2
-    FlowPaymentSourceCondition:
-      title: Flow payment source condition
+    Error401Unauthorized:
+      title: Unauthorized Error
       type: object
-      description: Payment source conditions with a name, operator, and value.
+      description: Unauthorized Error (HTTP 401).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`unauthorized`.'
+          example: unauthorized
+          enum:
+          - unauthorized
+        status:
+          type: integer
+          description: '`401`.'
+          example: 401
+          enum:
+          - 401
+        message:
+          type: string
+          description: No valid API authentication found.
+          example: No valid API authentication found
+          enum:
+          - No valid API authentication found
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    FlowCardSourceCondition:
+      title: Flow card source condition
+      type: object
+      description: Card source conditions with a name, operator, and value.
       x-tags:
       - Flow
       x-internal: true
@@ -2493,12 +2451,12 @@ components:
         name:
           type: string
           description: The type of match made for this rule.
-          example: payment_source
+          example: card_source
           enum:
-          - payment_source
+          - card_source
         operator:
           type: string
-          description: The comparison to make on the payment source `value`.
+          description: The comparison to make on the `value`.
           example: is_one_of
           enum:
           - is_one_of
@@ -2507,49 +2465,91 @@ components:
           type: array
           items:
             type: string
-            example: recurring
+            minLength: 1
+            maxLength: 50
+            description: Card sources to compare the transaction to.
             enum:
-            - ecommerce
-            - moto
-            - recurring
-            - installment
-            - card_on_file
+            - applepay
+            - googlepay
+            - network-token
+            - raw
+            - token
           example:
-          - recurring
-          - installment
-          description: Payment sources to compare the transaction to.
-    ErrorDetail:
-      title: Error details
-      description: Additional detail about the part of a request body that caused an issue.
+          - raw
+          - applepay
+    FlowGiftCardBINCondition:
+      title: Flow gift card BIN range condition
       type: object
+      description: Gift card BIN range conditions with a name, operator, and value.
+      x-tags:
+      - Flow
+      x-internal: true
+      required:
+      - name
+      - operator
+      - value
+      properties:
+        name:
+          type: string
+          description: The type of match made for this rule.
+          example: gift_card_bin
+          enum:
+          - gift_card_bin
+        operator:
+          type: string
+          description: The comparison to make on the `gift_card_bin` `value`.
+          example: is_one_of
+          enum:
+          - is_one_of
+          - is_not_one_of
+        value:
+          type: array
+          items:
+            type: string
+            minLength: 1
+          description: 'Gift card BIN range to compare with gift card numbers used in
+
+            the transaction to. A gift card BIN is 9 characters long at maximum.'
+          example:
+          - 414100000-424299999
+    Error404NotFound:
+      title: Not Found Error
+      type: object
+      description: Not Found Error (HTTP 404).
       x-tags:
       - Errors
       properties:
-        location:
-          type: string
-          example: body
-          description: The location where the error caused an issue.
-          enum:
-          - query
-          - body
-          - path
-          - header
         type:
           type: string
-          example: value_error.missing
-          description: A unique identifier for the type of error that occurred.
-        pointer:
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
           type: string
-          example: /payment_method/number
-          description: 'The exact item for which the validation did not succeed. This is a JSON
-
-            pointer for request bodies, while for query, path, and header parameters
-
-            it is the name of the parameter.'
+          description: The reason code for the error.
+          example: not_found
+          enum:
+          - not_found
+          - pending_creation
+        status:
+          type: integer
+          description: '`404`.'
+          example: 404
+          enum:
+          - 404
         message:
           type: string
-          example: field required
-          description: A human readable message for this error detail.
+          description: The human readable reason for the error.
+          example: The resource could not be found
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
   securitySchemes:
     bearerAuth:
       type: http

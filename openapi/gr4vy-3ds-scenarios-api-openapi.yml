@@ -486,8 +486,93 @@ paths:
       x-speakeasy-group: three-ds-scenarios
 components:
   schemas:
-    ThreeDSecureScenarioCreate:
+    ErrorLocation:
+      type: string
+      enum:
+      - query
+      - body
+      - path
+      - header
+      - unknown
+      title: ErrorLocation
+    Error405:
       properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `method_not_allowed`
+          default: method_not_allowed
+          examples:
+          - method_not_allowed
+        status:
+          type: integer
+          title: Status
+          description: Always `405`.
+          default: 405
+          examples:
+          - 405
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Method Not Allowed
+          examples:
+          - Method Not Allowed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error405
+    ThreeDSecureScenario:
+      properties:
+        type:
+          type: string
+          const: three-d-secure-scenario
+          title: Type
+          description: Always `three-d-secure-scenario`.
+          default: three-d-secure-scenario
+          examples:
+          - three-d-secure-scenario
+        id:
+          type: string
+          format: uuid
+          title: Id
+          description: Unique identifier for the 3DS scenario
+          examples:
+          - 550e8400-e29b-41d4-a716-446655440000
+        merchant_account_id:
+          type: string
+          title: Merchant Account Id
+          description: ID of the associated merchant account
+          examples:
+          - merchant-account-12345
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+          description: The date and time when this 3DS scenario was first created in our system.
+          examples:
+          - '2013-07-16T19:23:00.000+00:00'
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+          description: The date and time when this 3DS scenario was last updated in our system.
+          examples:
+          - '2013-07-16T19:23:00.000+00:00'
         conditions:
           $ref: '#/components/schemas/ThreeDSecureScenarioConditions'
           description: Conditions for the scenario.
@@ -513,9 +598,211 @@ components:
       additionalProperties: false
       type: object
       required:
+      - id
+      - merchant_account_id
+      - created_at
+      - updated_at
       - conditions
       - outcome
-      title: ThreeDSecureScenarioCreate
+      title: ThreeDSecureScenario
+    ErrorDetail:
+      properties:
+        location:
+          $ref: '#/components/schemas/ErrorLocation'
+          description: The part of the request where the property can be found that caused the error.
+          examples:
+          - body
+        pointer:
+          anyOf:
+          - type: string
+            format: json-pointer
+          - type: string
+          title: Pointer
+          description: A JSON pointer for the particular property that caused the error.
+          examples:
+          - /currency
+        message:
+          type: string
+          title: Message
+          description: A human-readdable explanation of the error.
+          examples:
+          - 'Unknown ISO 4217 currency code: USX'
+        type:
+          type: string
+          title: Type
+          description: The type of error that was raised for this property.
+          examples:
+          - value_error
+      additionalProperties: false
+      type: object
+      required:
+      - location
+      - pointer
+      - message
+      - type
+      title: ErrorDetail
+    ThreeDSecureScenarioOutcomeResult:
+      properties:
+        transaction_status:
+          type: string
+          enum:
+          - Y
+          - N
+          - timeout
+          title: Transaction Status
+          description: 3DS result.
+          examples:
+          - Y
+          - N
+          - timeout
+      additionalProperties: false
+      type: object
+      required:
+      - transaction_status
+      title: ThreeDSecureScenarioOutcomeResult
+    ThreeDSecureScenarioOutcome:
+      properties:
+        version:
+          anyOf:
+          - type: string
+            pattern: ^[12](\.\d+){0,2}$
+          - type: 'null'
+          title: Version
+          description: The version of 3DS which will be simulated.
+          examples:
+          - 2.2.0
+          - 2.3.1
+        authentication:
+          $ref: '#/components/schemas/ThreeDSecureScenarioOutcomeAuthentication'
+          description: 3DS authentication value.
+          examples:
+          - transaction_status: C
+        result:
+          anyOf:
+          - $ref: '#/components/schemas/ThreeDSecureScenarioOutcomeResult'
+          - type: 'null'
+          description: 3DS result value. Required if authentication status is "C".
+          examples:
+          - transaction_status: Y
+      additionalProperties: false
+      type: object
+      required:
+      - authentication
+      title: ThreeDSecureScenarioOutcome
+    ThreeDSecureScenarios:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/ThreeDSecureScenario'
+          type: array
+          title: Items
+          description: A list of items returned for this request.
+        limit:
+          type: integer
+          maximum: 100.0
+          minimum: 1.0
+          title: Limit
+          description: The number of items for this page.
+          default: 20
+          examples:
+          - 20
+        next_cursor:
+          anyOf:
+          - type: string
+            maxLength: 1000
+            minLength: 1
+          - type: 'null'
+          title: Next Cursor
+          description: The cursor pointing at the next page of items.
+          examples:
+          - ZXhhbXBsZTE
+        previous_cursor:
+          anyOf:
+          - type: string
+            maxLength: 1000
+            minLength: 1
+          - type: 'null'
+          title: Previous Cursor
+          description: The cursor pointing at the previous page of items.
+          examples:
+          - Xkjss7asS
+      additionalProperties: false
+      type: object
+      required:
+      - items
+      title: ThreeDSecureScenarios
+    Error404:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `not_found`
+          default: not_found
+          examples:
+          - not_found
+        status:
+          type: integer
+          title: Status
+          description: Always `404`.
+          default: 404
+          examples:
+          - 404
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: The resource could not be found
+          examples:
+          - The resource could not be found
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error404
+    ThreeDSecureScenarioUpdate:
+      properties:
+        conditions:
+          anyOf:
+          - $ref: '#/components/schemas/ThreeDSecureScenarioConditions'
+          - type: 'null'
+          description: Conditions for the scenario.
+          examples:
+          - amount: 100
+            card_number: '4242424242424242'
+            email_address: john@example.com
+            external_identifier: buyer-12345
+            first_name: John
+            last_name: Luhn
+        outcome:
+          anyOf:
+          - $ref: '#/components/schemas/ThreeDSecureScenarioOutcome'
+          - type: 'null'
+          description: Outcome for the scenario.
+          examples:
+          - authentication:
+              transaction_status: C
+            result:
+              transaction_status: Y
+            version: 2.3.1
+          - authentication:
+              transaction_status: N
+            version: 2.3.1
+      additionalProperties: false
+      type: object
+      title: ThreeDSecureScenarioUpdate
     Error409:
       properties:
         type:
@@ -565,7 +852,7 @@ components:
       additionalProperties: false
       type: object
       title: Error409
-    Error400:
+    Error401:
       properties:
         type:
           type: string
@@ -578,24 +865,24 @@ components:
         code:
           type: string
           title: Code
-          description: Always `bad_request`
-          default: bad_request
+          description: Always `unauthorized`
+          default: unauthorized
           examples:
-          - bad_request
+          - unauthorized
         status:
           type: integer
           title: Status
-          description: Always `400`.
-          default: 400
+          description: Always `401`.
+          default: 401
           examples:
-          - 400
+          - 401
         message:
           type: string
           title: Message
           description: A human readable message that provides more context to the error.
-          default: Generic error
+          default: No valid API authentication found
           examples:
-          - Request failed validation
+          - No valid API authentication found
         details:
           items:
             $ref: '#/components/schemas/ErrorDetail'
@@ -605,202 +892,7 @@ components:
           default: []
       additionalProperties: false
       type: object
-      title: Error400
-    ThreeDSecureScenarioConditions:
-      properties:
-        first_name:
-          anyOf:
-          - type: string
-            minLength: 1
-          - type: 'null'
-          title: First Name
-          description: First name of the buyer to match.
-          examples:
-          - John
-        last_name:
-          anyOf:
-          - type: string
-            minLength: 1
-          - type: 'null'
-          title: Last Name
-          description: Last name of the buyer to match.
-          examples:
-          - Luhn
-        email_address:
-          anyOf:
-          - type: string
-            minLength: 1
-          - type: 'null'
-          title: Email Address
-          description: Email address of the buyer to match.
-          examples:
-          - john@example.com
-        amount:
-          anyOf:
-          - type: integer
-            maximum: 99999999.0
-            minimum: 0.0
-          - type: 'null'
-          title: Amount
-          description: Amount of the transaction to match.
-          examples:
-          - 100
-        external_identifier:
-          anyOf:
-          - type: string
-            minLength: 1
-          - type: 'null'
-          title: External Identifier
-          description: External identifier to match.
-          examples:
-          - buyer-12345
-        card_number:
-          anyOf:
-          - type: string
-            minLength: 1
-          - type: 'null'
-          title: Card Number
-          description: Card number to match.
-          examples:
-          - '4242424242424242'
-      additionalProperties: false
-      type: object
-      title: ThreeDSecureScenarioConditions
-    ThreeDSecureScenarioOutcomeResult:
-      properties:
-        transaction_status:
-          type: string
-          enum:
-          - Y
-          - N
-          - timeout
-          title: Transaction Status
-          description: 3DS result.
-          examples:
-          - Y
-          - N
-          - timeout
-      additionalProperties: false
-      type: object
-      required:
-      - transaction_status
-      title: ThreeDSecureScenarioOutcomeResult
-    ErrorDetail:
-      properties:
-        location:
-          $ref: '#/components/schemas/ErrorLocation'
-          description: The part of the request where the property can be found that caused the error.
-          examples:
-          - body
-        pointer:
-          anyOf:
-          - type: string
-            format: json-pointer
-          - type: string
-          title: Pointer
-          description: A JSON pointer for the particular property that caused the error.
-          examples:
-          - /currency
-        message:
-          type: string
-          title: Message
-          description: A human-readdable explanation of the error.
-          examples:
-          - 'Unknown ISO 4217 currency code: USX'
-        type:
-          type: string
-          title: Type
-          description: The type of error that was raised for this property.
-          examples:
-          - value_error
-      additionalProperties: false
-      type: object
-      required:
-      - location
-      - pointer
-      - message
-      - type
-      title: ErrorDetail
-    ThreeDSecureScenarios:
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/ThreeDSecureScenario'
-          type: array
-          title: Items
-          description: A list of items returned for this request.
-        limit:
-          type: integer
-          maximum: 100.0
-          minimum: 1.0
-          title: Limit
-          description: The number of items for this page.
-          default: 20
-          examples:
-          - 20
-        next_cursor:
-          anyOf:
-          - type: string
-            maxLength: 1000
-            minLength: 1
-          - type: 'null'
-          title: Next Cursor
-          description: The cursor pointing at the next page of items.
-          examples:
-          - ZXhhbXBsZTE
-        previous_cursor:
-          anyOf:
-          - type: string
-            maxLength: 1000
-            minLength: 1
-          - type: 'null'
-          title: Previous Cursor
-          description: The cursor pointing at the previous page of items.
-          examples:
-          - Xkjss7asS
-      additionalProperties: false
-      type: object
-      required:
-      - items
-      title: ThreeDSecureScenarios
-    ThreeDSecureScenarioOutcome:
-      properties:
-        version:
-          anyOf:
-          - type: string
-            pattern: ^[12](\.\d+){0,2}$
-          - type: 'null'
-          title: Version
-          description: The version of 3DS which will be simulated.
-          examples:
-          - 2.2.0
-          - 2.3.1
-        authentication:
-          $ref: '#/components/schemas/ThreeDSecureScenarioOutcomeAuthentication'
-          description: 3DS authentication value.
-          examples:
-          - transaction_status: C
-        result:
-          anyOf:
-          - $ref: '#/components/schemas/ThreeDSecureScenarioOutcomeResult'
-          - type: 'null'
-          description: 3DS result value. Required if authentication status is "C".
-          examples:
-          - transaction_status: Y
-      additionalProperties: false
-      type: object
-      required:
-      - authentication
-      title: ThreeDSecureScenarioOutcome
-    ErrorLocation:
-      type: string
-      enum:
-      - query
-      - body
-      - path
-      - header
-      - unknown
-      title: ErrorLocation
+      title: Error401
     Error504:
       properties:
         type:
@@ -880,6 +972,75 @@ components:
       additionalProperties: false
       type: object
       title: Error502
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ThreeDSecureScenarioConditions:
+      properties:
+        first_name:
+          anyOf:
+          - type: string
+            minLength: 1
+          - type: 'null'
+          title: First Name
+          description: First name of the buyer to match.
+          examples:
+          - John
+        last_name:
+          anyOf:
+          - type: string
+            minLength: 1
+          - type: 'null'
+          title: Last Name
+          description: Last name of the buyer to match.
+          examples:
+          - Luhn
+        email_address:
+          anyOf:
+          - type: string
+            minLength: 1
+          - type: 'null'
+          title: Email Address
+          description: Email address of the buyer to match.
+          examples:
+          - john@example.com
+        amount:
+          anyOf:
+          - type: integer
+            maximum: 99999999.0
+            minimum: 0.0
+          - type: 'null'
+          title: Amount
+          description: Amount of the transaction to match.
+          examples:
+          - 100
+        external_identifier:
+          anyOf:
+          - type: string
+            minLength: 1
+          - type: 'null'
+          title: External Identifier
+          description: External identifier to match.
+          examples:
+          - buyer-12345
+        card_number:
+          anyOf:
+          - type: string
+            minLength: 1
+          - type: 'null'
+          title: Card Number
+          description: Card number to match.
+          examples:
+          - '4242424242424242'
+      additionalProperties: false
+      type: object
+      title: ThreeDSecureScenarioConditions
     Error500:
       properties:
         type:
@@ -921,224 +1082,32 @@ components:
       additionalProperties: false
       type: object
       title: Error500
-    Error401:
+    ValidationError:
       properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `unauthorized`
-          default: unauthorized
-          examples:
-          - unauthorized
-        status:
-          type: integer
-          title: Status
-          description: Always `401`.
-          default: 401
-          examples:
-          - 401
-        message:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
           type: string
           title: Message
-          description: A human readable message that provides more context to the error.
-          default: No valid API authentication found
-          examples:
-          - No valid API authentication found
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error401
-    Error404:
-      properties:
         type:
           type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `not_found`
-          default: not_found
-          examples:
-          - not_found
-        status:
-          type: integer
-          title: Status
-          description: Always `404`.
-          default: 404
-          examples:
-          - 404
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: The resource could not be found
-          examples:
-          - The resource could not be found
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error404
-    ThreeDSecureScenarioUpdate:
-      properties:
-        conditions:
-          anyOf:
-          - $ref: '#/components/schemas/ThreeDSecureScenarioConditions'
-          - type: 'null'
-          description: Conditions for the scenario.
-          examples:
-          - amount: 100
-            card_number: '4242424242424242'
-            email_address: john@example.com
-            external_identifier: buyer-12345
-            first_name: John
-            last_name: Luhn
-        outcome:
-          anyOf:
-          - $ref: '#/components/schemas/ThreeDSecureScenarioOutcome'
-          - type: 'null'
-          description: Outcome for the scenario.
-          examples:
-          - authentication:
-              transaction_status: C
-            result:
-              transaction_status: Y
-            version: 2.3.1
-          - authentication:
-              transaction_status: N
-            version: 2.3.1
-      additionalProperties: false
-      type: object
-      title: ThreeDSecureScenarioUpdate
-    ThreeDSecureScenarioOutcomeAuthentication:
-      properties:
-        transaction_status:
-          type: string
-          enum:
-          - Y
-          - N
-          - A
-          - R
-          - U
-          - C
-          - timeout
-          title: Transaction Status
-          description: 3DS transaction status.
-          examples:
-          - Y
-          - N
-          - A
-          - R
-          - U
-          - C
-          - timeout
-      additionalProperties: false
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
       type: object
       required:
-      - transaction_status
-      title: ThreeDSecureScenarioOutcomeAuthentication
-    ThreeDSecureScenario:
-      properties:
-        type:
-          type: string
-          const: three-d-secure-scenario
-          title: Type
-          description: Always `three-d-secure-scenario`.
-          default: three-d-secure-scenario
-          examples:
-          - three-d-secure-scenario
-        id:
-          type: string
-          format: uuid
-          title: Id
-          description: Unique identifier for the 3DS scenario
-          examples:
-          - 550e8400-e29b-41d4-a716-446655440000
-        merchant_account_id:
-          type: string
-          title: Merchant Account Id
-          description: ID of the associated merchant account
-          examples:
-          - merchant-account-12345
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-          description: The date and time when this 3DS scenario was first created in our system.
-          examples:
-          - '2013-07-16T19:23:00.000+00:00'
-        updated_at:
-          type: string
-          format: date-time
-          title: Updated At
-          description: The date and time when this 3DS scenario was last updated in our system.
-          examples:
-          - '2013-07-16T19:23:00.000+00:00'
-        conditions:
-          $ref: '#/components/schemas/ThreeDSecureScenarioConditions'
-          description: Conditions for the scenario.
-          examples:
-          - amount: 100
-            card_number: '4242424242424242'
-            email_address: john@example.com
-            external_identifier: buyer-12345
-            first_name: John
-            last_name: Luhn
-        outcome:
-          $ref: '#/components/schemas/ThreeDSecureScenarioOutcome'
-          description: Outcome for the scenario.
-          examples:
-          - authentication:
-              transaction_status: C
-            result:
-              transaction_status: Y
-            version: 2.3.1
-          - authentication:
-              transaction_status: N
-            version: 2.3.1
-      additionalProperties: false
-      type: object
-      required:
-      - id
-      - merchant_account_id
-      - created_at
-      - updated_at
-      - conditions
-      - outcome
-      title: ThreeDSecureScenario
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
+      - loc
+      - msg
+      - type
+      title: ValidationError
     Error425:
       properties:
         type:
@@ -1180,7 +1149,7 @@ components:
       additionalProperties: false
       type: object
       title: Error425
-    Error405:
+    Error400:
       properties:
         type:
           type: string
@@ -1193,58 +1162,17 @@ components:
         code:
           type: string
           title: Code
-          description: Always `method_not_allowed`
-          default: method_not_allowed
+          description: Always `bad_request`
+          default: bad_request
           examples:
-          - method_not_allowed
+          - bad_request
         status:
           type: integer
           title: Status
-          description: Always `405`.
-          default: 405
+          description: Always `400`.
+          default: 400
           examples:
-          - 405
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Method Not Allowed
-          examples:
-          - Method Not Allowed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error405
-    Error429:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `too_many_requests`
-          default: too_many_requests
-          examples:
-          - too_many_requests
-        status:
-          type: integer
-          title: Status
-          description: Always `429`.
-          default: 429
-          examples:
-          - 429
+          - 400
         message:
           type: string
           title: Message
@@ -1261,33 +1189,34 @@ components:
           default: []
       additionalProperties: false
       type: object
-      title: Error429
-    ValidationError:
+      title: Error400
+    ThreeDSecureScenarioOutcomeAuthentication:
       properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
+        transaction_status:
           type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
+          enum:
+          - Y
+          - N
+          - A
+          - R
+          - U
+          - C
+          - timeout
+          title: Transaction Status
+          description: 3DS transaction status.
+          examples:
+          - Y
+          - N
+          - A
+          - R
+          - U
+          - C
+          - timeout
+      additionalProperties: false
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - transaction_status
+      title: ThreeDSecureScenarioOutcomeAuthentication
     Error403:
       properties:
         type:
@@ -1329,6 +1258,77 @@ components:
       additionalProperties: false
       type: object
       title: Error403
+    ThreeDSecureScenarioCreate:
+      properties:
+        conditions:
+          $ref: '#/components/schemas/ThreeDSecureScenarioConditions'
+          description: Conditions for the scenario.
+          examples:
+          - amount: 100
+            card_number: '4242424242424242'
+            email_address: john@example.com
+            external_identifier: buyer-12345
+            first_name: John
+            last_name: Luhn
+        outcome:
+          $ref: '#/components/schemas/ThreeDSecureScenarioOutcome'
+          description: Outcome for the scenario.
+          examples:
+          - authentication:
+              transaction_status: C
+            result:
+              transaction_status: Y
+            version: 2.3.1
+          - authentication:
+              transaction_status: N
+            version: 2.3.1
+      additionalProperties: false
+      type: object
+      required:
+      - conditions
+      - outcome
+      title: ThreeDSecureScenarioCreate
+    Error429:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `too_many_requests`
+          default: too_many_requests
+          examples:
+          - too_many_requests
+        status:
+          type: integer
+          title: Status
+          description: Always `429`.
+          default: 429
+          examples:
+          - 429
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error429
   securitySchemes:
     OAuth2PasswordBearer:
       type: oauth2

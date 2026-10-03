@@ -276,48 +276,210 @@ paths:
                 $ref: '#/components/schemas/Error404NotFound'
 components:
   schemas:
-    ApplePayCertificates:
-      title: A list of Apple Pay certificates
+    Error400BadRequest:
+      title: Bad Request
       type: object
-      description: A list of Apple Pay certificate records.
+      description: Bad Request (HTTP 400).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: A short code that describes the reason for the error.
+          example: bad_request
+          enum:
+          - bad_request
+          - incorrect_json
+          - invalid_credentials
+        status:
+          type: integer
+          description: '`400`.'
+          example: 400
+          enum:
+          - 400
+        message:
+          type: string
+          description: A human-readable reason for the error.
+          example: Missing '****' field
+        details:
+          type: array
+          description: A list of detail objects that further clarify the reason for the error.
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    ErrorDetail:
+      title: Error details
+      description: Additional detail about the part of a request body that caused an issue.
+      type: object
+      x-tags:
+      - Errors
+      properties:
+        location:
+          type: string
+          example: body
+          description: The location where the error caused an issue.
+          enum:
+          - query
+          - body
+          - path
+          - header
+        type:
+          type: string
+          example: value_error.missing
+          description: A unique identifier for the type of error that occurred.
+        pointer:
+          type: string
+          example: /payment_method/number
+          description: 'The exact item for which the validation did not succeed. This is a JSON
+
+            pointer for request bodies, while for query, path, and header parameters
+
+            it is the name of the parameter.'
+        message:
+          type: string
+          example: field required
+          description: A human readable message for this error detail.
+    ApplePayCertificate:
+      title: Apple Pay Certificate
+      type: object
+      description: An Apple Pay certificate record.
       x-tags:
       - Apple Pay Certificates
       x-internal: true
       properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/ApplePayCertificate'
-        limit:
+        type:
+          type: string
+          description: The type of this resource. Is always `apple-pay-certificate`.
+          example: apple-pay-certificate
+          enum:
+          - apple-pay-certificate
+        id:
+          type: string
+          example: fe26475d-ec3e-4884-9553-f7356683f7f9
+          description: The unique identifier for this Apple Pay certificate record.
+          format: uuid
+        display_name:
+          type: string
+          example: iPad App v2
+          description: 'The name for this Apple Pay certificate which is used in the Gr4vy admin
+
+            panel to give the Apple Pay certificate a human readable name.'
+        status:
+          type: string
+          description: The status of this Apple Pay certificate.
+          example: active
+          enum:
+          - active
+          - expired
+          - incomplete
+        apple_merchant_id:
+          type:
+          - string
+          - 'null'
+          description: 'The unique identifier representing a merchant for Apple Pay. This value is
+
+            populated after the Apple Pay certificate record has been updated with
+
+            the payment processing certificate received from Apple.'
+          example: merchant.com.gr4vy.demo
+        public_key_hash:
+          type:
+          - string
+          - 'null'
+          description: 'The hash value of the public key associated with this Apple Pay
+
+            certificate. This value is populated after the Apple Pay certificate
+
+            record has been updated with the payment processing certificate
+
+            received from Apple.'
+          example: WSOIlV70592m1ah1sm0mcmhJPQsAIWGSg7FSe+uzHtc=
+        certificate_signing_request:
+          type:
+          - string
+          - 'null'
+          description: 'The Certificate Signing Request to upload to the Apple Developer console
+
+            when creating a new payment processing certificate.'
+          example: '-----BEGIN CERTIFICATE REQUEST-----\nMIHTMHsCAQAwGTEXMBUG
+
+            A1UEAwwOc3BpZGVyLnNhbmRib3gwWTATBgcqhkjOPQIB\nBggqhkjOPQM
+
+            BBwNCAAQZgRE56Evtf6f9fD4Hn1zOMwyrgXU4CQXuyPXoIjiMwKXE\nV/
+
+            Hx9NX7vZbOSXhyzPaU/b6HdLMfx2+UP/GZ48jYoAAwCgYIKoZIzj0EAwI
+
+            DSAAw\nRQIgPhcfepIaX9s8E8WI/T+GEUqwuYIoVUQV+F8KlaYGukACIQ
+
+            CLeLocEFWFYPHN\n+QsLoyXvbbqmEjSPB4vQKmXQZ8I2DA==\n-----EN
+
+            D CERTIFICATE REQUEST-----\n'
+        expires_at:
+          type:
+          - string
+          - 'null'
+          description: 'The date and time this Apple Pay certificate expires. This value is
+
+            populated after the Apple Pay certificate record has been updated
+
+            with the payment processing certificate received from Apple.'
+          format: date-time
+          example: '2013-07-16T19:23:00.000+00:00'
+        created_at:
+          type: string
+          description: 'The date and time this Apple Pay certificate record was created in our
+
+            system.'
+          format: date-time
+          example: '2013-07-16T19:23:00.000+00:00'
+        updated_at:
+          type: string
+          format: date-time
+          description: The date and time this Apple Pay certificate record was last updated.
+          example: '2013-07-16T19:23:00.000+00:00'
+    Error404NotFound:
+      title: Not Found Error
+      type: object
+      description: Not Found Error (HTTP 404).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: The reason code for the error.
+          example: not_found
+          enum:
+          - not_found
+          - pending_creation
+        status:
           type: integer
-          description: 'The limit applied to request. This represents the number of items that are at
+          description: '`404`.'
+          example: 404
+          enum:
+          - 404
+        message:
+          type: string
+          description: The human readable reason for the error.
+          example: The resource could not be found
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
 
-            maximum returned by this request.'
-          format: int32
-          minimum: 1
-          maximum: 100
-          example: 1
-          default: 20
-        next_cursor:
-          type:
-          - string
-          - 'null'
-          description: 'The cursor that represents the next page of results. Use the `cursor` query
-
-            parameter to fetch this page of items.'
-          example: ZXhhbXBsZTE
-          minLength: 1
-          maxLength: 1000
-        previous_cursor:
-          type:
-          - string
-          - 'null'
-          description: 'The cursor that represents the next page of results. Use the `cursor` query
-
-            parameter to fetch this page of items.'
-          example: null
-          minLength: 1
-          maxLength: 1000
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
     AntiFraudService:
       title: Anti-Fraud Service
       type: object
@@ -460,26 +622,6 @@ components:
           example: []
           items:
             $ref: '#/components/schemas/ErrorDetail'
-    ApplePayCertificateRequest:
-      title: Apple Pay certificate (Create)
-      type: object
-      description: 'A request to start the registration of a new Apple Pay payment
-
-        processing certificate.'
-      x-tags:
-      - Apple Pay Certificates
-      x-internal: true
-      required:
-      - display_name
-      properties:
-        display_name:
-          type: string
-          description: 'A name for this Apple Pay certificate which is used in the Gr4vy
-
-            admin panel to give the Apple Pay certificate a human readable name.'
-          example: iPad App v2
-          minLength: 1
-          maxLength: 200
     Error409DuplicateRecord:
       title: Duplicate Record Error
       type: object
@@ -517,210 +659,68 @@ components:
           example: []
           items:
             $ref: '#/components/schemas/ErrorDetail'
-    ApplePayCertificate:
-      title: Apple Pay Certificate
+    ApplePayCertificates:
+      title: A list of Apple Pay certificates
       type: object
-      description: An Apple Pay certificate record.
+      description: A list of Apple Pay certificate records.
       x-tags:
       - Apple Pay Certificates
       x-internal: true
       properties:
-        type:
-          type: string
-          description: The type of this resource. Is always `apple-pay-certificate`.
-          example: apple-pay-certificate
-          enum:
-          - apple-pay-certificate
-        id:
-          type: string
-          example: fe26475d-ec3e-4884-9553-f7356683f7f9
-          description: The unique identifier for this Apple Pay certificate record.
-          format: uuid
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApplePayCertificate'
+        limit:
+          type: integer
+          description: 'The limit applied to request. This represents the number of items that are at
+
+            maximum returned by this request.'
+          format: int32
+          minimum: 1
+          maximum: 100
+          example: 1
+          default: 20
+        next_cursor:
+          type:
+          - string
+          - 'null'
+          description: 'The cursor that represents the next page of results. Use the `cursor` query
+
+            parameter to fetch this page of items.'
+          example: ZXhhbXBsZTE
+          minLength: 1
+          maxLength: 1000
+        previous_cursor:
+          type:
+          - string
+          - 'null'
+          description: 'The cursor that represents the next page of results. Use the `cursor` query
+
+            parameter to fetch this page of items.'
+          example: null
+          minLength: 1
+          maxLength: 1000
+    ApplePayCertificateRequest:
+      title: Apple Pay certificate (Create)
+      type: object
+      description: 'A request to start the registration of a new Apple Pay payment
+
+        processing certificate.'
+      x-tags:
+      - Apple Pay Certificates
+      x-internal: true
+      required:
+      - display_name
+      properties:
         display_name:
           type: string
+          description: 'A name for this Apple Pay certificate which is used in the Gr4vy
+
+            admin panel to give the Apple Pay certificate a human readable name.'
           example: iPad App v2
-          description: 'The name for this Apple Pay certificate which is used in the Gr4vy admin
-
-            panel to give the Apple Pay certificate a human readable name.'
-        status:
-          type: string
-          description: The status of this Apple Pay certificate.
-          example: active
-          enum:
-          - active
-          - expired
-          - incomplete
-        apple_merchant_id:
-          type:
-          - string
-          - 'null'
-          description: 'The unique identifier representing a merchant for Apple Pay. This value is
-
-            populated after the Apple Pay certificate record has been updated with
-
-            the payment processing certificate received from Apple.'
-          example: merchant.com.gr4vy.demo
-        public_key_hash:
-          type:
-          - string
-          - 'null'
-          description: 'The hash value of the public key associated with this Apple Pay
-
-            certificate. This value is populated after the Apple Pay certificate
-
-            record has been updated with the payment processing certificate
-
-            received from Apple.'
-          example: WSOIlV70592m1ah1sm0mcmhJPQsAIWGSg7FSe+uzHtc=
-        certificate_signing_request:
-          type:
-          - string
-          - 'null'
-          description: 'The Certificate Signing Request to upload to the Apple Developer console
-
-            when creating a new payment processing certificate.'
-          example: '-----BEGIN CERTIFICATE REQUEST-----\nMIHTMHsCAQAwGTEXMBUG
-
-            A1UEAwwOc3BpZGVyLnNhbmRib3gwWTATBgcqhkjOPQIB\nBggqhkjOPQM
-
-            BBwNCAAQZgRE56Evtf6f9fD4Hn1zOMwyrgXU4CQXuyPXoIjiMwKXE\nV/
-
-            Hx9NX7vZbOSXhyzPaU/b6HdLMfx2+UP/GZ48jYoAAwCgYIKoZIzj0EAwI
-
-            DSAAw\nRQIgPhcfepIaX9s8E8WI/T+GEUqwuYIoVUQV+F8KlaYGukACIQ
-
-            CLeLocEFWFYPHN\n+QsLoyXvbbqmEjSPB4vQKmXQZ8I2DA==\n-----EN
-
-            D CERTIFICATE REQUEST-----\n'
-        expires_at:
-          type:
-          - string
-          - 'null'
-          description: 'The date and time this Apple Pay certificate expires. This value is
-
-            populated after the Apple Pay certificate record has been updated
-
-            with the payment processing certificate received from Apple.'
-          format: date-time
-          example: '2013-07-16T19:23:00.000+00:00'
-        created_at:
-          type: string
-          description: 'The date and time this Apple Pay certificate record was created in our
-
-            system.'
-          format: date-time
-          example: '2013-07-16T19:23:00.000+00:00'
-        updated_at:
-          type: string
-          format: date-time
-          description: The date and time this Apple Pay certificate record was last updated.
-          example: '2013-07-16T19:23:00.000+00:00'
-    Error404NotFound:
-      title: Not Found Error
-      type: object
-      description: Not Found Error (HTTP 404).
-      x-tags:
-      - Errors
-      properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: The reason code for the error.
-          example: not_found
-          enum:
-          - not_found
-          - pending_creation
-        status:
-          type: integer
-          description: '`404`.'
-          example: 404
-          enum:
-          - 404
-        message:
-          type: string
-          description: The human readable reason for the error.
-          example: The resource could not be found
-        details:
-          type: array
-          description: 'A list of detail objects that further clarify the reason for the error.
-
-            Not every error supports more detail.'
-          example: []
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-    Error400BadRequest:
-      title: Bad Request
-      type: object
-      description: Bad Request (HTTP 400).
-      x-tags:
-      - Errors
-      properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: A short code that describes the reason for the error.
-          example: bad_request
-          enum:
-          - bad_request
-          - incorrect_json
-          - invalid_credentials
-        status:
-          type: integer
-          description: '`400`.'
-          example: 400
-          enum:
-          - 400
-        message:
-          type: string
-          description: A human-readable reason for the error.
-          example: Missing '****' field
-        details:
-          type: array
-          description: A list of detail objects that further clarify the reason for the error.
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-    ErrorDetail:
-      title: Error details
-      description: Additional detail about the part of a request body that caused an issue.
-      type: object
-      x-tags:
-      - Errors
-      properties:
-        location:
-          type: string
-          example: body
-          description: The location where the error caused an issue.
-          enum:
-          - query
-          - body
-          - path
-          - header
-        type:
-          type: string
-          example: value_error.missing
-          description: A unique identifier for the type of error that occurred.
-        pointer:
-          type: string
-          example: /payment_method/number
-          description: 'The exact item for which the validation did not succeed. This is a JSON
-
-            pointer for request bodies, while for query, path, and header parameters
-
-            it is the name of the parameter.'
-        message:
-          type: string
-          example: field required
-          description: A human readable message for this error detail.
+          minLength: 1
+          maxLength: 200
   securitySchemes:
     bearerAuth:
       type: http

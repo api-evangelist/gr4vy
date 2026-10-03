@@ -204,6 +204,111 @@ paths:
                 $ref: '#/components/schemas/Error404NotFound'
 components:
   schemas:
+    Error400BadRequest:
+      title: Bad Request
+      type: object
+      description: Bad Request (HTTP 400).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: A short code that describes the reason for the error.
+          example: bad_request
+          enum:
+          - bad_request
+          - incorrect_json
+          - invalid_credentials
+        status:
+          type: integer
+          description: '`400`.'
+          example: 400
+          enum:
+          - 400
+        message:
+          type: string
+          description: A human-readable reason for the error.
+          example: Missing '****' field
+        details:
+          type: array
+          description: A list of detail objects that further clarify the reason for the error.
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    Error409DuplicateRecord:
+      title: Duplicate Record Error
+      type: object
+      description: Duplicate Record Error (HTTP 409).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`duplicate_record`.'
+          example: duplicate_record
+          enum:
+          - duplicate_record
+        status:
+          type: integer
+          description: '`409`.'
+          example: 409
+          enum:
+          - 409
+        message:
+          type: string
+          description: Further details on the field that triggered the error.
+          example: A duplicate record exists with this external_identifier value
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    ErrorDetail:
+      title: Error details
+      description: Additional detail about the part of a request body that caused an issue.
+      type: object
+      x-tags:
+      - Errors
+      properties:
+        location:
+          type: string
+          example: body
+          description: The location where the error caused an issue.
+          enum:
+          - query
+          - body
+          - path
+          - header
+        type:
+          type: string
+          example: value_error.missing
+          description: A unique identifier for the type of error that occurred.
+        pointer:
+          type: string
+          example: /payment_method/number
+          description: 'The exact item for which the validation did not succeed. This is a JSON
+
+            pointer for request bodies, while for query, path, and header parameters
+
+            it is the name of the parameter.'
+        message:
+          type: string
+          example: field required
+          description: A human readable message for this error detail.
     Error401Unauthorized:
       title: Unauthorized Error
       type: object
@@ -315,6 +420,55 @@ components:
           format: date-time
           example: '2012-12-12T10:53:43+00:00'
           description: The date and time when this service was last updated.
+    GiftCardServiceVerifyRequest:
+      title: Gift Card Service (Verify)
+      type: object
+      description: Request body for verifying credentials against a gift card service.
+      x-tags:
+      - Request Bodies
+      required:
+      - gift_card_service_definition_id
+      - fields
+      properties:
+        gift_card_service_definition_id:
+          type: string
+          description: The ID of the gift card service to use.
+          example: qwikcilver-gift-card
+          minLength: 1
+          maxLength: 50
+        gift_card_service_id:
+          type: string
+          format: uuid
+          example: 46973e9d-88a7-44a6-abfe-be4ff0134ff4
+          description: 'The ID of the gift card service. Required if sending a partial set of
+
+            credentials in the `fields` property. This will merge the provided
+
+            fields with those already on the service.'
+        fields:
+          type: array
+          description: 'A list of fields where each field is a key-value pair that represents a defined field in the definition of the service. You are not required to send the full list of fields if the credentials for the service are already stored.
+
+            For example, if your credentials for `qwikcilver-gift-card` are stored and you only provide a `secret_key` in the request, it will override the stored `secret_key` and verify the resulting set of credentials against the service.'
+          items:
+            type: object
+            description: A key-value pair that represents a field defined in the definition for this service.
+            required:
+            - key
+            - value
+            properties:
+              key:
+                type: string
+                description: The key of the field to set a value for.
+                example: private_key
+                minLength: 1
+                maxLength: 50
+              value:
+                type: string
+                description: The value of a field to set.
+                example: pk_26PHem9AhJZvU623DfE1x4sd
+                minLength: 1
+                maxLength: 5000
     GiftCardServiceCreateRequest:
       title: Gift Card Service (Create)
       type: object
@@ -367,130 +521,6 @@ components:
           example: true
           default: true
           description: Defines if this service is currently active or not.
-    Error409DuplicateRecord:
-      title: Duplicate Record Error
-      type: object
-      description: Duplicate Record Error (HTTP 409).
-      x-tags:
-      - Errors
-      properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: '`duplicate_record`.'
-          example: duplicate_record
-          enum:
-          - duplicate_record
-        status:
-          type: integer
-          description: '`409`.'
-          example: 409
-          enum:
-          - 409
-        message:
-          type: string
-          description: Further details on the field that triggered the error.
-          example: A duplicate record exists with this external_identifier value
-        details:
-          type: array
-          description: 'A list of detail objects that further clarify the reason for the error.
-
-            Not every error supports more detail.'
-          example: []
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-    Error404NotFound:
-      title: Not Found Error
-      type: object
-      description: Not Found Error (HTTP 404).
-      x-tags:
-      - Errors
-      properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: The reason code for the error.
-          example: not_found
-          enum:
-          - not_found
-          - pending_creation
-        status:
-          type: integer
-          description: '`404`.'
-          example: 404
-          enum:
-          - 404
-        message:
-          type: string
-          description: The human readable reason for the error.
-          example: The resource could not be found
-        details:
-          type: array
-          description: 'A list of detail objects that further clarify the reason for the error.
-
-            Not every error supports more detail.'
-          example: []
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-    GiftCardServiceVerifyRequest:
-      title: Gift Card Service (Verify)
-      type: object
-      description: Request body for verifying credentials against a gift card service.
-      x-tags:
-      - Request Bodies
-      required:
-      - gift_card_service_definition_id
-      - fields
-      properties:
-        gift_card_service_definition_id:
-          type: string
-          description: The ID of the gift card service to use.
-          example: qwikcilver-gift-card
-          minLength: 1
-          maxLength: 50
-        gift_card_service_id:
-          type: string
-          format: uuid
-          example: 46973e9d-88a7-44a6-abfe-be4ff0134ff4
-          description: 'The ID of the gift card service. Required if sending a partial set of
-
-            credentials in the `fields` property. This will merge the provided
-
-            fields with those already on the service.'
-        fields:
-          type: array
-          description: 'A list of fields where each field is a key-value pair that represents a defined field in the definition of the service. You are not required to send the full list of fields if the credentials for the service are already stored.
-
-            For example, if your credentials for `qwikcilver-gift-card` are stored and you only provide a `secret_key` in the request, it will override the stored `secret_key` and verify the resulting set of credentials against the service.'
-          items:
-            type: object
-            description: A key-value pair that represents a field defined in the definition for this service.
-            required:
-            - key
-            - value
-            properties:
-              key:
-                type: string
-                description: The key of the field to set a value for.
-                example: private_key
-                minLength: 1
-                maxLength: 50
-              value:
-                type: string
-                description: The value of a field to set.
-                example: pk_26PHem9AhJZvU623DfE1x4sd
-                minLength: 1
-                maxLength: 5000
     GiftCardServiceUpdateRequest:
       title: Gift Card Service (Update)
       type: object
@@ -532,10 +562,10 @@ components:
           type: boolean
           example: true
           description: Defines if this service is currently active or not.
-    Error400BadRequest:
-      title: Bad Request
+    Error404NotFound:
+      title: Not Found Error
       type: object
-      description: Bad Request (HTTP 400).
+      description: Not Found Error (HTTP 404).
       x-tags:
       - Errors
       properties:
@@ -547,59 +577,29 @@ components:
           example: error
         code:
           type: string
-          description: A short code that describes the reason for the error.
-          example: bad_request
+          description: The reason code for the error.
+          example: not_found
           enum:
-          - bad_request
-          - incorrect_json
-          - invalid_credentials
+          - not_found
+          - pending_creation
         status:
           type: integer
-          description: '`400`.'
-          example: 400
+          description: '`404`.'
+          example: 404
           enum:
-          - 400
+          - 404
         message:
           type: string
-          description: A human-readable reason for the error.
-          example: Missing '****' field
+          description: The human readable reason for the error.
+          example: The resource could not be found
         details:
           type: array
-          description: A list of detail objects that further clarify the reason for the error.
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
           items:
             $ref: '#/components/schemas/ErrorDetail'
-    ErrorDetail:
-      title: Error details
-      description: Additional detail about the part of a request body that caused an issue.
-      type: object
-      x-tags:
-      - Errors
-      properties:
-        location:
-          type: string
-          example: body
-          description: The location where the error caused an issue.
-          enum:
-          - query
-          - body
-          - path
-          - header
-        type:
-          type: string
-          example: value_error.missing
-          description: A unique identifier for the type of error that occurred.
-        pointer:
-          type: string
-          example: /payment_method/number
-          description: 'The exact item for which the validation did not succeed. This is a JSON
-
-            pointer for request bodies, while for query, path, and header parameters
-
-            it is the name of the parameter.'
-        message:
-          type: string
-          example: field required
-          description: A human readable message for this error detail.
   securitySchemes:
     bearerAuth:
       type: http

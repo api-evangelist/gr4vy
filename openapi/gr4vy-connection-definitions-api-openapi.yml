@@ -145,6 +145,17 @@ components:
           type: string
           example: field required
           description: A human readable message for this error detail.
+    ConnectionDefinitions:
+      title: Connection definitions
+      type: object
+      description: A list of available connection definitions.
+      x-tags:
+      - Discovery
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConnectionDefinition'
     Error401Unauthorized:
       title: Unauthorized Error
       type: object
@@ -184,17 +195,6 @@ components:
           example: []
           items:
             $ref: '#/components/schemas/ErrorDetail'
-    ConnectionDefinitions:
-      title: Connection definitions
-      type: object
-      description: A list of available connection definitions.
-      x-tags:
-      - Discovery
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/ConnectionDefinition'
   securitySchemes:
     bearerAuth:
       type: http

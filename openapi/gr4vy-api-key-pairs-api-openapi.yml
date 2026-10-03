@@ -393,90 +393,6 @@ paths:
           description: The subdomain for your Gr4vy instance.
 components:
   schemas:
-    Error401Unauthorized:
-      title: Unauthorized Error
-      type: object
-      description: Unauthorized Error (HTTP 401).
-      x-tags:
-      - Errors
-      properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: '`unauthorized`.'
-          example: unauthorized
-          enum:
-          - unauthorized
-        status:
-          type: integer
-          description: '`401`.'
-          example: 401
-          enum:
-          - 401
-        message:
-          type: string
-          description: No valid API authentication found.
-          example: No valid API authentication found
-          enum:
-          - No valid API authentication found
-        details:
-          type: array
-          description: 'A list of detail objects that further clarify the reason for the error.
-
-            Not every error supports more detail.'
-          example: []
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-    APIKeyPairCreate:
-      title: API key-pair (Create)
-      type: object
-      description: A request to create an API key-pair.
-      x-tags:
-      - API Key Pairs
-      properties:
-        display_name:
-          type: string
-          description: A name for this key-pair which is used in the Gr4vy admin panel to give the key-pair a human readable name.
-          example: Sandbox
-          minLength: 1
-          maxLength: 200
-        algorithm:
-          type: string
-          description: 'The algorithm to use for the API Key Pair. The recommended value is `ECDSA`.
-
-            You should only use the `RSA` algorithm in environments that do not support
-
-            `ECDSA`.'
-          example: ECDSA
-          enum:
-          - ECDSA
-          - RSA
-          default: ECDSA
-        role_ids:
-          type: array
-          minItems: 1
-          description: 'A list of role IDs that will be assigned to the API Key Pair being created.
-
-            Only the "Administrator" and "Integration" roles are supported.'
-          items:
-            type: string
-            format: uuid
-          example:
-          - 8d3fe99b-1422-42e6-bbb3-932d95ae5f79
-        merchant_account_id:
-          type:
-          - string
-          - 'null'
-          description: 'The optional ID of the merchant account this API Key Pair should be assigned to.
-
-            Leave this unset to create an API key that works across all merchant accounts.'
-          example: plantly-uk
-          maxLength: 22
     APIKeyPair:
       title: API Key Pair
       type: object
@@ -564,10 +480,144 @@ components:
               example: john@example.com
         merchant_account:
           $ref: '#/components/schemas/MerchantAccount'
-    Error404NotFound:
-      title: Not Found Error
+    APIKeyPairCreate:
+      title: API key-pair (Create)
       type: object
-      description: Not Found Error (HTTP 404).
+      description: A request to create an API key-pair.
+      x-tags:
+      - API Key Pairs
+      properties:
+        display_name:
+          type: string
+          description: A name for this key-pair which is used in the Gr4vy admin panel to give the key-pair a human readable name.
+          example: Sandbox
+          minLength: 1
+          maxLength: 200
+        algorithm:
+          type: string
+          description: 'The algorithm to use for the API Key Pair. The recommended value is `ECDSA`.
+
+            You should only use the `RSA` algorithm in environments that do not support
+
+            `ECDSA`.'
+          example: ECDSA
+          enum:
+          - ECDSA
+          - RSA
+          default: ECDSA
+        role_ids:
+          type: array
+          minItems: 1
+          description: 'A list of role IDs that will be assigned to the API Key Pair being created.
+
+            Only the "Administrator" and "Integration" roles are supported.'
+          items:
+            type: string
+            format: uuid
+          example:
+          - 8d3fe99b-1422-42e6-bbb3-932d95ae5f79
+        merchant_account_id:
+          type:
+          - string
+          - 'null'
+          description: 'The optional ID of the merchant account this API Key Pair should be assigned to.
+
+            Leave this unset to create an API key that works across all merchant accounts.'
+          example: plantly-uk
+          maxLength: 22
+    APIKeyPairUpdate:
+      title: API key-pair (Update)
+      type: object
+      description: A request to update an API key-pair.
+      x-tags:
+      - API Key Pairs
+      required:
+      - display_name
+      properties:
+        display_name:
+          type: string
+          description: A name for this key-pair which is used in the Gr4vy admin panel to give the key-pair a human readable name.
+          example: Sandbox
+          minLength: 1
+          maxLength: 200
+    ErrorDetail:
+      title: Error details
+      description: Additional detail about the part of a request body that caused an issue.
+      type: object
+      x-tags:
+      - Errors
+      properties:
+        location:
+          type: string
+          example: body
+          description: The location where the error caused an issue.
+          enum:
+          - query
+          - body
+          - path
+          - header
+        type:
+          type: string
+          example: value_error.missing
+          description: A unique identifier for the type of error that occurred.
+        pointer:
+          type: string
+          example: /payment_method/number
+          description: 'The exact item for which the validation did not succeed. This is a JSON
+
+            pointer for request bodies, while for query, path, and header parameters
+
+            it is the name of the parameter.'
+        message:
+          type: string
+          example: field required
+          description: A human readable message for this error detail.
+    APIKeyPairs:
+      title: A list of active API key pairs
+      type: object
+      description: A list of the currently active API key pairs.
+      x-internal: true
+      x-tags:
+      - API Key Pairs
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/APIKeyPair'
+        limit:
+          type: integer
+          description: 'The limit applied to request. This represents the number of items that are at
+
+            maximum returned by this request.'
+          format: int32
+          minimum: 1
+          maximum: 100
+          example: 1
+          default: 20
+        next_cursor:
+          type:
+          - string
+          - 'null'
+          description: 'The cursor that represents the next page of results. Use the `cursor` query
+
+            parameter to fetch this page of items.'
+          example: ZXhhbXBsZTE
+          minLength: 1
+          maxLength: 1000
+        previous_cursor:
+          type:
+          - string
+          - 'null'
+          description: 'The cursor that represents the next page of results. Use the `cursor` query
+
+            parameter to fetch this page of items.'
+          example: null
+          minLength: 1
+          maxLength: 1000
+    Error401Unauthorized:
+      title: Unauthorized Error
+      type: object
+      description: Unauthorized Error (HTTP 401).
       x-tags:
       - Errors
       properties:
@@ -579,21 +629,22 @@ components:
           example: error
         code:
           type: string
-          description: The reason code for the error.
-          example: not_found
+          description: '`unauthorized`.'
+          example: unauthorized
           enum:
-          - not_found
-          - pending_creation
+          - unauthorized
         status:
           type: integer
-          description: '`404`.'
-          example: 404
+          description: '`401`.'
+          example: 401
           enum:
-          - 404
+          - 401
         message:
           type: string
-          description: The human readable reason for the error.
-          example: The resource could not be found
+          description: No valid API authentication found.
+          example: No valid API authentication found
+          enum:
+          - No valid API authentication found
         details:
           type: array
           description: 'A list of detail objects that further clarify the reason for the error.
@@ -856,101 +907,94 @@ components:
           description: 'The maximum percentage allowed for over-capture, for example `25` to allow for an
 
             over-capture of 25% of the original transaction amount.'
-    APIKeyPairs:
-      title: A list of active API key pairs
+    Error404NotFound:
+      title: Not Found Error
       type: object
-      description: A list of the currently active API key pairs.
-      x-internal: true
-      x-tags:
-      - API Key Pairs
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/APIKeyPair'
-        limit:
-          type: integer
-          description: 'The limit applied to request. This represents the number of items that are at
-
-            maximum returned by this request.'
-          format: int32
-          minimum: 1
-          maximum: 100
-          example: 1
-          default: 20
-        next_cursor:
-          type:
-          - string
-          - 'null'
-          description: 'The cursor that represents the next page of results. Use the `cursor` query
-
-            parameter to fetch this page of items.'
-          example: ZXhhbXBsZTE
-          minLength: 1
-          maxLength: 1000
-        previous_cursor:
-          type:
-          - string
-          - 'null'
-          description: 'The cursor that represents the next page of results. Use the `cursor` query
-
-            parameter to fetch this page of items.'
-          example: null
-          minLength: 1
-          maxLength: 1000
-    APIKeyPairUpdate:
-      title: API key-pair (Update)
-      type: object
-      description: A request to update an API key-pair.
-      x-tags:
-      - API Key Pairs
-      required:
-      - display_name
-      properties:
-        display_name:
-          type: string
-          description: A name for this key-pair which is used in the Gr4vy admin panel to give the key-pair a human readable name.
-          example: Sandbox
-          minLength: 1
-          maxLength: 200
-    ErrorDetail:
-      title: Error details
-      description: Additional detail about the part of a request body that caused an issue.
-      type: object
+      description: Not Found Error (HTTP 404).
       x-tags:
       - Errors
       properties:
-        location:
-          type: string
-          example: body
-          description: The location where the error caused an issue.
-          enum:
-          - query
-          - body
-          - path
-          - header
         type:
           type: string
-          example: value_error.missing
-          description: A unique identifier for the type of error that occurred.
-        pointer:
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
           type: string
-          example: /payment_method/number
-          description: 'The exact item for which the validation did not succeed. This is a JSON
-
-            pointer for request bodies, while for query, path, and header parameters
-
-            it is the name of the parameter.'
+          description: The reason code for the error.
+          example: not_found
+          enum:
+          - not_found
+          - pending_creation
+        status:
+          type: integer
+          description: '`404`.'
+          example: 404
+          enum:
+          - 404
         message:
           type: string
-          example: field required
-          description: A human readable message for this error detail.
-    CertificateAlgorithm:
+          description: The human readable reason for the error.
+          example: The resource could not be found
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    ErrorLocation:
       type: string
       enum:
-      - ECDSA
-      - RSA
-      title: CertificateAlgorithm
+      - query
+      - body
+      - path
+      - header
+      - unknown
+      title: ErrorLocation
+    Error405:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `method_not_allowed`
+          default: method_not_allowed
+          examples:
+          - method_not_allowed
+        status:
+          type: integer
+          title: Status
+          description: Always `405`.
+          default: 405
+          examples:
+          - 405
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Method Not Allowed
+          examples:
+          - Method Not Allowed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error405
     PermissionSet:
       properties:
         allow:
@@ -968,66 +1012,201 @@ components:
       - allow
       title: PermissionSet
       description: The permissions granted by a role.
-    APIKeyPairCreate_2:
+    APIKeyPairUpdate_2:
       properties:
         display_name:
-          type: string
-          maxLength: 200
-          minLength: 1
+          anyOf:
+          - type: string
+            maxLength: 200
+            minLength: 1
+          - type: 'null'
           title: Display Name
           description: The display name for the API key pair.
           examples:
           - Production key
-        algorithm:
-          $ref: '#/components/schemas/CertificateAlgorithm'
-          description: The algorithm to use to generate the API key pair.
-          default: ECDSA
-          examples:
-          - ECDSA
         active:
-          type: boolean
+          anyOf:
+          - type: boolean
+          - type: 'null'
           title: Active
-          description: Whether the API key pair should be active and usable once created.
-          default: true
+          description: Whether the API key pair is active and can be used to authenticate.
           examples:
           - true
         role_ids:
-          items:
-            type: string
-            format: uuid
-          type: array
-          minItems: 1
+          anyOf:
+          - items:
+              type: string
+              format: uuid
+            type: array
+            minItems: 1
+            description: The IDs of the roles to assign to the API key pair, replacing the roles it currently has. The caller can only assign roles whose scopes are a subset of its own.
+            examples:
+            - - 8f4b8c1a-1b2c-4d3e-9f5a-6b7c8d9e0f1a
+              - 2c9a7f3d-4e5b-4a6c-8d7e-9f0a1b2c3d4e
+          - type: 'null'
           title: Role Ids
-          description: The IDs of the roles to assign to the API key pair. The caller can only assign roles whose scopes are a subset of its own.
-          examples:
-          - - 8f4b8c1a-1b2c-4d3e-9f5a-6b7c8d9e0f1a
-            - 2c9a7f3d-4e5b-4a6c-8d7e-9f0a1b2c3d4e
         merchant_account_ids:
-          items:
-            type: string
-          type: array
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
           title: Merchant Account Ids
-          description: The IDs of the merchant accounts to associate with the API key pair. An empty list grants access to all merchant accounts. The caller can only assign merchant accounts it has access to.
+          description: The IDs of the merchant accounts to associate with the API key pair. The caller can only assign merchant accounts it has access to.
           examples:
           - - merchant-12345
-        public_key:
+      additionalProperties: false
+      type: object
+      title: APIKeyPairUpdate
+    ErrorDetail_2:
+      properties:
+        location:
+          $ref: '#/components/schemas/ErrorLocation'
+          description: The part of the request where the property can be found that caused the error.
+          examples:
+          - body
+        pointer:
           anyOf:
           - type: string
-          - type: 'null'
-          title: Public Key
-          description: A PEM-encoded ECDSA P-521 (ES512) public key. Provide this to register your own key pair (bring your own key); If omitted, Gr4vy will generate the key pair and return the private key.
+            format: json-pointer
+          - type: string
+          title: Pointer
+          description: A JSON pointer for the particular property that caused the error.
           examples:
-          - '-----BEGIN PUBLIC KEY-----
-
-            MIGbMBAGByqGSM49AgEGBSuBBAAjA4GGAAQB...
-
-            -----END PUBLIC KEY-----'
+          - /currency
+        message:
+          type: string
+          title: Message
+          description: A human-readdable explanation of the error.
+          examples:
+          - 'Unknown ISO 4217 currency code: USX'
+        type:
+          type: string
+          title: Type
+          description: The type of error that was raised for this property.
+          examples:
+          - value_error
       additionalProperties: false
       type: object
       required:
-      - display_name
-      - role_ids
-      title: APIKeyPairCreate
+      - location
+      - pointer
+      - message
+      - type
+      title: ErrorDetail
+    RoleAssigneeType:
+      type: string
+      enum:
+      - user
+      - api-key-pair
+      title: RoleAssigneeType
+    Error404:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `not_found`
+          default: not_found
+          examples:
+          - not_found
+        status:
+          type: integer
+          title: Status
+          description: Always `404`.
+          default: 404
+          examples:
+          - 404
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: The resource could not be found
+          examples:
+          - The resource could not be found
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error404
+    Role:
+      properties:
+        type:
+          type: string
+          const: role
+          title: Type
+          description: Always `role`.
+          default: role
+          examples:
+          - role
+        id:
+          type: string
+          format: uuid
+          title: Id
+          description: The unique ID for the role.
+          examples:
+          - fe26475d-ec3e-4884-9553-f7356683f7f9
+        name:
+          type: string
+          title: Name
+          description: The human-readable name of the role.
+          examples:
+          - Administrator
+        slug:
+          type: string
+          title: Slug
+          description: The unique, human-readable identifier for the role.
+          examples:
+          - administrator
+        description:
+          type: string
+          title: Description
+          description: A description of the access this role grants.
+          examples:
+          - Full read and write access.
+        permissions:
+          $ref: '#/components/schemas/PermissionSet'
+          description: The permissions granted by this role.
+        assignable_to:
+          items:
+            $ref: '#/components/schemas/RoleAssigneeType'
+          type: array
+          title: Assignable To
+          description: The types of resource this role can be assigned to.
+        applies_to:
+          items:
+            type: string
+          type: array
+          title: Applies To
+          description: The slugs of the roles this role is an add-on of. Empty when this role is not an add-on.
+        is_standalone_assignable:
+          type: boolean
+          title: Is Standalone Assignable
+          description: Whether this role can be assigned on its own, without being combined with another role.
+      additionalProperties: false
+      type: object
+      required:
+      - id
+      - name
+      - slug
+      - description
+      - permissions
+      - assignable_to
+      - applies_to
+      - is_standalone_assignable
+      title: Role
     Error409:
       properties:
         type:
@@ -1077,120 +1256,48 @@ components:
       additionalProperties: false
       type: object
       title: Error409
-    api__routers__api_key_pairs__schemas__Creator:
+    Collection_APIKeyPair_:
       properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-          description: The ID of the user or API key pair that created the API key pair.
-          examples:
-          - fe26475d-ec3e-4884-9553-f7356683f7f9
-        name:
-          type: string
-          title: Name
-          description: The name of the user or API key pair that created the API key pair.
-          examples:
-          - John Doe
-        email_address:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Email Address
-          description: The email address of the user that created the API key pair, when it was created by a dashboard user.
-          examples:
-          - john.doe@example.com
-        thumbprint:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Thumbprint
-          description: The thumbprint of the API key pair that created the API key pair, when it was created by another API key.
-          examples:
-          - 6zsbrjs0Cp4M4Ebz8sfHqUKGiG9Sd0lF2sfKp5-w-nk
-      additionalProperties: false
-      type: object
-      required:
-      - id
-      - name
-      title: Creator
-    Error400:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `bad_request`
-          default: bad_request
-          examples:
-          - bad_request
-        status:
-          type: integer
-          title: Status
-          description: Always `400`.
-          default: 400
-          examples:
-          - 400
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
+        items:
           items:
-            $ref: '#/components/schemas/ErrorDetail_2'
+            $ref: '#/components/schemas/APIKeyPair_2'
           type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error400
-    ErrorDetail_2:
-      properties:
-        location:
-          $ref: '#/components/schemas/ErrorLocation'
-          description: The part of the request where the property can be found that caused the error.
+          title: Items
+          description: A list of items returned for this request.
+        limit:
+          type: integer
+          maximum: 100.0
+          minimum: 1.0
+          title: Limit
+          description: The number of items for this page.
+          default: 20
           examples:
-          - body
-        pointer:
+          - 20
+        next_cursor:
           anyOf:
           - type: string
-            format: json-pointer
+            maxLength: 1000
+            minLength: 1
+          - type: 'null'
+          title: Next Cursor
+          description: The cursor pointing at the next page of items.
+          examples:
+          - ZXhhbXBsZTE
+        previous_cursor:
+          anyOf:
           - type: string
-          title: Pointer
-          description: A JSON pointer for the particular property that caused the error.
+            maxLength: 1000
+            minLength: 1
+          - type: 'null'
+          title: Previous Cursor
+          description: The cursor pointing at the previous page of items.
           examples:
-          - /currency
-        message:
-          type: string
-          title: Message
-          description: A human-readdable explanation of the error.
-          examples:
-          - 'Unknown ISO 4217 currency code: USX'
-        type:
-          type: string
-          title: Type
-          description: The type of error that was raised for this property.
-          examples:
-          - value_error
+          - Xkjss7asS
       additionalProperties: false
       type: object
       required:
-      - location
-      - pointer
-      - message
-      - type
-      title: ErrorDetail
+      - items
+      title: Collection[APIKeyPair]
     APIKeyPair_2:
       properties:
         type:
@@ -1288,286 +1395,72 @@ components:
       - created_at
       - updated_at
       title: APIKeyPair
-    Role:
-      properties:
-        type:
-          type: string
-          const: role
-          title: Type
-          description: Always `role`.
-          default: role
-          examples:
-          - role
-        id:
-          type: string
-          format: uuid
-          title: Id
-          description: The unique ID for the role.
-          examples:
-          - fe26475d-ec3e-4884-9553-f7356683f7f9
-        name:
-          type: string
-          title: Name
-          description: The human-readable name of the role.
-          examples:
-          - Administrator
-        slug:
-          type: string
-          title: Slug
-          description: The unique, human-readable identifier for the role.
-          examples:
-          - administrator
-        description:
-          type: string
-          title: Description
-          description: A description of the access this role grants.
-          examples:
-          - Full read and write access.
-        permissions:
-          $ref: '#/components/schemas/PermissionSet'
-          description: The permissions granted by this role.
-        assignable_to:
-          items:
-            $ref: '#/components/schemas/RoleAssigneeType'
-          type: array
-          title: Assignable To
-          description: The types of resource this role can be assigned to.
-        applies_to:
-          items:
-            type: string
-          type: array
-          title: Applies To
-          description: The slugs of the roles this role is an add-on of. Empty when this role is not an add-on.
-        is_standalone_assignable:
-          type: boolean
-          title: Is Standalone Assignable
-          description: Whether this role can be assigned on its own, without being combined with another role.
-      additionalProperties: false
-      type: object
-      required:
-      - id
-      - name
-      - slug
-      - description
-      - permissions
-      - assignable_to
-      - applies_to
-      - is_standalone_assignable
-      title: Role
-    ErrorLocation:
-      type: string
-      enum:
-      - query
-      - body
-      - path
-      - header
-      - unknown
-      title: ErrorLocation
-    Error504:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `gateway_timeout`
-          default: gateway_timeout
-          examples:
-          - gateway_timeout
-        status:
-          type: integer
-          title: Status
-          default: 504
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Request could not be processed
-          examples:
-          - Request could not be processed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error504
-    APIKeyPairUpdate_2:
+    APIKeyPairCreate_2:
       properties:
         display_name:
-          anyOf:
-          - type: string
-            maxLength: 200
-            minLength: 1
-          - type: 'null'
+          type: string
+          maxLength: 200
+          minLength: 1
           title: Display Name
           description: The display name for the API key pair.
           examples:
           - Production key
+        algorithm:
+          $ref: '#/components/schemas/CertificateAlgorithm'
+          description: The algorithm to use to generate the API key pair.
+          default: ECDSA
+          examples:
+          - ECDSA
         active:
-          anyOf:
-          - type: boolean
-          - type: 'null'
+          type: boolean
           title: Active
-          description: Whether the API key pair is active and can be used to authenticate.
+          description: Whether the API key pair should be active and usable once created.
+          default: true
           examples:
           - true
         role_ids:
-          anyOf:
-          - items:
-              type: string
-              format: uuid
-            type: array
-            minItems: 1
-            description: The IDs of the roles to assign to the API key pair, replacing the roles it currently has. The caller can only assign roles whose scopes are a subset of its own.
-            examples:
-            - - 8f4b8c1a-1b2c-4d3e-9f5a-6b7c8d9e0f1a
-              - 2c9a7f3d-4e5b-4a6c-8d7e-9f0a1b2c3d4e
-          - type: 'null'
+          items:
+            type: string
+            format: uuid
+          type: array
+          minItems: 1
           title: Role Ids
+          description: The IDs of the roles to assign to the API key pair. The caller can only assign roles whose scopes are a subset of its own.
+          examples:
+          - - 8f4b8c1a-1b2c-4d3e-9f5a-6b7c8d9e0f1a
+            - 2c9a7f3d-4e5b-4a6c-8d7e-9f0a1b2c3d4e
         merchant_account_ids:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
+          items:
+            type: string
+          type: array
           title: Merchant Account Ids
-          description: The IDs of the merchant accounts to associate with the API key pair. The caller can only assign merchant accounts it has access to.
+          description: The IDs of the merchant accounts to associate with the API key pair. An empty list grants access to all merchant accounts. The caller can only assign merchant accounts it has access to.
           examples:
           - - merchant-12345
-      additionalProperties: false
-      type: object
-      title: APIKeyPairUpdate
-    Error502:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `bad_gateway`
-          default: bad_gateway
-          examples:
-          - bad_gateway
-        status:
-          type: integer
-          title: Status
-          description: Always `502`.
-          default: 502
-          examples:
-          - 502
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Request could not be processed
-          examples:
-          - Request could not be processed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error502
-    Error500:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `server_error`
-          default: server_error
-          examples:
-          - server_error
-        status:
-          type: integer
-          title: Status
-          description: Always `500`.
-          default: 500
-          examples:
-          - 500
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Request could not be processed
-          examples:
-          - Request could not be processed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error500
-    MerchantAccountSummary:
-      properties:
-        type:
-          type: string
-          const: merchant-account
-          title: Type
-          default: merchant-account
-        id:
-          type: string
-          title: Id
-        display_name:
-          type: string
-          title: Display Name
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-        updated_at:
-          type: string
-          format: date-time
-          title: Updated At
-        over_capture_amount:
+        public_key:
           anyOf:
-          - type: integer
+          - type: string
           - type: 'null'
-          title: Over Capture Amount
-        over_capture_percentage:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Over Capture Percentage
+          title: Public Key
+          description: A PEM-encoded ECDSA P-521 (ES512) public key. Provide this to register your own key pair (bring your own key); If omitted, Gr4vy will generate the key pair and return the private key.
+          examples:
+          - '-----BEGIN PUBLIC KEY-----
+
+            MIGbMBAGByqGSM49AgEGBSuBBAAjA4GGAAQB...
+
+            -----END PUBLIC KEY-----'
       additionalProperties: false
       type: object
       required:
-      - id
       - display_name
-      - created_at
-      - updated_at
-      title: MerchantAccountSummary
+      - role_ids
+      title: APIKeyPairCreate
+    CertificateAlgorithm:
+      type: string
+      enum:
+      - ECDSA
+      - RSA
+      title: CertificateAlgorithm
     Error401:
       properties:
         type:
@@ -1609,7 +1502,7 @@ components:
       additionalProperties: false
       type: object
       title: Error401
-    Error404:
+    Error504:
       properties:
         type:
           type: string
@@ -1622,24 +1515,21 @@ components:
         code:
           type: string
           title: Code
-          description: Always `not_found`
-          default: not_found
+          description: Always `gateway_timeout`
+          default: gateway_timeout
           examples:
-          - not_found
+          - gateway_timeout
         status:
           type: integer
           title: Status
-          description: Always `404`.
-          default: 404
-          examples:
-          - 404
+          default: 504
         message:
           type: string
           title: Message
           description: A human readable message that provides more context to the error.
-          default: The resource could not be found
+          default: Request could not be processed
           examples:
-          - The resource could not be found
+          - Request could not be processed
         details:
           items:
             $ref: '#/components/schemas/ErrorDetail_2'
@@ -1649,49 +1539,48 @@ components:
           default: []
       additionalProperties: false
       type: object
-      title: Error404
-    Collection_APIKeyPair_:
+      title: Error504
+    Error502:
       properties:
-        items:
-          items:
-            $ref: '#/components/schemas/APIKeyPair_2'
-          type: array
-          title: Items
-          description: A list of items returned for this request.
-        limit:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `bad_gateway`
+          default: bad_gateway
+          examples:
+          - bad_gateway
+        status:
           type: integer
-          maximum: 100.0
-          minimum: 1.0
-          title: Limit
-          description: The number of items for this page.
-          default: 20
+          title: Status
+          description: Always `502`.
+          default: 502
           examples:
-          - 20
-        next_cursor:
-          anyOf:
-          - type: string
-            maxLength: 1000
-            minLength: 1
-          - type: 'null'
-          title: Next Cursor
-          description: The cursor pointing at the next page of items.
+          - 502
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
           examples:
-          - ZXhhbXBsZTE
-        previous_cursor:
-          anyOf:
-          - type: string
-            maxLength: 1000
-            minLength: 1
-          - type: 'null'
-          title: Previous Cursor
-          description: The cursor pointing at the previous page of items.
-          examples:
-          - Xkjss7asS
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
       additionalProperties: false
       type: object
-      required:
-      - items
-      title: Collection[APIKeyPair]
+      title: Error502
     HTTPValidationError:
       properties:
         detail:
@@ -1701,6 +1590,73 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
+    Error500:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `server_error`
+          default: server_error
+          examples:
+          - server_error
+        status:
+          type: integer
+          title: Status
+          description: Always `500`.
+          default: 500
+          examples:
+          - 500
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error500
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     Error425:
       properties:
         type:
@@ -1742,48 +1698,83 @@ components:
       additionalProperties: false
       type: object
       title: Error425
-    Error405:
+    api__routers__api_key_pairs__schemas__Creator:
       properties:
-        type:
+        id:
           type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
+          format: uuid
+          title: Id
+          description: The ID of the user or API key pair that created the API key pair.
           examples:
-          - error
-        code:
+          - fe26475d-ec3e-4884-9553-f7356683f7f9
+        name:
           type: string
-          title: Code
-          description: Always `method_not_allowed`
-          default: method_not_allowed
+          title: Name
+          description: The name of the user or API key pair that created the API key pair.
           examples:
-          - method_not_allowed
-        status:
-          type: integer
-          title: Status
-          description: Always `405`.
-          default: 405
+          - John Doe
+        email_address:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email Address
+          description: The email address of the user that created the API key pair, when it was created by a dashboard user.
           examples:
-          - 405
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Method Not Allowed
+          - john.doe@example.com
+        thumbprint:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Thumbprint
+          description: The thumbprint of the API key pair that created the API key pair, when it was created by another API key.
           examples:
-          - Method Not Allowed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
+          - 6zsbrjs0Cp4M4Ebz8sfHqUKGiG9Sd0lF2sfKp5-w-nk
       additionalProperties: false
       type: object
-      title: Error405
-    Error429:
+      required:
+      - id
+      - name
+      title: Creator
+    MerchantAccountSummary:
+      properties:
+        type:
+          type: string
+          const: merchant-account
+          title: Type
+          default: merchant-account
+        id:
+          type: string
+          title: Id
+        display_name:
+          type: string
+          title: Display Name
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+        over_capture_amount:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Over Capture Amount
+        over_capture_percentage:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Over Capture Percentage
+      additionalProperties: false
+      type: object
+      required:
+      - id
+      - display_name
+      - created_at
+      - updated_at
+      title: MerchantAccountSummary
+    Error400:
       properties:
         type:
           type: string
@@ -1796,17 +1787,17 @@ components:
         code:
           type: string
           title: Code
-          description: Always `too_many_requests`
-          default: too_many_requests
+          description: Always `bad_request`
+          default: bad_request
           examples:
-          - too_many_requests
+          - bad_request
         status:
           type: integer
           title: Status
-          description: Always `429`.
-          default: 429
+          description: Always `400`.
+          default: 400
           examples:
-          - 429
+          - 400
         message:
           type: string
           title: Message
@@ -1823,39 +1814,7 @@ components:
           default: []
       additionalProperties: false
       type: object
-      title: Error429
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    RoleAssigneeType:
-      type: string
-      enum:
-      - user
-      - api-key-pair
-      title: RoleAssigneeType
+      title: Error400
     Error403:
       properties:
         type:
@@ -1897,6 +1856,47 @@ components:
       additionalProperties: false
       type: object
       title: Error403
+    Error429:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `too_many_requests`
+          default: too_many_requests
+          examples:
+          - too_many_requests
+        status:
+          type: integer
+          title: Status
+          description: Always `429`.
+          default: 429
+          examples:
+          - 429
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error429
   securitySchemes:
     bearerAuth:
       type: http

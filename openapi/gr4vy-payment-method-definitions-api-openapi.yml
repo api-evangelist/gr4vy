@@ -54,6 +54,72 @@ paths:
                 $ref: '#/components/schemas/Error401Unauthorized'
 components:
   schemas:
+    Error401Unauthorized:
+      title: Unauthorized Error
+      type: object
+      description: Unauthorized Error (HTTP 401).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`unauthorized`.'
+          example: unauthorized
+          enum:
+          - unauthorized
+        status:
+          type: integer
+          description: '`401`.'
+          example: 401
+          enum:
+          - 401
+        message:
+          type: string
+          description: No valid API authentication found.
+          example: No valid API authentication found
+          enum:
+          - No valid API authentication found
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    PaymentMethodDefinition:
+      title: Payment Method Definition
+      type: object
+      description: Definitions of a payment method including icon, label, etc.
+      x-tags:
+      - Payment Method Definitions
+      properties:
+        id:
+          type: string
+          description: The mode of this payment method.
+          example: bank
+        icon_url:
+          type: string
+          description: The icon for this payment method.
+          example: https://api.sandbox.example.gr4vy.app/assets/payment-method-definitions/bank.svg
+        display_name:
+          type: string
+          description: The display name of this payment method.
+          example: Bank
+        long_display_name:
+          type: string
+          description: The long display name of this payment method.
+          example: Bank (BACS)
+        method:
+          type: string
+          description: The method, or type, for this payment method.
+          example: BACS
     ErrorDetail:
       title: Error details
       description: Additional detail about the part of a request body that caused an issue.
@@ -97,72 +163,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/PaymentMethodDefinition'
-    PaymentMethodDefinition:
-      title: Payment Method Definition
-      type: object
-      description: Definitions of a payment method including icon, label, etc.
-      x-tags:
-      - Payment Method Definitions
-      properties:
-        id:
-          type: string
-          description: The mode of this payment method.
-          example: bank
-        icon_url:
-          type: string
-          description: The icon for this payment method.
-          example: https://api.sandbox.example.gr4vy.app/assets/payment-method-definitions/bank.svg
-        display_name:
-          type: string
-          description: The display name of this payment method.
-          example: Bank
-        long_display_name:
-          type: string
-          description: The long display name of this payment method.
-          example: Bank (BACS)
-        method:
-          type: string
-          description: The method, or type, for this payment method.
-          example: BACS
-    Error401Unauthorized:
-      title: Unauthorized Error
-      type: object
-      description: Unauthorized Error (HTTP 401).
-      x-tags:
-      - Errors
-      properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: '`unauthorized`.'
-          example: unauthorized
-          enum:
-          - unauthorized
-        status:
-          type: integer
-          description: '`401`.'
-          example: 401
-          enum:
-          - 401
-        message:
-          type: string
-          description: No valid API authentication found.
-          example: No valid API authentication found
-          enum:
-          - No valid API authentication found
-        details:
-          type: array
-          description: 'A list of detail objects that further clarify the reason for the error.
-
-            Not every error supports more detail.'
-          example: []
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
   securitySchemes:
     bearerAuth:
       type: http
