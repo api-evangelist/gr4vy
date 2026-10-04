@@ -1,0 +1,69 @@
+slug: gr4vy
+provider: Gr4vy
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 5
+edges:
+- tag: Webhook Subscriptions
+  spec_file: gr4vy-webhook-subscriptions-api-openapi.yml
+  capability_id: BC-4270.80
+  capability_id_l1: BC-4270
+  capability_name: Webhook & Event Subscription Management
+  confidence: 0.9
+  evidence: POST /webhook-subscriptions  new-webhook-subscription  New webhook subscription ... POST /webhook-subscriptions/{webhook_subscription_id}/rotate-secret  Rotate
+    the webhook subscription secret
+  reason: Full CRUD plus secret rotation over outbound webhook subscriptions (WebhookSubscriptionCreate,
+    WebhookSubscriptionAuthentication) — exactly the lifecycle of outbound webhook/event subscriptions
+    exposed to integrators.
+- tag: Roles
+  spec_file: gr4vy-roles-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.85
+  evidence: GET /roles  list-roles; POST /roles/assignments  new-role-assignment  New role assignment;
+    schemas RolePermissions, PermissionSet, RoleAssigneeType
+  reason: Role definitions, permission sets and assignment/revocation of roles to assignees is role-based
+    access administration, i.e. Identity & Access Management. Unambiguous from the operation summaries
+    and schema names.
+- tag: Buyers
+  spec_file: gr4vy-buyers-api-openapi.yml
+  capability_id: BC-420.10
+  capability_id_l1: BC-420
+  capability_name: Customer Data Management
+  confidence: 0.75
+  evidence: POST /buyers  new-buyer  New buyer; GET /buyers/billing-details  get-buyer-billing-details;
+    schemas Buyer, BillingDetails, ShippingDetail, TaxId
+  reason: Full CRUD over buyer (end-customer) records plus their billing and shipping details — creation
+    and maintenance of customer master records in the payment platform, which realises Customer Data Management.
+- tag: Users
+  spec_file: gr4vy-users-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.75
+  evidence: '"New user", "Set user password", "Reset user password", schemas UserRole, RolePermissions,
+    Role'
+  reason: Administers platform user accounts, roles/permissions and credentials for the merchant account
+    — classic identity and access management. Could alternatively be read as tenant user lifecycle, but
+    no SSO/SCIM federation evidence is present.
+- tag: Reports
+  spec_file: gr4vy-reports-api-openapi.yml
+  capability_id: BC-610.50
+  capability_id_l1: BC-610
+  capability_name: Analytics & BI Management
+  confidence: 0.7
+  evidence: POST /reports  new-report  New report; GET /reports/{report_id}/executions  List executions
+    for report; schemas TransactionsReportSpec, DetailedSettlementReportSpec, AccountsReceivablesReportSpec
+  reason: Defines, schedules, executes and distributes analytical report specifications over transaction/settlement
+    data, which is reporting and BI delivery (BC-610.50). It is a reporting engine rather than a specific
+    finance process, so the analytics capability is the honest mapping.

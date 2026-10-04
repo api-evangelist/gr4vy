@@ -2657,6 +2657,9 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: CapabilityMap
+  url: capabilities/gr4vy-capability-edges.yml
+  name: Gr4vy Business Capability Map
 - type: AgenticAccess
   url: agentic-access/gr4vy-agentic-access.yml
 - type: LLMsTxt
