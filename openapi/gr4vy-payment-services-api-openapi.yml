@@ -480,480 +480,6 @@ paths:
           description: The subdomain for your Gr4vy instance.
 components:
   schemas:
-    Error400BadRequest:
-      title: Bad Request
-      type: object
-      description: Bad Request (HTTP 400).
-      x-tags:
-      - Errors
-      properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: A short code that describes the reason for the error.
-          example: bad_request
-          enum:
-          - bad_request
-          - incorrect_json
-          - invalid_credentials
-        status:
-          type: integer
-          description: '`400`.'
-          example: 400
-          enum:
-          - 400
-        message:
-          type: string
-          description: A human-readable reason for the error.
-          example: Missing '****' field
-        details:
-          type: array
-          description: A list of detail objects that further clarify the reason for the error.
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-    MerchantProfile:
-      title: Merchant Profile
-      type: object
-      description: Merchant profile for the different card schemes.
-      properties:
-        amex:
-          type:
-          - object
-          - 'null'
-          description: Merchant profile for Amex.
-          allOf:
-          - $ref: '#/components/schemas/MerchantProfileScheme'
-        dankort:
-          type:
-          - object
-          - 'null'
-          description: Merchant profile for Dankort.
-          allOf:
-          - $ref: '#/components/schemas/MerchantProfileScheme'
-        discover:
-          type:
-          - object
-          - 'null'
-          description: Merchant profile for Discover.
-          allOf:
-          - $ref: '#/components/schemas/MerchantProfileScheme'
-        jcb:
-          type:
-          - object
-          - 'null'
-          description: Merchant profile for JCB.
-          allOf:
-          - $ref: '#/components/schemas/MerchantProfileScheme'
-        mastercard:
-          type:
-          - object
-          - 'null'
-          description: Merchant profile for Mastercard.
-          allOf:
-          - $ref: '#/components/schemas/MerchantProfileScheme'
-        unionpay:
-          type:
-          - object
-          - 'null'
-          description: Merchant profile for UnionPay.
-          allOf:
-          - $ref: '#/components/schemas/MerchantProfileScheme'
-        visa:
-          type:
-          - object
-          - 'null'
-          description: Merchant profile for Visa.
-          allOf:
-          - $ref: '#/components/schemas/MerchantProfileScheme'
-    PaymentServices:
-      title: A list of active payment services
-      type: object
-      description: A list of active, configured payment services.
-      x-tags:
-      - Payment Services
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/PaymentService'
-        limit:
-          type: integer
-          description: 'The limit applied to request. This represents the number of items that are at
-
-            maximum returned by this request.'
-          format: int32
-          minimum: 1
-          maximum: 100
-          example: 1
-          default: 20
-        next_cursor:
-          type:
-          - string
-          - 'null'
-          description: 'The cursor that represents the next page of results. Use the `cursor` query
-
-            parameter to fetch this page of items.'
-          example: ZXhhbXBsZTE
-          minLength: 1
-          maxLength: 1000
-        previous_cursor:
-          type:
-          - string
-          - 'null'
-          description: 'The cursor that represents the next page of results. Use the `cursor` query
-
-            parameter to fetch this page of items.'
-          example: null
-          minLength: 1
-          maxLength: 1000
-    ErrorDetail:
-      title: Error details
-      description: Additional detail about the part of a request body that caused an issue.
-      type: object
-      x-tags:
-      - Errors
-      properties:
-        location:
-          type: string
-          example: body
-          description: The location where the error caused an issue.
-          enum:
-          - query
-          - body
-          - path
-          - header
-        type:
-          type: string
-          example: value_error.missing
-          description: A unique identifier for the type of error that occurred.
-        pointer:
-          type: string
-          example: /payment_method/number
-          description: 'The exact item for which the validation did not succeed. This is a JSON
-
-            pointer for request bodies, while for query, path, and header parameters
-
-            it is the name of the parameter.'
-        message:
-          type: string
-          example: field required
-          description: A human readable message for this error detail.
-    MerchantProfileSummary:
-      title: Merchant Profile
-      type: object
-      description: Merchant profile for the different card schemes.
-      properties:
-        amex:
-          type:
-          - object
-          - 'null'
-          description: Merchant profile for Amex.
-          allOf:
-          - $ref: '#/components/schemas/MerchantProfileSchemeSummary'
-        dankort:
-          type:
-          - object
-          - 'null'
-          description: Merchant profile for Dankort.
-          allOf:
-          - $ref: '#/components/schemas/MerchantProfileSchemeSummary'
-        discover:
-          type:
-          - object
-          - 'null'
-          description: Merchant profile for Discover.
-          allOf:
-          - $ref: '#/components/schemas/MerchantProfileSchemeSummary'
-        jcb:
-          type:
-          - object
-          - 'null'
-          description: Merchant profile for JCB.
-          allOf:
-          - $ref: '#/components/schemas/MerchantProfileSchemeSummary'
-        mastercard:
-          type:
-          - object
-          - 'null'
-          description: Merchant profile for Mastercard.
-          allOf:
-          - $ref: '#/components/schemas/MerchantProfileSchemeSummary'
-        unionpay:
-          type:
-          - object
-          - 'null'
-          description: Merchant profile for UnionPay.
-          allOf:
-          - $ref: '#/components/schemas/MerchantProfileSchemeSummary'
-        visa:
-          type:
-          - object
-          - 'null'
-          description: Merchant profile for Visa.
-          allOf:
-          - $ref: '#/components/schemas/MerchantProfileSchemeSummary'
-    MerchantProfileSchemeSummary:
-      title: Merchant Profile (single scheme)
-      type: object
-      description: Merchant profile for a specific scheme.
-      properties:
-        merchant_acquirer_bin:
-          type: string
-          maxLength: 11
-          description: Acquirer bin to use when calling 3DS through this scheme.
-        merchant_url:
-          type: string
-          description: URL to send when calling 3DS through this scheme.
-        merchant_acquirer_id:
-          type: string
-          maxLength: 35
-          description: Merchant ID to use when calling 3DS through this scheme.
-        merchant_name:
-          type: string
-          maxLength: 40
-          description: Merchant name to use when calling 3DS through this scheme.
-        merchant_country_code:
-          type: string
-          minLength: 3
-          maxLength: 3
-          description: Merchant country code to use when calling 3DS through this scheme.
-        merchant_category_code:
-          type: string
-          maxLength: 4
-          description: Merchant category code to use when calling 3DS through this scheme.
-        created_at:
-          type: string
-          description: The date and time when this profile was created.
-          format: date-time
-          example: '2023-07-26T19:23:00.000+00:00'
-    PaymentServiceUpdate:
-      title: Payment Service (Update)
-      type: object
-      description: Request body for updating an active payment service.
-      x-tags:
-      - Request Bodies
-      properties:
-        display_name:
-          type: string
-          description: A custom name for the payment service. This will be shown in the Admin UI.
-          example: Stripe (Main)
-          minLength: 1
-          maxLength: 50
-        fields:
-          type: array
-          description: A list of fields, each containing a key-value pair for each field defined by the definition for this payment service e.g. for stripe-card `secret_key` is required and so must be sent within this field.
-          items:
-            type: object
-            description: A key-value pair that represents a field defined in the definition for this payment service.
-            required:
-            - key
-            - value
-            properties:
-              key:
-                type: string
-                description: The key of the field to set a value for.
-                example: private_key
-                minLength: 1
-                maxLength: 50
-              value:
-                type: string
-                description: The value of a field to set; you can unset optional fields by setting this to an empty string `""`.
-                example: REDACTED_STRIPE_KEY
-                minLength: 0
-                maxLength: 5000
-        reporting_fields:
-          type: array
-          description: The `reporting_fields` field should contain a list of key-value pairs. Each key-value pair represents a reporting field defined by the payment service. For example, when enabling settlement reporting for `nuvei-card`, the `ssh_username` field is required and must be included in `reporting_fields`.
-          items:
-            type: object
-            description: A key-value pair that represents a reporting field defined in the definition for this payment service.
-            required:
-            - key
-            - value
-            properties:
-              key:
-                type: string
-                description: The key of the field to set a value for.
-                example: ssh_username
-                minLength: 1
-                maxLength: 50
-              value:
-                type: string
-                description: The value of a field to set; you can unset optional fields by setting this to an empty string `""`.
-                example: test_ssh_user
-                minLength: 0
-                maxLength: 5000
-        accepted_countries:
-          type: array
-          description: A list of countries that this payment service needs to support in ISO two-letter code format.
-          minItems: 1
-          items:
-            type: string
-            minLength: 2
-            maxLength: 2
-          example:
-          - US
-          - GB
-          - DE
-        accepted_currencies:
-          type: array
-          description: A list of currencies that this payment service needs to support in ISO 4217 three-letter code format.
-          minItems: 1
-          items:
-            type: string
-            minLength: 3
-            maxLength: 3
-          example:
-          - EUR
-          - USD
-          - GBP
-        three_d_secure_enabled:
-          type: boolean
-          example: true
-          default: false
-          description: 'Defines if 3-D Secure is enabled for the service. This feature
-
-            can only be enabled if the payment service definition supports
-
-            the `three_d_secure_hosted` feature.
-
-            This does not affect pass through 3-D Secure data.'
-        merchant_profile:
-          type:
-          - object
-          - 'null'
-          description: 'Configuration for each supported card scheme.
-
-            When updating a Payment Service, a key not being present will
-
-            indicate no updates to be done on that scheme, whereas an object being
-
-            sent as Null for a key will empty the configuration for that scheme.'
-          allOf:
-          - $ref: '#/components/schemas/MerchantProfile'
-        active:
-          type: boolean
-          example: true
-          default: true
-          description: Defines if this service is currently active or not.
-        open_loop:
-          type:
-          - boolean
-          - 'null'
-          example: true
-          description: 'Defines if the service works as an open-loop service. This feature
-
-            can only be enabled if the PSP is set up to accept previous scheme
-
-            transaction IDs.
-
-
-            If this value is set to `null`, it will be set to the value of
-
-            `open_loop` in the payment service definition.
-
-
-            If `open_loop_toggle` is `false` in the payment service definition,
-
-            `open_loop` should either not be provided or set to `null`, or it
-
-            will fail with a validation error.'
-        payment_method_tokenization_enabled:
-          type:
-          - boolean
-          - 'null'
-          example: true
-          description: 'Defines if tokenization is enabled for the service. This feature
-
-            can only be enabled if the payment service is NOT set as `open_loop`
-
-            and the PSP is set up to tokenize.'
-        network_tokens_enabled:
-          type:
-          - boolean
-          - 'null'
-          example: true
-          description: 'Defines if network tokens are enabled for the service. This feature
-
-            can only be enabled if the payment service is set as `open_loop` and
-
-            the PSP is set up to accept network tokens.
-
-
-            If this value is set to `null`, it will be set to the value of
-
-            `network_tokens_default` in the payment service definition.
-
-
-            If `network_tokens_toggle` is `false` in the payment service definition,
-
-            `network_tokens_enabled` should either not be provided or set to `null`,
-
-            or it will fail with a validation error.'
-        settlement_reporting_enabled:
-          type: boolean
-          example: true
-          default: false
-          description: 'Defines if settlement reporting is enabled for the service.
-
-            This feature can only be enabled if the payment service
-
-            definition supports the `settlement_reporting` feature.'
-    PaymentServiceSession:
-      title: Payment Service Session
-      type: object
-      description: 'A session request for a payment session. This is an opaque object
-
-        passed to the payment service.'
-      x-tags:
-      - Payment Services
-      properties:
-        type:
-          type: string
-          description: The type of this resource.
-          example: payment-service-session
-          enum:
-          - payment-service-session
-        status:
-          type: string
-          description: 'The status of the response.
-
-
-            - `succeeded` - The session was successfully generated.
-
-            - `failed` - The session could not be generated.'
-          example: succeeded
-          enum:
-          - succeeded
-          - failed
-        code:
-          type:
-          - string
-          - 'null'
-          example: UNKNOWN_ERROR
-          description: A generic error code that may be returned when the session could not be generated.
-        status_code:
-          type:
-          - number
-          - 'null'
-          example: 200
-          description: The HTTP status code received from the payment service.
-        response_body:
-          type:
-          - object
-          - 'null'
-          description: The parsed JSON received from the payment service.
-          additionalProperties: true
-          example:
-            data:
-              customerType: EXISTING
-              walletManagementUrl: https://example.com/session
-            meta: {}
     PaymentService:
       title: A payment service
       type: object
@@ -1249,10 +775,134 @@ components:
           type:
           - string
           - 'null'
-    Error401Unauthorized:
-      title: Unauthorized Error
+    MerchantProfileSchemeSummary:
+      title: Merchant Profile (single scheme)
       type: object
-      description: Unauthorized Error (HTTP 401).
+      description: Merchant profile for a specific scheme.
+      properties:
+        merchant_acquirer_bin:
+          type: string
+          maxLength: 11
+          description: Acquirer bin to use when calling 3DS through this scheme.
+        merchant_url:
+          type: string
+          description: URL to send when calling 3DS through this scheme.
+        merchant_acquirer_id:
+          type: string
+          maxLength: 35
+          description: Merchant ID to use when calling 3DS through this scheme.
+        merchant_name:
+          type: string
+          maxLength: 40
+          description: Merchant name to use when calling 3DS through this scheme.
+        merchant_country_code:
+          type: string
+          minLength: 3
+          maxLength: 3
+          description: Merchant country code to use when calling 3DS through this scheme.
+        merchant_category_code:
+          type: string
+          maxLength: 4
+          description: Merchant category code to use when calling 3DS through this scheme.
+        created_at:
+          type: string
+          description: The date and time when this profile was created.
+          format: date-time
+          example: '2023-07-26T19:23:00.000+00:00'
+    PaymentServiceSessionRequest:
+      title: Payment Service Session Request
+      type: object
+      description: A request to generate a session for a payment session.
+      x-tags:
+      - Payment Services
+      additionalProperties: true
+    MerchantProfileScheme:
+      title: Merchant Profile (single scheme)
+      type: object
+      description: Merchant profile for a specific scheme.
+      properties:
+        merchant_acquirer_bin:
+          type: string
+          maxLength: 11
+          description: Acquirer bin to use when calling 3DS through this scheme.
+        merchant_url:
+          type: string
+          description: URL to send when calling 3DS through this scheme.
+        merchant_acquirer_id:
+          type: string
+          maxLength: 35
+          description: Merchant ID to use when calling 3DS through this scheme.
+        merchant_name:
+          type: string
+          maxLength: 40
+          description: Merchant name to use when calling 3DS through this scheme.
+        merchant_country_code:
+          type: string
+          minLength: 3
+          maxLength: 3
+          description: Merchant country code to use when calling 3DS through this scheme.
+        merchant_category_code:
+          type: string
+          maxLength: 4
+          description: Merchant category code to use when calling 3DS through this scheme.
+    MerchantProfileSummary:
+      title: Merchant Profile
+      type: object
+      description: Merchant profile for the different card schemes.
+      properties:
+        amex:
+          type:
+          - object
+          - 'null'
+          description: Merchant profile for Amex.
+          allOf:
+          - $ref: '#/components/schemas/MerchantProfileSchemeSummary'
+        dankort:
+          type:
+          - object
+          - 'null'
+          description: Merchant profile for Dankort.
+          allOf:
+          - $ref: '#/components/schemas/MerchantProfileSchemeSummary'
+        discover:
+          type:
+          - object
+          - 'null'
+          description: Merchant profile for Discover.
+          allOf:
+          - $ref: '#/components/schemas/MerchantProfileSchemeSummary'
+        jcb:
+          type:
+          - object
+          - 'null'
+          description: Merchant profile for JCB.
+          allOf:
+          - $ref: '#/components/schemas/MerchantProfileSchemeSummary'
+        mastercard:
+          type:
+          - object
+          - 'null'
+          description: Merchant profile for Mastercard.
+          allOf:
+          - $ref: '#/components/schemas/MerchantProfileSchemeSummary'
+        unionpay:
+          type:
+          - object
+          - 'null'
+          description: Merchant profile for UnionPay.
+          allOf:
+          - $ref: '#/components/schemas/MerchantProfileSchemeSummary'
+        visa:
+          type:
+          - object
+          - 'null'
+          description: Merchant profile for Visa.
+          allOf:
+          - $ref: '#/components/schemas/MerchantProfileSchemeSummary'
+    Error404NotFound:
+      title: Not Found Error
+      type: object
+      description: Not Found Error (HTTP 404).
       x-tags:
       - Errors
       properties:
@@ -1264,22 +914,21 @@ components:
           example: error
         code:
           type: string
-          description: '`unauthorized`.'
-          example: unauthorized
+          description: The reason code for the error.
+          example: not_found
           enum:
-          - unauthorized
+          - not_found
+          - pending_creation
         status:
           type: integer
-          description: '`401`.'
-          example: 401
+          description: '`404`.'
+          example: 404
           enum:
-          - 401
+          - 404
         message:
           type: string
-          description: No valid API authentication found.
-          example: No valid API authentication found
-          enum:
-          - No valid API authentication found
+          description: The human readable reason for the error.
+          example: The resource could not be found
         details:
           type: array
           description: 'A list of detail objects that further clarify the reason for the error.
@@ -1288,13 +937,47 @@ components:
           example: []
           items:
             $ref: '#/components/schemas/ErrorDetail'
-    PaymentServiceSessionRequest:
-      title: Payment Service Session Request
+    PaymentServices:
+      title: A list of active payment services
       type: object
-      description: A request to generate a session for a payment session.
+      description: A list of active, configured payment services.
       x-tags:
       - Payment Services
-      additionalProperties: true
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentService'
+        limit:
+          type: integer
+          description: 'The limit applied to request. This represents the number of items that are at
+
+            maximum returned by this request.'
+          format: int32
+          minimum: 1
+          maximum: 100
+          example: 1
+          default: 20
+        next_cursor:
+          type:
+          - string
+          - 'null'
+          description: 'The cursor that represents the next page of results. Use the `cursor` query
+
+            parameter to fetch this page of items.'
+          example: ZXhhbXBsZTE
+          minLength: 1
+          maxLength: 1000
+        previous_cursor:
+          type:
+          - string
+          - 'null'
+          description: 'The cursor that represents the next page of results. Use the `cursor` query
+
+            parameter to fetch this page of items.'
+          example: null
+          minLength: 1
+          maxLength: 1000
     PaymentServiceRequest:
       title: Payment Service (Create)
       type: object
@@ -1476,73 +1159,38 @@ components:
             This feature can only be enabled if the payment service
 
             definition supports the `settlement_reporting` feature.'
-    MerchantProfileScheme:
-      title: Merchant Profile (single scheme)
+    ErrorDetail:
+      title: Error details
+      description: Additional detail about the part of a request body that caused an issue.
       type: object
-      description: Merchant profile for a specific scheme.
-      properties:
-        merchant_acquirer_bin:
-          type: string
-          maxLength: 11
-          description: Acquirer bin to use when calling 3DS through this scheme.
-        merchant_url:
-          type: string
-          description: URL to send when calling 3DS through this scheme.
-        merchant_acquirer_id:
-          type: string
-          maxLength: 35
-          description: Merchant ID to use when calling 3DS through this scheme.
-        merchant_name:
-          type: string
-          maxLength: 40
-          description: Merchant name to use when calling 3DS through this scheme.
-        merchant_country_code:
-          type: string
-          minLength: 3
-          maxLength: 3
-          description: Merchant country code to use when calling 3DS through this scheme.
-        merchant_category_code:
-          type: string
-          maxLength: 4
-          description: Merchant category code to use when calling 3DS through this scheme.
-    Error404NotFound:
-      title: Not Found Error
-      type: object
-      description: Not Found Error (HTTP 404).
       x-tags:
       - Errors
       properties:
+        location:
+          type: string
+          example: body
+          description: The location where the error caused an issue.
+          enum:
+          - query
+          - body
+          - path
+          - header
         type:
           type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
+          example: value_error.missing
+          description: A unique identifier for the type of error that occurred.
+        pointer:
           type: string
-          description: The reason code for the error.
-          example: not_found
-          enum:
-          - not_found
-          - pending_creation
-        status:
-          type: integer
-          description: '`404`.'
-          example: 404
-          enum:
-          - 404
+          example: /payment_method/number
+          description: 'The exact item for which the validation did not succeed. This is a JSON
+
+            pointer for request bodies, while for query, path, and header parameters
+
+            it is the name of the parameter.'
         message:
           type: string
-          description: The human readable reason for the error.
-          example: The resource could not be found
-        details:
-          type: array
-          description: 'A list of detail objects that further clarify the reason for the error.
-
-            Not every error supports more detail.'
-          example: []
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
+          example: field required
+          description: A human readable message for this error detail.
     PaymentServiceVerify:
       title: Payment Service (Verify)
       type: object
@@ -1591,16 +1239,359 @@ components:
                 example: REDACTED_STRIPE_KEY
                 minLength: 1
                 maxLength: 5000
-    ErrorLocation:
-      type: string
-      enum:
-      - query
-      - body
-      - path
-      - header
-      - unknown
-      title: ErrorLocation
-    Error405:
+    MerchantProfile:
+      title: Merchant Profile
+      type: object
+      description: Merchant profile for the different card schemes.
+      properties:
+        amex:
+          type:
+          - object
+          - 'null'
+          description: Merchant profile for Amex.
+          allOf:
+          - $ref: '#/components/schemas/MerchantProfileScheme'
+        dankort:
+          type:
+          - object
+          - 'null'
+          description: Merchant profile for Dankort.
+          allOf:
+          - $ref: '#/components/schemas/MerchantProfileScheme'
+        discover:
+          type:
+          - object
+          - 'null'
+          description: Merchant profile for Discover.
+          allOf:
+          - $ref: '#/components/schemas/MerchantProfileScheme'
+        jcb:
+          type:
+          - object
+          - 'null'
+          description: Merchant profile for JCB.
+          allOf:
+          - $ref: '#/components/schemas/MerchantProfileScheme'
+        mastercard:
+          type:
+          - object
+          - 'null'
+          description: Merchant profile for Mastercard.
+          allOf:
+          - $ref: '#/components/schemas/MerchantProfileScheme'
+        unionpay:
+          type:
+          - object
+          - 'null'
+          description: Merchant profile for UnionPay.
+          allOf:
+          - $ref: '#/components/schemas/MerchantProfileScheme'
+        visa:
+          type:
+          - object
+          - 'null'
+          description: Merchant profile for Visa.
+          allOf:
+          - $ref: '#/components/schemas/MerchantProfileScheme'
+    Error401Unauthorized:
+      title: Unauthorized Error
+      type: object
+      description: Unauthorized Error (HTTP 401).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`unauthorized`.'
+          example: unauthorized
+          enum:
+          - unauthorized
+        status:
+          type: integer
+          description: '`401`.'
+          example: 401
+          enum:
+          - 401
+        message:
+          type: string
+          description: No valid API authentication found.
+          example: No valid API authentication found
+          enum:
+          - No valid API authentication found
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    PaymentServiceSession:
+      title: Payment Service Session
+      type: object
+      description: 'A session request for a payment session. This is an opaque object
+
+        passed to the payment service.'
+      x-tags:
+      - Payment Services
+      properties:
+        type:
+          type: string
+          description: The type of this resource.
+          example: payment-service-session
+          enum:
+          - payment-service-session
+        status:
+          type: string
+          description: 'The status of the response.
+
+
+            - `succeeded` - The session was successfully generated.
+
+            - `failed` - The session could not be generated.'
+          example: succeeded
+          enum:
+          - succeeded
+          - failed
+        code:
+          type:
+          - string
+          - 'null'
+          example: UNKNOWN_ERROR
+          description: A generic error code that may be returned when the session could not be generated.
+        status_code:
+          type:
+          - number
+          - 'null'
+          example: 200
+          description: The HTTP status code received from the payment service.
+        response_body:
+          type:
+          - object
+          - 'null'
+          description: The parsed JSON received from the payment service.
+          additionalProperties: true
+          example:
+            data:
+              customerType: EXISTING
+              walletManagementUrl: https://example.com/session
+            meta: {}
+    Error400BadRequest:
+      title: Bad Request
+      type: object
+      description: Bad Request (HTTP 400).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: A short code that describes the reason for the error.
+          example: bad_request
+          enum:
+          - bad_request
+          - incorrect_json
+          - invalid_credentials
+        status:
+          type: integer
+          description: '`400`.'
+          example: 400
+          enum:
+          - 400
+        message:
+          type: string
+          description: A human-readable reason for the error.
+          example: Missing '****' field
+        details:
+          type: array
+          description: A list of detail objects that further clarify the reason for the error.
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    PaymentServiceUpdate:
+      title: Payment Service (Update)
+      type: object
+      description: Request body for updating an active payment service.
+      x-tags:
+      - Request Bodies
+      properties:
+        display_name:
+          type: string
+          description: A custom name for the payment service. This will be shown in the Admin UI.
+          example: Stripe (Main)
+          minLength: 1
+          maxLength: 50
+        fields:
+          type: array
+          description: A list of fields, each containing a key-value pair for each field defined by the definition for this payment service e.g. for stripe-card `secret_key` is required and so must be sent within this field.
+          items:
+            type: object
+            description: A key-value pair that represents a field defined in the definition for this payment service.
+            required:
+            - key
+            - value
+            properties:
+              key:
+                type: string
+                description: The key of the field to set a value for.
+                example: private_key
+                minLength: 1
+                maxLength: 50
+              value:
+                type: string
+                description: The value of a field to set; you can unset optional fields by setting this to an empty string `""`.
+                example: REDACTED_STRIPE_KEY
+                minLength: 0
+                maxLength: 5000
+        reporting_fields:
+          type: array
+          description: The `reporting_fields` field should contain a list of key-value pairs. Each key-value pair represents a reporting field defined by the payment service. For example, when enabling settlement reporting for `nuvei-card`, the `ssh_username` field is required and must be included in `reporting_fields`.
+          items:
+            type: object
+            description: A key-value pair that represents a reporting field defined in the definition for this payment service.
+            required:
+            - key
+            - value
+            properties:
+              key:
+                type: string
+                description: The key of the field to set a value for.
+                example: ssh_username
+                minLength: 1
+                maxLength: 50
+              value:
+                type: string
+                description: The value of a field to set; you can unset optional fields by setting this to an empty string `""`.
+                example: test_ssh_user
+                minLength: 0
+                maxLength: 5000
+        accepted_countries:
+          type: array
+          description: A list of countries that this payment service needs to support in ISO two-letter code format.
+          minItems: 1
+          items:
+            type: string
+            minLength: 2
+            maxLength: 2
+          example:
+          - US
+          - GB
+          - DE
+        accepted_currencies:
+          type: array
+          description: A list of currencies that this payment service needs to support in ISO 4217 three-letter code format.
+          minItems: 1
+          items:
+            type: string
+            minLength: 3
+            maxLength: 3
+          example:
+          - EUR
+          - USD
+          - GBP
+        three_d_secure_enabled:
+          type: boolean
+          example: true
+          default: false
+          description: 'Defines if 3-D Secure is enabled for the service. This feature
+
+            can only be enabled if the payment service definition supports
+
+            the `three_d_secure_hosted` feature.
+
+            This does not affect pass through 3-D Secure data.'
+        merchant_profile:
+          type:
+          - object
+          - 'null'
+          description: 'Configuration for each supported card scheme.
+
+            When updating a Payment Service, a key not being present will
+
+            indicate no updates to be done on that scheme, whereas an object being
+
+            sent as Null for a key will empty the configuration for that scheme.'
+          allOf:
+          - $ref: '#/components/schemas/MerchantProfile'
+        active:
+          type: boolean
+          example: true
+          default: true
+          description: Defines if this service is currently active or not.
+        open_loop:
+          type:
+          - boolean
+          - 'null'
+          example: true
+          description: 'Defines if the service works as an open-loop service. This feature
+
+            can only be enabled if the PSP is set up to accept previous scheme
+
+            transaction IDs.
+
+
+            If this value is set to `null`, it will be set to the value of
+
+            `open_loop` in the payment service definition.
+
+
+            If `open_loop_toggle` is `false` in the payment service definition,
+
+            `open_loop` should either not be provided or set to `null`, or it
+
+            will fail with a validation error.'
+        payment_method_tokenization_enabled:
+          type:
+          - boolean
+          - 'null'
+          example: true
+          description: 'Defines if tokenization is enabled for the service. This feature
+
+            can only be enabled if the payment service is NOT set as `open_loop`
+
+            and the PSP is set up to tokenize.'
+        network_tokens_enabled:
+          type:
+          - boolean
+          - 'null'
+          example: true
+          description: 'Defines if network tokens are enabled for the service. This feature
+
+            can only be enabled if the payment service is set as `open_loop` and
+
+            the PSP is set up to accept network tokens.
+
+
+            If this value is set to `null`, it will be set to the value of
+
+            `network_tokens_default` in the payment service definition.
+
+
+            If `network_tokens_toggle` is `false` in the payment service definition,
+
+            `network_tokens_enabled` should either not be provided or set to `null`,
+
+            or it will fail with a validation error.'
+        settlement_reporting_enabled:
+          type: boolean
+          example: true
+          default: false
+          description: 'Defines if settlement reporting is enabled for the service.
+
+            This feature can only be enabled if the payment service
+
+            definition supports the `settlement_reporting` feature.'
+    Error401:
       properties:
         type:
           type: string
@@ -1613,24 +1604,24 @@ components:
         code:
           type: string
           title: Code
-          description: Always `method_not_allowed`
-          default: method_not_allowed
+          description: Always `unauthorized`
+          default: unauthorized
           examples:
-          - method_not_allowed
+          - unauthorized
         status:
           type: integer
           title: Status
-          description: Always `405`.
-          default: 405
+          description: Always `401`.
+          default: 401
           examples:
-          - 405
+          - 401
         message:
           type: string
           title: Message
           description: A human readable message that provides more context to the error.
-          default: Method Not Allowed
+          default: No valid API authentication found
           examples:
-          - Method Not Allowed
+          - No valid API authentication found
         details:
           items:
             $ref: '#/components/schemas/ErrorDetail_2'
@@ -1640,249 +1631,7 @@ components:
           default: []
       additionalProperties: false
       type: object
-      title: Error405
-    CreateSession:
-      properties:
-        type:
-          type: string
-          const: payment-service-session
-          title: Type
-          description: Always `payment-service-session`.
-          default: payment-service-session
-          examples:
-          - payment-service-session
-        status:
-          $ref: '#/components/schemas/CreateSessionStatus'
-          description: The status of the response.
-          examples:
-          - succeeded
-        code:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Code
-          description: A generic error code that may be returned when the session could not be generated.
-          examples:
-          - UNKNOWN_ERROR
-        status_code:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Status Code
-          description: The HTTP status code received from the payment service.
-          examples:
-          - 201
-        response_body:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Response Body
-          description: The JSON response body received from the payment service.
-          examples:
-          - sessionId: '12345'
-      additionalProperties: false
-      type: object
-      required:
-      - status
-      title: CreateSession
-      description: The session data received from the payment service.
-    ErrorDetail_2:
-      properties:
-        location:
-          $ref: '#/components/schemas/ErrorLocation'
-          description: The part of the request where the property can be found that caused the error.
-          examples:
-          - body
-        pointer:
-          anyOf:
-          - type: string
-            format: json-pointer
-          - type: string
-          title: Pointer
-          description: A JSON pointer for the particular property that caused the error.
-          examples:
-          - /currency
-        message:
-          type: string
-          title: Message
-          description: A human-readdable explanation of the error.
-          examples:
-          - 'Unknown ISO 4217 currency code: USX'
-        type:
-          type: string
-          title: Type
-          description: The type of error that was raised for this property.
-          examples:
-          - value_error
-      additionalProperties: false
-      type: object
-      required:
-      - location
-      - pointer
-      - message
-      - type
-      title: ErrorDetail
-    VoidableField:
-      properties:
-        key:
-          type: string
-          maxLength: 50
-          minLength: 1
-          title: Key
-        value:
-          anyOf:
-          - type: string
-            maxLength: 10000
-            minLength: 1
-          - type: string
-            const: ''
-          title: Value
-      additionalProperties: false
-      type: object
-      required:
-      - key
-      - value
-      title: VoidableField
-    CreateSessionStatus:
-      type: string
-      enum:
-      - succeeded
-      - failed
-      title: CreateSessionStatus
-    Method:
-      type: string
-      enum:
-      - abitab
-      - affirm
-      - afterpay
-      - alipay
-      - alipayhk
-      - applepay
-      - arcuspaynetwork
-      - bacs
-      - bancontact
-      - bank
-      - bcp
-      - becs
-      - bitpay
-      - blik
-      - ach
-      - boleto
-      - boost
-      - breb
-      - capitec
-      - card
-      - cashapp
-      - cashappafterpay
-      - chaseorbital
-      - clearpay
-      - click-to-pay
-      - custom_push
-      - custom_redirect
-      - custom_tokenize
-      - dana
-      - dcb
-      - dlocal
-      - duitnow
-      - ebanx
-      - eckoh
-      - efecty
-      - eps
-      - everydaypay
-      - gcash
-      - gem
-      - gemds
-      - gift-card
-      - giropay
-      - givingblock
-      - gocardless
-      - googlepay
-      - googlepay_pan_only
-      - gopay
-      - grabpay
-      - ideal
-      - interac
-      - kakaopay
-      - kcp
-      - khipu
-      - klarna
-      - konbini
-      - latitude
-      - latitudeds
-      - laybuy
-      - linepay
-      - linkaja
-      - maybankqrpay
-      - mercadopago
-      - multibanco
-      - multipago
-      - nequi
-      - netbanking
-      - network-token
-      - nupay
-      - oney_10x
-      - oney_12x
-      - oney_3x
-      - oney_4x
-      - oney_6x
-      - onlinebankingcz
-      - onelink
-      - ovo
-      - oxxo
-      - p24
-      - pagoefectivo
-      - paybybank
-      - payid
-      - paymaya
-      - paysquad
-      - paypal
-      - paypaldirectorder
-      - paypalpaylater
-      - paypay
-      - payto
-      - payvalida
-      - paze
-      - picpay
-      - pix
-      - plaid
-      - pse
-      - rabbitlinepay
-      - razorpay
-      - rapipago
-      - redpagos
-      - scalapay
-      - sepa
-      - servipag
-      - seveneleven
-      - sezzle
-      - shopeepay
-      - singteldash
-      - smartpay
-      - sofort
-      - spei
-      - stitch
-      - swish
-      - stripe
-      - stripedd
-      - stripetoken
-      - tapi
-      - tapifintechs
-      - thaiqr
-      - touchngo
-      - truemoney
-      - trustly
-      - trustlyeurope
-      - upi
-      - venmo
-      - vipps
-      - waave
-      - webpay
-      - wechat
-      - wero
-      - yape
-      - zippay
-      title: Method
+      title: Error401
     Error404:
       properties:
         type:
@@ -1924,60 +1673,16 @@ components:
       additionalProperties: false
       type: object
       title: Error404
-    MerchantProfileScheme_2:
-      properties:
-        merchant_acquirer_bin:
-          type: string
-          maxLength: 11
-          title: Merchant Acquirer Bin
-          description: Acquirer BIN to use when calling 3DS through this scheme.
-          examples:
-          - '516327'
-        merchant_acquirer_id:
-          type: string
-          maxLength: 35
-          title: Merchant Acquirer Id
-          description: Merchant ID to use when calling 3DS through this scheme.
-          examples:
-          - '123456789012345'
-        merchant_name:
-          type: string
-          maxLength: 40
-          title: Merchant Name
-          description: ''
-          examples:
-          - Acme Inc.
-        merchant_country_code:
-          type: string
-          title: Merchant Country Code
-          description: The merchant's ISO 3166-1 numeric country code.
-          examples:
-          - '840'
-        merchant_category_code:
-          type: string
-          maxLength: 4
-          minLength: 4
-          title: Merchant Category Code
-          description: Merchant category code to use when calling 3DS through this scheme.
-          examples:
-          - '1234'
-        merchant_url:
-          type: string
-          title: Merchant Url
-          description: URL to send when calling 3DS through this scheme.
-          examples:
-          - https://example.com
-      additionalProperties: false
-      type: object
-      required:
-      - merchant_acquirer_bin
-      - merchant_acquirer_id
-      - merchant_name
-      - merchant_country_code
-      - merchant_category_code
-      - merchant_url
-      title: MerchantProfileScheme
-    Error409:
+    ErrorLocation:
+      type: string
+      enum:
+      - query
+      - body
+      - path
+      - header
+      - unknown
+      title: ErrorLocation
+    Error425:
       properties:
         type:
           type: string
@@ -1990,17 +1695,17 @@ components:
         code:
           type: string
           title: Code
-          description: Always `duplicate_record`
-          default: duplicate_record
+          description: Always `too_early`
+          default: too_early
           examples:
-          - duplicate_record
+          - too_early
         status:
           type: integer
           title: Status
-          description: Always `409`.
-          default: 409
+          description: Always `425`.
+          default: 425
           examples:
-          - 409
+          - 425
         message:
           type: string
           title: Message
@@ -2015,103 +1720,9 @@ components:
           title: Details
           description: A list of details that further ellaborate on the error.
           default: []
-        resource_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Resource Id
-          description: The ID of the conflicting resource.
-          examples:
-          - cdc70639-cb9c-4222-a73f-b8ce39f7821b
       additionalProperties: false
       type: object
-      title: Error409
-    Field:
-      properties:
-        key:
-          type: string
-          maxLength: 50
-          minLength: 1
-          title: Key
-          description: The ID of the configured field.
-          examples:
-          - api_key
-        value:
-          type: string
-          maxLength: 10000
-          minLength: 1
-          title: Value
-          description: The value of the configured field.
-          examples:
-          - key-12345
-      additionalProperties: false
-      type: object
-      required:
-      - key
-      - value
-      title: Field
-      description: A field used in a payment service
-    MerchantProfileSchemeSummary_2:
-      properties:
-        merchant_acquirer_bin:
-          type: string
-          maxLength: 11
-          title: Merchant Acquirer Bin
-          description: Acquirer BIN to use when calling 3DS through this scheme.
-          examples:
-          - '516327'
-        merchant_acquirer_id:
-          type: string
-          maxLength: 35
-          title: Merchant Acquirer Id
-          description: Merchant ID to use when calling 3DS through this scheme.
-          examples:
-          - '123456789012345'
-        merchant_name:
-          type: string
-          maxLength: 40
-          title: Merchant Name
-          description: ''
-          examples:
-          - Acme Inc.
-        merchant_country_code:
-          type: string
-          title: Merchant Country Code
-          description: The merchant's ISO 3166-1 numeric country code.
-          examples:
-          - '840'
-        merchant_category_code:
-          type: string
-          maxLength: 4
-          minLength: 4
-          title: Merchant Category Code
-          description: Merchant category code to use when calling 3DS through this scheme.
-          examples:
-          - '1234'
-        merchant_url:
-          type: string
-          title: Merchant Url
-          description: URL to send when calling 3DS through this scheme.
-          examples:
-          - https://example.com
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-          description: The date and time when this profile was first created in our system.
-          examples:
-          - '2013-07-16T19:23:00.000+00:00'
-      additionalProperties: false
-      type: object
-      required:
-      - merchant_acquirer_bin
-      - merchant_acquirer_id
-      - merchant_name
-      - merchant_country_code
-      - merchant_category_code
-      - merchant_url
-      - created_at
-      title: MerchantProfileSchemeSummary
+      title: Error425
     PaymentService_2:
       properties:
         type:
@@ -2309,35 +1920,507 @@ components:
       - created_at
       - updated_at
       title: PaymentService
-    CardScheme:
+    Field:
+      properties:
+        key:
+          type: string
+          maxLength: 50
+          minLength: 1
+          title: Key
+          description: The ID of the configured field.
+          examples:
+          - api_key
+        value:
+          type: string
+          maxLength: 10000
+          minLength: 1
+          title: Value
+          description: The value of the configured field.
+          examples:
+          - key-12345
+      additionalProperties: false
+      type: object
+      required:
+      - key
+      - value
+      title: Field
+      description: A field used in a payment service
+    MerchantProfileScheme_2:
+      properties:
+        merchant_acquirer_bin:
+          type: string
+          maxLength: 11
+          title: Merchant Acquirer Bin
+          description: Acquirer BIN to use when calling 3DS through this scheme.
+          examples:
+          - '516327'
+        merchant_acquirer_id:
+          type: string
+          maxLength: 35
+          title: Merchant Acquirer Id
+          description: Merchant ID to use when calling 3DS through this scheme.
+          examples:
+          - '123456789012345'
+        merchant_name:
+          type: string
+          maxLength: 40
+          title: Merchant Name
+          description: ''
+          examples:
+          - Acme Inc.
+        merchant_country_code:
+          type: string
+          title: Merchant Country Code
+          description: The merchant's ISO 3166-1 numeric country code.
+          examples:
+          - '840'
+        merchant_category_code:
+          type: string
+          maxLength: 4
+          minLength: 4
+          title: Merchant Category Code
+          description: Merchant category code to use when calling 3DS through this scheme.
+          examples:
+          - '1234'
+        merchant_url:
+          type: string
+          title: Merchant Url
+          description: URL to send when calling 3DS through this scheme.
+          examples:
+          - https://example.com
+      additionalProperties: false
+      type: object
+      required:
+      - merchant_acquirer_bin
+      - merchant_acquirer_id
+      - merchant_name
+      - merchant_country_code
+      - merchant_category_code
+      - merchant_url
+      title: MerchantProfileScheme
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ErrorDetail_2:
+      properties:
+        location:
+          $ref: '#/components/schemas/ErrorLocation'
+          description: The part of the request where the property can be found that caused the error.
+          examples:
+          - body
+        pointer:
+          anyOf:
+          - type: string
+            format: json-pointer
+          - type: string
+          title: Pointer
+          description: A JSON pointer for the particular property that caused the error.
+          examples:
+          - /currency
+        message:
+          type: string
+          title: Message
+          description: A human-readdable explanation of the error.
+          examples:
+          - 'Unknown ISO 4217 currency code: USX'
+        type:
+          type: string
+          title: Type
+          description: The type of error that was raised for this property.
+          examples:
+          - value_error
+      additionalProperties: false
+      type: object
+      required:
+      - location
+      - pointer
+      - message
+      - type
+      title: ErrorDetail
+    VerifyCredentials:
+      properties:
+        payment_service_definition_id:
+          type: string
+          title: Payment Service Definition Id
+          description: The ID of the payment service definition to verify the fields against
+          examples:
+          - stripe-card
+        payment_service_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Payment Service Id
+          description: The optional ID of the configured payment service. New fields will be merged with any existing fields already stored before they are verified.
+          examples:
+          - fffd152a-9532-4087-9a4f-de58754210f0
+        fields:
+          items:
+            $ref: '#/components/schemas/Field'
+          type: array
+          title: Fields
+          description: The fields and their values, or a set of updated fields to merge with existing values.
+      additionalProperties: false
+      type: object
+      required:
+      - payment_service_definition_id
+      - fields
+      title: VerifyCredentials
+    Error405:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `method_not_allowed`
+          default: method_not_allowed
+          examples:
+          - method_not_allowed
+        status:
+          type: integer
+          title: Status
+          description: Always `405`.
+          default: 405
+          examples:
+          - 405
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Method Not Allowed
+          examples:
+          - Method Not Allowed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error405
+    VoidableField:
+      properties:
+        key:
+          type: string
+          maxLength: 50
+          minLength: 1
+          title: Key
+        value:
+          anyOf:
+          - type: string
+            maxLength: 10000
+            minLength: 1
+          - type: string
+            const: ''
+          title: Value
+      additionalProperties: false
+      type: object
+      required:
+      - key
+      - value
+      title: VoidableField
+    PaymentServiceStatus:
       type: string
       enum:
-      - accel
-      - amex
-      - bancontact
-      - carte-bancaire
-      - cirrus
-      - culiance
-      - dankort
-      - diners-club
-      - discover
-      - eftpos-australia
-      - elo
-      - hipercard
-      - jcb
-      - maestro
-      - mastercard
-      - mir
-      - nyce
-      - other
-      - pulse
-      - qcard
-      - rupay
-      - star
-      - uatp
-      - unionpay
-      - visa
-      title: CardScheme
+      - pending
+      - created
+      - failed
+      title: PaymentServiceStatus
+    Error429:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `too_many_requests`
+          default: too_many_requests
+          examples:
+          - too_many_requests
+        status:
+          type: integer
+          title: Status
+          description: Always `429`.
+          default: 429
+          examples:
+          - 429
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error429
+    Error500:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `server_error`
+          default: server_error
+          examples:
+          - server_error
+        status:
+          type: integer
+          title: Status
+          description: Always `500`.
+          default: 500
+          examples:
+          - 500
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error500
+    Error504:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `gateway_timeout`
+          default: gateway_timeout
+          examples:
+          - gateway_timeout
+        status:
+          type: integer
+          title: Status
+          default: 504
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error504
+    Error400:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `bad_request`
+          default: bad_request
+          examples:
+          - bad_request
+        status:
+          type: integer
+          title: Status
+          description: Always `400`.
+          default: 400
+          examples:
+          - 400
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error400
+    CreateSession:
+      properties:
+        type:
+          type: string
+          const: payment-service-session
+          title: Type
+          description: Always `payment-service-session`.
+          default: payment-service-session
+          examples:
+          - payment-service-session
+        status:
+          $ref: '#/components/schemas/CreateSessionStatus'
+          description: The status of the response.
+          examples:
+          - succeeded
+        code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Code
+          description: A generic error code that may be returned when the session could not be generated.
+          examples:
+          - UNKNOWN_ERROR
+        status_code:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Status Code
+          description: The HTTP status code received from the payment service.
+          examples:
+          - 201
+        response_body:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Response Body
+          description: The JSON response body received from the payment service.
+          examples:
+          - sessionId: '12345'
+      additionalProperties: false
+      type: object
+      required:
+      - status
+      title: CreateSession
+      description: The session data received from the payment service.
+    CreateSessionStatus:
+      type: string
+      enum:
+      - succeeded
+      - failed
+      title: CreateSessionStatus
+    Error502:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `bad_gateway`
+          default: bad_gateway
+          examples:
+          - bad_gateway
+        status:
+          type: integer
+          title: Status
+          description: Always `502`.
+          default: 502
+          examples:
+          - 502
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error502
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     PaymentServiceUpdate_2:
       properties:
         display_name:
@@ -2475,115 +2558,68 @@ components:
       type: object
       title: PaymentServiceUpdate
       description: Request body for updating a Payment Service
-    Error401:
+    MerchantProfileSchemeSummary_2:
       properties:
-        type:
+        merchant_acquirer_bin:
           type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
+          maxLength: 11
+          title: Merchant Acquirer Bin
+          description: Acquirer BIN to use when calling 3DS through this scheme.
           examples:
-          - error
-        code:
+          - '516327'
+        merchant_acquirer_id:
           type: string
-          title: Code
-          description: Always `unauthorized`
-          default: unauthorized
+          maxLength: 35
+          title: Merchant Acquirer Id
+          description: Merchant ID to use when calling 3DS through this scheme.
           examples:
-          - unauthorized
-        status:
-          type: integer
-          title: Status
-          description: Always `401`.
-          default: 401
-          examples:
-          - 401
-        message:
+          - '123456789012345'
+        merchant_name:
           type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: No valid API authentication found
+          maxLength: 40
+          title: Merchant Name
+          description: ''
           examples:
-          - No valid API authentication found
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error401
-    Error504:
-      properties:
-        type:
+          - Acme Inc.
+        merchant_country_code:
           type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
+          title: Merchant Country Code
+          description: The merchant's ISO 3166-1 numeric country code.
           examples:
-          - error
-        code:
+          - '840'
+        merchant_category_code:
           type: string
-          title: Code
-          description: Always `gateway_timeout`
-          default: gateway_timeout
+          maxLength: 4
+          minLength: 4
+          title: Merchant Category Code
+          description: Merchant category code to use when calling 3DS through this scheme.
           examples:
-          - gateway_timeout
-        status:
-          type: integer
-          title: Status
-          default: 504
-        message:
+          - '1234'
+        merchant_url:
           type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Request could not be processed
+          title: Merchant Url
+          description: URL to send when calling 3DS through this scheme.
           examples:
-          - Request could not be processed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error504
-    VerifyCredentials:
-      properties:
-        payment_service_definition_id:
+          - https://example.com
+        created_at:
           type: string
-          title: Payment Service Definition Id
-          description: The ID of the payment service definition to verify the fields against
+          format: date-time
+          title: Created At
+          description: The date and time when this profile was first created in our system.
           examples:
-          - stripe-card
-        payment_service_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Payment Service Id
-          description: The optional ID of the configured payment service. New fields will be merged with any existing fields already stored before they are verified.
-          examples:
-          - fffd152a-9532-4087-9a4f-de58754210f0
-        fields:
-          items:
-            $ref: '#/components/schemas/Field'
-          type: array
-          title: Fields
-          description: The fields and their values, or a set of updated fields to merge with existing values.
+          - '2013-07-16T19:23:00.000+00:00'
       additionalProperties: false
       type: object
       required:
-      - payment_service_definition_id
-      - fields
-      title: VerifyCredentials
-    Error502:
+      - merchant_acquirer_bin
+      - merchant_acquirer_id
+      - merchant_name
+      - merchant_country_code
+      - merchant_category_code
+      - merchant_url
+      - created_at
+      title: MerchantProfileSchemeSummary
+    Error403:
       properties:
         type:
           type: string
@@ -2596,134 +2632,17 @@ components:
         code:
           type: string
           title: Code
-          description: Always `bad_gateway`
-          default: bad_gateway
+          description: Always `forbidden`
+          default: forbidden
           examples:
-          - bad_gateway
+          - forbidden
         status:
           type: integer
           title: Status
-          description: Always `502`.
-          default: 502
+          description: Always `403`.
+          default: 403
           examples:
-          - 502
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Request could not be processed
-          examples:
-          - Request could not be processed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error502
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    Error500:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `server_error`
-          default: server_error
-          examples:
-          - server_error
-        status:
-          type: integer
-          title: Status
-          description: Always `500`.
-          default: 500
-          examples:
-          - 500
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Request could not be processed
-          examples:
-          - Request could not be processed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error500
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    Error425:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `too_early`
-          default: too_early
-          examples:
-          - too_early
-        status:
-          type: integer
-          title: Status
-          description: Always `425`.
-          default: 425
-          examples:
-          - 425
+          - 403
         message:
           type: string
           title: Message
@@ -2740,7 +2659,127 @@ components:
           default: []
       additionalProperties: false
       type: object
-      title: Error425
+      title: Error403
+    CardScheme:
+      type: string
+      enum:
+      - accel
+      - amex
+      - bancontact
+      - carte-bancaire
+      - cirrus
+      - culiance
+      - dankort
+      - diners-club
+      - discover
+      - eftpos-australia
+      - elo
+      - hipercard
+      - jcb
+      - maestro
+      - mastercard
+      - mir
+      - nyce
+      - other
+      - pulse
+      - qcard
+      - rupay
+      - star
+      - uatp
+      - unionpay
+      - visa
+      title: CardScheme
+    Error409:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `duplicate_record`
+          default: duplicate_record
+          examples:
+          - duplicate_record
+        status:
+          type: integer
+          title: Status
+          description: Always `409`.
+          default: 409
+          examples:
+          - 409
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+        resource_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Resource Id
+          description: The ID of the conflicting resource.
+          examples:
+          - cdc70639-cb9c-4222-a73f-b8ce39f7821b
+      additionalProperties: false
+      type: object
+      title: Error409
+    PaymentServices_2:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/PaymentService_2'
+          type: array
+          title: Items
+          description: A list of items returned for this request.
+        limit:
+          type: integer
+          maximum: 100.0
+          minimum: 1.0
+          title: Limit
+          description: The number of items for this page.
+          default: 20
+          examples:
+          - 20
+        next_cursor:
+          anyOf:
+          - type: string
+            maxLength: 1000
+            minLength: 1
+          - type: 'null'
+          title: Next Cursor
+          description: The cursor pointing at the next page of items.
+          examples:
+          - ZXhhbXBsZTE
+        previous_cursor:
+          anyOf:
+          - type: string
+            maxLength: 1000
+            minLength: 1
+          - type: 'null'
+          title: Previous Cursor
+          description: The cursor pointing at the previous page of items.
+          examples:
+          - Xkjss7asS
+      additionalProperties: false
+      type: object
+      required:
+      - items
+      title: PaymentServices
     PaymentServiceCreate:
       properties:
         display_name:
@@ -2883,178 +2922,139 @@ components:
       - accepted_countries
       title: PaymentServiceCreate
       description: Request body for activating a payment service
-    Error400:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `bad_request`
-          default: bad_request
-          examples:
-          - bad_request
-        status:
-          type: integer
-          title: Status
-          description: Always `400`.
-          default: 400
-          examples:
-          - 400
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error400
-    PaymentServices_2:
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/PaymentService_2'
-          type: array
-          title: Items
-          description: A list of items returned for this request.
-        limit:
-          type: integer
-          maximum: 100.0
-          minimum: 1.0
-          title: Limit
-          description: The number of items for this page.
-          default: 20
-          examples:
-          - 20
-        next_cursor:
-          anyOf:
-          - type: string
-            maxLength: 1000
-            minLength: 1
-          - type: 'null'
-          title: Next Cursor
-          description: The cursor pointing at the next page of items.
-          examples:
-          - ZXhhbXBsZTE
-        previous_cursor:
-          anyOf:
-          - type: string
-            maxLength: 1000
-            minLength: 1
-          - type: 'null'
-          title: Previous Cursor
-          description: The cursor pointing at the previous page of items.
-          examples:
-          - Xkjss7asS
-      additionalProperties: false
-      type: object
-      required:
-      - items
-      title: PaymentServices
-    Error403:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `forbidden`
-          default: forbidden
-          examples:
-          - forbidden
-        status:
-          type: integer
-          title: Status
-          description: Always `403`.
-          default: 403
-          examples:
-          - 403
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error403
-    PaymentServiceStatus:
+    Method:
       type: string
       enum:
-      - pending
-      - created
-      - failed
-      title: PaymentServiceStatus
-    Error429:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `too_many_requests`
-          default: too_many_requests
-          examples:
-          - too_many_requests
-        status:
-          type: integer
-          title: Status
-          description: Always `429`.
-          default: 429
-          examples:
-          - 429
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error429
+      - abitab
+      - affirm
+      - afterpay
+      - alipay
+      - alipayhk
+      - applepay
+      - arcuspaynetwork
+      - bacs
+      - bancontact
+      - bank
+      - bcp
+      - becs
+      - bitpay
+      - blik
+      - ach
+      - boleto
+      - boost
+      - breb
+      - capitec
+      - card
+      - cashapp
+      - cashappafterpay
+      - chaseorbital
+      - clearpay
+      - click-to-pay
+      - custom_push
+      - custom_redirect
+      - custom_tokenize
+      - dana
+      - dcb
+      - dlocal
+      - duitnow
+      - ebanx
+      - eckoh
+      - efecty
+      - eps
+      - everydaypay
+      - gcash
+      - gem
+      - gemds
+      - gift-card
+      - giropay
+      - givingblock
+      - gocardless
+      - googlepay
+      - googlepay_pan_only
+      - gopay
+      - grabpay
+      - ideal
+      - interac
+      - kakaopay
+      - kcp
+      - khipu
+      - klarna
+      - konbini
+      - latitude
+      - latitudeds
+      - laybuy
+      - linepay
+      - linkaja
+      - maybankqrpay
+      - mercadopago
+      - multibanco
+      - multipago
+      - nequi
+      - netbanking
+      - network-token
+      - nupay
+      - oney_10x
+      - oney_12x
+      - oney_3x
+      - oney_4x
+      - oney_6x
+      - onlinebankingcz
+      - onelink
+      - ovo
+      - oxxo
+      - p24
+      - pagoefectivo
+      - paybybank
+      - payid
+      - paymaya
+      - paysquad
+      - paypal
+      - paypaldirectorder
+      - paypalpaylater
+      - paypay
+      - payto
+      - payvalida
+      - paze
+      - picpay
+      - pix
+      - plaid
+      - pse
+      - rabbitlinepay
+      - razorpay
+      - rapipago
+      - redpagos
+      - scalapay
+      - sepa
+      - servipag
+      - seveneleven
+      - sezzle
+      - shopeepay
+      - singteldash
+      - smartpay
+      - sofort
+      - spei
+      - stitch
+      - swish
+      - stripe
+      - stripedd
+      - stripetoken
+      - tapi
+      - tapifintechs
+      - thaiqr
+      - touchngo
+      - truemoney
+      - trustly
+      - trustlyeurope
+      - upi
+      - venmo
+      - vipps
+      - waave
+      - webpay
+      - wechat
+      - wero
+      - yape
+      - zippay
+      title: Method
   securitySchemes:
     bearerAuth:
       type: http

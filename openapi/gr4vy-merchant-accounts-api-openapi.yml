@@ -264,338 +264,47 @@ paths:
           description: The subdomain for your Gr4vy instance.
 components:
   schemas:
-    Error400BadRequest:
-      title: Bad Request
+    MerchantAccounts:
+      title: Merchant Accounts
       type: object
-      description: Bad Request (HTTP 400).
-      x-tags:
-      - Errors
-      properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: A short code that describes the reason for the error.
-          example: bad_request
-          enum:
-          - bad_request
-          - incorrect_json
-          - invalid_credentials
-        status:
-          type: integer
-          description: '`400`.'
-          example: 400
-          enum:
-          - 400
-        message:
-          type: string
-          description: A human-readable reason for the error.
-          example: Missing '****' field
-        details:
-          type: array
-          description: A list of detail objects that further clarify the reason for the error.
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-    ErrorDetail:
-      title: Error details
-      description: Additional detail about the part of a request body that caused an issue.
-      type: object
-      x-tags:
-      - Errors
-      properties:
-        location:
-          type: string
-          example: body
-          description: The location where the error caused an issue.
-          enum:
-          - query
-          - body
-          - path
-          - header
-        type:
-          type: string
-          example: value_error.missing
-          description: A unique identifier for the type of error that occurred.
-        pointer:
-          type: string
-          example: /payment_method/number
-          description: 'The exact item for which the validation did not succeed. This is a JSON
-
-            pointer for request bodies, while for query, path, and header parameters
-
-            it is the name of the parameter.'
-        message:
-          type: string
-          example: field required
-          description: A human readable message for this error detail.
-    MerchantAccountCreate:
-      title: Merchant Account (Create)
-      type: object
-      description: A request to create a merchant account.
       x-tags:
       - Merchant Accounts
       properties:
-        id:
-          type: string
-          description: The unique ID for the merchant account.
-          example: plantly-uk
-          minLength: 1
-          maxLength: 22
-        display_name:
-          type: string
-          description: The human-readable name of the merchant account.
-          example: Plantly UK
-          minLength: 1
-          maxLength: 255
-        outbound_webhook_url:
-          type:
-          - string
-          - 'null'
-          description: The optional URL where webhooks will be received.
-          example: https://www.example.com/webhook
-        outbound_webhook_username:
-          type:
-          - string
-          - 'null'
-          description: 'The optional username to use when `outbound_webhook_url` is configured and
-
-            requires basic authentication.'
-          example: gr4vy
-        outbound_webhook_password:
-          type:
-          - string
-          - 'null'
-          description: 'The optional password to use when `outbound_webhook_url` is configured and
-
-            requires basic authentication.'
-          example: super-secret-password
-        visa_network_tokens_requestor_id:
-          type:
-          - string
-          - 'null'
-          description: 'Requestor ID provided for Visa after onboarding to use Network Tokens.
-
-            The requestor ID must be unique across all schemes and merchant accounts.'
-          example: e50fa0da-903d-4d54-aacc-4cac57d48df2
-          maxLength: 300
-        visa_network_tokens_app_id:
-          type:
-          - string
-          - 'null'
-          description: 'Application ID provided for Visa after onboarding to use Network
-
-            Tokens. The application ID must be unique across all schemes and merchant
-
-            accounts.'
-          example: e50fa0da-903d-4d54-aacc-4cac57d48df2
-          maxLength: 300
-        amex_network_tokens_requestor_id:
-          type:
-          - string
-          - 'null'
-          description: 'Requestor ID provided for Amex after onboarding to use Network Tokens.
-
-            The requestor ID must be unique across all schemes and merchant accounts.'
-          example: e50fa0da-903d-4d54-aacc-4cac57d48df2
-          maxLength: 300
-        amex_network_tokens_app_id:
-          type:
-          - string
-          - 'null'
-          description: Application ID provided for Amex after onboarding to use Network Tokens. The application ID must be unique across all schemes and merchant accounts.
-          example: e50fa0da-903d-4d54-aacc-4cac57d48df2
-          maxLength: 300
-        mastercard_network_tokens_requestor_id:
-          type:
-          - string
-          - 'null'
-          description: 'Requestor ID provided for Mastercard after onboarding to use Network
-
-            Tokens. The requestor ID must be unique across all schemes and merchant
-
-            accounts.'
-          example: e50fa0da-903d-4d54-aacc-4cac57d48df2
-          maxLength: 300
-        mastercard_network_tokens_app_id:
-          type:
-          - string
-          - 'null'
-          description: 'Application ID provided for Mastercard after onboarding to use
-
-            Network Tokens. The application ID must be unique across all schemes and
-
-            merchant accounts.'
-          example: e50fa0da-903d-4d54-aacc-4cac57d48df2
-          maxLength: 300
-        loon_client_key:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          description: 'Client key provided by Pagos to authenticate to the Loon API.
-
-            Loon is the Account Updater service used by Gr4vy.
-
-
-            * If the field is not set or if it''s set to `null`, the Account Updater service doesn''t get configured.
-
-            * If the field is set to `null`, the other `loon_*` fields must be set to `null` as well.'
-        loon_secret_key:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          description: 'Secret key provided by Pagos to authenticate to the Loon API.
-
-            Loon is the Account Updater service used by Gr4vy.
-
-
-            * If the field is not set or if it''s set to `null`, the Account Updater service doesn''t get configured.
-
-            * If the field is set to `null`, the other `loon_*` fields must be set to `null` as well.'
-        loon_accepted_schemes:
-          type:
-          - array
-          - 'null'
+        items:
+          type: array
+          description: A list of merchant accounts.
           items:
-            type: string
-            example: visa
-            enum:
-            - accel
-            - amex
-            - bancontact
-            - carte-bancaire
-            - cirrus
-            - culiance
-            - dankort
-            - diners-club
-            - discover
-            - eftpos-australia
-            - elo
-            - hipercard
-            - jcb
-            - maestro
-            - mastercard
-            - mir
-            - nyce
-            - other
-            - pulse
-            - rupay
-            - star
-            - uatp
-            - unionpay
-            - visa
-            - null
-          description: 'Card schemes accepted when creating jobs using this set of Loon API keys.
+            $ref: '#/components/schemas/MerchantAccount'
+        limit:
+          type: integer
+          description: 'The limit applied to request. This represents the number of items that are at
 
-            Loon is the Account Updater service used by Gr4vy.
-
-
-            * If the field is not set or if it''s set to `null`, the Account Updater service doesn''t get configured.
-
-            * If the field is set to `null`, the other `loon_*` fields must be set to `null` as well.'
-        over_capture_amount:
-          type:
-          - number
-          - 'null'
-          example: 1000
+            maximum returned by this request.'
+          format: int32
           minimum: 1
-          maximum: 99999999
-          description: 'The maximum monetary amount allowed for over-capture, in the smallest
-
-            currency unit, for example `1299` cents to allow for an over-capture of `$12.99`.'
-        over_capture_percentage:
-          type:
-          - number
-          - 'null'
-          example: 20
-          minimum: 1
-          maximum: 99999999
-          description: 'The maximum percentage allowed for over-capture, for example `25` to allow for an
-
-            over-capture of 25% of the original transaction amount.'
-        account_updater_enabled:
-          type: boolean
-          example: true
-          default: false
-          description: 'Whether the Realtime Account Updater service is enabled for this merchant account.
-
-            The Account Updater service is used to update card details when cards are
-
-            lost, stolen or expired.
-
-
-            * If the field is not set or if it''s set to `false`, the Account Updater service
-
-            doesn''t get called if a payment fails with expired or invalid card details.
-
-            * If the field is set to `true`, the service is called. Please note that for this to work
-
-            the other `account_updater_*` fields must be set as well.'
-        account_updater_request_encryption_key:
+          maximum: 100
+          example: 1
+          default: 20
+        next_cursor:
           type:
           - string
           - 'null'
-          example: example-encryption-key
-          description: 'The public key used to encrypt the request to the Realtime Account Updater service.
+          description: 'The cursor that represents the next page of results. Use the `cursor` query
 
-            The Account Updater service is used to update card details when cards are
-
-            lost, stolen or expired.
-
-
-            * If the field is not set or if it''s set to `null`, the Account Updater service doesn''t get called.
-
-            * If the field is set, the other `account_updater_*` fields must be set as well.'
-        account_updater_request_encryption_key_id:
+            parameter to fetch this page of items.'
+          example: ZXhhbXBsZTE
+          minLength: 1
+          maxLength: 1000
+        previous_cursor:
           type:
           - string
           - 'null'
-          example: example-encryption-key-id
-          description: 'The public key ID used to encrypt the request to the Realtime Account Updater service.
+          description: 'The cursor that represents the next page of results. Use the `cursor` query
 
-            The Account Updater service is used to update card details when cards are
-
-            lost, stolen or expired.
-
-
-            * If the field is not set or if it''s set to `null`, the Account Updater service doesn''t get called.
-
-            * If the field is set, the other `account_updater_*` fields must be set as well.'
-        account_updater_response_decryption_key:
-          type:
-          - string
-          - 'null'
-          example: example-decryption-key
-          description: 'The private key used to decrypt the response from the Realtime Account Updater service.
-
-            The Account Updater service is used to update card details when cards are
-
-            lost, stolen or expired.
-
-
-            * If the field is not set or if it''s set to `null`, the Account Updater service doesn''t get called.
-
-            * If the field is set, the other `account_updater_*` fields must be set as well.'
-        account_updater_response_decryption_key_id:
-          type:
-          - string
-          - 'null'
-          example: example-decryption-key-id
-          description: 'The private key ID used to decrypt the response from the Realtime Account Updater service.
-
-            The Account Updater service is used to update card details when cards are
-
-            lost, stolen or expired.
-
-
-            * If the field is not set or if it''s set to `null`, the Account Updater service doesn''t get called.
-
-            * If the field is set, the other `account_updater_*` fields must be set as well.'
+            parameter to fetch this page of items.'
+          example: null
+          minLength: 1
+          maxLength: 1000
     MerchantAccountUpdate:
       title: Merchant Account (Update)
       type: object
@@ -860,47 +569,113 @@ components:
             * If the field is not set or if it''s set to `null`, the Account Updater service doesn''t get called.
 
             * If the field is set, the other `account_updater_*` fields must be set as well.'
-    MerchantAccounts:
-      title: Merchant Accounts
+    Error404NotFound:
+      title: Not Found Error
+      type: object
+      description: Not Found Error (HTTP 404).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: The reason code for the error.
+          example: not_found
+          enum:
+          - not_found
+          - pending_creation
+        status:
+          type: integer
+          description: '`404`.'
+          example: 404
+          enum:
+          - 404
+        message:
+          type: string
+          description: The human readable reason for the error.
+          example: The resource could not be found
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    ErrorDetail:
+      title: Error details
+      description: Additional detail about the part of a request body that caused an issue.
       type: object
       x-tags:
-      - Merchant Accounts
+      - Errors
       properties:
-        items:
-          type: array
-          description: A list of merchant accounts.
-          items:
-            $ref: '#/components/schemas/MerchantAccount'
-        limit:
+        location:
+          type: string
+          example: body
+          description: The location where the error caused an issue.
+          enum:
+          - query
+          - body
+          - path
+          - header
+        type:
+          type: string
+          example: value_error.missing
+          description: A unique identifier for the type of error that occurred.
+        pointer:
+          type: string
+          example: /payment_method/number
+          description: 'The exact item for which the validation did not succeed. This is a JSON
+
+            pointer for request bodies, while for query, path, and header parameters
+
+            it is the name of the parameter.'
+        message:
+          type: string
+          example: field required
+          description: A human readable message for this error detail.
+    Error409DuplicateRecord:
+      title: Duplicate Record Error
+      type: object
+      description: Duplicate Record Error (HTTP 409).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`duplicate_record`.'
+          example: duplicate_record
+          enum:
+          - duplicate_record
+        status:
           type: integer
-          description: 'The limit applied to request. This represents the number of items that are at
+          description: '`409`.'
+          example: 409
+          enum:
+          - 409
+        message:
+          type: string
+          description: Further details on the field that triggered the error.
+          example: A duplicate record exists with this external_identifier value
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
 
-            maximum returned by this request.'
-          format: int32
-          minimum: 1
-          maximum: 100
-          example: 1
-          default: 20
-        next_cursor:
-          type:
-          - string
-          - 'null'
-          description: 'The cursor that represents the next page of results. Use the `cursor` query
-
-            parameter to fetch this page of items.'
-          example: ZXhhbXBsZTE
-          minLength: 1
-          maxLength: 1000
-        previous_cursor:
-          type:
-          - string
-          - 'null'
-          description: 'The cursor that represents the next page of results. Use the `cursor` query
-
-            parameter to fetch this page of items.'
-          example: null
-          minLength: 1
-          maxLength: 1000
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
     Error401Unauthorized:
       title: Unauthorized Error
       type: object
@@ -1194,10 +969,10 @@ components:
           description: 'The maximum percentage allowed for over-capture, for example `25` to allow for an
 
             over-capture of 25% of the original transaction amount.'
-    Error409DuplicateRecord:
-      title: Duplicate Record Error
+    Error400BadRequest:
+      title: Bad Request
       type: object
-      description: Duplicate Record Error (HTTP 409).
+      description: Bad Request (HTTP 400).
       x-tags:
       - Errors
       properties:
@@ -1209,76 +984,334 @@ components:
           example: error
         code:
           type: string
-          description: '`duplicate_record`.'
-          example: duplicate_record
+          description: A short code that describes the reason for the error.
+          example: bad_request
           enum:
-          - duplicate_record
+          - bad_request
+          - incorrect_json
+          - invalid_credentials
         status:
           type: integer
-          description: '`409`.'
-          example: 409
+          description: '`400`.'
+          example: 400
           enum:
-          - 409
+          - 400
         message:
           type: string
-          description: Further details on the field that triggered the error.
-          example: A duplicate record exists with this external_identifier value
+          description: A human-readable reason for the error.
+          example: Missing '****' field
         details:
           type: array
-          description: 'A list of detail objects that further clarify the reason for the error.
-
-            Not every error supports more detail.'
-          example: []
+          description: A list of detail objects that further clarify the reason for the error.
           items:
             $ref: '#/components/schemas/ErrorDetail'
-    Error404NotFound:
-      title: Not Found Error
+    MerchantAccountCreate:
+      title: Merchant Account (Create)
       type: object
-      description: Not Found Error (HTTP 404).
+      description: A request to create a merchant account.
       x-tags:
-      - Errors
+      - Merchant Accounts
       properties:
-        type:
+        id:
           type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
+          description: The unique ID for the merchant account.
+          example: plantly-uk
+          minLength: 1
+          maxLength: 22
+        display_name:
           type: string
-          description: The reason code for the error.
-          example: not_found
-          enum:
-          - not_found
-          - pending_creation
-        status:
-          type: integer
-          description: '`404`.'
-          example: 404
-          enum:
-          - 404
-        message:
-          type: string
-          description: The human readable reason for the error.
-          example: The resource could not be found
-        details:
-          type: array
-          description: 'A list of detail objects that further clarify the reason for the error.
+          description: The human-readable name of the merchant account.
+          example: Plantly UK
+          minLength: 1
+          maxLength: 255
+        outbound_webhook_url:
+          type:
+          - string
+          - 'null'
+          description: The optional URL where webhooks will be received.
+          example: https://www.example.com/webhook
+        outbound_webhook_username:
+          type:
+          - string
+          - 'null'
+          description: 'The optional username to use when `outbound_webhook_url` is configured and
 
-            Not every error supports more detail.'
-          example: []
+            requires basic authentication.'
+          example: gr4vy
+        outbound_webhook_password:
+          type:
+          - string
+          - 'null'
+          description: 'The optional password to use when `outbound_webhook_url` is configured and
+
+            requires basic authentication.'
+          example: super-secret-password
+        visa_network_tokens_requestor_id:
+          type:
+          - string
+          - 'null'
+          description: 'Requestor ID provided for Visa after onboarding to use Network Tokens.
+
+            The requestor ID must be unique across all schemes and merchant accounts.'
+          example: e50fa0da-903d-4d54-aacc-4cac57d48df2
+          maxLength: 300
+        visa_network_tokens_app_id:
+          type:
+          - string
+          - 'null'
+          description: 'Application ID provided for Visa after onboarding to use Network
+
+            Tokens. The application ID must be unique across all schemes and merchant
+
+            accounts.'
+          example: e50fa0da-903d-4d54-aacc-4cac57d48df2
+          maxLength: 300
+        amex_network_tokens_requestor_id:
+          type:
+          - string
+          - 'null'
+          description: 'Requestor ID provided for Amex after onboarding to use Network Tokens.
+
+            The requestor ID must be unique across all schemes and merchant accounts.'
+          example: e50fa0da-903d-4d54-aacc-4cac57d48df2
+          maxLength: 300
+        amex_network_tokens_app_id:
+          type:
+          - string
+          - 'null'
+          description: Application ID provided for Amex after onboarding to use Network Tokens. The application ID must be unique across all schemes and merchant accounts.
+          example: e50fa0da-903d-4d54-aacc-4cac57d48df2
+          maxLength: 300
+        mastercard_network_tokens_requestor_id:
+          type:
+          - string
+          - 'null'
+          description: 'Requestor ID provided for Mastercard after onboarding to use Network
+
+            Tokens. The requestor ID must be unique across all schemes and merchant
+
+            accounts.'
+          example: e50fa0da-903d-4d54-aacc-4cac57d48df2
+          maxLength: 300
+        mastercard_network_tokens_app_id:
+          type:
+          - string
+          - 'null'
+          description: 'Application ID provided for Mastercard after onboarding to use
+
+            Network Tokens. The application ID must be unique across all schemes and
+
+            merchant accounts.'
+          example: e50fa0da-903d-4d54-aacc-4cac57d48df2
+          maxLength: 300
+        loon_client_key:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          description: 'Client key provided by Pagos to authenticate to the Loon API.
+
+            Loon is the Account Updater service used by Gr4vy.
+
+
+            * If the field is not set or if it''s set to `null`, the Account Updater service doesn''t get configured.
+
+            * If the field is set to `null`, the other `loon_*` fields must be set to `null` as well.'
+        loon_secret_key:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          description: 'Secret key provided by Pagos to authenticate to the Loon API.
+
+            Loon is the Account Updater service used by Gr4vy.
+
+
+            * If the field is not set or if it''s set to `null`, the Account Updater service doesn''t get configured.
+
+            * If the field is set to `null`, the other `loon_*` fields must be set to `null` as well.'
+        loon_accepted_schemes:
+          type:
+          - array
+          - 'null'
           items:
-            $ref: '#/components/schemas/ErrorDetail'
-    ErrorLocation:
-      type: string
-      enum:
-      - query
-      - body
-      - path
-      - header
-      - unknown
-      title: ErrorLocation
-    Error405:
+            type: string
+            example: visa
+            enum:
+            - accel
+            - amex
+            - bancontact
+            - carte-bancaire
+            - cirrus
+            - culiance
+            - dankort
+            - diners-club
+            - discover
+            - eftpos-australia
+            - elo
+            - hipercard
+            - jcb
+            - maestro
+            - mastercard
+            - mir
+            - nyce
+            - other
+            - pulse
+            - rupay
+            - star
+            - uatp
+            - unionpay
+            - visa
+            - null
+          description: 'Card schemes accepted when creating jobs using this set of Loon API keys.
+
+            Loon is the Account Updater service used by Gr4vy.
+
+
+            * If the field is not set or if it''s set to `null`, the Account Updater service doesn''t get configured.
+
+            * If the field is set to `null`, the other `loon_*` fields must be set to `null` as well.'
+        over_capture_amount:
+          type:
+          - number
+          - 'null'
+          example: 1000
+          minimum: 1
+          maximum: 99999999
+          description: 'The maximum monetary amount allowed for over-capture, in the smallest
+
+            currency unit, for example `1299` cents to allow for an over-capture of `$12.99`.'
+        over_capture_percentage:
+          type:
+          - number
+          - 'null'
+          example: 20
+          minimum: 1
+          maximum: 99999999
+          description: 'The maximum percentage allowed for over-capture, for example `25` to allow for an
+
+            over-capture of 25% of the original transaction amount.'
+        account_updater_enabled:
+          type: boolean
+          example: true
+          default: false
+          description: 'Whether the Realtime Account Updater service is enabled for this merchant account.
+
+            The Account Updater service is used to update card details when cards are
+
+            lost, stolen or expired.
+
+
+            * If the field is not set or if it''s set to `false`, the Account Updater service
+
+            doesn''t get called if a payment fails with expired or invalid card details.
+
+            * If the field is set to `true`, the service is called. Please note that for this to work
+
+            the other `account_updater_*` fields must be set as well.'
+        account_updater_request_encryption_key:
+          type:
+          - string
+          - 'null'
+          example: example-encryption-key
+          description: 'The public key used to encrypt the request to the Realtime Account Updater service.
+
+            The Account Updater service is used to update card details when cards are
+
+            lost, stolen or expired.
+
+
+            * If the field is not set or if it''s set to `null`, the Account Updater service doesn''t get called.
+
+            * If the field is set, the other `account_updater_*` fields must be set as well.'
+        account_updater_request_encryption_key_id:
+          type:
+          - string
+          - 'null'
+          example: example-encryption-key-id
+          description: 'The public key ID used to encrypt the request to the Realtime Account Updater service.
+
+            The Account Updater service is used to update card details when cards are
+
+            lost, stolen or expired.
+
+
+            * If the field is not set or if it''s set to `null`, the Account Updater service doesn''t get called.
+
+            * If the field is set, the other `account_updater_*` fields must be set as well.'
+        account_updater_response_decryption_key:
+          type:
+          - string
+          - 'null'
+          example: example-decryption-key
+          description: 'The private key used to decrypt the response from the Realtime Account Updater service.
+
+            The Account Updater service is used to update card details when cards are
+
+            lost, stolen or expired.
+
+
+            * If the field is not set or if it''s set to `null`, the Account Updater service doesn''t get called.
+
+            * If the field is set, the other `account_updater_*` fields must be set as well.'
+        account_updater_response_decryption_key_id:
+          type:
+          - string
+          - 'null'
+          example: example-decryption-key-id
+          description: 'The private key ID used to decrypt the response from the Realtime Account Updater service.
+
+            The Account Updater service is used to update card details when cards are
+
+            lost, stolen or expired.
+
+
+            * If the field is not set or if it''s set to `null`, the Account Updater service doesn''t get called.
+
+            * If the field is set, the other `account_updater_*` fields must be set as well.'
+    MerchantAccounts_2:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/MerchantAccount_2'
+          type: array
+          title: Items
+          description: A list of items returned for this request.
+        limit:
+          type: integer
+          maximum: 100.0
+          minimum: 1.0
+          title: Limit
+          description: The number of items for this page.
+          default: 20
+          examples:
+          - 20
+        next_cursor:
+          anyOf:
+          - type: string
+            maxLength: 1000
+            minLength: 1
+          - type: 'null'
+          title: Next Cursor
+          description: The cursor pointing at the next page of items.
+          examples:
+          - ZXhhbXBsZTE
+        previous_cursor:
+          anyOf:
+          - type: string
+            maxLength: 1000
+            minLength: 1
+          - type: 'null'
+          title: Previous Cursor
+          description: The cursor pointing at the previous page of items.
+          examples:
+          - Xkjss7asS
+      additionalProperties: false
+      type: object
+      required:
+      - items
+      title: MerchantAccounts
+    Error401:
       properties:
         type:
           type: string
@@ -1291,24 +1324,24 @@ components:
         code:
           type: string
           title: Code
-          description: Always `method_not_allowed`
-          default: method_not_allowed
+          description: Always `unauthorized`
+          default: unauthorized
           examples:
-          - method_not_allowed
+          - unauthorized
         status:
           type: integer
           title: Status
-          description: Always `405`.
-          default: 405
+          description: Always `401`.
+          default: 401
           examples:
-          - 405
+          - 401
         message:
           type: string
           title: Message
           description: A human readable message that provides more context to the error.
-          default: Method Not Allowed
+          default: No valid API authentication found
           examples:
-          - Method Not Allowed
+          - No valid API authentication found
         details:
           items:
             $ref: '#/components/schemas/ErrorDetail_2'
@@ -1318,43 +1351,7 @@ components:
           default: []
       additionalProperties: false
       type: object
-      title: Error405
-    ErrorDetail_2:
-      properties:
-        location:
-          $ref: '#/components/schemas/ErrorLocation'
-          description: The part of the request where the property can be found that caused the error.
-          examples:
-          - body
-        pointer:
-          anyOf:
-          - type: string
-            format: json-pointer
-          - type: string
-          title: Pointer
-          description: A JSON pointer for the particular property that caused the error.
-          examples:
-          - /currency
-        message:
-          type: string
-          title: Message
-          description: A human-readdable explanation of the error.
-          examples:
-          - 'Unknown ISO 4217 currency code: USX'
-        type:
-          type: string
-          title: Type
-          description: The type of error that was raised for this property.
-          examples:
-          - value_error
-      additionalProperties: false
-      type: object
-      required:
-      - location
-      - pointer
-      - message
-      - type
-      title: ErrorDetail
+      title: Error401
     Error404:
       properties:
         type:
@@ -1396,7 +1393,16 @@ components:
       additionalProperties: false
       type: object
       title: Error404
-    Error409:
+    ErrorLocation:
+      type: string
+      enum:
+      - query
+      - body
+      - path
+      - header
+      - unknown
+      title: ErrorLocation
+    Error425:
       properties:
         type:
           type: string
@@ -1409,17 +1415,17 @@ components:
         code:
           type: string
           title: Code
-          description: Always `duplicate_record`
-          default: duplicate_record
+          description: Always `too_early`
+          default: too_early
           examples:
-          - duplicate_record
+          - too_early
         status:
           type: integer
           title: Status
-          description: Always `409`.
-          default: 409
+          description: Always `425`.
+          default: 425
           examples:
-          - 409
+          - 425
         message:
           type: string
           title: Message
@@ -1434,17 +1440,9 @@ components:
           title: Details
           description: A list of details that further ellaborate on the error.
           default: []
-        resource_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Resource Id
-          description: The ID of the conflicting resource.
-          examples:
-          - cdc70639-cb9c-4222-a73f-b8ce39f7821b
       additionalProperties: false
       type: object
-      title: Error409
+      title: Error425
     MerchantAccountCreate_2:
       properties:
         account_updater_enabled:
@@ -1658,36 +1656,52 @@ components:
       - id
       - display_name
       title: MerchantAccountCreate
-    CardScheme:
-      type: string
-      enum:
-      - accel
-      - amex
-      - bancontact
-      - carte-bancaire
-      - cirrus
-      - culiance
-      - dankort
-      - diners-club
-      - discover
-      - eftpos-australia
-      - elo
-      - hipercard
-      - jcb
-      - maestro
-      - mastercard
-      - mir
-      - nyce
-      - other
-      - pulse
-      - qcard
-      - rupay
-      - star
-      - uatp
-      - unionpay
-      - visa
-      title: CardScheme
-    Error401:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ErrorDetail_2:
+      properties:
+        location:
+          $ref: '#/components/schemas/ErrorLocation'
+          description: The part of the request where the property can be found that caused the error.
+          examples:
+          - body
+        pointer:
+          anyOf:
+          - type: string
+            format: json-pointer
+          - type: string
+          title: Pointer
+          description: A JSON pointer for the particular property that caused the error.
+          examples:
+          - /currency
+        message:
+          type: string
+          title: Message
+          description: A human-readdable explanation of the error.
+          examples:
+          - 'Unknown ISO 4217 currency code: USX'
+        type:
+          type: string
+          title: Type
+          description: The type of error that was raised for this property.
+          examples:
+          - value_error
+      additionalProperties: false
+      type: object
+      required:
+      - location
+      - pointer
+      - message
+      - type
+      title: ErrorDetail
+    Error405:
       properties:
         type:
           type: string
@@ -1700,24 +1714,24 @@ components:
         code:
           type: string
           title: Code
-          description: Always `unauthorized`
-          default: unauthorized
+          description: Always `method_not_allowed`
+          default: method_not_allowed
           examples:
-          - unauthorized
+          - method_not_allowed
         status:
           type: integer
           title: Status
-          description: Always `401`.
-          default: 401
+          description: Always `405`.
+          default: 405
           examples:
-          - 401
+          - 405
         message:
           type: string
           title: Message
           description: A human readable message that provides more context to the error.
-          default: No valid API authentication found
+          default: Method Not Allowed
           examples:
-          - No valid API authentication found
+          - Method Not Allowed
         details:
           items:
             $ref: '#/components/schemas/ErrorDetail_2'
@@ -1727,7 +1741,292 @@ components:
           default: []
       additionalProperties: false
       type: object
-      title: Error401
+      title: Error405
+    Error429:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `too_many_requests`
+          default: too_many_requests
+          examples:
+          - too_many_requests
+        status:
+          type: integer
+          title: Status
+          description: Always `429`.
+          default: 429
+          examples:
+          - 429
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error429
+    Error500:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `server_error`
+          default: server_error
+          examples:
+          - server_error
+        status:
+          type: integer
+          title: Status
+          description: Always `500`.
+          default: 500
+          examples:
+          - 500
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error500
+    MerchantAccountUpdate_2:
+      properties:
+        account_updater_enabled:
+          type: boolean
+          title: Account Updater Enabled
+          description: Whether the Real-Time Account Updater service is enabled for this merchant account. The Account Updater service is used to update card details when cards are lost, stolen or expired. If the field is not set or if it's set to `false`, the Account Updater service doesn't get called if a payment fails with expired or invalid card details. If the field is set to `true`, the service is called. Please note that for this to work the other `account_updater_* fields` must be set as well.
+          default: false
+          examples:
+          - true
+        account_updater_request_encryption_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Account Updater Request Encryption Key
+          description: The public key used to encrypt the request to the Real-Time Account Updater service. The Account Updater service is used to update card details when cards are lost, stolen or expired. If the field is not set or if it's set to `null`, the Account Updater service doesn't get called. If the field is set, the other `account_updater_*` fields must be set as well.
+          deprecated: true
+          examples:
+          - key-1234
+        account_updater_request_encryption_key_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Account Updater Request Encryption Key Id
+          description: The ID of the key used to encrypt the request to the Real-Time Account Updater service. The Account Updater service is used to update card details when cards are lost, stolen or expired. If the field is not set or if it's set to `null`, the Account Updater service doesn't get called. If the field is set, the other `account_updater_*` fields must be set as well.
+          deprecated: true
+          examples:
+          - key-id-1234
+        account_updater_response_decryption_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Account Updater Response Decryption Key
+          description: The key used to decrypt the response from the Real-Time Account Updater service. The Account Updater service is used to update card details when cards are lost, stolen or expired. If the field is not set or if it's set to `null`, the Account Updater service doesn't get called. If the field is set, the other `account_updater_*` fields must be set as well.
+          deprecated: true
+          examples:
+          - key-1234
+        account_updater_response_decryption_key_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Account Updater Response Decryption Key Id
+          description: The ID of the key used to decrypt the request from the Real-Time Account Updater service. The Account Updater service is used to update card details when cards are lost, stolen or expired. If the field is not set or if it's set to `null`, the Account Updater service doesn't get called. If the field is set, the other `account_updater_*` fields must be set as well.
+          deprecated: true
+          examples:
+          - key-id-1234
+        over_capture_amount:
+          anyOf:
+          - type: integer
+            maximum: 99999999.0
+            minimum: 0.0
+          - type: 'null'
+          title: Over Capture Amount
+          description: The maximum monetary amount allowed for over-capture, in the smallest currency unit, for example `1299` cents to allow for an over-capture of `$12.99`.
+          examples:
+          - 1299
+        over_capture_percentage:
+          anyOf:
+          - type: integer
+            maximum: 99999999.0
+            minimum: 0.0
+          - type: 'null'
+          title: Over Capture Percentage
+          description: The maximum percentage allowed for over-capture, for example `25` to allow for an over-capture of `25%` of the original transaction amount.
+          examples:
+          - 25
+        loon_client_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Loon Client Key
+          description: Client key provided by Pagos to authenticate to the Loon API. Loon is the Account Updater service we use and if the field is not set or if it's set to null, the Account Updater service doesn't get configured. If the field is set to `null`, the other `loon_*` fields must be set to null as well.
+          deprecated: true
+          examples:
+          - client-key-1234
+        loon_secret_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Loon Secret Key
+          description: Secret key provided by Pagos to authenticate to the Loon API. Loon is the Account Updater service we use and if the field is not set or if it's set to null, the Account Updater service doesn't get configured. If the field is set to `null`, the other `loon_*` fields must be set to null as well.
+          deprecated: true
+          examples:
+          - key-12345
+        loon_accepted_schemes:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/CardScheme'
+            type: array
+            uniqueItems: true
+          - type: 'null'
+          title: Loon Accepted Schemes
+          description: Card schemes accepted when creating jobs using this set of Loon API keys. Loon is the Account Updater service we use and if the field is not set or if it's set to null, the Account Updater service doesn't get configured. If the field is set to `null`, the other `loon_*` fields must be set to null as well.
+          examples:
+          - - visa
+        loon_merchant_account_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Loon Merchant Account Id
+          description: Merchant account ID provided by Pagos to identify this merchant account on the Loon API. Loon is the Account Updater service we use and if the field is not set or if it's set to null, the Account Updater service doesn't get configured. If the field is set to `null`, the other `loon_*` fields must be set to null as well.
+          examples:
+          - loon-merchant-account-1234
+        visa_network_tokens_requestor_id:
+          anyOf:
+          - type: string
+            maxLength: 300
+            minLength: 0
+          - type: 'null'
+          title: Visa Network Tokens Requestor Id
+          description: Requestor ID provided for Visa after onboarding to use Network Tokens.
+          examples:
+          - id-12345
+        visa_network_tokens_app_id:
+          anyOf:
+          - type: string
+            maxLength: 300
+            minLength: 0
+          - type: 'null'
+          title: Visa Network Tokens App Id
+          description: Application ID provided for Visa after onboarding to use Network Tokens.
+          examples:
+          - id-12345
+        amex_network_tokens_requestor_id:
+          anyOf:
+          - type: string
+            maxLength: 300
+            minLength: 0
+          - type: 'null'
+          title: Amex Network Tokens Requestor Id
+          description: Requestor ID provided for American Express after onboarding to use Network Tokens.
+          examples:
+          - id-12345
+        amex_network_tokens_app_id:
+          anyOf:
+          - type: string
+            maxLength: 300
+            minLength: 0
+          - type: 'null'
+          title: Amex Network Tokens App Id
+          description: Application ID provided for American Express after onboarding to use Network Tokens.
+          examples:
+          - id-12345
+        mastercard_network_tokens_requestor_id:
+          anyOf:
+          - type: string
+            maxLength: 300
+            minLength: 0
+          - type: 'null'
+          title: Mastercard Network Tokens Requestor Id
+          description: Requestor ID provided for Mastercard after onboarding to use Network Tokens.
+          examples:
+          - id-12345
+        mastercard_network_tokens_app_id:
+          anyOf:
+          - type: string
+            maxLength: 300
+            minLength: 0
+          - type: 'null'
+          title: Mastercard Network Tokens App Id
+          description: Application ID provided for Mastercard after onboarding to use Network Tokens.
+          examples:
+          - id-12345
+        discover_network_tokens_requestor_id:
+          anyOf:
+          - type: string
+            maxLength: 300
+            minLength: 0
+          - type: 'null'
+          title: Discover Network Tokens Requestor Id
+          description: Requestor ID provided for Discover after onboarding to use Network Tokens.
+          examples:
+          - id-12345
+        discover_network_tokens_app_id:
+          anyOf:
+          - type: string
+            maxLength: 300
+            minLength: 0
+          - type: 'null'
+          title: Discover Network Tokens App Id
+          description: Application ID provided for Discover after onboarding to use Network Tokens.
+          examples:
+          - id-12345
+        async_network_tokens_enabled:
+          type: boolean
+          title: Async Network Tokens Enabled
+          description: When enabled network tokens will be generated asynchronously and only used on subsequent transactions to speed up transaction processing.
+          default: false
+          examples:
+          - true
+          - false
+        display_name:
+          anyOf:
+          - type: string
+            maxLength: 255
+            minLength: 1
+          - type: 'null'
+          title: Display Name
+          description: The display name for the merchant account.
+          examples:
+          - Example
+      additionalProperties: false
+      type: object
+      title: MerchantAccountUpdate
     Error504:
       properties:
         type:
@@ -1766,6 +2065,73 @@ components:
       additionalProperties: false
       type: object
       title: Error504
+    Error400:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `bad_request`
+          default: bad_request
+          examples:
+          - bad_request
+        status:
+          type: integer
+          title: Status
+          description: Always `400`.
+          default: 400
+          examples:
+          - 400
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error400
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     Error502:
       properties:
         type:
@@ -1807,57 +2173,125 @@ components:
       additionalProperties: false
       type: object
       title: Error502
-    HTTPValidationError:
+    Error409:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    MerchantAccounts_2:
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/MerchantAccount_2'
-          type: array
-          title: Items
-          description: A list of items returned for this request.
-        limit:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `duplicate_record`
+          default: duplicate_record
+          examples:
+          - duplicate_record
+        status:
           type: integer
-          maximum: 100.0
-          minimum: 1.0
-          title: Limit
-          description: The number of items for this page.
-          default: 20
+          title: Status
+          description: Always `409`.
+          default: 409
           examples:
-          - 20
-        next_cursor:
+          - 409
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+        resource_id:
           anyOf:
           - type: string
-            maxLength: 1000
-            minLength: 1
           - type: 'null'
-          title: Next Cursor
-          description: The cursor pointing at the next page of items.
+          title: Resource Id
+          description: The ID of the conflicting resource.
           examples:
-          - ZXhhbXBsZTE
-        previous_cursor:
-          anyOf:
-          - type: string
-            maxLength: 1000
-            minLength: 1
-          - type: 'null'
-          title: Previous Cursor
-          description: The cursor pointing at the previous page of items.
-          examples:
-          - Xkjss7asS
+          - cdc70639-cb9c-4222-a73f-b8ce39f7821b
       additionalProperties: false
       type: object
-      required:
-      - items
-      title: MerchantAccounts
+      title: Error409
+    Error403:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `forbidden`
+          default: forbidden
+          examples:
+          - forbidden
+        status:
+          type: integer
+          title: Status
+          description: Always `403`.
+          default: 403
+          examples:
+          - 403
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error403
+    CardScheme:
+      type: string
+      enum:
+      - accel
+      - amex
+      - bancontact
+      - carte-bancaire
+      - cirrus
+      - culiance
+      - dankort
+      - diners-club
+      - discover
+      - eftpos-australia
+      - elo
+      - hipercard
+      - jcb
+      - maestro
+      - mastercard
+      - mir
+      - nyce
+      - other
+      - pulse
+      - qcard
+      - rupay
+      - star
+      - uatp
+      - unionpay
+      - visa
+      title: CardScheme
     MerchantAccount_2:
       properties:
         type:
@@ -2073,440 +2507,6 @@ components:
       - created_at
       - updated_at
       title: MerchantAccount
-    Error500:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `server_error`
-          default: server_error
-          examples:
-          - server_error
-        status:
-          type: integer
-          title: Status
-          description: Always `500`.
-          default: 500
-          examples:
-          - 500
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Request could not be processed
-          examples:
-          - Request could not be processed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error500
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    Error425:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `too_early`
-          default: too_early
-          examples:
-          - too_early
-        status:
-          type: integer
-          title: Status
-          description: Always `425`.
-          default: 425
-          examples:
-          - 425
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error425
-    Error400:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `bad_request`
-          default: bad_request
-          examples:
-          - bad_request
-        status:
-          type: integer
-          title: Status
-          description: Always `400`.
-          default: 400
-          examples:
-          - 400
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error400
-    Error403:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `forbidden`
-          default: forbidden
-          examples:
-          - forbidden
-        status:
-          type: integer
-          title: Status
-          description: Always `403`.
-          default: 403
-          examples:
-          - 403
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error403
-    MerchantAccountUpdate_2:
-      properties:
-        account_updater_enabled:
-          type: boolean
-          title: Account Updater Enabled
-          description: Whether the Real-Time Account Updater service is enabled for this merchant account. The Account Updater service is used to update card details when cards are lost, stolen or expired. If the field is not set or if it's set to `false`, the Account Updater service doesn't get called if a payment fails with expired or invalid card details. If the field is set to `true`, the service is called. Please note that for this to work the other `account_updater_* fields` must be set as well.
-          default: false
-          examples:
-          - true
-        account_updater_request_encryption_key:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Account Updater Request Encryption Key
-          description: The public key used to encrypt the request to the Real-Time Account Updater service. The Account Updater service is used to update card details when cards are lost, stolen or expired. If the field is not set or if it's set to `null`, the Account Updater service doesn't get called. If the field is set, the other `account_updater_*` fields must be set as well.
-          deprecated: true
-          examples:
-          - key-1234
-        account_updater_request_encryption_key_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Account Updater Request Encryption Key Id
-          description: The ID of the key used to encrypt the request to the Real-Time Account Updater service. The Account Updater service is used to update card details when cards are lost, stolen or expired. If the field is not set or if it's set to `null`, the Account Updater service doesn't get called. If the field is set, the other `account_updater_*` fields must be set as well.
-          deprecated: true
-          examples:
-          - key-id-1234
-        account_updater_response_decryption_key:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Account Updater Response Decryption Key
-          description: The key used to decrypt the response from the Real-Time Account Updater service. The Account Updater service is used to update card details when cards are lost, stolen or expired. If the field is not set or if it's set to `null`, the Account Updater service doesn't get called. If the field is set, the other `account_updater_*` fields must be set as well.
-          deprecated: true
-          examples:
-          - key-1234
-        account_updater_response_decryption_key_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Account Updater Response Decryption Key Id
-          description: The ID of the key used to decrypt the request from the Real-Time Account Updater service. The Account Updater service is used to update card details when cards are lost, stolen or expired. If the field is not set or if it's set to `null`, the Account Updater service doesn't get called. If the field is set, the other `account_updater_*` fields must be set as well.
-          deprecated: true
-          examples:
-          - key-id-1234
-        over_capture_amount:
-          anyOf:
-          - type: integer
-            maximum: 99999999.0
-            minimum: 0.0
-          - type: 'null'
-          title: Over Capture Amount
-          description: The maximum monetary amount allowed for over-capture, in the smallest currency unit, for example `1299` cents to allow for an over-capture of `$12.99`.
-          examples:
-          - 1299
-        over_capture_percentage:
-          anyOf:
-          - type: integer
-            maximum: 99999999.0
-            minimum: 0.0
-          - type: 'null'
-          title: Over Capture Percentage
-          description: The maximum percentage allowed for over-capture, for example `25` to allow for an over-capture of `25%` of the original transaction amount.
-          examples:
-          - 25
-        loon_client_key:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Loon Client Key
-          description: Client key provided by Pagos to authenticate to the Loon API. Loon is the Account Updater service we use and if the field is not set or if it's set to null, the Account Updater service doesn't get configured. If the field is set to `null`, the other `loon_*` fields must be set to null as well.
-          deprecated: true
-          examples:
-          - client-key-1234
-        loon_secret_key:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Loon Secret Key
-          description: Secret key provided by Pagos to authenticate to the Loon API. Loon is the Account Updater service we use and if the field is not set or if it's set to null, the Account Updater service doesn't get configured. If the field is set to `null`, the other `loon_*` fields must be set to null as well.
-          deprecated: true
-          examples:
-          - key-12345
-        loon_accepted_schemes:
-          anyOf:
-          - items:
-              $ref: '#/components/schemas/CardScheme'
-            type: array
-            uniqueItems: true
-          - type: 'null'
-          title: Loon Accepted Schemes
-          description: Card schemes accepted when creating jobs using this set of Loon API keys. Loon is the Account Updater service we use and if the field is not set or if it's set to null, the Account Updater service doesn't get configured. If the field is set to `null`, the other `loon_*` fields must be set to null as well.
-          examples:
-          - - visa
-        loon_merchant_account_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Loon Merchant Account Id
-          description: Merchant account ID provided by Pagos to identify this merchant account on the Loon API. Loon is the Account Updater service we use and if the field is not set or if it's set to null, the Account Updater service doesn't get configured. If the field is set to `null`, the other `loon_*` fields must be set to null as well.
-          examples:
-          - loon-merchant-account-1234
-        visa_network_tokens_requestor_id:
-          anyOf:
-          - type: string
-            maxLength: 300
-            minLength: 0
-          - type: 'null'
-          title: Visa Network Tokens Requestor Id
-          description: Requestor ID provided for Visa after onboarding to use Network Tokens.
-          examples:
-          - id-12345
-        visa_network_tokens_app_id:
-          anyOf:
-          - type: string
-            maxLength: 300
-            minLength: 0
-          - type: 'null'
-          title: Visa Network Tokens App Id
-          description: Application ID provided for Visa after onboarding to use Network Tokens.
-          examples:
-          - id-12345
-        amex_network_tokens_requestor_id:
-          anyOf:
-          - type: string
-            maxLength: 300
-            minLength: 0
-          - type: 'null'
-          title: Amex Network Tokens Requestor Id
-          description: Requestor ID provided for American Express after onboarding to use Network Tokens.
-          examples:
-          - id-12345
-        amex_network_tokens_app_id:
-          anyOf:
-          - type: string
-            maxLength: 300
-            minLength: 0
-          - type: 'null'
-          title: Amex Network Tokens App Id
-          description: Application ID provided for American Express after onboarding to use Network Tokens.
-          examples:
-          - id-12345
-        mastercard_network_tokens_requestor_id:
-          anyOf:
-          - type: string
-            maxLength: 300
-            minLength: 0
-          - type: 'null'
-          title: Mastercard Network Tokens Requestor Id
-          description: Requestor ID provided for Mastercard after onboarding to use Network Tokens.
-          examples:
-          - id-12345
-        mastercard_network_tokens_app_id:
-          anyOf:
-          - type: string
-            maxLength: 300
-            minLength: 0
-          - type: 'null'
-          title: Mastercard Network Tokens App Id
-          description: Application ID provided for Mastercard after onboarding to use Network Tokens.
-          examples:
-          - id-12345
-        discover_network_tokens_requestor_id:
-          anyOf:
-          - type: string
-            maxLength: 300
-            minLength: 0
-          - type: 'null'
-          title: Discover Network Tokens Requestor Id
-          description: Requestor ID provided for Discover after onboarding to use Network Tokens.
-          examples:
-          - id-12345
-        discover_network_tokens_app_id:
-          anyOf:
-          - type: string
-            maxLength: 300
-            minLength: 0
-          - type: 'null'
-          title: Discover Network Tokens App Id
-          description: Application ID provided for Discover after onboarding to use Network Tokens.
-          examples:
-          - id-12345
-        async_network_tokens_enabled:
-          type: boolean
-          title: Async Network Tokens Enabled
-          description: When enabled network tokens will be generated asynchronously and only used on subsequent transactions to speed up transaction processing.
-          default: false
-          examples:
-          - true
-          - false
-        display_name:
-          anyOf:
-          - type: string
-            maxLength: 255
-            minLength: 1
-          - type: 'null'
-          title: Display Name
-          description: The display name for the merchant account.
-          examples:
-          - Example
-      additionalProperties: false
-      type: object
-      title: MerchantAccountUpdate
-    Error429:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `too_many_requests`
-          default: too_many_requests
-          examples:
-          - too_many_requests
-        status:
-          type: integer
-          title: Status
-          description: Always `429`.
-          default: 429
-          examples:
-          - 429
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error429
   securitySchemes:
     bearerAuth:
       type: http

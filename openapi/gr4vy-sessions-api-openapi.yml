@@ -130,61 +130,45 @@ paths:
                 $ref: '#/components/schemas/Error401Unauthorized'
 components:
   schemas:
-    SessionRequestEmailAndPassword:
-      title: Username/password session
+    Session:
+      title: Session
+      description: A user session.
       type: object
-      description: A request to create a session using an email address and password.
-      x-internal: true
       x-tags:
       - Authentication
-      required:
-      - email_address
-      - password
-      properties:
-        email_address:
-          type: string
-          description: The email address of the user to log in as.
-          example: john@example.com
-        password:
-          type: string
-          description: The password the user to log in as.
-          example: this-is-n0t-a-secure-passw0rd
-    Error400BadRequest:
-      title: Bad Request
-      type: object
-      description: Bad Request (HTTP 400).
-      x-tags:
-      - Errors
+      x-internal: true
       properties:
         type:
           type: string
-          description: '`error`.'
+          example: auth.session
+          description: '`auth.session`.'
           enum:
-          - error
-          example: error
-        code:
+          - auth.session
+        token_type:
           type: string
-          description: A short code that describes the reason for the error.
-          example: bad_request
           enum:
-          - bad_request
-          - incorrect_json
-          - invalid_credentials
-        status:
+          - bearer
+          example: bearer
+          description: '`bearer`.'
+        access_token:
+          type: string
+          description: 'A server-signed JWT that can be used as the bearer token in any
+
+            API calls.'
+          example: c3FIOG9vSGV4VHo4QzAyg5T1JvNnJoZ3ExaVNyQWw6WjRsanRKZG5lQk9qUE1BVQ
+        refresh_token:
+          type: string
+          description: 'A server-signed JWT that can be used as the bearer token to refresh the
+
+            access token.'
+          example: nJoZ3ExaVNyQWw6WjRsanRKZG5lQk9qUE1BVQ3FIOG9vSGV4VHo4QzAyg5T1JvNc
+        expires_in:
           type: integer
-          description: '`400`.'
-          example: 400
-          enum:
-          - 400
-        message:
-          type: string
-          description: A human-readable reason for the error.
-          example: Missing '****' field
-        details:
-          type: array
-          description: A list of detail objects that further clarify the reason for the error.
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
+          format: int64
+          example: 3600
+          description: 'The time in seconds in seconds by which the `access_token` token will
+
+            expire.'
     Error403Forbidden:
       title: Forbidden Error
       type: object
@@ -256,45 +240,43 @@ components:
           type: string
           example: field required
           description: A human readable message for this error detail.
-    Session:
-      title: Session
-      description: A user session.
+    Error409DuplicateRecord:
+      title: Duplicate Record Error
       type: object
+      description: Duplicate Record Error (HTTP 409).
       x-tags:
-      - Authentication
-      x-internal: true
+      - Errors
       properties:
         type:
           type: string
-          example: auth.session
-          description: '`auth.session`.'
+          description: '`error`.'
           enum:
-          - auth.session
-        token_type:
+          - error
+          example: error
+        code:
           type: string
+          description: '`duplicate_record`.'
+          example: duplicate_record
           enum:
-          - bearer
-          example: bearer
-          description: '`bearer`.'
-        access_token:
-          type: string
-          description: 'A server-signed JWT that can be used as the bearer token in any
-
-            API calls.'
-          example: c3FIOG9vSGV4VHo4QzAyg5T1JvNnJoZ3ExaVNyQWw6WjRsanRKZG5lQk9qUE1BVQ
-        refresh_token:
-          type: string
-          description: 'A server-signed JWT that can be used as the bearer token to refresh the
-
-            access token.'
-          example: nJoZ3ExaVNyQWw6WjRsanRKZG5lQk9qUE1BVQ3FIOG9vSGV4VHo4QzAyg5T1JvNc
-        expires_in:
+          - duplicate_record
+        status:
           type: integer
-          format: int64
-          example: 3600
-          description: 'The time in seconds in seconds by which the `access_token` token will
+          description: '`409`.'
+          example: 409
+          enum:
+          - 409
+        message:
+          type: string
+          description: Further details on the field that triggered the error.
+          example: A duplicate record exists with this external_identifier value
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
 
-            expire.'
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
     SessionRequestToken:
       title: Token session
       type: object
@@ -348,10 +330,10 @@ components:
           example: []
           items:
             $ref: '#/components/schemas/ErrorDetail'
-    Error409DuplicateRecord:
-      title: Duplicate Record Error
+    Error400BadRequest:
+      title: Bad Request
       type: object
-      description: Duplicate Record Error (HTTP 409).
+      description: Bad Request (HTTP 400).
       x-tags:
       - Errors
       properties:
@@ -363,28 +345,46 @@ components:
           example: error
         code:
           type: string
-          description: '`duplicate_record`.'
-          example: duplicate_record
+          description: A short code that describes the reason for the error.
+          example: bad_request
           enum:
-          - duplicate_record
+          - bad_request
+          - incorrect_json
+          - invalid_credentials
         status:
           type: integer
-          description: '`409`.'
-          example: 409
+          description: '`400`.'
+          example: 400
           enum:
-          - 409
+          - 400
         message:
           type: string
-          description: Further details on the field that triggered the error.
-          example: A duplicate record exists with this external_identifier value
+          description: A human-readable reason for the error.
+          example: Missing '****' field
         details:
           type: array
-          description: 'A list of detail objects that further clarify the reason for the error.
-
-            Not every error supports more detail.'
-          example: []
+          description: A list of detail objects that further clarify the reason for the error.
           items:
             $ref: '#/components/schemas/ErrorDetail'
+    SessionRequestEmailAndPassword:
+      title: Username/password session
+      type: object
+      description: A request to create a session using an email address and password.
+      x-internal: true
+      x-tags:
+      - Authentication
+      required:
+      - email_address
+      - password
+      properties:
+        email_address:
+          type: string
+          description: The email address of the user to log in as.
+          example: john@example.com
+        password:
+          type: string
+          description: The password the user to log in as.
+          example: this-is-n0t-a-secure-passw0rd
   securitySchemes:
     bearerAuth:
       type: http

@@ -150,97 +150,24 @@ paths:
           description: The subdomain for your Gr4vy instance.
 components:
   schemas:
-    PaymentMethodDetailsCard:
-      title: Card
-      description: A credit or debit card payment method.
+    PayoutConnectionOptionsRequest:
+      title: Payout
       type: object
       x-tags:
-      - Payment Methods
+      - Payout
       properties:
-        bin:
-          type: string
-          description: The first 6 digits of the full card number (the BIN).
-          example: '412345'
-        card_type:
-          description: The type of card, one of `credit`, `debit` or `prepaid`.
-          example: credit
-          type: string
-          enum:
-          - credit
-          - debit
-          - prepaid
-        card_issuer_name:
-          type: string
-          description: The name of the card issuer.
-          example: Bank
-    Error400BadRequest:
-      title: Bad Request
-      type: object
-      description: Bad Request (HTTP 400).
-      x-tags:
-      - Errors
-      properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: A short code that describes the reason for the error.
-          example: bad_request
-          enum:
-          - bad_request
-          - incorrect_json
-          - invalid_credentials
-        status:
-          type: integer
-          description: '`400`.'
-          example: 400
-          enum:
-          - 400
-        message:
-          type: string
-          description: A human-readable reason for the error.
-          example: Missing '****' field
-        details:
-          type: array
-          description: A list of detail objects that further clarify the reason for the error.
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-    ErrorDetail:
-      title: Error details
-      description: Additional detail about the part of a request body that caused an issue.
-      type: object
-      x-tags:
-      - Errors
-      properties:
-        location:
-          type: string
-          example: body
-          description: The location where the error caused an issue.
-          enum:
-          - query
-          - body
-          - path
-          - header
-        type:
-          type: string
-          example: value_error.missing
-          description: A unique identifier for the type of error that occurred.
-        pointer:
-          type: string
-          example: /payment_method/number
-          description: 'The exact item for which the validation did not succeed. This is a JSON
-
-            pointer for request bodies, while for query, path, and header parameters
-
-            it is the name of the parameter.'
-        message:
-          type: string
-          example: field required
-          description: A human readable message for this error detail.
+        checkout-card:
+          type:
+          - object
+          - 'null'
+          description: Custom options for checkout-card payment service.
+          properties:
+            source_id:
+              type: string
+              description: The ID of the currency account that will fund the payout.
+            processing_channel_id:
+              type: string
+              description: The processing channel to be used for the payment.
     TransactionBuyerRequest:
       title: Buyer
       type: object
@@ -286,363 +213,29 @@ components:
           maxLength: 255
           example: '1234567'
           description: The source account number to perform an account funding transaction.
-    Payout:
-      title: Payout
+    PaymentMethodDetailsCard:
+      title: Card
+      description: A credit or debit card payment method.
       type: object
       x-tags:
-      - Payout
+      - Payment Methods
       properties:
-        type:
+        bin:
           type: string
-          description: The type of this resource. Is always `payout`.
-          example: payout
+          description: The first 6 digits of the full card number (the BIN).
+          example: '412345'
+        card_type:
+          description: The type of card, one of `credit`, `debit` or `prepaid`.
+          example: credit
+          type: string
           enum:
-          - payout
-        id:
+          - credit
+          - debit
+          - prepaid
+        card_issuer_name:
           type: string
-          format: uuid
-          description: The ID of a payout.
-          example: 8d3fe99b-1422-42e6-bbb3-932d95ae5f79
-        merchant_account_id:
-          type:
-          - string
-          - 'null'
-          description: The optional ID of the merchant account this payout should be assigned to.
-          example: default
-          maxLength: 22
-        amount:
-          description: 'The monetary amount for this payout, in the smallest
-
-            currency unit for the given currency, for example `1299` cents to create
-
-            an authorization for `$12.99`.'
-          type: integer
-          example: 1299
-        currency:
-          type: string
-          example: USD
-          description: A supported ISO-4217 currency code.
-        created_at:
-          type: string
-          description: The date and time when this payout was created.
-          format: date-time
-          example: '2022-01-01T12:00:00+00:00'
-        updated_at:
-          type: string
-          description: The date and time when this payout was created.
-          format: date-time
-          example: '2022-01-01T12:00:00+00:00'
-        payment_service:
-          allOf:
-          - $ref: '#/components/schemas/PaymentService--Snapshot'
-          description: The payment service used for this payout.
-        payment_service_payout_id:
-          type:
-          - string
-          - 'null'
-          example: example
-          description: The ID of the payout in the underlying payment service.
-        category:
-          type: string
-          description: The type of payout to process.
-          example: online_gambling
-          enum:
-          - online_gambling
-        status:
-          type: string
-          example: pending
-          description: The status of the payout.
-          enum:
-          - pending
-          - failed
-          - declined
-          - succeeded
-        external_identifier:
-          type:
-          - string
-          - 'null'
-          description: An external identifier that can be used to match the payout against your own records. This value needs to be unique for all buyers.
-          example: user-789123
-          minLength: 1
-          maxLength: 200
-        merchant:
-          allOf:
-          - $ref: '#/components/schemas/Merchant'
-          description: The merchant details associated to this payout.
-        buyer:
-          allOf:
-          - $ref: '#/components/schemas/Buyer--Snapshot'
-          description: The buyer used for this transaction.
-        payment_method:
-          allOf:
-          - $ref: '#/components/schemas/PaymentMethod--Snapshot'
-          description: The payment method used for this payout.
-    PaymentService--Snapshot:
-      title: A payment service
-      type: object
-      description: An active, configured payment service.
-      x-tags:
-      - Payment Services
-      properties:
-        type:
-          type: string
-          description: The type of this resource.
-          example: payment-service
-          enum:
-          - payment-service
-        id:
-          type: string
-          description: The ID of this payment service.
-          example: stripe-card-faaad066-30b4-4997-a438-242b0752d7e1
-          minLength: 1
-          maxLength: 200
-        display_name:
-          description: The custom name set for this service.
-          example: Stripe (Main)
-          maxLength: 50
-          minLength: 1
-          type: string
-        method:
-          description: The payment method that this services handles.
-          type: string
-          example: card
-          enum:
-          - affirm
-          - afterpay
-          - alipay
-          - alipayhk
-          - applepay
-          - bacs
-          - bancontact
-          - banked
-          - becs
-          - bitpay
-          - boleto
-          - boost
-          - card
-          - cashapp
-          - chaseorbital
-          - checkout-session
-          - clearpay
-          - click-to-pay
-          - dana
-          - dcb
-          - dlocal
-          - ebanx
-          - efecty
-          - eps
-          - everydaypay
-          - gcash
-          - gem
-          - gemds
-          - gift-card
-          - giropay
-          - givingblock
-          - gocardless
-          - googlepay
-          - googlepay_pan_only
-          - gopay
-          - grabpay
-          - id
-          - ideal
-          - kakaopay
-          - kcp
-          - klarna
-          - latitude
-          - latitudeds
-          - laybuy
-          - linepay
-          - linkaja
-          - maybankqrpay
-          - mercadopago
-          - multibanco
-          - multipago
-          - netbanking
-          - network-token
-          - oney_3x
-          - oney_4x
-          - oney_6x
-          - oney_10x
-          - oney_12x
-          - ovo
-          - oxxo
-          - payid
-          - paymaya
-          - paypal
-          - paypalpaylater
-          - payto
-          - venmo
-          - pix
-          - pse
-          - rabbitlinepay
-          - razorpay
-          - scalapay
-          - sepa
-          - shopeepay
-          - singteldash
-          - smartpay
-          - sofort
-          - spei
-          - stripedd
-          - thaiqr
-          - touchngo
-          - truemoney
-          - trustly
-          - trustlyeurope
-          - upi
-          - vipps
-          - waave
-          - webpay
-          - wechat
-          - zippay
-        payment_service_definition_id:
-          description: 'The ID of the payment service definition used to create this service.
-
-            '
-          example: stripe-card
-          maxLength: 50
-          minLength: 1
-          type: string
-    PayoutRequest:
-      title: Payout (Create)
-      type: object
-      description: Request body for creating new payout.
-      x-tags:
-      - Request Bodies
-      required:
-      - amount
-      - currency
-      - payment_method
-      - payment_service_id
-      properties:
-        amount:
-          type: number
-          example: 1299
-          minimum: 1
-          maximum: 99999999
-          description: The amount to payout.
-        currency:
-          type: string
-          example: USD
-          description: The ISO-4217 currency code for the payout.
-        payment_service_id:
-          type: string
-          format: uuid
-          example: a7d6b829-aea5-407d-ab7f-138784b5ad2c
-          description: The ID of the payment service to use for the payout.
-        category:
-          type: string
-          description: The type of payout to process.
-          example: online_gambling
-          default: online_gambling
-          enum:
-          - online_gambling
-        external_identifier:
-          type:
-          - string
-          - 'null'
-          description: A value that can be used to match the payout against your own records.
-          example: payout-123
-          minLength: 1
-          maxLength: 200
-        buyer_id:
-          type:
-          - string
-          - 'null'
-          format: uuid
-          example: fe26475d-ec3e-4884-9553-f7356683f7f9
-          description: The ID of the buyer to send the payout.
-        buyer_external_identifier:
-          type:
-          - string
-          - 'null'
-          description: The `external_identifier` of the buyer to send this payout to.
-          example: user-789123
-          maxLength: 200
-        buyer:
-          description: Inline buyer details for the payout.
-          allOf:
-          - $ref: '#/components/schemas/TransactionBuyerRequest'
-          type:
-          - object
-          - 'null'
-        merchant:
-          type:
-          - object
-          - 'null'
-          description: Merchant information for the source of the payout.
-          allOf:
-          - $ref: '#/components/schemas/MerchantRequest'
-        payment_method:
-          type: object
-          x-model-name: PayoutPaymentMethodRequest
-          description: The type of payment method to send funds too.
-          oneOf:
-          - $ref: '#/components/schemas/PayoutInlineCardRequest'
-          - $ref: '#/components/schemas/PayoutStoredCardRequest'
-        connection_options:
-          type:
-          - object
-          - 'null'
-          description: Optional fields for processing payouts on specific payment services.
-          allOf:
-          - $ref: '#/components/schemas/PayoutConnectionOptionsRequest'
-    BillingDetails:
-      title: Billing details
-      type: object
-      description: Billing details associated to a buyer.
-      x-tags:
-      - Buyers
-      properties:
-        type:
-          type: string
-          description: The type of this resource. Is always `billing-details`.
-          example: billing-details
-          enum:
-          - billing-details
-        first_name:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 255
-          description: The first name(s) or given name of the buyer.
-          example: John
-        last_name:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 255
-          example: Lunn
-          description: The last name, or family name, of the buyer.
-        email_address:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 320
-          description: The email address of the buyer.
-          example: john@example.com
-        phone_number:
-          type:
-          - string
-          - 'null'
-          pattern: ^\+[1-9]\d{1,14}$
-          minLength: 1
-          maxLength: 50
-          description: 'The phone number of the buyer. This number is formatted according to the
-
-            [E164 number standard](https://www.twilio.com/docs/glossary/what-e164).'
-          example: '+1234567890'
-        address:
-          description: The billing address of the buyer.
-          allOf:
-          - $ref: '#/components/schemas/Address'
-        tax_id:
-          description: The tax information associated with the billing details.
-          allOf:
-          - $ref: '#/components/schemas/TaxId'
+          description: The name of the card issuer.
+          example: Bank
     PaymentMethod--Snapshot:
       title: Payment method (Snapshot)
       description: 'Snapshot of a payment method, as used when embedded inside other
@@ -906,48 +499,349 @@ components:
           - 'null'
           description: The unique hash derived from the payment method identifier (e.g. card number).
           example: 20eb353620155d2b5fc864cc46a73ea77cb92c725238650839da1813fa987a17
-    Payouts:
-      title: Payouts
+    Error400BadRequest:
+      title: Bad Request
       type: object
-      description: A list of payouts.
+      description: Bad Request (HTTP 400).
       x-tags:
-      - Payouts
+      - Errors
       properties:
-        items:
-          type: array
-          description: A list of payouts.
-          items:
-            $ref: '#/components/schemas/Payout'
-        limit:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: A short code that describes the reason for the error.
+          example: bad_request
+          enum:
+          - bad_request
+          - incorrect_json
+          - invalid_credentials
+        status:
           type: integer
-          description: 'The limit applied to request. This represents the number of items that are at
-
-            maximum returned by this request.'
-          format: int32
-          minimum: 1
-          maximum: 100
-          example: 1
-          default: 20
-        next_cursor:
+          description: '`400`.'
+          example: 400
+          enum:
+          - 400
+        message:
+          type: string
+          description: A human-readable reason for the error.
+          example: Missing '****' field
+        details:
+          type: array
+          description: A list of detail objects that further clarify the reason for the error.
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    ShippingDetail:
+      title: Shipping detail
+      type: object
+      description: Shipping detail for a buyer.
+      x-tags:
+      - Buyers
+      properties:
+        type:
+          type: string
+          description: The type of this resource. Is always `shipping-details`.
+          example: shipping-details
+          enum:
+          - shipping-details
+        id:
+          type: string
+          format: uuid
+          description: The unique ID for a buyer's shipping detail.
+          example: 8724fd24-5489-4a5d-90fd-0604df7d3b83
+        buyer_id:
+          type: string
+          format: uuid
+          description: The unique ID for a buyer.
+          example: 8724fd24-5489-4a5d-90fd-0604df7d3b83
+        first_name:
           type:
           - string
           - 'null'
-          description: 'The cursor that represents the next page of results. Use the `cursor` query
-
-            parameter to fetch this page of items.'
-          example: ZXhhbXBsZTE
           minLength: 1
-          maxLength: 1000
-        previous_cursor:
+          maxLength: 255
+          description: The first name(s) or given name of the buyer.
+          example: John
+        last_name:
           type:
           - string
           - 'null'
-          description: 'The cursor that represents the next page of results. Use the `cursor` query
-
-            parameter to fetch this page of items.'
-          example: null
           minLength: 1
-          maxLength: 1000
+          maxLength: 255
+          example: Lunn
+          description: The last name, or family name, of the buyer.
+        email_address:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 320
+          description: The email address of the buyer.
+          example: john@example.com
+        phone_number:
+          type:
+          - string
+          - 'null'
+          pattern: ^\+[1-9]\d{1,14}$
+          minLength: 1
+          maxLength: 50
+          description: 'The phone number of the buyer. This number is formatted according to the
+
+            [E164 number standard](https://www.twilio.com/docs/glossary/what-e164).'
+          example: '+1234567890'
+        address:
+          type:
+          - object
+          - 'null'
+          description: The physical shipping address associated to this buyer.
+          allOf:
+          - $ref: '#/components/schemas/Address'
+    MerchantRequest:
+      title: Merchant
+      type: object
+      description: Details of the merchant.
+      x-tags:
+      - Request Bodies
+      required:
+      - name
+      - identification_number
+      - phone_number
+      - url
+      - statement_descriptor
+      - merchant_category_code
+      properties:
+        name:
+          type: string
+          example: Merchant
+          description: The name of the merchant.
+          maxLength: 255
+        identification_number:
+          type: string
+          maxLength: 200
+          description: Unique value which identifies a merchant for processing transactions, also known as a MID.
+        phone_number:
+          type: string
+          pattern: ^\+[1-9]\d{1,14}$
+          minLength: 1
+          maxLength: 50
+          description: 'The phone number for the merchant which should be formatted according to the
+
+            [E164 number standard](https://www.twilio.com/docs/glossary/what-e164).'
+          example: '+1234567890'
+        url:
+          type: string
+          format: uri
+          description: Merchant website URL.
+        statement_descriptor:
+          type: string
+          minLength: 5
+          maxLength: 22
+          description: Value to explain charges or payments on bank statements.
+        merchant_category_code:
+          type: string
+          minLength: 1
+          maxLength: 4
+          description: Merchant classification for the type of goods or services it provides.
+        address:
+          type:
+          - object
+          - 'null'
+          description: The address for the merchant.
+          allOf:
+          - $ref: '#/components/schemas/Address'
+    ErrorDetail:
+      title: Error details
+      description: Additional detail about the part of a request body that caused an issue.
+      type: object
+      x-tags:
+      - Errors
+      properties:
+        location:
+          type: string
+          example: body
+          description: The location where the error caused an issue.
+          enum:
+          - query
+          - body
+          - path
+          - header
+        type:
+          type: string
+          example: value_error.missing
+          description: A unique identifier for the type of error that occurred.
+        pointer:
+          type: string
+          example: /payment_method/number
+          description: 'The exact item for which the validation did not succeed. This is a JSON
+
+            pointer for request bodies, while for query, path, and header parameters
+
+            it is the name of the parameter.'
+        message:
+          type: string
+          example: field required
+          description: A human readable message for this error detail.
+    Error401Unauthorized:
+      title: Unauthorized Error
+      type: object
+      description: Unauthorized Error (HTTP 401).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`unauthorized`.'
+          example: unauthorized
+          enum:
+          - unauthorized
+        status:
+          type: integer
+          description: '`401`.'
+          example: 401
+          enum:
+          - 401
+        message:
+          type: string
+          description: No valid API authentication found.
+          example: No valid API authentication found
+          enum:
+          - No valid API authentication found
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    BillingDetails:
+      title: Billing details
+      type: object
+      description: Billing details associated to a buyer.
+      x-tags:
+      - Buyers
+      properties:
+        type:
+          type: string
+          description: The type of this resource. Is always `billing-details`.
+          example: billing-details
+          enum:
+          - billing-details
+        first_name:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 255
+          description: The first name(s) or given name of the buyer.
+          example: John
+        last_name:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 255
+          example: Lunn
+          description: The last name, or family name, of the buyer.
+        email_address:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 320
+          description: The email address of the buyer.
+          example: john@example.com
+        phone_number:
+          type:
+          - string
+          - 'null'
+          pattern: ^\+[1-9]\d{1,14}$
+          minLength: 1
+          maxLength: 50
+          description: 'The phone number of the buyer. This number is formatted according to the
+
+            [E164 number standard](https://www.twilio.com/docs/glossary/what-e164).'
+          example: '+1234567890'
+        address:
+          description: The billing address of the buyer.
+          allOf:
+          - $ref: '#/components/schemas/Address'
+        tax_id:
+          description: The tax information associated with the billing details.
+          allOf:
+          - $ref: '#/components/schemas/TaxId'
+    BillingDetailsRequest:
+      title: Billing details (Create)
+      type: object
+      description: Billing details to use associated to a buyer.
+      x-tags:
+      - Buyers
+      properties:
+        first_name:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 255
+          description: The first name(s) or given name for the buyer.
+          example: John
+        last_name:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 255
+          example: Lunn
+          description: The last name, or family name, of the buyer.
+        email_address:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 320
+          description: The email address for the buyer.
+          example: john@example.com
+        phone_number:
+          type:
+          - string
+          - 'null'
+          pattern: ^\+[1-9]\d{1,14}$
+          minLength: 1
+          maxLength: 50
+          description: 'The phone number for the buyer which should be formatted according to the
+
+            [E164 number standard](https://www.twilio.com/docs/glossary/what-e164).'
+          example: '+1234567890'
+        address:
+          type:
+          - object
+          - 'null'
+          description: The billing address for the buyer.
+          allOf:
+          - $ref: '#/components/schemas/Address'
+          - required:
+            - line1
+            - city
+            - state
+            - postal_code
+            - country
+        tax_id:
+          type:
+          - object
+          - 'null'
+          description: The tax ID information associated with the billing details.
+          allOf:
+          - $ref: '#/components/schemas/TaxId'
     TaxId:
       title: Tax ID
       type: object
@@ -1013,27 +907,180 @@ components:
           - tw.vat
           - us.ein
           - za.vat
-    PayoutStoredCardRequest:
+    Buyer--Snapshot:
+      title: Buyer (Snapshot)
+      type: object
+      description: 'Snapshot of a buyer, as used when embedded inside other
+
+        resources.'
+      x-tags:
+      - Buyers
+      properties:
+        type:
+          type: string
+          description: The type of this resource. Is always `buyer`.
+          example: buyer
+          enum:
+          - buyer
+        id:
+          type:
+          - string
+          - 'null'
+          example: fe26475d-ec3e-4884-9553-f7356683f7f9
+          description: The unique Gr4vy ID for this buyer.
+          format: uuid
+        billing_details:
+          allOf:
+          - $ref: '#/components/schemas/BillingDetails'
+          description: 'The billing details associated with the buyer, which include the
+
+            address and tax ID.'
+        display_name:
+          description: A unique name for this buyer which is used in the Gr4vy admin panel to give a buyer a human readable name.
+          example: John L.
+          maxLength: 200
+          minLength: 1
+          type:
+          - string
+          - 'null'
+        external_identifier:
+          description: An external identifier that can be used to match the buyer against your own records.
+          example: user-789123
+          maxLength: 200
+          minLength: 1
+          type:
+          - string
+          - 'null'
+        account_number:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 255
+          example: '1234567'
+          description: The source account number to perform an account funding transaction.
+    PayoutInlineCardRequest:
       title: Payout card payment method
       type: object
-      description: Stored card reference.
+      description: Inline card details.
       x-tags:
       - Request Bodies
       required:
       - method
-      - id
+      - number
+      - expiration_date
       properties:
         method:
           type: string
-          example: id
+          example: card
           description: The method to use.
           enum:
-          - id
-        id:
+          - card
+        number:
           type: string
-          format: uuid
-          description: The ID of the stored payment method.
-          example: 8d3fe99b-1422-42e6-bbb3-932d95ae5f79
+          minLength: 13
+          maxLength: 19
+          example: '4111111111111111'
+          pattern: ^[0-9]{13,19}$
+          description: 'The 13-19 digit number for this card as it can be found on the
+
+            front of the card.'
+        expiration_date:
+          type: string
+          description: The expiration date of the card, formatted `MM/YY`.
+          example: 11/25
+          pattern: ^\d{2}/\d{2}$
+          minLength: 5
+          maxLength: 5
+        external_identifier:
+          type:
+          - string
+          - 'null'
+          description: An external identifier that can be used to match the card against your own records.
+          example: card-323444
+        scheme:
+          description: The card scheme.
+          type:
+          - string
+          - 'null'
+          example: visa
+          enum:
+          - accel
+          - amex
+          - bancontact
+          - carte-bancaire
+          - cirrus
+          - culiance
+          - dankort
+          - diners-club
+          - discover
+          - eftpos-australia
+          - elo
+          - hipercard
+          - jcb
+          - maestro
+          - mastercard
+          - mir
+          - nyce
+          - other
+          - pulse
+          - rupay
+          - star
+          - uatp
+          - unionpay
+          - visa
+          - null
+    Merchant:
+      title: Merchant
+      type: object
+      x-tags:
+      - Merchant
+      properties:
+        type:
+          type: string
+          description: The type of this resource. Is always `merchant`.
+          example: merchant
+          enum:
+          - merchant
+        name:
+          type: string
+          example: Merchant
+          description: The name of the merchant.
+          maxLength: 255
+        identification_number:
+          type: string
+          maxLength: 200
+          description: Unique value which identifies a merchant for processing transactions, also known as a MID.
+        phone_number:
+          type: string
+          pattern: ^\+[1-9]\d{1,14}$
+          minLength: 1
+          maxLength: 50
+          description: 'The phone number for the merchant which should be formatted according to the
+
+            [E164 number standard](https://www.twilio.com/docs/glossary/what-e164).'
+          example: '+1234567890'
+        url:
+          type: string
+          format: uri
+          description: Merchant website URL.
+        statement_descriptor:
+          type: string
+          minLength: 5
+          maxLength: 22
+          description: Value to explain charges or payments on bank statements.
+        merchant_category_code:
+          type: string
+          minLength: 1
+          maxLength: 4
+          description: Merchant classification for the type of goods or services it provides.
+        address:
+          type:
+          - object
+          - 'null'
+          description: The address for the merchant.
+          allOf:
+          - $ref: '#/components/schemas/Address'
     Address:
       title: Address
       type: object
@@ -1119,417 +1166,223 @@ components:
 
             to the address.'
           example: Gr4vy
-    BillingDetailsRequest:
-      title: Billing details (Create)
-      type: object
-      description: Billing details to use associated to a buyer.
-      x-tags:
-      - Buyers
-      properties:
-        first_name:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 255
-          description: The first name(s) or given name for the buyer.
-          example: John
-        last_name:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 255
-          example: Lunn
-          description: The last name, or family name, of the buyer.
-        email_address:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 320
-          description: The email address for the buyer.
-          example: john@example.com
-        phone_number:
-          type:
-          - string
-          - 'null'
-          pattern: ^\+[1-9]\d{1,14}$
-          minLength: 1
-          maxLength: 50
-          description: 'The phone number for the buyer which should be formatted according to the
-
-            [E164 number standard](https://www.twilio.com/docs/glossary/what-e164).'
-          example: '+1234567890'
-        address:
-          type:
-          - object
-          - 'null'
-          description: The billing address for the buyer.
-          allOf:
-          - $ref: '#/components/schemas/Address'
-          - required:
-            - line1
-            - city
-            - state
-            - postal_code
-            - country
-        tax_id:
-          type:
-          - object
-          - 'null'
-          description: The tax ID information associated with the billing details.
-          allOf:
-          - $ref: '#/components/schemas/TaxId'
-    PayoutConnectionOptionsRequest:
+    Payout:
       title: Payout
       type: object
       x-tags:
       - Payout
       properties:
-        checkout-card:
-          type:
-          - object
-          - 'null'
-          description: Custom options for checkout-card payment service.
-          properties:
-            source_id:
-              type: string
-              description: The ID of the currency account that will fund the payout.
-            processing_channel_id:
-              type: string
-              description: The processing channel to be used for the payment.
-    ShippingDetail:
-      title: Shipping detail
-      type: object
-      description: Shipping detail for a buyer.
-      x-tags:
-      - Buyers
-      properties:
         type:
           type: string
-          description: The type of this resource. Is always `shipping-details`.
-          example: shipping-details
+          description: The type of this resource. Is always `payout`.
+          example: payout
           enum:
-          - shipping-details
+          - payout
         id:
           type: string
           format: uuid
-          description: The unique ID for a buyer's shipping detail.
-          example: 8724fd24-5489-4a5d-90fd-0604df7d3b83
-        buyer_id:
-          type: string
-          format: uuid
-          description: The unique ID for a buyer.
-          example: 8724fd24-5489-4a5d-90fd-0604df7d3b83
-        first_name:
+          description: The ID of a payout.
+          example: 8d3fe99b-1422-42e6-bbb3-932d95ae5f79
+        merchant_account_id:
           type:
           - string
           - 'null'
-          minLength: 1
-          maxLength: 255
-          description: The first name(s) or given name of the buyer.
-          example: John
-        last_name:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 255
-          example: Lunn
-          description: The last name, or family name, of the buyer.
-        email_address:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 320
-          description: The email address of the buyer.
-          example: john@example.com
-        phone_number:
-          type:
-          - string
-          - 'null'
-          pattern: ^\+[1-9]\d{1,14}$
-          minLength: 1
-          maxLength: 50
-          description: 'The phone number of the buyer. This number is formatted according to the
+          description: The optional ID of the merchant account this payout should be assigned to.
+          example: default
+          maxLength: 22
+        amount:
+          description: 'The monetary amount for this payout, in the smallest
 
-            [E164 number standard](https://www.twilio.com/docs/glossary/what-e164).'
-          example: '+1234567890'
-        address:
-          type:
-          - object
-          - 'null'
-          description: The physical shipping address associated to this buyer.
+            currency unit for the given currency, for example `1299` cents to create
+
+            an authorization for `$12.99`.'
+          type: integer
+          example: 1299
+        currency:
+          type: string
+          example: USD
+          description: A supported ISO-4217 currency code.
+        created_at:
+          type: string
+          description: The date and time when this payout was created.
+          format: date-time
+          example: '2022-01-01T12:00:00+00:00'
+        updated_at:
+          type: string
+          description: The date and time when this payout was created.
+          format: date-time
+          example: '2022-01-01T12:00:00+00:00'
+        payment_service:
           allOf:
-          - $ref: '#/components/schemas/Address'
-    Buyer--Snapshot:
-      title: Buyer (Snapshot)
-      type: object
-      description: 'Snapshot of a buyer, as used when embedded inside other
-
-        resources.'
-      x-tags:
-      - Buyers
-      properties:
-        type:
+          - $ref: '#/components/schemas/PaymentService--Snapshot'
+          description: The payment service used for this payout.
+        payment_service_payout_id:
+          type:
+          - string
+          - 'null'
+          example: example
+          description: The ID of the payout in the underlying payment service.
+        category:
           type: string
-          description: The type of this resource. Is always `buyer`.
-          example: buyer
+          description: The type of payout to process.
+          example: online_gambling
           enum:
-          - buyer
-        id:
-          type:
-          - string
-          - 'null'
-          example: fe26475d-ec3e-4884-9553-f7356683f7f9
-          description: The unique Gr4vy ID for this buyer.
-          format: uuid
-        billing_details:
-          allOf:
-          - $ref: '#/components/schemas/BillingDetails'
-          description: 'The billing details associated with the buyer, which include the
-
-            address and tax ID.'
-        display_name:
-          description: A unique name for this buyer which is used in the Gr4vy admin panel to give a buyer a human readable name.
-          example: John L.
-          maxLength: 200
-          minLength: 1
-          type:
-          - string
-          - 'null'
+          - online_gambling
+        status:
+          type: string
+          example: pending
+          description: The status of the payout.
+          enum:
+          - pending
+          - failed
+          - declined
+          - succeeded
         external_identifier:
-          description: An external identifier that can be used to match the buyer against your own records.
+          type:
+          - string
+          - 'null'
+          description: An external identifier that can be used to match the payout against your own records. This value needs to be unique for all buyers.
+          example: user-789123
+          minLength: 1
+          maxLength: 200
+        merchant:
+          allOf:
+          - $ref: '#/components/schemas/Merchant'
+          description: The merchant details associated to this payout.
+        buyer:
+          allOf:
+          - $ref: '#/components/schemas/Buyer--Snapshot'
+          description: The buyer used for this transaction.
+        payment_method:
+          allOf:
+          - $ref: '#/components/schemas/PaymentMethod--Snapshot'
+          description: The payment method used for this payout.
+    PayoutRequest:
+      title: Payout (Create)
+      type: object
+      description: Request body for creating new payout.
+      x-tags:
+      - Request Bodies
+      required:
+      - amount
+      - currency
+      - payment_method
+      - payment_service_id
+      properties:
+        amount:
+          type: number
+          example: 1299
+          minimum: 1
+          maximum: 99999999
+          description: The amount to payout.
+        currency:
+          type: string
+          example: USD
+          description: The ISO-4217 currency code for the payout.
+        payment_service_id:
+          type: string
+          format: uuid
+          example: a7d6b829-aea5-407d-ab7f-138784b5ad2c
+          description: The ID of the payment service to use for the payout.
+        category:
+          type: string
+          description: The type of payout to process.
+          example: online_gambling
+          default: online_gambling
+          enum:
+          - online_gambling
+        external_identifier:
+          type:
+          - string
+          - 'null'
+          description: A value that can be used to match the payout against your own records.
+          example: payout-123
+          minLength: 1
+          maxLength: 200
+        buyer_id:
+          type:
+          - string
+          - 'null'
+          format: uuid
+          example: fe26475d-ec3e-4884-9553-f7356683f7f9
+          description: The ID of the buyer to send the payout.
+        buyer_external_identifier:
+          type:
+          - string
+          - 'null'
+          description: The `external_identifier` of the buyer to send this payout to.
           example: user-789123
           maxLength: 200
-          minLength: 1
-          type:
-          - string
-          - 'null'
-        account_number:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 255
-          example: '1234567'
-          description: The source account number to perform an account funding transaction.
-    MerchantRequest:
-      title: Merchant
-      type: object
-      description: Details of the merchant.
-      x-tags:
-      - Request Bodies
-      required:
-      - name
-      - identification_number
-      - phone_number
-      - url
-      - statement_descriptor
-      - merchant_category_code
-      properties:
-        name:
-          type: string
-          example: Merchant
-          description: The name of the merchant.
-          maxLength: 255
-        identification_number:
-          type: string
-          maxLength: 200
-          description: Unique value which identifies a merchant for processing transactions, also known as a MID.
-        phone_number:
-          type: string
-          pattern: ^\+[1-9]\d{1,14}$
-          minLength: 1
-          maxLength: 50
-          description: 'The phone number for the merchant which should be formatted according to the
-
-            [E164 number standard](https://www.twilio.com/docs/glossary/what-e164).'
-          example: '+1234567890'
-        url:
-          type: string
-          format: uri
-          description: Merchant website URL.
-        statement_descriptor:
-          type: string
-          minLength: 5
-          maxLength: 22
-          description: Value to explain charges or payments on bank statements.
-        merchant_category_code:
-          type: string
-          minLength: 1
-          maxLength: 4
-          description: Merchant classification for the type of goods or services it provides.
-        address:
+        buyer:
+          description: Inline buyer details for the payout.
+          allOf:
+          - $ref: '#/components/schemas/TransactionBuyerRequest'
           type:
           - object
           - 'null'
-          description: The address for the merchant.
+        merchant:
+          type:
+          - object
+          - 'null'
+          description: Merchant information for the source of the payout.
           allOf:
-          - $ref: '#/components/schemas/Address'
-    PayoutInlineCardRequest:
-      title: Payout card payment method
-      type: object
-      description: Inline card details.
-      x-tags:
-      - Request Bodies
-      required:
-      - method
-      - number
-      - expiration_date
-      properties:
-        method:
-          type: string
-          example: card
-          description: The method to use.
-          enum:
-          - card
-        number:
-          type: string
-          minLength: 13
-          maxLength: 19
-          example: '4111111111111111'
-          pattern: ^[0-9]{13,19}$
-          description: 'The 13-19 digit number for this card as it can be found on the
-
-            front of the card.'
-        expiration_date:
-          type: string
-          description: The expiration date of the card, formatted `MM/YY`.
-          example: 11/25
-          pattern: ^\d{2}/\d{2}$
-          minLength: 5
-          maxLength: 5
-        external_identifier:
+          - $ref: '#/components/schemas/MerchantRequest'
+        payment_method:
+          type: object
+          x-model-name: PayoutPaymentMethodRequest
+          description: The type of payment method to send funds too.
+          oneOf:
+          - $ref: '#/components/schemas/PayoutInlineCardRequest'
+          - $ref: '#/components/schemas/PayoutStoredCardRequest'
+        connection_options:
           type:
-          - string
+          - object
           - 'null'
-          description: An external identifier that can be used to match the card against your own records.
-          example: card-323444
-        scheme:
-          description: The card scheme.
-          type:
-          - string
-          - 'null'
-          example: visa
-          enum:
-          - accel
-          - amex
-          - bancontact
-          - carte-bancaire
-          - cirrus
-          - culiance
-          - dankort
-          - diners-club
-          - discover
-          - eftpos-australia
-          - elo
-          - hipercard
-          - jcb
-          - maestro
-          - mastercard
-          - mir
-          - nyce
-          - other
-          - pulse
-          - rupay
-          - star
-          - uatp
-          - unionpay
-          - visa
-          - null
-    Error401Unauthorized:
-      title: Unauthorized Error
+          description: Optional fields for processing payouts on specific payment services.
+          allOf:
+          - $ref: '#/components/schemas/PayoutConnectionOptionsRequest'
+    Payouts:
+      title: Payouts
       type: object
-      description: Unauthorized Error (HTTP 401).
+      description: A list of payouts.
       x-tags:
-      - Errors
+      - Payouts
       properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: '`unauthorized`.'
-          example: unauthorized
-          enum:
-          - unauthorized
-        status:
-          type: integer
-          description: '`401`.'
-          example: 401
-          enum:
-          - 401
-        message:
-          type: string
-          description: No valid API authentication found.
-          example: No valid API authentication found
-          enum:
-          - No valid API authentication found
-        details:
+        items:
           type: array
-          description: 'A list of detail objects that further clarify the reason for the error.
-
-            Not every error supports more detail.'
-          example: []
+          description: A list of payouts.
           items:
-            $ref: '#/components/schemas/ErrorDetail'
-    Merchant:
-      title: Merchant
-      type: object
-      x-tags:
-      - Merchant
-      properties:
-        type:
-          type: string
-          description: The type of this resource. Is always `merchant`.
-          example: merchant
-          enum:
-          - merchant
-        name:
-          type: string
-          example: Merchant
-          description: The name of the merchant.
-          maxLength: 255
-        identification_number:
-          type: string
-          maxLength: 200
-          description: Unique value which identifies a merchant for processing transactions, also known as a MID.
-        phone_number:
-          type: string
-          pattern: ^\+[1-9]\d{1,14}$
-          minLength: 1
-          maxLength: 50
-          description: 'The phone number for the merchant which should be formatted according to the
+            $ref: '#/components/schemas/Payout'
+        limit:
+          type: integer
+          description: 'The limit applied to request. This represents the number of items that are at
 
-            [E164 number standard](https://www.twilio.com/docs/glossary/what-e164).'
-          example: '+1234567890'
-        url:
-          type: string
-          format: uri
-          description: Merchant website URL.
-        statement_descriptor:
-          type: string
-          minLength: 5
-          maxLength: 22
-          description: Value to explain charges or payments on bank statements.
-        merchant_category_code:
-          type: string
-          minLength: 1
-          maxLength: 4
-          description: Merchant classification for the type of goods or services it provides.
-        address:
+            maximum returned by this request.'
+          format: int32
+          minimum: 1
+          maximum: 100
+          example: 1
+          default: 20
+        next_cursor:
           type:
-          - object
+          - string
           - 'null'
-          description: The address for the merchant.
-          allOf:
-          - $ref: '#/components/schemas/Address'
+          description: 'The cursor that represents the next page of results. Use the `cursor` query
+
+            parameter to fetch this page of items.'
+          example: ZXhhbXBsZTE
+          minLength: 1
+          maxLength: 1000
+        previous_cursor:
+          type:
+          - string
+          - 'null'
+          description: 'The cursor that represents the next page of results. Use the `cursor` query
+
+            parameter to fetch this page of items.'
+          example: null
+          minLength: 1
+          maxLength: 1000
     Error404NotFound:
       title: Not Found Error
       type: object
@@ -1568,6 +1421,430 @@ components:
           example: []
           items:
             $ref: '#/components/schemas/ErrorDetail'
+    PaymentService--Snapshot:
+      title: A payment service
+      type: object
+      description: An active, configured payment service.
+      x-tags:
+      - Payment Services
+      properties:
+        type:
+          type: string
+          description: The type of this resource.
+          example: payment-service
+          enum:
+          - payment-service
+        id:
+          type: string
+          description: The ID of this payment service.
+          example: stripe-card-faaad066-30b4-4997-a438-242b0752d7e1
+          minLength: 1
+          maxLength: 200
+        display_name:
+          description: The custom name set for this service.
+          example: Stripe (Main)
+          maxLength: 50
+          minLength: 1
+          type: string
+        method:
+          description: The payment method that this services handles.
+          type: string
+          example: card
+          enum:
+          - affirm
+          - afterpay
+          - alipay
+          - alipayhk
+          - applepay
+          - bacs
+          - bancontact
+          - banked
+          - becs
+          - bitpay
+          - boleto
+          - boost
+          - card
+          - cashapp
+          - chaseorbital
+          - checkout-session
+          - clearpay
+          - click-to-pay
+          - dana
+          - dcb
+          - dlocal
+          - ebanx
+          - efecty
+          - eps
+          - everydaypay
+          - gcash
+          - gem
+          - gemds
+          - gift-card
+          - giropay
+          - givingblock
+          - gocardless
+          - googlepay
+          - googlepay_pan_only
+          - gopay
+          - grabpay
+          - id
+          - ideal
+          - kakaopay
+          - kcp
+          - klarna
+          - latitude
+          - latitudeds
+          - laybuy
+          - linepay
+          - linkaja
+          - maybankqrpay
+          - mercadopago
+          - multibanco
+          - multipago
+          - netbanking
+          - network-token
+          - oney_3x
+          - oney_4x
+          - oney_6x
+          - oney_10x
+          - oney_12x
+          - ovo
+          - oxxo
+          - payid
+          - paymaya
+          - paypal
+          - paypalpaylater
+          - payto
+          - venmo
+          - pix
+          - pse
+          - rabbitlinepay
+          - razorpay
+          - scalapay
+          - sepa
+          - shopeepay
+          - singteldash
+          - smartpay
+          - sofort
+          - spei
+          - stripedd
+          - thaiqr
+          - touchngo
+          - truemoney
+          - trustly
+          - trustlyeurope
+          - upi
+          - vipps
+          - waave
+          - webpay
+          - wechat
+          - zippay
+        payment_service_definition_id:
+          description: 'The ID of the payment service definition used to create this service.
+
+            '
+          example: stripe-card
+          maxLength: 50
+          minLength: 1
+          type: string
+    PayoutStoredCardRequest:
+      title: Payout card payment method
+      type: object
+      description: Stored card reference.
+      x-tags:
+      - Request Bodies
+      required:
+      - method
+      - id
+      properties:
+        method:
+          type: string
+          example: id
+          description: The method to use.
+          enum:
+          - id
+        id:
+          type: string
+          format: uuid
+          description: The ID of the stored payment method.
+          example: 8d3fe99b-1422-42e6-bbb3-932d95ae5f79
+    PayoutMerchantSummary:
+      properties:
+        type:
+          type: string
+          const: merchant
+          title: Type
+          description: Always `merchant`.
+          default: merchant
+          examples:
+          - merchant
+        name:
+          type: string
+          maxLength: 255
+          minLength: 1
+          title: Name
+          description: The name of the merchant.
+          examples:
+          - Acme Inc
+        identification_number:
+          type: string
+          maxLength: 200
+          minLength: 1
+          title: Identification Number
+          description: Unique value which identifies a merchant for processing transactions, also known as a MID.
+          examples:
+          - '12345'
+        phone_number:
+          type: string
+          pattern: ^\+[1-9]\d{1,14}$
+          title: Phone Number
+          description: The phone number for the merchant which should be formatted according to the E164 number standard.
+          examples:
+          - '+14155552671'
+          - '+442071838750'
+        url:
+          type: string
+          title: Url
+          description: Merchant website URL.
+          examples:
+          - https://example.com
+        statement_descriptor:
+          anyOf:
+          - type: string
+            maxLength: 22
+            minLength: 5
+          - type: 'null'
+          title: Statement Descriptor
+          description: Value to explain charges or payments on bank statements.
+          examples:
+          - Winnings
+        merchant_category_code:
+          type: string
+          maxLength: 4
+          minLength: 1
+          title: Merchant Category Code
+          description: Merchant classification for the type of goods or services it provides.
+          examples:
+          - '1234'
+        address:
+          anyOf:
+          - $ref: '#/components/schemas/Address_2'
+          - type: 'null'
+          description: The address for the merchant.
+      additionalProperties: false
+      type: object
+      required:
+      - name
+      - identification_number
+      - phone_number
+      - url
+      - merchant_category_code
+      title: PayoutMerchantSummary
+      description: 'PayoutMerchantSummary
+
+
+        Represents a summary of a merchant.'
+    PayoutSummary:
+      properties:
+        type:
+          type: string
+          const: payout
+          title: Type
+          description: Always `payout`.
+          default: payout
+          examples:
+          - payout
+        id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Id
+          description: The ID for the payout.
+          examples:
+          - 6f96a57e-a35b-4f98-b192-d298995f811a
+        amount:
+          type: integer
+          title: Amount
+          description: The monetary amount for this payout, in the smallest currency unit for the given currency, for example `1299` cents to create an authorization for $12.99.
+          examples:
+          - 1299
+        buyer:
+          anyOf:
+          - $ref: '#/components/schemas/TransactionBuyer'
+          - type: 'null'
+          description: The buyer used for this payout.
+        category:
+          anyOf:
+          - $ref: '#/components/schemas/PayoutCategory'
+          - type: 'null'
+          description: The type of payout to process.
+          examples:
+          - online_gambling
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+          description: The date this payout was created at.
+          examples:
+          - '2013-07-16T19:23:00.000+00:00'
+        currency:
+          type: string
+          pattern: ^[A-Z]{3}$
+          title: Currency
+          description: A supported ISO-4217 currency code.
+          examples:
+          - EUR
+          - GBP
+          - USD
+        external_identifier:
+          anyOf:
+          - type: string
+            maxLength: 200
+            minLength: 1
+          - type: 'null'
+          title: External Identifier
+          description: The merchant identifier for this payout.
+          examples:
+          - payout-12345
+        merchant:
+          anyOf:
+          - $ref: '#/components/schemas/PayoutMerchantSummary'
+          - type: 'null'
+          description: The merchant details associated to this payout.
+        merchant_account_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Merchant Account Id
+          description: The ID of the merchant account this payout was created for.
+          examples:
+          - default
+        payment_method:
+          $ref: '#/components/schemas/TransactionPaymentMethod'
+          description: The payment method used for this payout.
+        payment_service:
+          $ref: '#/components/schemas/PayoutPaymentService'
+          description: The payment service used for this payout.
+        payment_service_payout_id:
+          anyOf:
+          - type: string
+            maxLength: 200
+            minLength: 1
+          - type: 'null'
+          title: Payment Service Payout Id
+          description: The ID of the payout in the underlying payment service.
+          examples:
+          - pout-12345
+        status:
+          $ref: '#/components/schemas/PayoutStatus'
+          description: The status of the payout.
+          examples:
+          - succeeded
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+          description: The date this payout was last updated at.
+          examples:
+          - '2013-07-16T19:23:00.000+00:00'
+      additionalProperties: false
+      type: object
+      required:
+      - amount
+      - created_at
+      - currency
+      - payment_method
+      - payment_service
+      - status
+      - updated_at
+      title: PayoutSummary
+      description: 'PayoutSummary
+
+
+        Represents a summary of a payout.'
+    Error401:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `unauthorized`
+          default: unauthorized
+          examples:
+          - unauthorized
+        status:
+          type: integer
+          title: Status
+          description: Always `401`.
+          default: 401
+          examples:
+          - 401
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: No valid API authentication found
+          examples:
+          - No valid API authentication found
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error401
+    Error404:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `not_found`
+          default: not_found
+          examples:
+          - not_found
+        status:
+          type: integer
+          title: Status
+          description: Always `404`.
+          default: 404
+          examples:
+          - 404
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: The resource could not be found
+          examples:
+          - The resource could not be found
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error404
     ErrorLocation:
       type: string
       enum:
@@ -1599,24 +1876,564 @@ components:
       additionalProperties: false
       type: object
       title: PaymentMethodDetailsCard
-    PayoutCategory:
+    Error425:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `too_early`
+          default: too_early
+          examples:
+          - too_early
+        status:
+          type: integer
+          title: Status
+          description: Always `425`.
+          default: 425
+          examples:
+          - 425
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error425
+    PaymentMethodCard:
+      properties:
+        method:
+          type: string
+          const: card
+          title: Method
+          description: Set to `card` to use a new card.
+          default: card
+          examples:
+          - card
+        number:
+          type: string
+          maxLength: 19
+          minLength: 13
+          pattern: ^\d+$
+          title: Number
+          description: The 13-19 digit number for this card as it can be found on the front of the card.
+          examples:
+          - '4242424242424242'
+        expiration_date:
+          type: string
+          maxLength: 5
+          minLength: 5
+          pattern: ^\d{2}/\d{2}$
+          title: Expiration Date
+          description: The expiration date of the card, formatted `MM/YY`.
+          examples:
+          - 12/30
+        card_scheme:
+          anyOf:
+          - $ref: '#/components/schemas/CardScheme'
+          - type: 'null'
+          description: The optional card's network scheme.
+          examples:
+          - visa
+        external_identifier:
+          anyOf:
+          - type: string
+            maxLength: 200
+            minLength: 1
+          - type: 'null'
+          title: External Identifier
+          description: The merchant identifier for this card.
+          examples:
+          - card-12345
+      additionalProperties: false
+      type: object
+      required:
+      - number
+      - expiration_date
+      title: PaymentMethodCard
+    ApprovalTarget:
       type: string
       enum:
-      - online_gambling
-      title: PayoutCategory
-    Mode:
+      - new_window
+      - any
+      title: ApprovalTarget
+    PayoutPaymentService:
+      properties:
+        type:
+          type: string
+          const: payment-service
+          title: Type
+          description: Always `payment-service`.
+          default: payment-service
+          examples:
+          - payment-service
+        id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Id
+          description: The ID for the payout service.
+          examples:
+          - b6c9eb12-2b62-4103-99b9-e3efc94e396d
+        method:
+          type: string
+          const: card
+          title: Method
+          description: Always `card`.
+          default: card
+          examples:
+          - card
+        payment_service_definition_id:
+          type: string
+          title: Payment Service Definition Id
+          description: The ID of the connection used for this payout.
+          examples:
+          - nuvei-card
+        display_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Display Name
+          description: The display name of the connection used for this payout.
+          examples:
+          - Nuvei
+      additionalProperties: false
+      type: object
+      required:
+      - payment_service_definition_id
+      title: PayoutPaymentService
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ErrorDetail_2:
+      properties:
+        location:
+          $ref: '#/components/schemas/ErrorLocation'
+          description: The part of the request where the property can be found that caused the error.
+          examples:
+          - body
+        pointer:
+          anyOf:
+          - type: string
+            format: json-pointer
+          - type: string
+          title: Pointer
+          description: A JSON pointer for the particular property that caused the error.
+          examples:
+          - /currency
+        message:
+          type: string
+          title: Message
+          description: A human-readdable explanation of the error.
+          examples:
+          - 'Unknown ISO 4217 currency code: USX'
+        type:
+          type: string
+          title: Type
+          description: The type of error that was raised for this property.
+          examples:
+          - value_error
+      additionalProperties: false
+      type: object
+      required:
+      - location
+      - pointer
+      - message
+      - type
+      title: ErrorDetail
+    Error405:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `method_not_allowed`
+          default: method_not_allowed
+          examples:
+          - method_not_allowed
+        status:
+          type: integer
+          title: Status
+          description: Always `405`.
+          default: 405
+          examples:
+          - 405
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Method Not Allowed
+          examples:
+          - Method Not Allowed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error405
+    BillingDetails_2:
+      properties:
+        first_name:
+          anyOf:
+          - type: string
+            maxLength: 255
+            minLength: 1
+          - type: 'null'
+          title: First Name
+          description: The first name(s) or given name for the buyer.
+          examples:
+          - John
+        last_name:
+          anyOf:
+          - type: string
+            maxLength: 255
+            minLength: 1
+          - type: 'null'
+          title: Last Name
+          description: The last name, or family name, of the buyer.
+          examples:
+          - Doe
+        email_address:
+          anyOf:
+          - type: string
+            maxLength: 320
+            minLength: 1
+          - type: 'null'
+          title: Email Address
+          description: The email address for the buyer.
+          examples:
+          - john@example.com
+        phone_number:
+          anyOf:
+          - type: string
+            pattern: ^\+[1-9]\d{1,14}$
+            examples:
+            - '+14155552671'
+            - '+442071838750'
+          - type: 'null'
+          title: Phone Number
+          description: The phone number for the buyer which should be formatted according to the E164 number standard.
+          examples:
+          - '+1234567890'
+        address:
+          anyOf:
+          - $ref: '#/components/schemas/Address_2'
+          - type: 'null'
+          description: The billing address for the buyer.
+        tax_id:
+          anyOf:
+          - $ref: '#/components/schemas/TaxId_2'
+          - type: 'null'
+          description: The tax ID information associated with the billing details.
+      additionalProperties: false
+      type: object
+      title: BillingDetails
+    PayoutCreate:
+      properties:
+        amount:
+          type: integer
+          maximum: 99999999.0
+          minimum: 0.0
+          title: Amount
+          description: The monetary amount for this payout, in the smallest currency unit for the given currency, for example `1299` cents to create an authorization for $12.99.
+          examples:
+          - 1299
+        currency:
+          type: string
+          pattern: ^[A-Z]{3}$
+          title: Currency
+          description: The ISO-4217 currency code for this payout.
+          examples:
+          - EUR
+          - GBP
+          - USD
+        payment_service_id:
+          type: string
+          format: uuid
+          title: Payment Service Id
+          description: The ID of the payment service to use for the payout.
+          examples:
+          - ed8bd87d-85ad-40cf-8e8f-007e21e55aad
+        payment_method:
+          anyOf:
+          - $ref: '#/components/schemas/PaymentMethodCard'
+          - $ref: '#/components/schemas/PaymentMethodStoredCard'
+          title: Payment Method
+          description: The type of payment method to send funds too.
+        category:
+          anyOf:
+          - $ref: '#/components/schemas/PayoutCategory'
+          - type: 'null'
+          description: The type of payout to process.
+          examples:
+          - online_gambling
+        external_identifier:
+          anyOf:
+          - type: string
+            maxLength: 200
+            minLength: 1
+          - type: 'null'
+          title: External Identifier
+          description: A value that can be used to match the payout against your own records.
+          examples:
+          - payout-12345
+        buyer_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Buyer Id
+          description: The `id` of a stored buyer to use for this payout Use this instead of the `buyer` or `buyer_external_identifier`.
+          examples:
+          - fe26475d-ec3e-4884-9553-f7356683f7f9
+        buyer:
+          anyOf:
+          - $ref: '#/components/schemas/GuestBuyer'
+          - type: 'null'
+          description: Inline buyer details for the payout. Use this instead of the `buyer_id` or `buyer_external_identifier`.
+        buyer_external_identifier:
+          anyOf:
+          - type: string
+            maxLength: 200
+            minLength: 1
+          - type: 'null'
+          title: Buyer External Identifier
+          description: The `external_identifier` of a stored buyer to use for this payout. Use this instead of the `buyer_id` or `buyer`.
+          examples:
+          - buyer-12345
+        merchant:
+          anyOf:
+          - $ref: '#/components/schemas/PayoutMerchant'
+          - type: 'null'
+          description: Merchant information for the source of the payout.
+        connection_options:
+          anyOf:
+          - $ref: '#/components/schemas/PayoutConnectionOptions'
+          - type: 'null'
+          description: Optional fields for processing payouts on specific payment services.
+      additionalProperties: false
+      type: object
+      required:
+      - amount
+      - currency
+      - payment_service_id
+      - payment_method
+      title: PayoutCreate
+      description: 'PayoutCreate
+
+
+        Represents the data required to create a new payout.'
+    Error429:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `too_many_requests`
+          default: too_many_requests
+          examples:
+          - too_many_requests
+        status:
+          type: integer
+          title: Status
+          description: Always `429`.
+          default: 429
+          examples:
+          - 429
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error429
+    TaxIdKind:
       type: string
       enum:
-      - card
-      - redirect
-      - applepay
-      - googlepay
-      - checkout-session
-      - click-to-pay
-      - gift-card
-      - bank
-      - paze
-      title: Mode
+      - ae.trn
+      - au.abn
+      - ar.dni
+      - ar.cuil
+      - ar.cuit
+      - br.cnpj
+      - br.cpf
+      - ca.bn
+      - ca.gst_hst
+      - ca.pst_bc
+      - ca.pst_mb
+      - ca.pst_sk
+      - ca.qst
+      - ch.vat
+      - cl.tin
+      - co.itin
+      - co.nit
+      - co.cc
+      - co.ce
+      - co.de
+      - co.rc
+      - co.ti
+      - co.passport
+      - es.cif
+      - eu.vat
+      - gb.vat
+      - hk.br
+      - id.nik
+      - id.npwp
+      - in.gst
+      - in.pan
+      - jp.cn
+      - jp.rn
+      - kr.brn
+      - li.uid
+      - mx.curp
+      - mx.rfc
+      - my.frp
+      - my.itn
+      - my.nric
+      - my.sst
+      - no.vat
+      - nz.gst
+      - pe.ruc
+      - ph.tin
+      - ru.inn
+      - ru.kpp
+      - sa.vat
+      - sg.gst
+      - sg.uen
+      - th.id
+      - th.vat
+      - tw.vat
+      - us.ein
+      - za.vat
+      - bo.ci
+      - uy.rut
+      - uy.ci
+      title: TaxIdKind
+    PayoutSummaries:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/PayoutSummary'
+          type: array
+          title: Items
+          description: A list of items returned for this request.
+        limit:
+          type: integer
+          maximum: 100.0
+          minimum: 1.0
+          title: Limit
+          description: The number of items for this page.
+          default: 20
+          examples:
+          - 20
+        next_cursor:
+          anyOf:
+          - type: string
+            maxLength: 1000
+            minLength: 1
+          - type: 'null'
+          title: Next Cursor
+          description: The cursor pointing at the next page of items.
+          examples:
+          - ZXhhbXBsZTE
+        previous_cursor:
+          anyOf:
+          - type: string
+            maxLength: 1000
+            minLength: 1
+          - type: 'null'
+          title: Previous Cursor
+          description: The cursor pointing at the previous page of items.
+          examples:
+          - Xkjss7asS
+      additionalProperties: false
+      type: object
+      required:
+      - items
+      title: PayoutSummaries
+    PayoutConnectionOptions:
+      properties:
+        checkout-card:
+          anyOf:
+          - $ref: '#/components/schemas/CheckoutPayoutOptions'
+          - type: 'null'
+          description: Custom options for `checkout-card` payment service.
+      additionalProperties: false
+      type: object
+      title: PayoutConnectionOptions
+    TaxId_2:
+      properties:
+        value:
+          type: string
+          maxLength: 50
+          minLength: 1
+          title: Value
+          description: The tax ID for the buyer.
+          examples:
+          - '12345678931'
+        kind:
+          $ref: '#/components/schemas/TaxIdKind'
+          description: The kind of tax ID
+          examples:
+          - us.ein
+      additionalProperties: false
+      type: object
+      required:
+      - value
+      - kind
+      title: TaxId
     PayoutMerchant:
       properties:
         name:
@@ -1680,7 +2497,7 @@ components:
       - statement_descriptor
       - merchant_category_code
       title: PayoutMerchant
-    Error405:
+    Error500:
       properties:
         type:
           type: string
@@ -1693,24 +2510,24 @@ components:
         code:
           type: string
           title: Code
-          description: Always `method_not_allowed`
-          default: method_not_allowed
+          description: Always `server_error`
+          default: server_error
           examples:
-          - method_not_allowed
+          - server_error
         status:
           type: integer
           title: Status
-          description: Always `405`.
-          default: 405
+          description: Always `500`.
+          default: 500
           examples:
-          - 405
+          - 500
         message:
           type: string
           title: Message
           description: A human readable message that provides more context to the error.
-          default: Method Not Allowed
+          default: Request could not be processed
           examples:
-          - Method Not Allowed
+          - Request could not be processed
         details:
           items:
             $ref: '#/components/schemas/ErrorDetail_2'
@@ -1720,43 +2537,592 @@ components:
           default: []
       additionalProperties: false
       type: object
-      title: Error405
-    ErrorDetail_2:
+      title: Error500
+    CardType:
+      type: string
+      enum:
+      - credit
+      - debit
+      - prepaid
+      title: CardType
+    Error504:
       properties:
-        location:
-          $ref: '#/components/schemas/ErrorLocation'
-          description: The part of the request where the property can be found that caused the error.
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
           examples:
-          - body
-        pointer:
-          anyOf:
-          - type: string
-            format: json-pointer
-          - type: string
-          title: Pointer
-          description: A JSON pointer for the particular property that caused the error.
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `gateway_timeout`
+          default: gateway_timeout
           examples:
-          - /currency
+          - gateway_timeout
+        status:
+          type: integer
+          title: Status
+          default: 504
         message:
           type: string
           title: Message
-          description: A human-readdable explanation of the error.
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
           examples:
-          - 'Unknown ISO 4217 currency code: USX'
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error504
+    Error400:
+      properties:
         type:
           type: string
+          const: error
           title: Type
-          description: The type of error that was raised for this property.
+          description: Always `error`.
+          default: error
           examples:
-          - value_error
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `bad_request`
+          default: bad_request
+          examples:
+          - bad_request
+        status:
+          type: integer
+          title: Status
+          description: Always `400`.
+          default: 400
+          examples:
+          - 400
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error400
+    Mode:
+      type: string
+      enum:
+      - card
+      - redirect
+      - applepay
+      - googlepay
+      - checkout-session
+      - click-to-pay
+      - gift-card
+      - bank
+      - paze
+      title: Mode
+    PaymentMethodStoredCard:
+      properties:
+        method:
+          type: string
+          const: id
+          title: Method
+          description: Set to `id` to use a stored card.
+          default: id
+          examples:
+          - id
+        id:
+          type: string
+          format: uuid
+          title: Id
+          description: The ID of the stored card to use.
+          examples:
+          - 852b951c-d7ea-4c98-b09e-4a1c9e97c077
       additionalProperties: false
       type: object
       required:
-      - location
-      - pointer
-      - message
+      - id
+      title: PaymentMethodStoredCard
+    Address_2:
+      properties:
+        city:
+          anyOf:
+          - type: string
+            maxLength: 100
+            minLength: 1
+          - type: 'null'
+          title: City
+          description: The city for the address.
+          examples:
+          - San Jose
+        country:
+          anyOf:
+          - type: string
+            pattern: ^[A-Z]{2}$
+            examples:
+            - DE
+            - GB
+            - US
+          - type: 'null'
+          title: Country
+          description: The country for the address in ISO 3166 format.
+          examples:
+          - US
+        postal_code:
+          anyOf:
+          - type: string
+            maxLength: 50
+            minLength: 1
+          - type: 'null'
+          title: Postal Code
+          description: The postal code or zip code for the address.
+          examples:
+          - '94560'
+        state:
+          anyOf:
+          - type: string
+            maxLength: 255
+            minLength: 1
+          - type: 'null'
+          title: State
+          description: The state, county, or province for the address.
+          examples:
+          - California
+        state_code:
+          anyOf:
+          - type: string
+            pattern: ^[A-Z]{2}-[A-Z0-9]{1,3}$
+            examples:
+            - GB-LND
+            - US-CA
+          - type: 'null'
+          title: State Code
+          description: The code of state, county, or province for the address in ISO 3166-2 format.
+          examples:
+          - US-CA
+        house_number_or_name:
+          anyOf:
+          - type: string
+            maxLength: 255
+            minLength: 1
+          - type: 'null'
+          title: House Number Or Name
+          description: The house number or name for the address. Not all payment services use this field but some do.
+          examples:
+          - '10'
+        line1:
+          anyOf:
+          - type: string
+            maxLength: 255
+            minLength: 1
+          - type: 'null'
+          title: Line1
+          description: The first line of the address.
+          examples:
+          - Stafford Appartments
+        line2:
+          anyOf:
+          - type: string
+            maxLength: 255
+            minLength: 1
+          - type: 'null'
+          title: Line2
+          description: The second line of the address.
+          examples:
+          - 29th Street
+        organization:
+          anyOf:
+          - type: string
+            maxLength: 255
+            minLength: 1
+          - type: 'null'
+          title: Organization
+          description: The optional name of the company or organisation to add to the address.
+          examples:
+          - Gr4vy
+      additionalProperties: false
+      type: object
+      title: Address
+    GuestBuyer:
+      properties:
+        display_name:
+          anyOf:
+          - type: string
+            maxLength: 200
+            minLength: 1
+          - type: 'null'
+          title: Display Name
+          description: The display name for the buyer.
+          examples:
+          - John Doe
+        external_identifier:
+          anyOf:
+          - type: string
+            maxLength: 200
+            minLength: 1
+          - type: 'null'
+          title: External Identifier
+          description: The merchant identifier for this buyer.
+          examples:
+          - buyer-12345
+        billing_details:
+          anyOf:
+          - $ref: '#/components/schemas/BillingDetails_2'
+          - type: 'null'
+          description: The billing name, address, email, and other fields for this buyer.
+        account_number:
+          anyOf:
+          - type: string
+            maxLength: 200
+            minLength: 1
+          - type: 'null'
+          title: Account Number
+          description: The buyer account number
+        shipping_details:
+          anyOf:
+          - $ref: '#/components/schemas/ShippingDetailsCreate'
+          - type: 'null'
+          description: The optional shipping details for this buyer.
+      additionalProperties: false
+      type: object
+      title: GuestBuyer
+    Error502:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `bad_gateway`
+          default: bad_gateway
+          examples:
+          - bad_gateway
+        status:
+          type: integer
+          title: Status
+          description: Always `502`.
+          default: 502
+          examples:
+          - 502
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error502
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
       - type
-      title: ErrorDetail
+      title: ValidationError
+    TransactionBuyer:
+      properties:
+        type:
+          type: string
+          const: buyer
+          title: Type
+          description: Always `buyer`.
+          default: buyer
+          examples:
+          - buyer
+        id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Id
+          description: The ID for the buyer.
+          examples:
+          - fe26475d-ec3e-4884-9553-f7356683f7f9
+        reconciliation_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reconciliation Id
+          description: The base62 encoded buyer ID. This represents a shorter version of this buyer's `id` which is sent to payment services, anti-fraud services, and other connectors. You can use this ID to reconcile a payment service's buyer against our system.
+          examples:
+          - 7jZXl4gBUNl0CnaLEnfXbt
+        display_name:
+          anyOf:
+          - type: string
+            maxLength: 200
+            minLength: 1
+          - type: 'null'
+          title: Display Name
+          description: The display name for the buyer.
+          examples:
+          - John Doe
+        external_identifier:
+          anyOf:
+          - type: string
+            maxLength: 200
+            minLength: 1
+          - type: 'null'
+          title: External Identifier
+          description: The merchant identifier for this buyer.
+          examples:
+          - buyer-12345
+        billing_details:
+          anyOf:
+          - $ref: '#/components/schemas/BillingDetails_2'
+          - type: 'null'
+          description: The billing name, address, email, and other fields for this buyer.
+        account_number:
+          anyOf:
+          - type: string
+            maxLength: 200
+            minLength: 1
+          - type: 'null'
+          title: Account Number
+          description: The buyer account number.
+      additionalProperties: false
+      type: object
+      title: TransactionBuyer
+    Error409:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `duplicate_record`
+          default: duplicate_record
+          examples:
+          - duplicate_record
+        status:
+          type: integer
+          title: Status
+          description: Always `409`.
+          default: 409
+          examples:
+          - 409
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+        resource_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Resource Id
+          description: The ID of the conflicting resource.
+          examples:
+          - cdc70639-cb9c-4222-a73f-b8ce39f7821b
+      additionalProperties: false
+      type: object
+      title: Error409
+    Error403:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `forbidden`
+          default: forbidden
+          examples:
+          - forbidden
+        status:
+          type: integer
+          title: Status
+          description: Always `403`.
+          default: 403
+          examples:
+          - 403
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error403
+    CardScheme:
+      type: string
+      enum:
+      - accel
+      - amex
+      - bancontact
+      - carte-bancaire
+      - cirrus
+      - culiance
+      - dankort
+      - diners-club
+      - discover
+      - eftpos-australia
+      - elo
+      - hipercard
+      - jcb
+      - maestro
+      - mastercard
+      - mir
+      - nyce
+      - other
+      - pulse
+      - qcard
+      - rupay
+      - star
+      - uatp
+      - unionpay
+      - visa
+      title: CardScheme
+    CheckoutPayoutOptions:
+      properties:
+        processing_channel_id:
+          type: string
+          title: Processing Channel Id
+          description: The processing channel to be used for the payment.
+          examples:
+          - channel-1234
+        source_id:
+          type: string
+          title: Source Id
+          description: The ID of the currency account that will fund the payout.
+          examples:
+          - acct-1234
+      additionalProperties: false
+      type: object
+      required:
+      - processing_channel_id
+      - source_id
+      title: CheckoutPayoutOptions
+    ShippingDetailsCreate:
+      properties:
+        first_name:
+          anyOf:
+          - type: string
+            maxLength: 255
+            minLength: 1
+          - type: 'null'
+          title: First Name
+          description: The first name(s) or given name for the buyer.
+          examples:
+          - John
+        last_name:
+          anyOf:
+          - type: string
+            maxLength: 255
+            minLength: 1
+          - type: 'null'
+          title: Last Name
+          description: The last name, or family name, of the buyer.
+          examples:
+          - Doe
+        email_address:
+          anyOf:
+          - type: string
+            maxLength: 320
+            minLength: 1
+          - type: 'null'
+          title: Email Address
+          description: The email address for the buyer.
+          examples:
+          - john@example.com
+        phone_number:
+          anyOf:
+          - type: string
+            pattern: ^\+[1-9]\d{1,14}$
+            examples:
+            - '+14155552671'
+            - '+442071838750'
+          - type: 'null'
+          title: Phone Number
+          description: The phone number for the buyer which should be formatted according to the E164 number standard.
+          examples:
+          - '+1234567890'
+        address:
+          anyOf:
+          - $ref: '#/components/schemas/Address_2'
+          - type: 'null'
+          description: The billing address for the buyer.
+      additionalProperties: false
+      type: object
+      title: ShippingDetailsCreate
     Method:
       type: string
       enum:
@@ -1890,302 +3256,11 @@ components:
       - yape
       - zippay
       title: Method
-    Error404:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `not_found`
-          default: not_found
-          examples:
-          - not_found
-        status:
-          type: integer
-          title: Status
-          description: Always `404`.
-          default: 404
-          examples:
-          - 404
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: The resource could not be found
-          examples:
-          - The resource could not be found
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error404
-    PayoutMerchantSummary:
-      properties:
-        type:
-          type: string
-          const: merchant
-          title: Type
-          description: Always `merchant`.
-          default: merchant
-          examples:
-          - merchant
-        name:
-          type: string
-          maxLength: 255
-          minLength: 1
-          title: Name
-          description: The name of the merchant.
-          examples:
-          - Acme Inc
-        identification_number:
-          type: string
-          maxLength: 200
-          minLength: 1
-          title: Identification Number
-          description: Unique value which identifies a merchant for processing transactions, also known as a MID.
-          examples:
-          - '12345'
-        phone_number:
-          type: string
-          pattern: ^\+[1-9]\d{1,14}$
-          title: Phone Number
-          description: The phone number for the merchant which should be formatted according to the E164 number standard.
-          examples:
-          - '+14155552671'
-          - '+442071838750'
-        url:
-          type: string
-          title: Url
-          description: Merchant website URL.
-          examples:
-          - https://example.com
-        statement_descriptor:
-          anyOf:
-          - type: string
-            maxLength: 22
-            minLength: 5
-          - type: 'null'
-          title: Statement Descriptor
-          description: Value to explain charges or payments on bank statements.
-          examples:
-          - Winnings
-        merchant_category_code:
-          type: string
-          maxLength: 4
-          minLength: 1
-          title: Merchant Category Code
-          description: Merchant classification for the type of goods or services it provides.
-          examples:
-          - '1234'
-        address:
-          anyOf:
-          - $ref: '#/components/schemas/Address_2'
-          - type: 'null'
-          description: The address for the merchant.
-      additionalProperties: false
-      type: object
-      required:
-      - name
-      - identification_number
-      - phone_number
-      - url
-      - merchant_category_code
-      title: PayoutMerchantSummary
-      description: 'PayoutMerchantSummary
-
-
-        Represents a summary of a merchant.'
-    Error409:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `duplicate_record`
-          default: duplicate_record
-          examples:
-          - duplicate_record
-        status:
-          type: integer
-          title: Status
-          description: Always `409`.
-          default: 409
-          examples:
-          - 409
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-        resource_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Resource Id
-          description: The ID of the conflicting resource.
-          examples:
-          - cdc70639-cb9c-4222-a73f-b8ce39f7821b
-      additionalProperties: false
-      type: object
-      title: Error409
-    TaxIdKind:
+    PayoutCategory:
       type: string
       enum:
-      - ae.trn
-      - au.abn
-      - ar.dni
-      - ar.cuil
-      - ar.cuit
-      - br.cnpj
-      - br.cpf
-      - ca.bn
-      - ca.gst_hst
-      - ca.pst_bc
-      - ca.pst_mb
-      - ca.pst_sk
-      - ca.qst
-      - ch.vat
-      - cl.tin
-      - co.itin
-      - co.nit
-      - co.cc
-      - co.ce
-      - co.de
-      - co.rc
-      - co.ti
-      - co.passport
-      - es.cif
-      - eu.vat
-      - gb.vat
-      - hk.br
-      - id.nik
-      - id.npwp
-      - in.gst
-      - in.pan
-      - jp.cn
-      - jp.rn
-      - kr.brn
-      - li.uid
-      - mx.curp
-      - mx.rfc
-      - my.frp
-      - my.itn
-      - my.nric
-      - my.sst
-      - no.vat
-      - nz.gst
-      - pe.ruc
-      - ph.tin
-      - ru.inn
-      - ru.kpp
-      - sa.vat
-      - sg.gst
-      - sg.uen
-      - th.id
-      - th.vat
-      - tw.vat
-      - us.ein
-      - za.vat
-      - bo.ci
-      - uy.rut
-      - uy.ci
-      title: TaxIdKind
-    CheckoutPayoutOptions:
-      properties:
-        processing_channel_id:
-          type: string
-          title: Processing Channel Id
-          description: The processing channel to be used for the payment.
-          examples:
-          - channel-1234
-        source_id:
-          type: string
-          title: Source Id
-          description: The ID of the currency account that will fund the payout.
-          examples:
-          - acct-1234
-      additionalProperties: false
-      type: object
-      required:
-      - processing_channel_id
-      - source_id
-      title: CheckoutPayoutOptions
-    ApprovalTarget:
-      type: string
-      enum:
-      - new_window
-      - any
-      title: ApprovalTarget
-    PayoutSummaries:
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/PayoutSummary'
-          type: array
-          title: Items
-          description: A list of items returned for this request.
-        limit:
-          type: integer
-          maximum: 100.0
-          minimum: 1.0
-          title: Limit
-          description: The number of items for this page.
-          default: 20
-          examples:
-          - 20
-        next_cursor:
-          anyOf:
-          - type: string
-            maxLength: 1000
-            minLength: 1
-          - type: 'null'
-          title: Next Cursor
-          description: The cursor pointing at the next page of items.
-          examples:
-          - ZXhhbXBsZTE
-        previous_cursor:
-          anyOf:
-          - type: string
-            maxLength: 1000
-            minLength: 1
-          - type: 'null'
-          title: Previous Cursor
-          description: The cursor pointing at the previous page of items.
-          examples:
-          - Xkjss7asS
-      additionalProperties: false
-      type: object
-      required:
-      - items
-      title: PayoutSummaries
+      - online_gambling
+      title: PayoutCategory
     PayoutStatus:
       type: string
       enum:
@@ -2194,841 +3269,6 @@ components:
       - pending
       - succeeded
       title: PayoutStatus
-    CardScheme:
-      type: string
-      enum:
-      - accel
-      - amex
-      - bancontact
-      - carte-bancaire
-      - cirrus
-      - culiance
-      - dankort
-      - diners-club
-      - discover
-      - eftpos-australia
-      - elo
-      - hipercard
-      - jcb
-      - maestro
-      - mastercard
-      - mir
-      - nyce
-      - other
-      - pulse
-      - qcard
-      - rupay
-      - star
-      - uatp
-      - unionpay
-      - visa
-      title: CardScheme
-    PaymentMethodCard:
-      properties:
-        method:
-          type: string
-          const: card
-          title: Method
-          description: Set to `card` to use a new card.
-          default: card
-          examples:
-          - card
-        number:
-          type: string
-          maxLength: 19
-          minLength: 13
-          pattern: ^\d+$
-          title: Number
-          description: The 13-19 digit number for this card as it can be found on the front of the card.
-          examples:
-          - '4242424242424242'
-        expiration_date:
-          type: string
-          maxLength: 5
-          minLength: 5
-          pattern: ^\d{2}/\d{2}$
-          title: Expiration Date
-          description: The expiration date of the card, formatted `MM/YY`.
-          examples:
-          - 12/30
-        card_scheme:
-          anyOf:
-          - $ref: '#/components/schemas/CardScheme'
-          - type: 'null'
-          description: The optional card's network scheme.
-          examples:
-          - visa
-        external_identifier:
-          anyOf:
-          - type: string
-            maxLength: 200
-            minLength: 1
-          - type: 'null'
-          title: External Identifier
-          description: The merchant identifier for this card.
-          examples:
-          - card-12345
-      additionalProperties: false
-      type: object
-      required:
-      - number
-      - expiration_date
-      title: PaymentMethodCard
-    CardType:
-      type: string
-      enum:
-      - credit
-      - debit
-      - prepaid
-      title: CardType
-    BillingDetails_2:
-      properties:
-        first_name:
-          anyOf:
-          - type: string
-            maxLength: 255
-            minLength: 1
-          - type: 'null'
-          title: First Name
-          description: The first name(s) or given name for the buyer.
-          examples:
-          - John
-        last_name:
-          anyOf:
-          - type: string
-            maxLength: 255
-            minLength: 1
-          - type: 'null'
-          title: Last Name
-          description: The last name, or family name, of the buyer.
-          examples:
-          - Doe
-        email_address:
-          anyOf:
-          - type: string
-            maxLength: 320
-            minLength: 1
-          - type: 'null'
-          title: Email Address
-          description: The email address for the buyer.
-          examples:
-          - john@example.com
-        phone_number:
-          anyOf:
-          - type: string
-            pattern: ^\+[1-9]\d{1,14}$
-            examples:
-            - '+14155552671'
-            - '+442071838750'
-          - type: 'null'
-          title: Phone Number
-          description: The phone number for the buyer which should be formatted according to the E164 number standard.
-          examples:
-          - '+1234567890'
-        address:
-          anyOf:
-          - $ref: '#/components/schemas/Address_2'
-          - type: 'null'
-          description: The billing address for the buyer.
-        tax_id:
-          anyOf:
-          - $ref: '#/components/schemas/TaxId_2'
-          - type: 'null'
-          description: The tax ID information associated with the billing details.
-      additionalProperties: false
-      type: object
-      title: BillingDetails
-    Error401:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `unauthorized`
-          default: unauthorized
-          examples:
-          - unauthorized
-        status:
-          type: integer
-          title: Status
-          description: Always `401`.
-          default: 401
-          examples:
-          - 401
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: No valid API authentication found
-          examples:
-          - No valid API authentication found
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error401
-    Error504:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `gateway_timeout`
-          default: gateway_timeout
-          examples:
-          - gateway_timeout
-        status:
-          type: integer
-          title: Status
-          default: 504
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Request could not be processed
-          examples:
-          - Request could not be processed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error504
-    Error502:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `bad_gateway`
-          default: bad_gateway
-          examples:
-          - bad_gateway
-        status:
-          type: integer
-          title: Status
-          description: Always `502`.
-          default: 502
-          examples:
-          - 502
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Request could not be processed
-          examples:
-          - Request could not be processed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error502
-    TaxId_2:
-      properties:
-        value:
-          type: string
-          maxLength: 50
-          minLength: 1
-          title: Value
-          description: The tax ID for the buyer.
-          examples:
-          - '12345678931'
-        kind:
-          $ref: '#/components/schemas/TaxIdKind'
-          description: The kind of tax ID
-          examples:
-          - us.ein
-      additionalProperties: false
-      type: object
-      required:
-      - value
-      - kind
-      title: TaxId
-    PaymentMethodStoredCard:
-      properties:
-        method:
-          type: string
-          const: id
-          title: Method
-          description: Set to `id` to use a stored card.
-          default: id
-          examples:
-          - id
-        id:
-          type: string
-          format: uuid
-          title: Id
-          description: The ID of the stored card to use.
-          examples:
-          - 852b951c-d7ea-4c98-b09e-4a1c9e97c077
-      additionalProperties: false
-      type: object
-      required:
-      - id
-      title: PaymentMethodStoredCard
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    PayoutSummary:
-      properties:
-        type:
-          type: string
-          const: payout
-          title: Type
-          description: Always `payout`.
-          default: payout
-          examples:
-          - payout
-        id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Id
-          description: The ID for the payout.
-          examples:
-          - 6f96a57e-a35b-4f98-b192-d298995f811a
-        amount:
-          type: integer
-          title: Amount
-          description: The monetary amount for this payout, in the smallest currency unit for the given currency, for example `1299` cents to create an authorization for $12.99.
-          examples:
-          - 1299
-        buyer:
-          anyOf:
-          - $ref: '#/components/schemas/TransactionBuyer'
-          - type: 'null'
-          description: The buyer used for this payout.
-        category:
-          anyOf:
-          - $ref: '#/components/schemas/PayoutCategory'
-          - type: 'null'
-          description: The type of payout to process.
-          examples:
-          - online_gambling
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-          description: The date this payout was created at.
-          examples:
-          - '2013-07-16T19:23:00.000+00:00'
-        currency:
-          type: string
-          pattern: ^[A-Z]{3}$
-          title: Currency
-          description: A supported ISO-4217 currency code.
-          examples:
-          - EUR
-          - GBP
-          - USD
-        external_identifier:
-          anyOf:
-          - type: string
-            maxLength: 200
-            minLength: 1
-          - type: 'null'
-          title: External Identifier
-          description: The merchant identifier for this payout.
-          examples:
-          - payout-12345
-        merchant:
-          anyOf:
-          - $ref: '#/components/schemas/PayoutMerchantSummary'
-          - type: 'null'
-          description: The merchant details associated to this payout.
-        merchant_account_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Merchant Account Id
-          description: The ID of the merchant account this payout was created for.
-          examples:
-          - default
-        payment_method:
-          $ref: '#/components/schemas/TransactionPaymentMethod'
-          description: The payment method used for this payout.
-        payment_service:
-          $ref: '#/components/schemas/PayoutPaymentService'
-          description: The payment service used for this payout.
-        payment_service_payout_id:
-          anyOf:
-          - type: string
-            maxLength: 200
-            minLength: 1
-          - type: 'null'
-          title: Payment Service Payout Id
-          description: The ID of the payout in the underlying payment service.
-          examples:
-          - pout-12345
-        status:
-          $ref: '#/components/schemas/PayoutStatus'
-          description: The status of the payout.
-          examples:
-          - succeeded
-        updated_at:
-          type: string
-          format: date-time
-          title: Updated At
-          description: The date this payout was last updated at.
-          examples:
-          - '2013-07-16T19:23:00.000+00:00'
-      additionalProperties: false
-      type: object
-      required:
-      - amount
-      - created_at
-      - currency
-      - payment_method
-      - payment_service
-      - status
-      - updated_at
-      title: PayoutSummary
-      description: 'PayoutSummary
-
-
-        Represents a summary of a payout.'
-    PayoutCreate:
-      properties:
-        amount:
-          type: integer
-          maximum: 99999999.0
-          minimum: 0.0
-          title: Amount
-          description: The monetary amount for this payout, in the smallest currency unit for the given currency, for example `1299` cents to create an authorization for $12.99.
-          examples:
-          - 1299
-        currency:
-          type: string
-          pattern: ^[A-Z]{3}$
-          title: Currency
-          description: The ISO-4217 currency code for this payout.
-          examples:
-          - EUR
-          - GBP
-          - USD
-        payment_service_id:
-          type: string
-          format: uuid
-          title: Payment Service Id
-          description: The ID of the payment service to use for the payout.
-          examples:
-          - ed8bd87d-85ad-40cf-8e8f-007e21e55aad
-        payment_method:
-          anyOf:
-          - $ref: '#/components/schemas/PaymentMethodCard'
-          - $ref: '#/components/schemas/PaymentMethodStoredCard'
-          title: Payment Method
-          description: The type of payment method to send funds too.
-        category:
-          anyOf:
-          - $ref: '#/components/schemas/PayoutCategory'
-          - type: 'null'
-          description: The type of payout to process.
-          examples:
-          - online_gambling
-        external_identifier:
-          anyOf:
-          - type: string
-            maxLength: 200
-            minLength: 1
-          - type: 'null'
-          title: External Identifier
-          description: A value that can be used to match the payout against your own records.
-          examples:
-          - payout-12345
-        buyer_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Buyer Id
-          description: The `id` of a stored buyer to use for this payout Use this instead of the `buyer` or `buyer_external_identifier`.
-          examples:
-          - fe26475d-ec3e-4884-9553-f7356683f7f9
-        buyer:
-          anyOf:
-          - $ref: '#/components/schemas/GuestBuyer'
-          - type: 'null'
-          description: Inline buyer details for the payout. Use this instead of the `buyer_id` or `buyer_external_identifier`.
-        buyer_external_identifier:
-          anyOf:
-          - type: string
-            maxLength: 200
-            minLength: 1
-          - type: 'null'
-          title: Buyer External Identifier
-          description: The `external_identifier` of a stored buyer to use for this payout. Use this instead of the `buyer_id` or `buyer`.
-          examples:
-          - buyer-12345
-        merchant:
-          anyOf:
-          - $ref: '#/components/schemas/PayoutMerchant'
-          - type: 'null'
-          description: Merchant information for the source of the payout.
-        connection_options:
-          anyOf:
-          - $ref: '#/components/schemas/PayoutConnectionOptions'
-          - type: 'null'
-          description: Optional fields for processing payouts on specific payment services.
-      additionalProperties: false
-      type: object
-      required:
-      - amount
-      - currency
-      - payment_service_id
-      - payment_method
-      title: PayoutCreate
-      description: 'PayoutCreate
-
-
-        Represents the data required to create a new payout.'
-    Address_2:
-      properties:
-        city:
-          anyOf:
-          - type: string
-            maxLength: 100
-            minLength: 1
-          - type: 'null'
-          title: City
-          description: The city for the address.
-          examples:
-          - San Jose
-        country:
-          anyOf:
-          - type: string
-            pattern: ^[A-Z]{2}$
-            examples:
-            - DE
-            - GB
-            - US
-          - type: 'null'
-          title: Country
-          description: The country for the address in ISO 3166 format.
-          examples:
-          - US
-        postal_code:
-          anyOf:
-          - type: string
-            maxLength: 50
-            minLength: 1
-          - type: 'null'
-          title: Postal Code
-          description: The postal code or zip code for the address.
-          examples:
-          - '94560'
-        state:
-          anyOf:
-          - type: string
-            maxLength: 255
-            minLength: 1
-          - type: 'null'
-          title: State
-          description: The state, county, or province for the address.
-          examples:
-          - California
-        state_code:
-          anyOf:
-          - type: string
-            pattern: ^[A-Z]{2}-[A-Z0-9]{1,3}$
-            examples:
-            - GB-LND
-            - US-CA
-          - type: 'null'
-          title: State Code
-          description: The code of state, county, or province for the address in ISO 3166-2 format.
-          examples:
-          - US-CA
-        house_number_or_name:
-          anyOf:
-          - type: string
-            maxLength: 255
-            minLength: 1
-          - type: 'null'
-          title: House Number Or Name
-          description: The house number or name for the address. Not all payment services use this field but some do.
-          examples:
-          - '10'
-        line1:
-          anyOf:
-          - type: string
-            maxLength: 255
-            minLength: 1
-          - type: 'null'
-          title: Line1
-          description: The first line of the address.
-          examples:
-          - Stafford Appartments
-        line2:
-          anyOf:
-          - type: string
-            maxLength: 255
-            minLength: 1
-          - type: 'null'
-          title: Line2
-          description: The second line of the address.
-          examples:
-          - 29th Street
-        organization:
-          anyOf:
-          - type: string
-            maxLength: 255
-            minLength: 1
-          - type: 'null'
-          title: Organization
-          description: The optional name of the company or organisation to add to the address.
-          examples:
-          - Gr4vy
-      additionalProperties: false
-      type: object
-      title: Address
-    Error500:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `server_error`
-          default: server_error
-          examples:
-          - server_error
-        status:
-          type: integer
-          title: Status
-          description: Always `500`.
-          default: 500
-          examples:
-          - 500
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Request could not be processed
-          examples:
-          - Request could not be processed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error500
-    PayoutPaymentService:
-      properties:
-        type:
-          type: string
-          const: payment-service
-          title: Type
-          description: Always `payment-service`.
-          default: payment-service
-          examples:
-          - payment-service
-        id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Id
-          description: The ID for the payout service.
-          examples:
-          - b6c9eb12-2b62-4103-99b9-e3efc94e396d
-        method:
-          type: string
-          const: card
-          title: Method
-          description: Always `card`.
-          default: card
-          examples:
-          - card
-        payment_service_definition_id:
-          type: string
-          title: Payment Service Definition Id
-          description: The ID of the connection used for this payout.
-          examples:
-          - nuvei-card
-        display_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Display Name
-          description: The display name of the connection used for this payout.
-          examples:
-          - Nuvei
-      additionalProperties: false
-      type: object
-      required:
-      - payment_service_definition_id
-      title: PayoutPaymentService
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    PayoutConnectionOptions:
-      properties:
-        checkout-card:
-          anyOf:
-          - $ref: '#/components/schemas/CheckoutPayoutOptions'
-          - type: 'null'
-          description: Custom options for `checkout-card` payment service.
-      additionalProperties: false
-      type: object
-      title: PayoutConnectionOptions
-    Error425:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `too_early`
-          default: too_early
-          examples:
-          - too_early
-        status:
-          type: integer
-          title: Status
-          description: Always `425`.
-          default: 425
-          examples:
-          - 425
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error425
-    Error400:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `bad_request`
-          default: bad_request
-          examples:
-          - bad_request
-        status:
-          type: integer
-          title: Status
-          description: Always `400`.
-          default: 400
-          examples:
-          - 400
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error400
     TransactionPaymentMethod:
       properties:
         type:
@@ -3174,246 +3414,6 @@ components:
       required:
       - method
       title: TransactionPaymentMethod
-    Error403:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `forbidden`
-          default: forbidden
-          examples:
-          - forbidden
-        status:
-          type: integer
-          title: Status
-          description: Always `403`.
-          default: 403
-          examples:
-          - 403
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error403
-    TransactionBuyer:
-      properties:
-        type:
-          type: string
-          const: buyer
-          title: Type
-          description: Always `buyer`.
-          default: buyer
-          examples:
-          - buyer
-        id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Id
-          description: The ID for the buyer.
-          examples:
-          - fe26475d-ec3e-4884-9553-f7356683f7f9
-        reconciliation_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Reconciliation Id
-          description: The base62 encoded buyer ID. This represents a shorter version of this buyer's `id` which is sent to payment services, anti-fraud services, and other connectors. You can use this ID to reconcile a payment service's buyer against our system.
-          examples:
-          - 7jZXl4gBUNl0CnaLEnfXbt
-        display_name:
-          anyOf:
-          - type: string
-            maxLength: 200
-            minLength: 1
-          - type: 'null'
-          title: Display Name
-          description: The display name for the buyer.
-          examples:
-          - John Doe
-        external_identifier:
-          anyOf:
-          - type: string
-            maxLength: 200
-            minLength: 1
-          - type: 'null'
-          title: External Identifier
-          description: The merchant identifier for this buyer.
-          examples:
-          - buyer-12345
-        billing_details:
-          anyOf:
-          - $ref: '#/components/schemas/BillingDetails_2'
-          - type: 'null'
-          description: The billing name, address, email, and other fields for this buyer.
-        account_number:
-          anyOf:
-          - type: string
-            maxLength: 200
-            minLength: 1
-          - type: 'null'
-          title: Account Number
-          description: The buyer account number.
-      additionalProperties: false
-      type: object
-      title: TransactionBuyer
-    ShippingDetailsCreate:
-      properties:
-        first_name:
-          anyOf:
-          - type: string
-            maxLength: 255
-            minLength: 1
-          - type: 'null'
-          title: First Name
-          description: The first name(s) or given name for the buyer.
-          examples:
-          - John
-        last_name:
-          anyOf:
-          - type: string
-            maxLength: 255
-            minLength: 1
-          - type: 'null'
-          title: Last Name
-          description: The last name, or family name, of the buyer.
-          examples:
-          - Doe
-        email_address:
-          anyOf:
-          - type: string
-            maxLength: 320
-            minLength: 1
-          - type: 'null'
-          title: Email Address
-          description: The email address for the buyer.
-          examples:
-          - john@example.com
-        phone_number:
-          anyOf:
-          - type: string
-            pattern: ^\+[1-9]\d{1,14}$
-            examples:
-            - '+14155552671'
-            - '+442071838750'
-          - type: 'null'
-          title: Phone Number
-          description: The phone number for the buyer which should be formatted according to the E164 number standard.
-          examples:
-          - '+1234567890'
-        address:
-          anyOf:
-          - $ref: '#/components/schemas/Address_2'
-          - type: 'null'
-          description: The billing address for the buyer.
-      additionalProperties: false
-      type: object
-      title: ShippingDetailsCreate
-    GuestBuyer:
-      properties:
-        display_name:
-          anyOf:
-          - type: string
-            maxLength: 200
-            minLength: 1
-          - type: 'null'
-          title: Display Name
-          description: The display name for the buyer.
-          examples:
-          - John Doe
-        external_identifier:
-          anyOf:
-          - type: string
-            maxLength: 200
-            minLength: 1
-          - type: 'null'
-          title: External Identifier
-          description: The merchant identifier for this buyer.
-          examples:
-          - buyer-12345
-        billing_details:
-          anyOf:
-          - $ref: '#/components/schemas/BillingDetails_2'
-          - type: 'null'
-          description: The billing name, address, email, and other fields for this buyer.
-        account_number:
-          anyOf:
-          - type: string
-            maxLength: 200
-            minLength: 1
-          - type: 'null'
-          title: Account Number
-          description: The buyer account number
-        shipping_details:
-          anyOf:
-          - $ref: '#/components/schemas/ShippingDetailsCreate'
-          - type: 'null'
-          description: The optional shipping details for this buyer.
-      additionalProperties: false
-      type: object
-      title: GuestBuyer
-    Error429:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `too_many_requests`
-          default: too_many_requests
-          examples:
-          - too_many_requests
-        status:
-          type: integer
-          title: Status
-          description: Always `429`.
-          default: 429
-          examples:
-          - 429
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error429
   securitySchemes:
     bearerAuth:
       type: http

@@ -620,20 +620,67 @@ paths:
       x-speakeasy-group: gift-cards.issuances
 components:
   schemas:
-    GiftCardBalanceStoredRequest:
-      title: Gift Card Balance (Stored)
+    GiftCard:
+      title: A gift card
       type: object
-      description: Check the balance for a stored gift card.
+      description: A gift card stored for a buyer, or used in a transaction.
       x-tags:
-      - Request Bodies
-      required:
-      - id
+      - Gift Cards
       properties:
+        type:
+          type: string
+          description: The type of this resource.
+          example: gift-card
+          enum:
+          - gift-card
         id:
           type: string
           format: uuid
+          description: The ID of this gift card.
           example: e6cdf979-87e2-4796-8ff6-9784d5aed893
-          description: The ID of the gift card to check a balance for.
+        merchant_account_id:
+          type: string
+          description: The unique ID for a merchant account.
+          example: default
+        service:
+          $ref: '#/components/schemas/GiftCardService'
+        bin:
+          type: string
+          description: The first 6 digits of the full gift card number.
+          example: '412345'
+        sub_bin:
+          type: string
+          description: The 3 digits after the `bin` of the full gift card number.
+          example: '554'
+        last4:
+          type: string
+          description: The last 4 digits for the gift card.
+          example: '1234'
+        expiration_date:
+          type:
+          - string
+          - 'null'
+          description: 'The date and time when this gift card expires. This is a full
+
+            date/time and may be more accurate than the actual expiry date
+
+            received by the gift card service.'
+          format: date-time
+          example: '2013-07-16T19:23:00.000+00:00'
+        buyer:
+          description: The optional buyer for which this payment method has been stored.
+          allOf:
+          - $ref: '#/components/schemas/Buyer'
+        created_at:
+          type: string
+          description: The date and time when this gift card was created in our system.
+          format: date-time
+          example: '2013-07-16T19:23:00.000+00:00'
+        updated_at:
+          type: string
+          description: The date and time when this gift card was last updated in our system.
+          format: date-time
+          example: '2013-07-16T19:23:00.000+00:00'
     Error400BadRequest:
       title: Bad Request
       type: object
@@ -670,38 +717,6 @@ components:
           description: A list of detail objects that further clarify the reason for the error.
           items:
             $ref: '#/components/schemas/ErrorDetail'
-    ErrorDetail:
-      title: Error details
-      description: Additional detail about the part of a request body that caused an issue.
-      type: object
-      x-tags:
-      - Errors
-      properties:
-        location:
-          type: string
-          example: body
-          description: The location where the error caused an issue.
-          enum:
-          - query
-          - body
-          - path
-          - header
-        type:
-          type: string
-          example: value_error.missing
-          description: A unique identifier for the type of error that occurred.
-        pointer:
-          type: string
-          example: /payment_method/number
-          description: 'The exact item for which the validation did not succeed. This is a JSON
-
-            pointer for request bodies, while for query, path, and header parameters
-
-            it is the name of the parameter.'
-        message:
-          type: string
-          example: field required
-          description: A human readable message for this error detail.
     GiftCardService:
       title: A gift card service
       type: object
@@ -774,6 +789,167 @@ components:
           format: date-time
           example: '2012-12-12T10:53:43+00:00'
           description: The date and time when this service was last updated.
+    ErrorDetail:
+      title: Error details
+      description: Additional detail about the part of a request body that caused an issue.
+      type: object
+      x-tags:
+      - Errors
+      properties:
+        location:
+          type: string
+          example: body
+          description: The location where the error caused an issue.
+          enum:
+          - query
+          - body
+          - path
+          - header
+        type:
+          type: string
+          example: value_error.missing
+          description: A unique identifier for the type of error that occurred.
+        pointer:
+          type: string
+          example: /payment_method/number
+          description: 'The exact item for which the validation did not succeed. This is a JSON
+
+            pointer for request bodies, while for query, path, and header parameters
+
+            it is the name of the parameter.'
+        message:
+          type: string
+          example: field required
+          description: A human readable message for this error detail.
+    Error401Unauthorized:
+      title: Unauthorized Error
+      type: object
+      description: Unauthorized Error (HTTP 401).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`unauthorized`.'
+          example: unauthorized
+          enum:
+          - unauthorized
+        status:
+          type: integer
+          description: '`401`.'
+          example: 401
+          enum:
+          - 401
+        message:
+          type: string
+          description: No valid API authentication found.
+          example: No valid API authentication found
+          enum:
+          - No valid API authentication found
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    BillingDetails:
+      title: Billing details
+      type: object
+      description: Billing details associated to a buyer.
+      x-tags:
+      - Buyers
+      properties:
+        type:
+          type: string
+          description: The type of this resource. Is always `billing-details`.
+          example: billing-details
+          enum:
+          - billing-details
+        first_name:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 255
+          description: The first name(s) or given name of the buyer.
+          example: John
+        last_name:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 255
+          example: Lunn
+          description: The last name, or family name, of the buyer.
+        email_address:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 320
+          description: The email address of the buyer.
+          example: john@example.com
+        phone_number:
+          type:
+          - string
+          - 'null'
+          pattern: ^\+[1-9]\d{1,14}$
+          minLength: 1
+          maxLength: 50
+          description: 'The phone number of the buyer. This number is formatted according to the
+
+            [E164 number standard](https://www.twilio.com/docs/glossary/what-e164).'
+          example: '+1234567890'
+        address:
+          description: The billing address of the buyer.
+          allOf:
+          - $ref: '#/components/schemas/Address'
+        tax_id:
+          description: The tax information associated with the billing details.
+          allOf:
+          - $ref: '#/components/schemas/TaxId'
+    GiftCardBalancesRequest:
+      title: A gift card balance check request
+      type: object
+      description: 'A request to check the balance for a set of stored and
+
+        non-stored gift cards.'
+      x-tags:
+      - Gift Cards
+      properties:
+        items:
+          type: array
+          description: 'One or more gift cards to check balances for, up to a default limit
+
+            of 10 gift cards. Please contact our team to change this limit.'
+          minItems: 1
+          items:
+            x-model-name: GiftCardBalanceRequest
+            oneOf:
+            - $ref: '#/components/schemas/GiftCardBalanceNewRequest'
+            - $ref: '#/components/schemas/GiftCardBalanceStoredRequest'
+    GiftCardBalanceStoredRequest:
+      title: Gift Card Balance (Stored)
+      type: object
+      description: Check the balance for a stored gift card.
+      x-tags:
+      - Request Bodies
+      required:
+      - id
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: e6cdf979-87e2-4796-8ff6-9784d5aed893
+          description: The ID of the gift card to check a balance for.
     Buyer:
       title: Buyer
       type: object
@@ -837,196 +1013,6 @@ components:
           maxLength: 255
           example: '1234567'
           description: The source account number to perform an account funding transaction.
-    Error409DuplicateRecord:
-      title: Duplicate Record Error
-      type: object
-      description: Duplicate Record Error (HTTP 409).
-      x-tags:
-      - Errors
-      properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: '`duplicate_record`.'
-          example: duplicate_record
-          enum:
-          - duplicate_record
-        status:
-          type: integer
-          description: '`409`.'
-          example: 409
-          enum:
-          - 409
-        message:
-          type: string
-          description: Further details on the field that triggered the error.
-          example: A duplicate record exists with this external_identifier value
-        details:
-          type: array
-          description: 'A list of detail objects that further clarify the reason for the error.
-
-            Not every error supports more detail.'
-          example: []
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-    GiftCard:
-      title: A gift card
-      type: object
-      description: A gift card stored for a buyer, or used in a transaction.
-      x-tags:
-      - Gift Cards
-      properties:
-        type:
-          type: string
-          description: The type of this resource.
-          example: gift-card
-          enum:
-          - gift-card
-        id:
-          type: string
-          format: uuid
-          description: The ID of this gift card.
-          example: e6cdf979-87e2-4796-8ff6-9784d5aed893
-        merchant_account_id:
-          type: string
-          description: The unique ID for a merchant account.
-          example: default
-        service:
-          $ref: '#/components/schemas/GiftCardService'
-        bin:
-          type: string
-          description: The first 6 digits of the full gift card number.
-          example: '412345'
-        sub_bin:
-          type: string
-          description: The 3 digits after the `bin` of the full gift card number.
-          example: '554'
-        last4:
-          type: string
-          description: The last 4 digits for the gift card.
-          example: '1234'
-        expiration_date:
-          type:
-          - string
-          - 'null'
-          description: 'The date and time when this gift card expires. This is a full
-
-            date/time and may be more accurate than the actual expiry date
-
-            received by the gift card service.'
-          format: date-time
-          example: '2013-07-16T19:23:00.000+00:00'
-        buyer:
-          description: The optional buyer for which this payment method has been stored.
-          allOf:
-          - $ref: '#/components/schemas/Buyer'
-        created_at:
-          type: string
-          description: The date and time when this gift card was created in our system.
-          format: date-time
-          example: '2013-07-16T19:23:00.000+00:00'
-        updated_at:
-          type: string
-          description: The date and time when this gift card was last updated in our system.
-          format: date-time
-          example: '2013-07-16T19:23:00.000+00:00'
-    GiftCardStoreRequest:
-      title: Gift Card (Store)
-      type: object
-      description: The gift card details to store.
-      x-tags:
-      - Request Bodies
-      required:
-      - number
-      - pin
-      properties:
-        number:
-          type: string
-          minLength: 16
-          maxLength: 19
-          example: '4123455541234561234'
-          pattern: ^[0-9]{16,19}$
-          description: The 16-19 digit number for this gift card.
-        pin:
-          type: string
-          description: The PIN for this gift card.
-          example: '1234'
-        buyer_id:
-          type: string
-          format: uuid
-          example: fe26475d-ec3e-4884-9553-f7356683f7f9
-          description: 'The ID of the buyer to associate this gift card to. If this field is
-
-            provided then the `buyer_external_identifier` field needs to be unset.'
-        buyer_external_identifier:
-          type: string
-          description: 'The `external_identifier` of the buyer to associate this gift card
-
-            to. If this field is provided then the `buyer_id` field
-
-            needs to be unset.'
-          example: user-789123
-    BillingDetails:
-      title: Billing details
-      type: object
-      description: Billing details associated to a buyer.
-      x-tags:
-      - Buyers
-      properties:
-        type:
-          type: string
-          description: The type of this resource. Is always `billing-details`.
-          example: billing-details
-          enum:
-          - billing-details
-        first_name:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 255
-          description: The first name(s) or given name of the buyer.
-          example: John
-        last_name:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 255
-          example: Lunn
-          description: The last name, or family name, of the buyer.
-        email_address:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 320
-          description: The email address of the buyer.
-          example: john@example.com
-        phone_number:
-          type:
-          - string
-          - 'null'
-          pattern: ^\+[1-9]\d{1,14}$
-          minLength: 1
-          maxLength: 50
-          description: 'The phone number of the buyer. This number is formatted according to the
-
-            [E164 number standard](https://www.twilio.com/docs/glossary/what-e164).'
-          example: '+1234567890'
-        address:
-          description: The billing address of the buyer.
-          allOf:
-          - $ref: '#/components/schemas/Address'
-        tax_id:
-          description: The tax information associated with the billing details.
-          allOf:
-          - $ref: '#/components/schemas/TaxId'
     TaxId:
       title: Tax ID
       type: object
@@ -1092,145 +1078,42 @@ components:
           - tw.vat
           - us.ein
           - za.vat
-    Address:
-      title: Address
+    GiftCardStoreRequest:
+      title: Gift Card (Store)
       type: object
-      description: An address for the buyer.
+      description: The gift card details to store.
       x-tags:
-      - Buyers
+      - Request Bodies
+      required:
+      - number
+      - pin
       properties:
-        city:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 100
-          description: The city for the address.
-          example: London
-        country:
-          type:
-          - string
-          - 'null'
-          minLength: 2
-          maxLength: 2
-          description: The country for the address in ISO 3166 format.
-          example: GB
-        postal_code:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 50
-          description: The postal code or zip code for the address.
-          example: '789123'
-        state:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 255
-          description: The state, county, or province for the address.
-          example: Greater London
-        state_code:
-          type:
-          - string
-          - 'null'
-          minLength: 4
-          maxLength: 6
-          description: 'The code of state, county, or province for the address in
+        number:
+          type: string
+          minLength: 16
+          maxLength: 19
+          example: '4123455541234561234'
+          pattern: ^[0-9]{16,19}$
+          description: The 16-19 digit number for this gift card.
+        pin:
+          type: string
+          description: The PIN for this gift card.
+          example: '1234'
+        buyer_id:
+          type: string
+          format: uuid
+          example: fe26475d-ec3e-4884-9553-f7356683f7f9
+          description: 'The ID of the buyer to associate this gift card to. If this field is
 
-            ISO 3166-2 format.'
-          example: GB-LND
-        house_number_or_name:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 255
-          description: 'The house number or name for the address. Not all payment
+            provided then the `buyer_external_identifier` field needs to be unset.'
+        buyer_external_identifier:
+          type: string
+          description: 'The `external_identifier` of the buyer to associate this gift card
 
-            services use this field but some do.'
-          example: '10'
-        line1:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 255
-          description: The first line of the address.
-          example: 10 Oxford Street
-        line2:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 255
-          description: The second line of the address.
-          example: New Oxford Court
-        organization:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 255
-          description: 'The optional name of the company or organisation to add
+            to. If this field is provided then the `buyer_id` field
 
-            to the address.'
-          example: Gr4vy
-    GiftCards:
-      title: Gift Cards
-      type: object
-      description: A list of stored gift cards.
-      x-tags:
-      - Gift Cards
-      properties:
-        items:
-          type: array
-          description: A list of stored gift cards.
-          items:
-            $ref: '#/components/schemas/GiftCard'
-        limit:
-          type: integer
-          description: 'The limit applied to request. This represents the number of items that are at
-
-            maximum returned by this request.'
-          format: int32
-          minimum: 1
-          maximum: 100
-          example: 1
-          default: 20
-        next_cursor:
-          type:
-          - string
-          - 'null'
-          description: 'The cursor that represents the next page of results. Use the `cursor` query
-
-            parameter to fetch this page of items.'
-          example: ZXhhbXBsZTE
-          minLength: 1
-          maxLength: 1000
-        previous_cursor:
-          type:
-          - string
-          - 'null'
-          description: 'The cursor that represents the next page of results. Use the `cursor` query
-
-            parameter to fetch this page of items.'
-          example: null
-          minLength: 1
-          maxLength: 1000
-    GiftCards--Summary:
-      title: Gift Cards (Summary)
-      type: object
-      description: A list of gift cards in a short format including the latest balance.
-      x-tags:
-      - Gift Cards
-      properties:
-        items:
-          type: array
-          description: A list of stored gift cards.
-          items:
-            $ref: '#/components/schemas/GiftCard--Summary'
+            needs to be unset.'
+          example: user-789123
     GiftCard--Summary:
       title: A stored gift card (summary)
       type: object
@@ -1331,6 +1214,170 @@ components:
           type:
           - string
           - 'null'
+    GiftCards:
+      title: Gift Cards
+      type: object
+      description: A list of stored gift cards.
+      x-tags:
+      - Gift Cards
+      properties:
+        items:
+          type: array
+          description: A list of stored gift cards.
+          items:
+            $ref: '#/components/schemas/GiftCard'
+        limit:
+          type: integer
+          description: 'The limit applied to request. This represents the number of items that are at
+
+            maximum returned by this request.'
+          format: int32
+          minimum: 1
+          maximum: 100
+          example: 1
+          default: 20
+        next_cursor:
+          type:
+          - string
+          - 'null'
+          description: 'The cursor that represents the next page of results. Use the `cursor` query
+
+            parameter to fetch this page of items.'
+          example: ZXhhbXBsZTE
+          minLength: 1
+          maxLength: 1000
+        previous_cursor:
+          type:
+          - string
+          - 'null'
+          description: 'The cursor that represents the next page of results. Use the `cursor` query
+
+            parameter to fetch this page of items.'
+          example: null
+          minLength: 1
+          maxLength: 1000
+    Error409DuplicateRecord:
+      title: Duplicate Record Error
+      type: object
+      description: Duplicate Record Error (HTTP 409).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`duplicate_record`.'
+          example: duplicate_record
+          enum:
+          - duplicate_record
+        status:
+          type: integer
+          description: '`409`.'
+          example: 409
+          enum:
+          - 409
+        message:
+          type: string
+          description: Further details on the field that triggered the error.
+          example: A duplicate record exists with this external_identifier value
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    Address:
+      title: Address
+      type: object
+      description: An address for the buyer.
+      x-tags:
+      - Buyers
+      properties:
+        city:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 100
+          description: The city for the address.
+          example: London
+        country:
+          type:
+          - string
+          - 'null'
+          minLength: 2
+          maxLength: 2
+          description: The country for the address in ISO 3166 format.
+          example: GB
+        postal_code:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 50
+          description: The postal code or zip code for the address.
+          example: '789123'
+        state:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 255
+          description: The state, county, or province for the address.
+          example: Greater London
+        state_code:
+          type:
+          - string
+          - 'null'
+          minLength: 4
+          maxLength: 6
+          description: 'The code of state, county, or province for the address in
+
+            ISO 3166-2 format.'
+          example: GB-LND
+        house_number_or_name:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 255
+          description: 'The house number or name for the address. Not all payment
+
+            services use this field but some do.'
+          example: '10'
+        line1:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 255
+          description: The first line of the address.
+          example: 10 Oxford Street
+        line2:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 255
+          description: The second line of the address.
+          example: New Oxford Court
+        organization:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 255
+          description: 'The optional name of the company or organisation to add
+
+            to the address.'
+          example: Gr4vy
     GiftCardBalanceNewRequest:
       title: Gift Card Balance (New)
       type: object
@@ -1352,82 +1399,18 @@ components:
           type: string
           description: The PIN for this gift card.
           example: '1234'
-    Error429TooManyRequests:
-      title: Too Many Requests Error
+    GiftCards--Summary:
+      title: Gift Cards (Summary)
       type: object
-      description: Too Many Requests Error (HTTP 429).
+      description: A list of gift cards in a short format including the latest balance.
       x-tags:
-      - Errors
+      - Gift Cards
       properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: '`too_many_requests`.'
-          example: too_many_requests
-          enum:
-          - too_many_requests
-        status:
-          type: integer
-          description: '`429`.'
-          example: 429
-          enum:
-          - 429
-        message:
-          type: string
-          description: Further details on the field that triggered the error.
-          example: Too many requests
-        details:
+        items:
           type: array
-          description: 'A list of detail objects that further clarify the reason for the error.
-
-            Not every error supports more detail.'
-          example: []
+          description: A list of stored gift cards.
           items:
-            $ref: '#/components/schemas/ErrorDetail'
-    Error401Unauthorized:
-      title: Unauthorized Error
-      type: object
-      description: Unauthorized Error (HTTP 401).
-      x-tags:
-      - Errors
-      properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: '`unauthorized`.'
-          example: unauthorized
-          enum:
-          - unauthorized
-        status:
-          type: integer
-          description: '`401`.'
-          example: 401
-          enum:
-          - 401
-        message:
-          type: string
-          description: No valid API authentication found.
-          example: No valid API authentication found
-          enum:
-          - No valid API authentication found
-        details:
-          type: array
-          description: 'A list of detail objects that further clarify the reason for the error.
-
-            Not every error supports more detail.'
-          example: []
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
+            $ref: '#/components/schemas/GiftCard--Summary'
     Error404NotFound:
       title: Not Found Error
       type: object
@@ -1466,36 +1449,51 @@ components:
           example: []
           items:
             $ref: '#/components/schemas/ErrorDetail'
-    GiftCardBalancesRequest:
-      title: A gift card balance check request
+    Error429TooManyRequests:
+      title: Too Many Requests Error
       type: object
-      description: 'A request to check the balance for a set of stored and
-
-        non-stored gift cards.'
+      description: Too Many Requests Error (HTTP 429).
       x-tags:
-      - Gift Cards
+      - Errors
       properties:
-        items:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`too_many_requests`.'
+          example: too_many_requests
+          enum:
+          - too_many_requests
+        status:
+          type: integer
+          description: '`429`.'
+          example: 429
+          enum:
+          - 429
+        message:
+          type: string
+          description: Further details on the field that triggered the error.
+          example: Too many requests
+        details:
           type: array
-          description: 'One or more gift cards to check balances for, up to a default limit
+          description: 'A list of detail objects that further clarify the reason for the error.
 
-            of 10 gift cards. Please contact our team to change this limit.'
-          minItems: 1
+            Not every error supports more detail.'
+          example: []
           items:
-            x-model-name: GiftCardBalanceRequest
-            oneOf:
-            - $ref: '#/components/schemas/GiftCardBalanceNewRequest'
-            - $ref: '#/components/schemas/GiftCardBalanceStoredRequest'
-    ErrorLocation:
+            $ref: '#/components/schemas/ErrorDetail'
+    GiftCardServiceProvider:
       type: string
       enum:
-      - query
-      - body
-      - path
-      - header
-      - unknown
-      title: ErrorLocation
-    Error405:
+      - mock-gift-card
+      - qwikcilver-gift-card
+      - valuelink-gift-card
+      title: GiftCardServiceProvider
+    Error401:
       properties:
         type:
           type: string
@@ -1508,24 +1506,24 @@ components:
         code:
           type: string
           title: Code
-          description: Always `method_not_allowed`
-          default: method_not_allowed
+          description: Always `unauthorized`
+          default: unauthorized
           examples:
-          - method_not_allowed
+          - unauthorized
         status:
           type: integer
           title: Status
-          description: Always `405`.
-          default: 405
+          description: Always `401`.
+          default: 401
           examples:
-          - 405
+          - 401
         message:
           type: string
           title: Message
           description: A human readable message that provides more context to the error.
-          default: Method Not Allowed
+          default: No valid API authentication found
           examples:
-          - Method Not Allowed
+          - No valid API authentication found
         details:
           items:
             $ref: '#/components/schemas/ErrorDetail_2'
@@ -1535,187 +1533,7 @@ components:
           default: []
       additionalProperties: false
       type: object
-      title: Error405
-    GiftCardServiceProvider:
-      type: string
-      enum:
-      - mock-gift-card
-      - qwikcilver-gift-card
-      - valuelink-gift-card
-      title: GiftCardServiceProvider
-    ErrorDetail_2:
-      properties:
-        location:
-          $ref: '#/components/schemas/ErrorLocation'
-          description: The part of the request where the property can be found that caused the error.
-          examples:
-          - body
-        pointer:
-          anyOf:
-          - type: string
-            format: json-pointer
-          - type: string
-          title: Pointer
-          description: A JSON pointer for the particular property that caused the error.
-          examples:
-          - /currency
-        message:
-          type: string
-          title: Message
-          description: A human-readdable explanation of the error.
-          examples:
-          - 'Unknown ISO 4217 currency code: USX'
-        type:
-          type: string
-          title: Type
-          description: The type of error that was raised for this property.
-          examples:
-          - value_error
-      additionalProperties: false
-      type: object
-      required:
-      - location
-      - pointer
-      - message
-      - type
-      title: ErrorDetail
-    GiftCardBalanceRequest:
-      properties:
-        items:
-          items:
-            anyOf:
-            - $ref: '#/components/schemas/GiftCardRequest'
-            - $ref: '#/components/schemas/GiftCardStoredRequest'
-          type: array
-          title: Items
-          description: A list of gift cards to request a balance for.
-      additionalProperties: false
-      type: object
-      required:
-      - items
-      title: GiftCardBalanceRequest
-    GiftCardService_2:
-      properties:
-        type:
-          type: string
-          const: gift-card-service
-          title: Type
-          description: Always `gift-card-service`.
-          default: gift-card-service
-          examples:
-          - gift-card-service
-        id:
-          type: string
-          format: uuid
-          title: Id
-          description: The ID for the gift card service.
-          examples:
-          - 35b60feec-a7c7-4844-b503-f39b09192d81
-        gift_card_service_definition_id:
-          $ref: '#/components/schemas/GiftCardServiceProvider'
-          description: The ID of the definition for this service.
-          examples:
-          - qwikcilver-gift-card
-        display_name:
-          type: string
-          maxLength: 200
-          minLength: 1
-          title: Display Name
-          description: The display name for the gift card service.
-          examples:
-          - Qwikcilver USA
-      additionalProperties: false
-      type: object
-      required:
-      - id
-      - gift_card_service_definition_id
-      - display_name
-      title: GiftCardService
-    Buyer_2:
-      properties:
-        type:
-          type: string
-          const: buyer
-          title: Type
-          description: Always `buyer`.
-          default: buyer
-          examples:
-          - buyer
-        id:
-          type: string
-          format: uuid
-          title: Id
-          description: The ID for the buyer.
-          examples:
-          - fe26475d-ec3e-4884-9553-f7356683f7f9
-        reconciliation_id:
-          type: string
-          title: Reconciliation Id
-          description: The base62 encoded buyer ID. This represents a shorter version of this buyer's `id` which is sent to payment services, anti-fraud services, and other connectors. You can use this ID to reconcile a payment service's buyer against our system.
-          examples:
-          - 7jZXl4gBUNl0CnaLEnfXbt
-        merchant_account_id:
-          type: string
-          title: Merchant Account Id
-          description: The ID of the merchant account this buyer belongs to.
-          examples:
-          - default
-        display_name:
-          anyOf:
-          - type: string
-            maxLength: 200
-            minLength: 1
-          - type: 'null'
-          title: Display Name
-          description: The display name for the buyer.
-          examples:
-          - John Doe
-        external_identifier:
-          anyOf:
-          - type: string
-            maxLength: 200
-            minLength: 1
-          - type: 'null'
-          title: External Identifier
-          description: The merchant identifier for this buyer.
-          examples:
-          - buyer-12345
-        billing_details:
-          anyOf:
-          - $ref: '#/components/schemas/BillingDetails_2'
-          - type: 'null'
-          description: The billing name, address, email, and other fields for this buyer.
-        account_number:
-          anyOf:
-          - type: string
-            maxLength: 200
-            minLength: 1
-          - type: 'null'
-          title: Account Number
-          description: The buyer account number
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-          description: The date this buyer was created at.
-          examples:
-          - '2013-07-16T19:23:00.000+00:00'
-        updated_at:
-          type: string
-          format: date-time
-          title: Updated At
-          description: The date this buyer was last updated at.
-          examples:
-          - '2013-07-16T19:23:00.000+00:00'
-      additionalProperties: false
-      type: object
-      required:
-      - id
-      - reconciliation_id
-      - merchant_account_id
-      - created_at
-      - updated_at
-      title: Buyer
+      title: Error401
     Error404:
       properties:
         type:
@@ -1757,6 +1575,99 @@ components:
       additionalProperties: false
       type: object
       title: Error404
+    ErrorLocation:
+      type: string
+      enum:
+      - query
+      - body
+      - path
+      - header
+      - unknown
+      title: ErrorLocation
+    GiftCardCreate:
+      properties:
+        number:
+          type: string
+          maxLength: 19
+          minLength: 16
+          pattern: ^\d+$
+          title: Number
+          description: The 16-19 digit number for the gift card.
+          examples:
+          - '4123455541234561234'
+        pin:
+          type: string
+          minLength: 1
+          title: Pin
+          description: The PIN for this gift card.
+          examples:
+          - '1234'
+        buyer_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Buyer Id
+          description: ' The ID of the buyer to associate this gift card to. If this field is provided then the `buyer_external_identifier` field needs to be unset.'
+          examples:
+          - fe26475d-ec3e-4884-9553-f7356683f7f9
+        buyer_external_identifier:
+          anyOf:
+          - type: string
+            maxLength: 200
+            minLength: 1
+          - type: 'null'
+          title: Buyer External Identifier
+          description: The `external_identifier` of the buyer to associate this gift card to. If this field is provided then the `buyer_id` field needs to be unset.
+          examples:
+          - buyer-12345
+      additionalProperties: false
+      type: object
+      required:
+      - number
+      - pin
+      title: GiftCardCreate
+    Error425:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `too_early`
+          default: too_early
+          examples:
+          - too_early
+        status:
+          type: integer
+          title: Status
+          description: Always `425`.
+          default: 425
+          examples:
+          - 425
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error425
     GiftCard_2:
       properties:
         type:
@@ -1873,6 +1784,452 @@ components:
       - usage_count
       - cit_usage_count
       title: GiftCard
+    GiftCardIssuanceCreate:
+      properties:
+        theme:
+          type: string
+          maxLength: 200
+          minLength: 1
+          title: Theme
+          description: The provider theme code to issue the gift card against.
+          examples:
+          - '031111372'
+        amount:
+          type: integer
+          maximum: 99999999.0
+          minimum: 0.0
+          title: Amount
+          description: The amount to load onto the gift card, in the smallest denomination for the currency.
+          examples:
+          - 5000
+        currency:
+          type: string
+          pattern: ^[A-Z]{3}$
+          title: Currency
+          description: The ISO-4217 currency code for the `amount`.
+          examples:
+          - EUR
+          - GBP
+          - USD
+        external_identifier:
+          anyOf:
+          - type: string
+            maxLength: 200
+            minLength: 1
+          - type: 'null'
+          title: External Identifier
+          description: An optional external identifier for this issuance.
+          examples:
+          - order-12345
+      additionalProperties: false
+      type: object
+      required:
+      - theme
+      - amount
+      - currency
+      title: GiftCardIssuanceCreate
+      description: The details used to issue a new virtual gift card.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    GiftCardService_2:
+      properties:
+        type:
+          type: string
+          const: gift-card-service
+          title: Type
+          description: Always `gift-card-service`.
+          default: gift-card-service
+          examples:
+          - gift-card-service
+        id:
+          type: string
+          format: uuid
+          title: Id
+          description: The ID for the gift card service.
+          examples:
+          - 35b60feec-a7c7-4844-b503-f39b09192d81
+        gift_card_service_definition_id:
+          $ref: '#/components/schemas/GiftCardServiceProvider'
+          description: The ID of the definition for this service.
+          examples:
+          - qwikcilver-gift-card
+        display_name:
+          type: string
+          maxLength: 200
+          minLength: 1
+          title: Display Name
+          description: The display name for the gift card service.
+          examples:
+          - Qwikcilver USA
+      additionalProperties: false
+      type: object
+      required:
+      - id
+      - gift_card_service_definition_id
+      - display_name
+      title: GiftCardService
+    ErrorDetail_2:
+      properties:
+        location:
+          $ref: '#/components/schemas/ErrorLocation'
+          description: The part of the request where the property can be found that caused the error.
+          examples:
+          - body
+        pointer:
+          anyOf:
+          - type: string
+            format: json-pointer
+          - type: string
+          title: Pointer
+          description: A JSON pointer for the particular property that caused the error.
+          examples:
+          - /currency
+        message:
+          type: string
+          title: Message
+          description: A human-readdable explanation of the error.
+          examples:
+          - 'Unknown ISO 4217 currency code: USX'
+        type:
+          type: string
+          title: Type
+          description: The type of error that was raised for this property.
+          examples:
+          - value_error
+      additionalProperties: false
+      type: object
+      required:
+      - location
+      - pointer
+      - message
+      - type
+      title: ErrorDetail
+    GiftCardSummaries:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/GiftCardSummary'
+          type: array
+          title: Items
+          description: A list of items returned for this request.
+      type: object
+      required:
+      - items
+      title: GiftCardSummaries
+    Error405:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `method_not_allowed`
+          default: method_not_allowed
+          examples:
+          - method_not_allowed
+        status:
+          type: integer
+          title: Status
+          description: Always `405`.
+          default: 405
+          examples:
+          - 405
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Method Not Allowed
+          examples:
+          - Method Not Allowed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error405
+    BillingDetails_2:
+      properties:
+        first_name:
+          anyOf:
+          - type: string
+            maxLength: 255
+            minLength: 1
+          - type: 'null'
+          title: First Name
+          description: The first name(s) or given name for the buyer.
+          examples:
+          - John
+        last_name:
+          anyOf:
+          - type: string
+            maxLength: 255
+            minLength: 1
+          - type: 'null'
+          title: Last Name
+          description: The last name, or family name, of the buyer.
+          examples:
+          - Doe
+        email_address:
+          anyOf:
+          - type: string
+            maxLength: 320
+            minLength: 1
+          - type: 'null'
+          title: Email Address
+          description: The email address for the buyer.
+          examples:
+          - john@example.com
+        phone_number:
+          anyOf:
+          - type: string
+            pattern: ^\+[1-9]\d{1,14}$
+            examples:
+            - '+14155552671'
+            - '+442071838750'
+          - type: 'null'
+          title: Phone Number
+          description: The phone number for the buyer which should be formatted according to the E164 number standard.
+          examples:
+          - '+1234567890'
+        address:
+          anyOf:
+          - $ref: '#/components/schemas/Address_2'
+          - type: 'null'
+          description: The billing address for the buyer.
+        tax_id:
+          anyOf:
+          - $ref: '#/components/schemas/TaxId_2'
+          - type: 'null'
+          description: The tax ID information associated with the billing details.
+      additionalProperties: false
+      type: object
+      title: BillingDetails
+    Error429:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `too_many_requests`
+          default: too_many_requests
+          examples:
+          - too_many_requests
+        status:
+          type: integer
+          title: Status
+          description: Always `429`.
+          default: 429
+          examples:
+          - 429
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error429
+    TaxIdKind:
+      type: string
+      enum:
+      - ae.trn
+      - au.abn
+      - ar.dni
+      - ar.cuil
+      - ar.cuit
+      - br.cnpj
+      - br.cpf
+      - ca.bn
+      - ca.gst_hst
+      - ca.pst_bc
+      - ca.pst_mb
+      - ca.pst_sk
+      - ca.qst
+      - ch.vat
+      - cl.tin
+      - co.itin
+      - co.nit
+      - co.cc
+      - co.ce
+      - co.de
+      - co.rc
+      - co.ti
+      - co.passport
+      - es.cif
+      - eu.vat
+      - gb.vat
+      - hk.br
+      - id.nik
+      - id.npwp
+      - in.gst
+      - in.pan
+      - jp.cn
+      - jp.rn
+      - kr.brn
+      - li.uid
+      - mx.curp
+      - mx.rfc
+      - my.frp
+      - my.itn
+      - my.nric
+      - my.sst
+      - no.vat
+      - nz.gst
+      - pe.ruc
+      - ph.tin
+      - ru.inn
+      - ru.kpp
+      - sa.vat
+      - sg.gst
+      - sg.uen
+      - th.id
+      - th.vat
+      - tw.vat
+      - us.ein
+      - za.vat
+      - bo.ci
+      - uy.rut
+      - uy.ci
+      title: TaxIdKind
+    Buyer_2:
+      properties:
+        type:
+          type: string
+          const: buyer
+          title: Type
+          description: Always `buyer`.
+          default: buyer
+          examples:
+          - buyer
+        id:
+          type: string
+          format: uuid
+          title: Id
+          description: The ID for the buyer.
+          examples:
+          - fe26475d-ec3e-4884-9553-f7356683f7f9
+        reconciliation_id:
+          type: string
+          title: Reconciliation Id
+          description: The base62 encoded buyer ID. This represents a shorter version of this buyer's `id` which is sent to payment services, anti-fraud services, and other connectors. You can use this ID to reconcile a payment service's buyer against our system.
+          examples:
+          - 7jZXl4gBUNl0CnaLEnfXbt
+        merchant_account_id:
+          type: string
+          title: Merchant Account Id
+          description: The ID of the merchant account this buyer belongs to.
+          examples:
+          - default
+        display_name:
+          anyOf:
+          - type: string
+            maxLength: 200
+            minLength: 1
+          - type: 'null'
+          title: Display Name
+          description: The display name for the buyer.
+          examples:
+          - John Doe
+        external_identifier:
+          anyOf:
+          - type: string
+            maxLength: 200
+            minLength: 1
+          - type: 'null'
+          title: External Identifier
+          description: The merchant identifier for this buyer.
+          examples:
+          - buyer-12345
+        billing_details:
+          anyOf:
+          - $ref: '#/components/schemas/BillingDetails_2'
+          - type: 'null'
+          description: The billing name, address, email, and other fields for this buyer.
+        account_number:
+          anyOf:
+          - type: string
+            maxLength: 200
+            minLength: 1
+          - type: 'null'
+          title: Account Number
+          description: The buyer account number
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+          description: The date this buyer was created at.
+          examples:
+          - '2013-07-16T19:23:00.000+00:00'
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+          description: The date this buyer was last updated at.
+          examples:
+          - '2013-07-16T19:23:00.000+00:00'
+      additionalProperties: false
+      type: object
+      required:
+      - id
+      - reconciliation_id
+      - merchant_account_id
+      - created_at
+      - updated_at
+      title: Buyer
+    TaxId_2:
+      properties:
+        value:
+          type: string
+          maxLength: 50
+          minLength: 1
+          title: Value
+          description: The tax ID for the buyer.
+          examples:
+          - '12345678931'
+        kind:
+          $ref: '#/components/schemas/TaxIdKind'
+          description: The kind of tax ID
+          examples:
+          - us.ein
+      additionalProperties: false
+      type: object
+      required:
+      - value
+      - kind
+      title: TaxId
     GiftCardIssuance:
       properties:
         type:
@@ -1965,68 +2322,452 @@ components:
       - created_at
       - updated_at
       title: GiftCardIssuance
-    TaxIdKind:
+    GiftCardErrorCode:
       type: string
       enum:
-      - ae.trn
-      - au.abn
-      - ar.dni
-      - ar.cuil
-      - ar.cuit
-      - br.cnpj
-      - br.cpf
-      - ca.bn
-      - ca.gst_hst
-      - ca.pst_bc
-      - ca.pst_mb
-      - ca.pst_sk
-      - ca.qst
-      - ch.vat
-      - cl.tin
-      - co.itin
-      - co.nit
-      - co.cc
-      - co.ce
-      - co.de
-      - co.rc
-      - co.ti
-      - co.passport
-      - es.cif
-      - eu.vat
-      - gb.vat
-      - hk.br
-      - id.nik
-      - id.npwp
-      - in.gst
-      - in.pan
-      - jp.cn
-      - jp.rn
-      - kr.brn
-      - li.uid
-      - mx.curp
-      - mx.rfc
-      - my.frp
-      - my.itn
-      - my.nric
-      - my.sst
-      - no.vat
-      - nz.gst
-      - pe.ruc
-      - ph.tin
-      - ru.inn
-      - ru.kpp
-      - sa.vat
-      - sg.gst
-      - sg.uen
-      - th.id
-      - th.vat
-      - tw.vat
-      - us.ein
-      - za.vat
-      - bo.ci
-      - uy.rut
-      - uy.ci
-      title: TaxIdKind
+      - invalid_gift_card
+      - expired_card
+      - inactive_card
+      - invalid_service_credentials
+      - invalid_amount
+      - incorrect_currency
+      - insufficient_funds
+      - invalid_service_configuration
+      - operation_canceled
+      - service_error
+      - service_network_error
+      - unknown_error
+      - max_gift_cards_reached
+      - suspected_fraud
+      - canceled_payment_method
+      - duplicate_transaction
+      - unexpected_state
+      title: GiftCardErrorCode
+      description: 'Gift card error codes.
+
+
+        Gr4vy normalised gift card error codes. Keep the naming and style in line with
+
+        those in the connectors framework.
+
+
+        If new codes are added, append them at the end or amend public simulator
+
+        documentation: https://docs.gr4vy.com/guides/features/gift-cards/simulator'
+    Error500:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `server_error`
+          default: server_error
+          examples:
+          - server_error
+        status:
+          type: integer
+          title: Status
+          description: Always `500`.
+          default: 500
+          examples:
+          - 500
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error500
+    Error504:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `gateway_timeout`
+          default: gateway_timeout
+          examples:
+          - gateway_timeout
+        status:
+          type: integer
+          title: Status
+          default: 504
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error504
+    GiftCards_2:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/GiftCard_2'
+          type: array
+          title: Items
+          description: A list of items returned for this request.
+        limit:
+          type: integer
+          maximum: 100.0
+          minimum: 1.0
+          title: Limit
+          description: The number of items for this page.
+          default: 20
+          examples:
+          - 20
+        next_cursor:
+          anyOf:
+          - type: string
+            maxLength: 1000
+            minLength: 1
+          - type: 'null'
+          title: Next Cursor
+          description: The cursor pointing at the next page of items.
+          examples:
+          - ZXhhbXBsZTE
+        previous_cursor:
+          anyOf:
+          - type: string
+            maxLength: 1000
+            minLength: 1
+          - type: 'null'
+          title: Previous Cursor
+          description: The cursor pointing at the previous page of items.
+          examples:
+          - Xkjss7asS
+      additionalProperties: false
+      type: object
+      required:
+      - items
+      title: GiftCards
+    Error400:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `bad_request`
+          default: bad_request
+          examples:
+          - bad_request
+        status:
+          type: integer
+          title: Status
+          description: Always `400`.
+          default: 400
+          examples:
+          - 400
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error400
+    Address_2:
+      properties:
+        city:
+          anyOf:
+          - type: string
+            maxLength: 100
+            minLength: 1
+          - type: 'null'
+          title: City
+          description: The city for the address.
+          examples:
+          - San Jose
+        country:
+          anyOf:
+          - type: string
+            pattern: ^[A-Z]{2}$
+            examples:
+            - DE
+            - GB
+            - US
+          - type: 'null'
+          title: Country
+          description: The country for the address in ISO 3166 format.
+          examples:
+          - US
+        postal_code:
+          anyOf:
+          - type: string
+            maxLength: 50
+            minLength: 1
+          - type: 'null'
+          title: Postal Code
+          description: The postal code or zip code for the address.
+          examples:
+          - '94560'
+        state:
+          anyOf:
+          - type: string
+            maxLength: 255
+            minLength: 1
+          - type: 'null'
+          title: State
+          description: The state, county, or province for the address.
+          examples:
+          - California
+        state_code:
+          anyOf:
+          - type: string
+            pattern: ^[A-Z]{2}-[A-Z0-9]{1,3}$
+            examples:
+            - GB-LND
+            - US-CA
+          - type: 'null'
+          title: State Code
+          description: The code of state, county, or province for the address in ISO 3166-2 format.
+          examples:
+          - US-CA
+        house_number_or_name:
+          anyOf:
+          - type: string
+            maxLength: 255
+            minLength: 1
+          - type: 'null'
+          title: House Number Or Name
+          description: The house number or name for the address. Not all payment services use this field but some do.
+          examples:
+          - '10'
+        line1:
+          anyOf:
+          - type: string
+            maxLength: 255
+            minLength: 1
+          - type: 'null'
+          title: Line1
+          description: The first line of the address.
+          examples:
+          - Stafford Appartments
+        line2:
+          anyOf:
+          - type: string
+            maxLength: 255
+            minLength: 1
+          - type: 'null'
+          title: Line2
+          description: The second line of the address.
+          examples:
+          - 29th Street
+        organization:
+          anyOf:
+          - type: string
+            maxLength: 255
+            minLength: 1
+          - type: 'null'
+          title: Organization
+          description: The optional name of the company or organisation to add to the address.
+          examples:
+          - Gr4vy
+      additionalProperties: false
+      type: object
+      title: Address
+    Error502:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `bad_gateway`
+          default: bad_gateway
+          examples:
+          - bad_gateway
+        status:
+          type: integer
+          title: Status
+          description: Always `502`.
+          default: 502
+          examples:
+          - 502
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error502
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    GiftCardActivationCreate:
+      properties:
+        number:
+          type: string
+          maxLength: 19
+          minLength: 16
+          pattern: ^\d+$
+          title: Number
+          description: The 16-19 digit number for the gift card.
+          examples:
+          - '4123455541234561234'
+        pin:
+          anyOf:
+          - type: string
+            minLength: 1
+          - type: 'null'
+          title: Pin
+          description: The PIN for this gift card.
+          examples:
+          - '1234'
+        amount:
+          anyOf:
+          - type: integer
+            maximum: 99999999.0
+            minimum: 0.0
+          - type: 'null'
+          title: Amount
+          description: The amount to load onto the gift card, in the smallest denomination for the currency. Required if `currency` is provided.
+          examples:
+          - 5000
+        currency:
+          anyOf:
+          - type: string
+            pattern: ^[A-Z]{3}$
+            examples:
+            - EUR
+            - GBP
+            - USD
+          - type: 'null'
+          title: Currency
+          description: The ISO-4217 currency code for the `amount`. Required if `amount` is provided.
+          examples:
+          - USD
+        external_identifier:
+          anyOf:
+          - type: string
+            maxLength: 200
+            minLength: 1
+          - type: 'null'
+          title: External Identifier
+          description: An optional external identifier for this activation.
+          examples:
+          - order-12345
+        store:
+          type: boolean
+          title: Store
+          description: Whether to store the activated gift card in the vault. When `true`, a `pin` is required.
+          default: false
+          examples:
+          - false
+        buyer_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Buyer Id
+          description: The ID of the buyer to associate this gift card to. Only allowed when `store` is `true`. If this field is provided then the `buyer_external_identifier` field needs to be unset.
+          examples:
+          - fe26475d-ec3e-4884-9553-f7356683f7f9
+        buyer_external_identifier:
+          anyOf:
+          - type: string
+            maxLength: 200
+            minLength: 1
+          - type: 'null'
+          title: Buyer External Identifier
+          description: The `external_identifier` of the buyer to associate this gift card to. Only allowed when `store` is `true`. If this field is provided then the `buyer_id` field needs to be unset.
+          examples:
+          - user-789123
+      additionalProperties: false
+      type: object
+      required:
+      - number
+      title: GiftCardActivationCreate
+      description: The details used to activate a physical gift card.
     Error409:
       properties:
         type:
@@ -2076,6 +2817,62 @@ components:
       additionalProperties: false
       type: object
       title: Error409
+    Error403:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `forbidden`
+          default: forbidden
+          examples:
+          - forbidden
+        status:
+          type: integer
+          title: Status
+          description: Always `403`.
+          default: 403
+          examples:
+          - 403
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error403
+    GiftCardBalanceRequest:
+      properties:
+        items:
+          items:
+            anyOf:
+            - $ref: '#/components/schemas/GiftCardRequest'
+            - $ref: '#/components/schemas/GiftCardStoredRequest'
+          type: array
+          title: Items
+          description: A list of gift cards to request a balance for.
+      additionalProperties: false
+      type: object
+      required:
+      - items
+      title: GiftCardBalanceRequest
     GiftCardRequest:
       properties:
         number:
@@ -2237,154 +3034,6 @@ components:
       - usage_count
       - cit_usage_count
       title: GiftCardSummary
-    BillingDetails_2:
-      properties:
-        first_name:
-          anyOf:
-          - type: string
-            maxLength: 255
-            minLength: 1
-          - type: 'null'
-          title: First Name
-          description: The first name(s) or given name for the buyer.
-          examples:
-          - John
-        last_name:
-          anyOf:
-          - type: string
-            maxLength: 255
-            minLength: 1
-          - type: 'null'
-          title: Last Name
-          description: The last name, or family name, of the buyer.
-          examples:
-          - Doe
-        email_address:
-          anyOf:
-          - type: string
-            maxLength: 320
-            minLength: 1
-          - type: 'null'
-          title: Email Address
-          description: The email address for the buyer.
-          examples:
-          - john@example.com
-        phone_number:
-          anyOf:
-          - type: string
-            pattern: ^\+[1-9]\d{1,14}$
-            examples:
-            - '+14155552671'
-            - '+442071838750'
-          - type: 'null'
-          title: Phone Number
-          description: The phone number for the buyer which should be formatted according to the E164 number standard.
-          examples:
-          - '+1234567890'
-        address:
-          anyOf:
-          - $ref: '#/components/schemas/Address_2'
-          - type: 'null'
-          description: The billing address for the buyer.
-        tax_id:
-          anyOf:
-          - $ref: '#/components/schemas/TaxId_2'
-          - type: 'null'
-          description: The tax ID information associated with the billing details.
-      additionalProperties: false
-      type: object
-      title: BillingDetails
-    Error401:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `unauthorized`
-          default: unauthorized
-          examples:
-          - unauthorized
-        status:
-          type: integer
-          title: Status
-          description: Always `401`.
-          default: 401
-          examples:
-          - 401
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: No valid API authentication found
-          examples:
-          - No valid API authentication found
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error401
-    Error504:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `gateway_timeout`
-          default: gateway_timeout
-          examples:
-          - gateway_timeout
-        status:
-          type: integer
-          title: Status
-          default: 504
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Request could not be processed
-          examples:
-          - Request could not be processed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error504
-    GiftCardSummaries:
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/GiftCardSummary'
-          type: array
-          title: Items
-          description: A list of items returned for this request.
-      type: object
-      required:
-      - items
-      title: GiftCardSummaries
     GiftCardStoredRequest:
       properties:
         id:
@@ -2400,655 +3049,6 @@ components:
       - id
       title: GiftCardStoredRequest
       description: The ID of a stored gift card to fetch a balance for.
-    Error502:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `bad_gateway`
-          default: bad_gateway
-          examples:
-          - bad_gateway
-        status:
-          type: integer
-          title: Status
-          description: Always `502`.
-          default: 502
-          examples:
-          - 502
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Request could not be processed
-          examples:
-          - Request could not be processed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error502
-    TaxId_2:
-      properties:
-        value:
-          type: string
-          maxLength: 50
-          minLength: 1
-          title: Value
-          description: The tax ID for the buyer.
-          examples:
-          - '12345678931'
-        kind:
-          $ref: '#/components/schemas/TaxIdKind'
-          description: The kind of tax ID
-          examples:
-          - us.ein
-      additionalProperties: false
-      type: object
-      required:
-      - value
-      - kind
-      title: TaxId
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    GiftCardCreate:
-      properties:
-        number:
-          type: string
-          maxLength: 19
-          minLength: 16
-          pattern: ^\d+$
-          title: Number
-          description: The 16-19 digit number for the gift card.
-          examples:
-          - '4123455541234561234'
-        pin:
-          type: string
-          minLength: 1
-          title: Pin
-          description: The PIN for this gift card.
-          examples:
-          - '1234'
-        buyer_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Buyer Id
-          description: ' The ID of the buyer to associate this gift card to. If this field is provided then the `buyer_external_identifier` field needs to be unset.'
-          examples:
-          - fe26475d-ec3e-4884-9553-f7356683f7f9
-        buyer_external_identifier:
-          anyOf:
-          - type: string
-            maxLength: 200
-            minLength: 1
-          - type: 'null'
-          title: Buyer External Identifier
-          description: The `external_identifier` of the buyer to associate this gift card to. If this field is provided then the `buyer_id` field needs to be unset.
-          examples:
-          - buyer-12345
-      additionalProperties: false
-      type: object
-      required:
-      - number
-      - pin
-      title: GiftCardCreate
-    Address_2:
-      properties:
-        city:
-          anyOf:
-          - type: string
-            maxLength: 100
-            minLength: 1
-          - type: 'null'
-          title: City
-          description: The city for the address.
-          examples:
-          - San Jose
-        country:
-          anyOf:
-          - type: string
-            pattern: ^[A-Z]{2}$
-            examples:
-            - DE
-            - GB
-            - US
-          - type: 'null'
-          title: Country
-          description: The country for the address in ISO 3166 format.
-          examples:
-          - US
-        postal_code:
-          anyOf:
-          - type: string
-            maxLength: 50
-            minLength: 1
-          - type: 'null'
-          title: Postal Code
-          description: The postal code or zip code for the address.
-          examples:
-          - '94560'
-        state:
-          anyOf:
-          - type: string
-            maxLength: 255
-            minLength: 1
-          - type: 'null'
-          title: State
-          description: The state, county, or province for the address.
-          examples:
-          - California
-        state_code:
-          anyOf:
-          - type: string
-            pattern: ^[A-Z]{2}-[A-Z0-9]{1,3}$
-            examples:
-            - GB-LND
-            - US-CA
-          - type: 'null'
-          title: State Code
-          description: The code of state, county, or province for the address in ISO 3166-2 format.
-          examples:
-          - US-CA
-        house_number_or_name:
-          anyOf:
-          - type: string
-            maxLength: 255
-            minLength: 1
-          - type: 'null'
-          title: House Number Or Name
-          description: The house number or name for the address. Not all payment services use this field but some do.
-          examples:
-          - '10'
-        line1:
-          anyOf:
-          - type: string
-            maxLength: 255
-            minLength: 1
-          - type: 'null'
-          title: Line1
-          description: The first line of the address.
-          examples:
-          - Stafford Appartments
-        line2:
-          anyOf:
-          - type: string
-            maxLength: 255
-            minLength: 1
-          - type: 'null'
-          title: Line2
-          description: The second line of the address.
-          examples:
-          - 29th Street
-        organization:
-          anyOf:
-          - type: string
-            maxLength: 255
-            minLength: 1
-          - type: 'null'
-          title: Organization
-          description: The optional name of the company or organisation to add to the address.
-          examples:
-          - Gr4vy
-      additionalProperties: false
-      type: object
-      title: Address
-    GiftCards_2:
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/GiftCard_2'
-          type: array
-          title: Items
-          description: A list of items returned for this request.
-        limit:
-          type: integer
-          maximum: 100.0
-          minimum: 1.0
-          title: Limit
-          description: The number of items for this page.
-          default: 20
-          examples:
-          - 20
-        next_cursor:
-          anyOf:
-          - type: string
-            maxLength: 1000
-            minLength: 1
-          - type: 'null'
-          title: Next Cursor
-          description: The cursor pointing at the next page of items.
-          examples:
-          - ZXhhbXBsZTE
-        previous_cursor:
-          anyOf:
-          - type: string
-            maxLength: 1000
-            minLength: 1
-          - type: 'null'
-          title: Previous Cursor
-          description: The cursor pointing at the previous page of items.
-          examples:
-          - Xkjss7asS
-      additionalProperties: false
-      type: object
-      required:
-      - items
-      title: GiftCards
-    Error500:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `server_error`
-          default: server_error
-          examples:
-          - server_error
-        status:
-          type: integer
-          title: Status
-          description: Always `500`.
-          default: 500
-          examples:
-          - 500
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Request could not be processed
-          examples:
-          - Request could not be processed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error500
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    Error425:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `too_early`
-          default: too_early
-          examples:
-          - too_early
-        status:
-          type: integer
-          title: Status
-          description: Always `425`.
-          default: 425
-          examples:
-          - 425
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error425
-    Error400:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `bad_request`
-          default: bad_request
-          examples:
-          - bad_request
-        status:
-          type: integer
-          title: Status
-          description: Always `400`.
-          default: 400
-          examples:
-          - 400
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error400
-    Error403:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `forbidden`
-          default: forbidden
-          examples:
-          - forbidden
-        status:
-          type: integer
-          title: Status
-          description: Always `403`.
-          default: 403
-          examples:
-          - 403
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error403
-    GiftCardIssuanceCreate:
-      properties:
-        theme:
-          type: string
-          maxLength: 200
-          minLength: 1
-          title: Theme
-          description: The provider theme code to issue the gift card against.
-          examples:
-          - '031111372'
-        amount:
-          type: integer
-          maximum: 99999999.0
-          minimum: 0.0
-          title: Amount
-          description: The amount to load onto the gift card, in the smallest denomination for the currency.
-          examples:
-          - 5000
-        currency:
-          type: string
-          pattern: ^[A-Z]{3}$
-          title: Currency
-          description: The ISO-4217 currency code for the `amount`.
-          examples:
-          - EUR
-          - GBP
-          - USD
-        external_identifier:
-          anyOf:
-          - type: string
-            maxLength: 200
-            minLength: 1
-          - type: 'null'
-          title: External Identifier
-          description: An optional external identifier for this issuance.
-          examples:
-          - order-12345
-      additionalProperties: false
-      type: object
-      required:
-      - theme
-      - amount
-      - currency
-      title: GiftCardIssuanceCreate
-      description: The details used to issue a new virtual gift card.
-    GiftCardActivationCreate:
-      properties:
-        number:
-          type: string
-          maxLength: 19
-          minLength: 16
-          pattern: ^\d+$
-          title: Number
-          description: The 16-19 digit number for the gift card.
-          examples:
-          - '4123455541234561234'
-        pin:
-          anyOf:
-          - type: string
-            minLength: 1
-          - type: 'null'
-          title: Pin
-          description: The PIN for this gift card.
-          examples:
-          - '1234'
-        amount:
-          anyOf:
-          - type: integer
-            maximum: 99999999.0
-            minimum: 0.0
-          - type: 'null'
-          title: Amount
-          description: The amount to load onto the gift card, in the smallest denomination for the currency. Required if `currency` is provided.
-          examples:
-          - 5000
-        currency:
-          anyOf:
-          - type: string
-            pattern: ^[A-Z]{3}$
-            examples:
-            - EUR
-            - GBP
-            - USD
-          - type: 'null'
-          title: Currency
-          description: The ISO-4217 currency code for the `amount`. Required if `amount` is provided.
-          examples:
-          - USD
-        external_identifier:
-          anyOf:
-          - type: string
-            maxLength: 200
-            minLength: 1
-          - type: 'null'
-          title: External Identifier
-          description: An optional external identifier for this activation.
-          examples:
-          - order-12345
-        store:
-          type: boolean
-          title: Store
-          description: Whether to store the activated gift card in the vault. When `true`, a `pin` is required.
-          default: false
-          examples:
-          - false
-        buyer_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Buyer Id
-          description: The ID of the buyer to associate this gift card to. Only allowed when `store` is `true`. If this field is provided then the `buyer_external_identifier` field needs to be unset.
-          examples:
-          - fe26475d-ec3e-4884-9553-f7356683f7f9
-        buyer_external_identifier:
-          anyOf:
-          - type: string
-            maxLength: 200
-            minLength: 1
-          - type: 'null'
-          title: Buyer External Identifier
-          description: The `external_identifier` of the buyer to associate this gift card to. Only allowed when `store` is `true`. If this field is provided then the `buyer_id` field needs to be unset.
-          examples:
-          - user-789123
-      additionalProperties: false
-      type: object
-      required:
-      - number
-      title: GiftCardActivationCreate
-      description: The details used to activate a physical gift card.
-    Error429:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `too_many_requests`
-          default: too_many_requests
-          examples:
-          - too_many_requests
-        status:
-          type: integer
-          title: Status
-          description: Always `429`.
-          default: 429
-          examples:
-          - 429
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error429
-    GiftCardErrorCode:
-      type: string
-      enum:
-      - invalid_gift_card
-      - expired_card
-      - inactive_card
-      - invalid_service_credentials
-      - invalid_amount
-      - incorrect_currency
-      - insufficient_funds
-      - invalid_service_configuration
-      - operation_canceled
-      - service_error
-      - service_network_error
-      - unknown_error
-      - max_gift_cards_reached
-      - suspected_fraud
-      - canceled_payment_method
-      - duplicate_transaction
-      - unexpected_state
-      title: GiftCardErrorCode
-      description: 'Gift card error codes.
-
-
-        Gr4vy normalised gift card error codes. Keep the naming and style in line with
-
-        those in the connectors framework.
-
-
-        If new codes are added, append them at the end or amend public simulator
-
-        documentation: https://docs.gr4vy.com/guides/features/gift-cards/simulator'
   securitySchemes:
     bearerAuth:
       type: http

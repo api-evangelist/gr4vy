@@ -588,52 +588,198 @@ paths:
           description: The subdomain for your Gr4vy instance.
 components:
   schemas:
-    Buyers:
-      title: Buyers
+    ShippingDetail:
+      title: Shipping detail
       type: object
-      description: A list of buyers.
+      description: Shipping detail for a buyer.
       x-tags:
       - Buyers
       properties:
-        items:
-          type: array
-          description: A list of buyers.
-          items:
-            $ref: '#/components/schemas/Buyer'
-        limit:
-          type: integer
-          description: 'The limit applied to request. This represents the number of items that are at
-
-            maximum returned by this request.'
-          format: int32
-          minimum: 1
-          maximum: 100
-          example: 1
-          default: 20
-        next_cursor:
+        type:
+          type: string
+          description: The type of this resource. Is always `shipping-details`.
+          example: shipping-details
+          enum:
+          - shipping-details
+        id:
+          type: string
+          format: uuid
+          description: The unique ID for a buyer's shipping detail.
+          example: 8724fd24-5489-4a5d-90fd-0604df7d3b83
+        buyer_id:
+          type: string
+          format: uuid
+          description: The unique ID for a buyer.
+          example: 8724fd24-5489-4a5d-90fd-0604df7d3b83
+        first_name:
           type:
           - string
           - 'null'
-          description: 'The cursor that represents the next page of results. Use the `cursor` query
-
-            parameter to fetch this page of items.'
-          example: ZXhhbXBsZTE
           minLength: 1
-          maxLength: 1000
-        previous_cursor:
+          maxLength: 255
+          description: The first name(s) or given name of the buyer.
+          example: John
+        last_name:
           type:
           - string
           - 'null'
-          description: 'The cursor that represents the next page of results. Use the `cursor` query
-
-            parameter to fetch this page of items.'
-          example: null
           minLength: 1
-          maxLength: 1000
-    Error400BadRequest:
-      title: Bad Request
+          maxLength: 255
+          example: Lunn
+          description: The last name, or family name, of the buyer.
+        email_address:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 320
+          description: The email address of the buyer.
+          example: john@example.com
+        phone_number:
+          type:
+          - string
+          - 'null'
+          pattern: ^\+[1-9]\d{1,14}$
+          minLength: 1
+          maxLength: 50
+          description: 'The phone number of the buyer. This number is formatted according to the
+
+            [E164 number standard](https://www.twilio.com/docs/glossary/what-e164).'
+          example: '+1234567890'
+        address:
+          type:
+          - object
+          - 'null'
+          description: The physical shipping address associated to this buyer.
+          allOf:
+          - $ref: '#/components/schemas/Address'
+    BillingDetailsUpdateRequest:
+      title: Billing Details (Update)
       type: object
-      description: Bad Request (HTTP 400).
+      x-tags:
+      - Buyers
+      properties:
+        first_name:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 255
+          description: The first name(s) or given name for the buyer.
+          example: John
+        last_name:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 255
+          example: Lunn
+          description: The last name, or family name, of the buyer.
+        email_address:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 320
+          description: The email address for the buyer.
+          example: john@example.com
+        phone_number:
+          type:
+          - string
+          - 'null'
+          pattern: ^\+[1-9]\d{1,14}$
+          minLength: 1
+          maxLength: 50
+          description: 'The phone number for the buyer which should be formatted according to the
+
+            [E164 number standard](https://www.twilio.com/docs/glossary/what-e164).'
+          example: '+1234567890'
+        address:
+          type:
+          - object
+          - 'null'
+          description: The billing address for the buyer.
+          allOf:
+          - $ref: '#/components/schemas/Address'
+        tax_id:
+          type:
+          - object
+          - 'null'
+          description: The tax ID information associated with the billing details.
+          allOf:
+          - $ref: '#/components/schemas/TaxId'
+    BuyerRequest:
+      title: Buyer (Create)
+      type: object
+      description: A request to create a buyer.
+      x-tags:
+      - Buyers
+      properties:
+        external_identifier:
+          type:
+          - string
+          - 'null'
+          description: An external identifier that can be used to match the buyer against your own records. This value needs to be unique for all buyers.
+          example: user-789123
+          minLength: 1
+          maxLength: 200
+        display_name:
+          type:
+          - string
+          - 'null'
+          description: A unique name for this buyer which is used in the Gr4vy admin panel to give a buyer a human readable name.
+          example: John L.
+          minLength: 1
+          maxLength: 200
+        billing_details:
+          type:
+          - object
+          - 'null'
+          description: The optional billing details to associate with a buyer.
+          allOf:
+          - $ref: '#/components/schemas/BillingDetailsRequest'
+        account_number:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 255
+          example: '1234567'
+          description: The source account number to perform an account funding transaction.
+    BuyerUpdate:
+      title: Buyer (Update)
+      type: object
+      description: A request to update a buyer.
+      x-tags:
+      - Buyers
+      properties:
+        external_identifier:
+          type:
+          - string
+          - 'null'
+          description: An external identifier that can be used to match the buyer against your own records. This value needs to be unique for all buyers.
+          example: user-789123
+          minLength: 1
+          maxLength: 200
+        display_name:
+          type:
+          - string
+          - 'null'
+          description: A unique name for this buyer which is used in the Gr4vy admin panel to give a buyer a human readable name.
+          example: John L.
+          minLength: 1
+          maxLength: 200
+        billing_details:
+          type:
+          - object
+          - 'null'
+          description: The billing details of the buyer.
+          allOf:
+          - $ref: '#/components/schemas/BillingDetailsUpdateRequest'
+    Error404NotFound:
+      title: Not Found Error
+      type: object
+      description: Not Found Error (HTTP 404).
       x-tags:
       - Errors
       properties:
@@ -645,27 +791,119 @@ components:
           example: error
         code:
           type: string
-          description: A short code that describes the reason for the error.
-          example: bad_request
+          description: The reason code for the error.
+          example: not_found
           enum:
-          - bad_request
-          - incorrect_json
-          - invalid_credentials
+          - not_found
+          - pending_creation
         status:
           type: integer
-          description: '`400`.'
-          example: 400
+          description: '`404`.'
+          example: 404
           enum:
-          - 400
+          - 404
         message:
           type: string
-          description: A human-readable reason for the error.
-          example: Missing '****' field
+          description: The human readable reason for the error.
+          example: The resource could not be found
         details:
           type: array
-          description: A list of detail objects that further clarify the reason for the error.
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
           items:
             $ref: '#/components/schemas/ErrorDetail'
+    ErrorDetail:
+      title: Error details
+      description: Additional detail about the part of a request body that caused an issue.
+      type: object
+      x-tags:
+      - Errors
+      properties:
+        location:
+          type: string
+          example: body
+          description: The location where the error caused an issue.
+          enum:
+          - query
+          - body
+          - path
+          - header
+        type:
+          type: string
+          example: value_error.missing
+          description: A unique identifier for the type of error that occurred.
+        pointer:
+          type: string
+          example: /payment_method/number
+          description: 'The exact item for which the validation did not succeed. This is a JSON
+
+            pointer for request bodies, while for query, path, and header parameters
+
+            it is the name of the parameter.'
+        message:
+          type: string
+          example: field required
+          description: A human readable message for this error detail.
+    ShippingDetails:
+      title: Shipping details
+      type: object
+      description: A list of shipping details.
+      x-tags:
+      - Transactions
+      properties:
+        items:
+          type: array
+          description: A list of shipping details.
+          items:
+            $ref: '#/components/schemas/ShippingDetail'
+    ShippingDetailRequest:
+      title: Shipping detail (Create)
+      type: object
+      description: Shipping detail associated to a buyer.
+      x-tags:
+      - Buyers
+      properties:
+        first_name:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 255
+          description: The first name(s) or given name for the buyer.
+          example: John
+        last_name:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 255
+          example: Lunn
+          description: The last name, or family name, of the buyer.
+        email_address:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 320
+          description: The email address for the buyer.
+          example: john@example.com
+        phone_number:
+          type:
+          - string
+          - 'null'
+          pattern: ^\+[1-9]\d{1,14}$
+          minLength: 1
+          maxLength: 50
+          description: 'The phone number for the buyer which should be formatted according to the
+
+            [E164 number standard](https://www.twilio.com/docs/glossary/what-e164).'
+          example: '+1234567890'
+        address:
+          description: The physical shipping address associated to this buyer.
+          allOf:
+          - $ref: '#/components/schemas/Address'
     ShippingDetailUpdateRequest:
       title: Shipping detail (Update)
       type: object
@@ -711,115 +949,138 @@ components:
           description: The physical shipping address associated to this buyer.
           allOf:
           - $ref: '#/components/schemas/Address'
-    ShippingDetails:
-      title: Shipping details
+    Error409DuplicateRecord:
+      title: Duplicate Record Error
       type: object
-      description: A list of shipping details.
-      x-tags:
-      - Transactions
-      properties:
-        items:
-          type: array
-          description: A list of shipping details.
-          items:
-            $ref: '#/components/schemas/ShippingDetail'
-    TaxId:
-      title: Tax ID
-      type: object
-      description: The tax ID information associated to a buyer.
-      x-tags:
-      - Buyers
-      required:
-      - kind
-      - value
-      properties:
-        value:
-          type: string
-          minLength: 1
-          maxLength: 50
-          description: The tax ID for the buyer.
-          example: '12345678931'
-        kind:
-          type: string
-          description: The kind of tax ID.
-          example: gb.vat
-          enum:
-          - ae.trn
-          - au.abn
-          - ar.dni
-          - ar.cuil
-          - ar.cuit
-          - br.cnpj
-          - br.cpf
-          - ca.bn
-          - ca.gst_hst
-          - ca.pst_bc
-          - ca.pst_mb
-          - ca.pst_sk
-          - ca.qst
-          - ch.vat
-          - cl.tin
-          - es.cif
-          - eu.vat
-          - gb.vat
-          - hk.br
-          - id.nik
-          - id.npwp
-          - in.gst
-          - jp.cn
-          - jp.rn
-          - kr.brn
-          - li.uid
-          - mx.curp
-          - my.frp
-          - my.itn
-          - my.nric
-          - my.sst
-          - no.vat
-          - nz.gst
-          - ph.tin
-          - ru.inn
-          - ru.kpp
-          - sa.vat
-          - sg.gst
-          - sg.uen
-          - th.id
-          - th.vat
-          - tw.vat
-          - us.ein
-          - za.vat
-    ErrorDetail:
-      title: Error details
-      description: Additional detail about the part of a request body that caused an issue.
-      type: object
+      description: Duplicate Record Error (HTTP 409).
       x-tags:
       - Errors
       properties:
-        location:
-          type: string
-          example: body
-          description: The location where the error caused an issue.
-          enum:
-          - query
-          - body
-          - path
-          - header
         type:
           type: string
-          example: value_error.missing
-          description: A unique identifier for the type of error that occurred.
-        pointer:
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
           type: string
-          example: /payment_method/number
-          description: 'The exact item for which the validation did not succeed. This is a JSON
-
-            pointer for request bodies, while for query, path, and header parameters
-
-            it is the name of the parameter.'
+          description: '`duplicate_record`.'
+          example: duplicate_record
+          enum:
+          - duplicate_record
+        status:
+          type: integer
+          description: '`409`.'
+          example: 409
+          enum:
+          - 409
         message:
           type: string
-          example: field required
-          description: A human readable message for this error detail.
+          description: Further details on the field that triggered the error.
+          example: A duplicate record exists with this external_identifier value
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    Error401Unauthorized:
+      title: Unauthorized Error
+      type: object
+      description: Unauthorized Error (HTTP 401).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`unauthorized`.'
+          example: unauthorized
+          enum:
+          - unauthorized
+        status:
+          type: integer
+          description: '`401`.'
+          example: 401
+          enum:
+          - 401
+        message:
+          type: string
+          description: No valid API authentication found.
+          example: No valid API authentication found
+          enum:
+          - No valid API authentication found
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    BillingDetails:
+      title: Billing details
+      type: object
+      description: Billing details associated to a buyer.
+      x-tags:
+      - Buyers
+      properties:
+        type:
+          type: string
+          description: The type of this resource. Is always `billing-details`.
+          example: billing-details
+          enum:
+          - billing-details
+        first_name:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 255
+          description: The first name(s) or given name of the buyer.
+          example: John
+        last_name:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 255
+          example: Lunn
+          description: The last name, or family name, of the buyer.
+        email_address:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 320
+          description: The email address of the buyer.
+          example: john@example.com
+        phone_number:
+          type:
+          - string
+          - 'null'
+          pattern: ^\+[1-9]\d{1,14}$
+          minLength: 1
+          maxLength: 50
+          description: 'The phone number of the buyer. This number is formatted according to the
+
+            [E164 number standard](https://www.twilio.com/docs/glossary/what-e164).'
+          example: '+1234567890'
+        address:
+          description: The billing address of the buyer.
+          allOf:
+          - $ref: '#/components/schemas/Address'
+        tax_id:
+          description: The tax information associated with the billing details.
+          allOf:
+          - $ref: '#/components/schemas/TaxId'
     Address:
       title: Address
       type: object
@@ -905,45 +1166,6 @@ components:
 
             to the address.'
           example: Gr4vy
-    Error401Unauthorized:
-      title: Unauthorized Error
-      type: object
-      description: Unauthorized Error (HTTP 401).
-      x-tags:
-      - Errors
-      properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: '`unauthorized`.'
-          example: unauthorized
-          enum:
-          - unauthorized
-        status:
-          type: integer
-          description: '`401`.'
-          example: 401
-          enum:
-          - 401
-        message:
-          type: string
-          description: No valid API authentication found.
-          example: No valid API authentication found
-          enum:
-          - No valid API authentication found
-        details:
-          type: array
-          description: 'A list of detail objects that further clarify the reason for the error.
-
-            Not every error supports more detail.'
-          example: []
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
     BillingDetailsRequest:
       title: Billing details (Create)
       type: object
@@ -1006,295 +1228,48 @@ components:
           description: The tax ID information associated with the billing details.
           allOf:
           - $ref: '#/components/schemas/TaxId'
-    BillingDetails:
-      title: Billing details
+    Buyers:
+      title: Buyers
       type: object
-      description: Billing details associated to a buyer.
+      description: A list of buyers.
       x-tags:
       - Buyers
       properties:
-        type:
-          type: string
-          description: The type of this resource. Is always `billing-details`.
-          example: billing-details
-          enum:
-          - billing-details
-        first_name:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 255
-          description: The first name(s) or given name of the buyer.
-          example: John
-        last_name:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 255
-          example: Lunn
-          description: The last name, or family name, of the buyer.
-        email_address:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 320
-          description: The email address of the buyer.
-          example: john@example.com
-        phone_number:
-          type:
-          - string
-          - 'null'
-          pattern: ^\+[1-9]\d{1,14}$
-          minLength: 1
-          maxLength: 50
-          description: 'The phone number of the buyer. This number is formatted according to the
-
-            [E164 number standard](https://www.twilio.com/docs/glossary/what-e164).'
-          example: '+1234567890'
-        address:
-          description: The billing address of the buyer.
-          allOf:
-          - $ref: '#/components/schemas/Address'
-        tax_id:
-          description: The tax information associated with the billing details.
-          allOf:
-          - $ref: '#/components/schemas/TaxId'
-    BillingDetailsUpdateRequest:
-      title: Billing Details (Update)
-      type: object
-      x-tags:
-      - Buyers
-      properties:
-        first_name:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 255
-          description: The first name(s) or given name for the buyer.
-          example: John
-        last_name:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 255
-          example: Lunn
-          description: The last name, or family name, of the buyer.
-        email_address:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 320
-          description: The email address for the buyer.
-          example: john@example.com
-        phone_number:
-          type:
-          - string
-          - 'null'
-          pattern: ^\+[1-9]\d{1,14}$
-          minLength: 1
-          maxLength: 50
-          description: 'The phone number for the buyer which should be formatted according to the
-
-            [E164 number standard](https://www.twilio.com/docs/glossary/what-e164).'
-          example: '+1234567890'
-        address:
-          type:
-          - object
-          - 'null'
-          description: The billing address for the buyer.
-          allOf:
-          - $ref: '#/components/schemas/Address'
-        tax_id:
-          type:
-          - object
-          - 'null'
-          description: The tax ID information associated with the billing details.
-          allOf:
-          - $ref: '#/components/schemas/TaxId'
-    BuyerUpdate:
-      title: Buyer (Update)
-      type: object
-      description: A request to update a buyer.
-      x-tags:
-      - Buyers
-      properties:
-        external_identifier:
-          type:
-          - string
-          - 'null'
-          description: An external identifier that can be used to match the buyer against your own records. This value needs to be unique for all buyers.
-          example: user-789123
-          minLength: 1
-          maxLength: 200
-        display_name:
-          type:
-          - string
-          - 'null'
-          description: A unique name for this buyer which is used in the Gr4vy admin panel to give a buyer a human readable name.
-          example: John L.
-          minLength: 1
-          maxLength: 200
-        billing_details:
-          type:
-          - object
-          - 'null'
-          description: The billing details of the buyer.
-          allOf:
-          - $ref: '#/components/schemas/BillingDetailsUpdateRequest'
-    ShippingDetail:
-      title: Shipping detail
-      type: object
-      description: Shipping detail for a buyer.
-      x-tags:
-      - Buyers
-      properties:
-        type:
-          type: string
-          description: The type of this resource. Is always `shipping-details`.
-          example: shipping-details
-          enum:
-          - shipping-details
-        id:
-          type: string
-          format: uuid
-          description: The unique ID for a buyer's shipping detail.
-          example: 8724fd24-5489-4a5d-90fd-0604df7d3b83
-        buyer_id:
-          type: string
-          format: uuid
-          description: The unique ID for a buyer.
-          example: 8724fd24-5489-4a5d-90fd-0604df7d3b83
-        first_name:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 255
-          description: The first name(s) or given name of the buyer.
-          example: John
-        last_name:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 255
-          example: Lunn
-          description: The last name, or family name, of the buyer.
-        email_address:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 320
-          description: The email address of the buyer.
-          example: john@example.com
-        phone_number:
-          type:
-          - string
-          - 'null'
-          pattern: ^\+[1-9]\d{1,14}$
-          minLength: 1
-          maxLength: 50
-          description: 'The phone number of the buyer. This number is formatted according to the
-
-            [E164 number standard](https://www.twilio.com/docs/glossary/what-e164).'
-          example: '+1234567890'
-        address:
-          type:
-          - object
-          - 'null'
-          description: The physical shipping address associated to this buyer.
-          allOf:
-          - $ref: '#/components/schemas/Address'
-    Error409DuplicateRecord:
-      title: Duplicate Record Error
-      type: object
-      description: Duplicate Record Error (HTTP 409).
-      x-tags:
-      - Errors
-      properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: '`duplicate_record`.'
-          example: duplicate_record
-          enum:
-          - duplicate_record
-        status:
-          type: integer
-          description: '`409`.'
-          example: 409
-          enum:
-          - 409
-        message:
-          type: string
-          description: Further details on the field that triggered the error.
-          example: A duplicate record exists with this external_identifier value
-        details:
+        items:
           type: array
-          description: 'A list of detail objects that further clarify the reason for the error.
-
-            Not every error supports more detail.'
-          example: []
+          description: A list of buyers.
           items:
-            $ref: '#/components/schemas/ErrorDetail'
-    ShippingDetailRequest:
-      title: Shipping detail (Create)
-      type: object
-      description: Shipping detail associated to a buyer.
-      x-tags:
-      - Buyers
-      properties:
-        first_name:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 255
-          description: The first name(s) or given name for the buyer.
-          example: John
-        last_name:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 255
-          example: Lunn
-          description: The last name, or family name, of the buyer.
-        email_address:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 320
-          description: The email address for the buyer.
-          example: john@example.com
-        phone_number:
-          type:
-          - string
-          - 'null'
-          pattern: ^\+[1-9]\d{1,14}$
-          minLength: 1
-          maxLength: 50
-          description: 'The phone number for the buyer which should be formatted according to the
+            $ref: '#/components/schemas/Buyer'
+        limit:
+          type: integer
+          description: 'The limit applied to request. This represents the number of items that are at
 
-            [E164 number standard](https://www.twilio.com/docs/glossary/what-e164).'
-          example: '+1234567890'
-        address:
-          description: The physical shipping address associated to this buyer.
-          allOf:
-          - $ref: '#/components/schemas/Address'
+            maximum returned by this request.'
+          format: int32
+          minimum: 1
+          maximum: 100
+          example: 1
+          default: 20
+        next_cursor:
+          type:
+          - string
+          - 'null'
+          description: 'The cursor that represents the next page of results. Use the `cursor` query
+
+            parameter to fetch this page of items.'
+          example: ZXhhbXBsZTE
+          minLength: 1
+          maxLength: 1000
+        previous_cursor:
+          type:
+          - string
+          - 'null'
+          description: 'The cursor that represents the next page of results. Use the `cursor` query
+
+            parameter to fetch this page of items.'
+          example: null
+          minLength: 1
+          maxLength: 1000
     Buyer:
       title: Buyer
       type: object
@@ -1358,10 +1333,75 @@ components:
           maxLength: 255
           example: '1234567'
           description: The source account number to perform an account funding transaction.
-    Error404NotFound:
-      title: Not Found Error
+    TaxId:
+      title: Tax ID
       type: object
-      description: Not Found Error (HTTP 404).
+      description: The tax ID information associated to a buyer.
+      x-tags:
+      - Buyers
+      required:
+      - kind
+      - value
+      properties:
+        value:
+          type: string
+          minLength: 1
+          maxLength: 50
+          description: The tax ID for the buyer.
+          example: '12345678931'
+        kind:
+          type: string
+          description: The kind of tax ID.
+          example: gb.vat
+          enum:
+          - ae.trn
+          - au.abn
+          - ar.dni
+          - ar.cuil
+          - ar.cuit
+          - br.cnpj
+          - br.cpf
+          - ca.bn
+          - ca.gst_hst
+          - ca.pst_bc
+          - ca.pst_mb
+          - ca.pst_sk
+          - ca.qst
+          - ch.vat
+          - cl.tin
+          - es.cif
+          - eu.vat
+          - gb.vat
+          - hk.br
+          - id.nik
+          - id.npwp
+          - in.gst
+          - jp.cn
+          - jp.rn
+          - kr.brn
+          - li.uid
+          - mx.curp
+          - my.frp
+          - my.itn
+          - my.nric
+          - my.sst
+          - no.vat
+          - nz.gst
+          - ph.tin
+          - ru.inn
+          - ru.kpp
+          - sa.vat
+          - sg.gst
+          - sg.uen
+          - th.id
+          - th.vat
+          - tw.vat
+          - us.ein
+          - za.vat
+    Error400BadRequest:
+      title: Bad Request
+      type: object
+      description: Bad Request (HTTP 400).
       x-tags:
       - Errors
       properties:
@@ -1373,67 +1413,109 @@ components:
           example: error
         code:
           type: string
-          description: The reason code for the error.
-          example: not_found
+          description: A short code that describes the reason for the error.
+          example: bad_request
           enum:
-          - not_found
-          - pending_creation
+          - bad_request
+          - incorrect_json
+          - invalid_credentials
         status:
           type: integer
-          description: '`404`.'
-          example: 404
+          description: '`400`.'
+          example: 400
           enum:
+          - 400
+        message:
+          type: string
+          description: A human-readable reason for the error.
+          example: Missing '****' field
+        details:
+          type: array
+          description: A list of detail objects that further clarify the reason for the error.
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    Error401:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `unauthorized`
+          default: unauthorized
+          examples:
+          - unauthorized
+        status:
+          type: integer
+          title: Status
+          description: Always `401`.
+          default: 401
+          examples:
+          - 401
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: No valid API authentication found
+          examples:
+          - No valid API authentication found
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error401
+    Error404:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `not_found`
+          default: not_found
+          examples:
+          - not_found
+        status:
+          type: integer
+          title: Status
+          description: Always `404`.
+          default: 404
+          examples:
           - 404
         message:
           type: string
-          description: The human readable reason for the error.
-          example: The resource could not be found
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: The resource could not be found
+          examples:
+          - The resource could not be found
         details:
-          type: array
-          description: 'A list of detail objects that further clarify the reason for the error.
-
-            Not every error supports more detail.'
-          example: []
           items:
-            $ref: '#/components/schemas/ErrorDetail'
-    BuyerRequest:
-      title: Buyer (Create)
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
       type: object
-      description: A request to create a buyer.
-      x-tags:
-      - Buyers
-      properties:
-        external_identifier:
-          type:
-          - string
-          - 'null'
-          description: An external identifier that can be used to match the buyer against your own records. This value needs to be unique for all buyers.
-          example: user-789123
-          minLength: 1
-          maxLength: 200
-        display_name:
-          type:
-          - string
-          - 'null'
-          description: A unique name for this buyer which is used in the Gr4vy admin panel to give a buyer a human readable name.
-          example: John L.
-          minLength: 1
-          maxLength: 200
-        billing_details:
-          type:
-          - object
-          - 'null'
-          description: The optional billing details to associate with a buyer.
-          allOf:
-          - $ref: '#/components/schemas/BillingDetailsRequest'
-        account_number:
-          type:
-          - string
-          - 'null'
-          minLength: 1
-          maxLength: 255
-          example: '1234567'
-          description: The source account number to perform an account funding transaction.
+      title: Error404
     ErrorLocation:
       type: string
       enum:
@@ -1443,6 +1525,173 @@ components:
       - header
       - unknown
       title: ErrorLocation
+    Buyers_2:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/Buyer_2'
+          type: array
+          title: Items
+          description: A list of items returned for this request.
+        limit:
+          type: integer
+          maximum: 100.0
+          minimum: 1.0
+          title: Limit
+          description: The number of items for this page.
+          default: 20
+          examples:
+          - 20
+        next_cursor:
+          anyOf:
+          - type: string
+            maxLength: 1000
+            minLength: 1
+          - type: 'null'
+          title: Next Cursor
+          description: The cursor pointing at the next page of items.
+          examples:
+          - ZXhhbXBsZTE
+        previous_cursor:
+          anyOf:
+          - type: string
+            maxLength: 1000
+            minLength: 1
+          - type: 'null'
+          title: Previous Cursor
+          description: The cursor pointing at the previous page of items.
+          examples:
+          - Xkjss7asS
+      additionalProperties: false
+      type: object
+      required:
+      - items
+      title: Buyers
+    Error425:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `too_early`
+          default: too_early
+          examples:
+          - too_early
+        status:
+          type: integer
+          title: Status
+          description: Always `425`.
+          default: 425
+          examples:
+          - 425
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error425
+    BuyerUpdate_2:
+      properties:
+        display_name:
+          anyOf:
+          - type: string
+            maxLength: 200
+            minLength: 1
+          - type: 'null'
+          title: Display Name
+          description: The display name for the buyer.
+          examples:
+          - John Doe
+        external_identifier:
+          anyOf:
+          - type: string
+            maxLength: 200
+            minLength: 1
+          - type: 'null'
+          title: External Identifier
+          description: The merchant identifier for this buyer.
+          examples:
+          - buyer-12345
+        account_number:
+          anyOf:
+          - type: string
+            maxLength: 200
+            minLength: 1
+          - type: 'null'
+          title: Account Number
+          description: The buyer account number
+        billing_details:
+          anyOf:
+          - $ref: '#/components/schemas/BillingDetails_2'
+          - type: 'null'
+          description: The billing name, address, email, and other fields for this buyer.
+      additionalProperties: false
+      type: object
+      title: BuyerUpdate
+      description: Request body for updating an existing buyer
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ErrorDetail_2:
+      properties:
+        location:
+          $ref: '#/components/schemas/ErrorLocation'
+          description: The part of the request where the property can be found that caused the error.
+          examples:
+          - body
+        pointer:
+          anyOf:
+          - type: string
+            format: json-pointer
+          - type: string
+          title: Pointer
+          description: A JSON pointer for the particular property that caused the error.
+          examples:
+          - /currency
+        message:
+          type: string
+          title: Message
+          description: A human-readdable explanation of the error.
+          examples:
+          - 'Unknown ISO 4217 currency code: USX'
+        type:
+          type: string
+          title: Type
+          description: The type of error that was raised for this property.
+          examples:
+          - value_error
+      additionalProperties: false
+      type: object
+      required:
+      - location
+      - pointer
+      - message
+      - type
+      title: ErrorDetail
     Error405:
       properties:
         type:
@@ -1484,42 +1733,166 @@ components:
       additionalProperties: false
       type: object
       title: Error405
-    ErrorDetail_2:
+    BillingDetails_2:
       properties:
-        location:
-          $ref: '#/components/schemas/ErrorLocation'
-          description: The part of the request where the property can be found that caused the error.
-          examples:
-          - body
-        pointer:
+        first_name:
           anyOf:
           - type: string
-            format: json-pointer
-          - type: string
-          title: Pointer
-          description: A JSON pointer for the particular property that caused the error.
+            maxLength: 255
+            minLength: 1
+          - type: 'null'
+          title: First Name
+          description: The first name(s) or given name for the buyer.
           examples:
-          - /currency
+          - John
+        last_name:
+          anyOf:
+          - type: string
+            maxLength: 255
+            minLength: 1
+          - type: 'null'
+          title: Last Name
+          description: The last name, or family name, of the buyer.
+          examples:
+          - Doe
+        email_address:
+          anyOf:
+          - type: string
+            maxLength: 320
+            minLength: 1
+          - type: 'null'
+          title: Email Address
+          description: The email address for the buyer.
+          examples:
+          - john@example.com
+        phone_number:
+          anyOf:
+          - type: string
+            pattern: ^\+[1-9]\d{1,14}$
+            examples:
+            - '+14155552671'
+            - '+442071838750'
+          - type: 'null'
+          title: Phone Number
+          description: The phone number for the buyer which should be formatted according to the E164 number standard.
+          examples:
+          - '+1234567890'
+        address:
+          anyOf:
+          - $ref: '#/components/schemas/Address_2'
+          - type: 'null'
+          description: The billing address for the buyer.
+        tax_id:
+          anyOf:
+          - $ref: '#/components/schemas/TaxId_2'
+          - type: 'null'
+          description: The tax ID information associated with the billing details.
+      additionalProperties: false
+      type: object
+      title: BillingDetails
+    Error429:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `too_many_requests`
+          default: too_many_requests
+          examples:
+          - too_many_requests
+        status:
+          type: integer
+          title: Status
+          description: Always `429`.
+          default: 429
+          examples:
+          - 429
         message:
           type: string
           title: Message
-          description: A human-readdable explanation of the error.
+          description: A human readable message that provides more context to the error.
+          default: Generic error
           examples:
-          - 'Unknown ISO 4217 currency code: USX'
-        type:
-          type: string
-          title: Type
-          description: The type of error that was raised for this property.
-          examples:
-          - value_error
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
       additionalProperties: false
       type: object
-      required:
-      - location
-      - pointer
-      - message
-      - type
-      title: ErrorDetail
+      title: Error429
+    TaxIdKind:
+      type: string
+      enum:
+      - ae.trn
+      - au.abn
+      - ar.dni
+      - ar.cuil
+      - ar.cuit
+      - br.cnpj
+      - br.cpf
+      - ca.bn
+      - ca.gst_hst
+      - ca.pst_bc
+      - ca.pst_mb
+      - ca.pst_sk
+      - ca.qst
+      - ch.vat
+      - cl.tin
+      - co.itin
+      - co.nit
+      - co.cc
+      - co.ce
+      - co.de
+      - co.rc
+      - co.ti
+      - co.passport
+      - es.cif
+      - eu.vat
+      - gb.vat
+      - hk.br
+      - id.nik
+      - id.npwp
+      - in.gst
+      - in.pan
+      - jp.cn
+      - jp.rn
+      - kr.brn
+      - li.uid
+      - mx.curp
+      - mx.rfc
+      - my.frp
+      - my.itn
+      - my.nric
+      - my.sst
+      - no.vat
+      - nz.gst
+      - pe.ruc
+      - ph.tin
+      - ru.inn
+      - ru.kpp
+      - sa.vat
+      - sg.gst
+      - sg.uen
+      - th.id
+      - th.vat
+      - tw.vat
+      - us.ein
+      - za.vat
+      - bo.ci
+      - uy.rut
+      - uy.ci
+      title: TaxIdKind
     Buyer_2:
       properties:
         type:
@@ -1605,7 +1978,28 @@ components:
       - created_at
       - updated_at
       title: Buyer
-    Error404:
+    TaxId_2:
+      properties:
+        value:
+          type: string
+          maxLength: 50
+          minLength: 1
+          title: Value
+          description: The tax ID for the buyer.
+          examples:
+          - '12345678931'
+        kind:
+          $ref: '#/components/schemas/TaxIdKind'
+          description: The kind of tax ID
+          examples:
+          - us.ein
+      additionalProperties: false
+      type: object
+      required:
+      - value
+      - kind
+      title: TaxId
+    Error500:
       properties:
         type:
           type: string
@@ -1618,24 +2012,24 @@ components:
         code:
           type: string
           title: Code
-          description: Always `not_found`
-          default: not_found
+          description: Always `server_error`
+          default: server_error
           examples:
-          - not_found
+          - server_error
         status:
           type: integer
           title: Status
-          description: Always `404`.
-          default: 404
+          description: Always `500`.
+          default: 500
           examples:
-          - 404
+          - 500
         message:
           type: string
           title: Message
           description: A human readable message that provides more context to the error.
-          default: The resource could not be found
+          default: Request could not be processed
           examples:
-          - The resource could not be found
+          - Request could not be processed
         details:
           items:
             $ref: '#/components/schemas/ErrorDetail_2'
@@ -1645,255 +2039,7 @@ components:
           default: []
       additionalProperties: false
       type: object
-      title: Error404
-    BuyerCreate:
-      properties:
-        display_name:
-          anyOf:
-          - type: string
-            maxLength: 200
-            minLength: 1
-          - type: 'null'
-          title: Display Name
-          description: The display name for the buyer.
-          examples:
-          - John Doe
-        external_identifier:
-          anyOf:
-          - type: string
-            maxLength: 200
-            minLength: 1
-          - type: 'null'
-          title: External Identifier
-          description: The merchant identifier for this buyer.
-          examples:
-          - buyer-12345
-        billing_details:
-          anyOf:
-          - $ref: '#/components/schemas/BillingDetails_2'
-          - type: 'null'
-          description: The billing name, address, email, and other fields for this buyer.
-        account_number:
-          anyOf:
-          - type: string
-            maxLength: 200
-            minLength: 1
-          - type: 'null'
-          title: Account Number
-          description: The buyer account number
-      additionalProperties: false
-      type: object
-      title: BuyerCreate
-      description: Request body for creating a new buyer
-    Error409:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `duplicate_record`
-          default: duplicate_record
-          examples:
-          - duplicate_record
-        status:
-          type: integer
-          title: Status
-          description: Always `409`.
-          default: 409
-          examples:
-          - 409
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-        resource_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Resource Id
-          description: The ID of the conflicting resource.
-          examples:
-          - cdc70639-cb9c-4222-a73f-b8ce39f7821b
-      additionalProperties: false
-      type: object
-      title: Error409
-    TaxIdKind:
-      type: string
-      enum:
-      - ae.trn
-      - au.abn
-      - ar.dni
-      - ar.cuil
-      - ar.cuit
-      - br.cnpj
-      - br.cpf
-      - ca.bn
-      - ca.gst_hst
-      - ca.pst_bc
-      - ca.pst_mb
-      - ca.pst_sk
-      - ca.qst
-      - ch.vat
-      - cl.tin
-      - co.itin
-      - co.nit
-      - co.cc
-      - co.ce
-      - co.de
-      - co.rc
-      - co.ti
-      - co.passport
-      - es.cif
-      - eu.vat
-      - gb.vat
-      - hk.br
-      - id.nik
-      - id.npwp
-      - in.gst
-      - in.pan
-      - jp.cn
-      - jp.rn
-      - kr.brn
-      - li.uid
-      - mx.curp
-      - mx.rfc
-      - my.frp
-      - my.itn
-      - my.nric
-      - my.sst
-      - no.vat
-      - nz.gst
-      - pe.ruc
-      - ph.tin
-      - ru.inn
-      - ru.kpp
-      - sa.vat
-      - sg.gst
-      - sg.uen
-      - th.id
-      - th.vat
-      - tw.vat
-      - us.ein
-      - za.vat
-      - bo.ci
-      - uy.rut
-      - uy.ci
-      title: TaxIdKind
-    BillingDetails_2:
-      properties:
-        first_name:
-          anyOf:
-          - type: string
-            maxLength: 255
-            minLength: 1
-          - type: 'null'
-          title: First Name
-          description: The first name(s) or given name for the buyer.
-          examples:
-          - John
-        last_name:
-          anyOf:
-          - type: string
-            maxLength: 255
-            minLength: 1
-          - type: 'null'
-          title: Last Name
-          description: The last name, or family name, of the buyer.
-          examples:
-          - Doe
-        email_address:
-          anyOf:
-          - type: string
-            maxLength: 320
-            minLength: 1
-          - type: 'null'
-          title: Email Address
-          description: The email address for the buyer.
-          examples:
-          - john@example.com
-        phone_number:
-          anyOf:
-          - type: string
-            pattern: ^\+[1-9]\d{1,14}$
-            examples:
-            - '+14155552671'
-            - '+442071838750'
-          - type: 'null'
-          title: Phone Number
-          description: The phone number for the buyer which should be formatted according to the E164 number standard.
-          examples:
-          - '+1234567890'
-        address:
-          anyOf:
-          - $ref: '#/components/schemas/Address_2'
-          - type: 'null'
-          description: The billing address for the buyer.
-        tax_id:
-          anyOf:
-          - $ref: '#/components/schemas/TaxId_2'
-          - type: 'null'
-          description: The tax ID information associated with the billing details.
-      additionalProperties: false
-      type: object
-      title: BillingDetails
-    Error401:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `unauthorized`
-          default: unauthorized
-          examples:
-          - unauthorized
-        status:
-          type: integer
-          title: Status
-          description: Always `401`.
-          default: 401
-          examples:
-          - 401
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: No valid API authentication found
-          examples:
-          - No valid API authentication found
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error401
+      title: Error500
     Error504:
       properties:
         type:
@@ -1932,7 +2078,7 @@ components:
       additionalProperties: false
       type: object
       title: Error504
-    Error502:
+    Error400:
       properties:
         type:
           type: string
@@ -1945,24 +2091,24 @@ components:
         code:
           type: string
           title: Code
-          description: Always `bad_gateway`
-          default: bad_gateway
+          description: Always `bad_request`
+          default: bad_request
           examples:
-          - bad_gateway
+          - bad_request
         status:
           type: integer
           title: Status
-          description: Always `502`.
-          default: 502
+          description: Always `400`.
+          default: 400
           examples:
-          - 502
+          - 400
         message:
           type: string
           title: Message
           description: A human readable message that provides more context to the error.
-          default: Request could not be processed
+          default: Generic error
           examples:
-          - Request could not be processed
+          - Request failed validation
         details:
           items:
             $ref: '#/components/schemas/ErrorDetail_2'
@@ -1972,37 +2118,7 @@ components:
           default: []
       additionalProperties: false
       type: object
-      title: Error502
-    TaxId_2:
-      properties:
-        value:
-          type: string
-          maxLength: 50
-          minLength: 1
-          title: Value
-          description: The tax ID for the buyer.
-          examples:
-          - '12345678931'
-        kind:
-          $ref: '#/components/schemas/TaxIdKind'
-          description: The kind of tax ID
-          examples:
-          - us.ein
-      additionalProperties: false
-      type: object
-      required:
-      - value
-      - kind
-      title: TaxId
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
+      title: Error400
     Address_2:
       properties:
         city:
@@ -2103,47 +2219,45 @@ components:
       additionalProperties: false
       type: object
       title: Address
-    Error500:
+    BuyerCreate:
       properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
+        display_name:
+          anyOf:
+          - type: string
+            maxLength: 200
+            minLength: 1
+          - type: 'null'
+          title: Display Name
+          description: The display name for the buyer.
           examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `server_error`
-          default: server_error
+          - John Doe
+        external_identifier:
+          anyOf:
+          - type: string
+            maxLength: 200
+            minLength: 1
+          - type: 'null'
+          title: External Identifier
+          description: The merchant identifier for this buyer.
           examples:
-          - server_error
-        status:
-          type: integer
-          title: Status
-          description: Always `500`.
-          default: 500
-          examples:
-          - 500
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Request could not be processed
-          examples:
-          - Request could not be processed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
+          - buyer-12345
+        billing_details:
+          anyOf:
+          - $ref: '#/components/schemas/BillingDetails_2'
+          - type: 'null'
+          description: The billing name, address, email, and other fields for this buyer.
+        account_number:
+          anyOf:
+          - type: string
+            maxLength: 200
+            minLength: 1
+          - type: 'null'
+          title: Account Number
+          description: The buyer account number
       additionalProperties: false
       type: object
-      title: Error500
+      title: BuyerCreate
+      description: Request body for creating a new buyer
     ValidationError:
       properties:
         loc:
@@ -2170,7 +2284,7 @@ components:
       - msg
       - type
       title: ValidationError
-    Error425:
+    Error502:
       properties:
         type:
           type: string
@@ -2183,17 +2297,58 @@ components:
         code:
           type: string
           title: Code
-          description: Always `too_early`
-          default: too_early
+          description: Always `bad_gateway`
+          default: bad_gateway
           examples:
-          - too_early
+          - bad_gateway
         status:
           type: integer
           title: Status
-          description: Always `425`.
-          default: 425
+          description: Always `502`.
+          default: 502
           examples:
-          - 425
+          - 502
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail_2'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error502
+    Error409:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `duplicate_record`
+          default: duplicate_record
+          examples:
+          - duplicate_record
+        status:
+          type: integer
+          title: Status
+          description: Always `409`.
+          default: 409
+          examples:
+          - 409
         message:
           type: string
           title: Message
@@ -2208,92 +2363,17 @@ components:
           title: Details
           description: A list of details that further ellaborate on the error.
           default: []
-      additionalProperties: false
-      type: object
-      title: Error425
-    Error400:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `bad_request`
-          default: bad_request
-          examples:
-          - bad_request
-        status:
-          type: integer
-          title: Status
-          description: Always `400`.
-          default: 400
-          examples:
-          - 400
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error400
-    Buyers_2:
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/Buyer_2'
-          type: array
-          title: Items
-          description: A list of items returned for this request.
-        limit:
-          type: integer
-          maximum: 100.0
-          minimum: 1.0
-          title: Limit
-          description: The number of items for this page.
-          default: 20
-          examples:
-          - 20
-        next_cursor:
+        resource_id:
           anyOf:
           - type: string
-            maxLength: 1000
-            minLength: 1
           - type: 'null'
-          title: Next Cursor
-          description: The cursor pointing at the next page of items.
+          title: Resource Id
+          description: The ID of the conflicting resource.
           examples:
-          - ZXhhbXBsZTE
-        previous_cursor:
-          anyOf:
-          - type: string
-            maxLength: 1000
-            minLength: 1
-          - type: 'null'
-          title: Previous Cursor
-          description: The cursor pointing at the previous page of items.
-          examples:
-          - Xkjss7asS
+          - cdc70639-cb9c-4222-a73f-b8ce39f7821b
       additionalProperties: false
       type: object
-      required:
-      - items
-      title: Buyers
+      title: Error409
     Error403:
       properties:
         type:
@@ -2335,86 +2415,6 @@ components:
       additionalProperties: false
       type: object
       title: Error403
-    BuyerUpdate_2:
-      properties:
-        display_name:
-          anyOf:
-          - type: string
-            maxLength: 200
-            minLength: 1
-          - type: 'null'
-          title: Display Name
-          description: The display name for the buyer.
-          examples:
-          - John Doe
-        external_identifier:
-          anyOf:
-          - type: string
-            maxLength: 200
-            minLength: 1
-          - type: 'null'
-          title: External Identifier
-          description: The merchant identifier for this buyer.
-          examples:
-          - buyer-12345
-        account_number:
-          anyOf:
-          - type: string
-            maxLength: 200
-            minLength: 1
-          - type: 'null'
-          title: Account Number
-          description: The buyer account number
-        billing_details:
-          anyOf:
-          - $ref: '#/components/schemas/BillingDetails_2'
-          - type: 'null'
-          description: The billing name, address, email, and other fields for this buyer.
-      additionalProperties: false
-      type: object
-      title: BuyerUpdate
-      description: Request body for updating an existing buyer
-    Error429:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `too_many_requests`
-          default: too_many_requests
-          examples:
-          - too_many_requests
-        status:
-          type: integer
-          title: Status
-          description: Always `429`.
-          default: 429
-          examples:
-          - 429
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail_2'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error429
   securitySchemes:
     bearerAuth:
       type: http

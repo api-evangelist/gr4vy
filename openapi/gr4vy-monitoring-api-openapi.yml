@@ -1148,6 +1148,208 @@ paths:
       x-speakeasy-ignore: true
 components:
   schemas:
+    MonitoringDebouncingIncidentPolicyParams:
+      properties:
+        create_after_n:
+          type: integer
+          maximum: 10.0
+          minimum: 1.0
+          title: Create After N
+        close_after_n:
+          type: integer
+          maximum: 10.0
+          minimum: 1.0
+          title: Close After N
+      additionalProperties: false
+      type: object
+      required:
+      - create_after_n
+      - close_after_n
+      title: MonitoringDebouncingIncidentPolicyParams
+    MonitoringAuthRateMetricSpecParams:
+      properties:
+        filters:
+          $ref: '#/components/schemas/MonitoringMetricFilters'
+          description: The filters to apply on data.
+          examples:
+          - datetime_range: PT60M/hour_start
+            payment_method_bin:
+            - '123456'
+            - '411111'
+            payment_method_scheme:
+            - visa
+      additionalProperties: false
+      type: object
+      required:
+      - filters
+      title: MonitoringAuthRateMetricSpecParams
+    Error401:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `unauthorized`
+          default: unauthorized
+          examples:
+          - unauthorized
+        status:
+          type: integer
+          title: Status
+          description: Always `401`.
+          default: 401
+          examples:
+          - 401
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: No valid API authentication found
+          examples:
+          - No valid API authentication found
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error401
+    MonitoringMetricCreatorType:
+      type: string
+      enum:
+      - private_key
+      - user
+      title: MonitoringMetricCreatorType
+    MonitoringMetricFilters:
+      properties:
+        datetime_range:
+          type: string
+          title: Datetime Range
+          description: 'Filters the results to the set of data aggregated over the duration of the specified period. The duration must be between 5 to 60 minutes. This parameter should be in the format of [ISO 8601 interval](https://en.wikipedia.org/wiki/ISO_8601#Time_intervals) while the duration only format is not accepted. Start and end are either a datetime in ISO 8601 format or a placeholder which is one of the following: `now`, `hour_start` and `hour_end`.'
+          examples:
+          - PT60M/hour_end
+        method:
+          anyOf:
+          - items:
+              anyOf:
+              - $ref: '#/components/schemas/Method'
+              - type: 'null'
+            type: array
+          - type: 'null'
+          title: Method
+          description: Filters the results to only include transactions that were processed using the specified payment method. This parameter also accepts `null` to include transactions that have a null for this field.
+          examples:
+          - card
+        payment_method_bin:
+          anyOf:
+          - items:
+              anyOf:
+              - type: string
+                maxLength: 6
+                minLength: 6
+                pattern: ^\d+$
+              - type: 'null'
+            type: array
+          - type: 'null'
+          title: Payment Method Bin
+          description: Filters the results to only include transactions that used the specified payment method bin. The payment method bin is the first 6 digits of the card number. This parameter also accepts `null` to include transactions that have a null for this field.
+          examples:
+          - '123456'
+        payment_method_scheme:
+          anyOf:
+          - items:
+              anyOf:
+              - $ref: '#/components/schemas/CardScheme'
+              - type: 'null'
+            type: array
+          - type: 'null'
+          title: Payment Method Scheme
+          description: Filters the results to only include transactions that were processed with the specified payment method scheme. This parameter also accepts `null` to include transactions that have a null for this field.
+          examples:
+          - visa
+        payment_service_id:
+          anyOf:
+          - items:
+              anyOf:
+              - type: string
+                format: uuid
+              - type: 'null'
+            type: array
+          - type: 'null'
+          title: Payment Service Id
+          description: Filters the results to only include transactions that were processed with the specified payment service ID. This parameter also accepts `null` to include transactions that have a null for this field.
+          examples:
+          - 06319aec-2c0f-4c7b-8af1-047ca037fc021
+      additionalProperties: false
+      type: object
+      required:
+      - datetime_range
+      title: MonitoringMetricFilters
+    Error404:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `not_found`
+          default: not_found
+          examples:
+          - not_found
+        status:
+          type: integer
+          title: Status
+          description: Always `404`.
+          default: 404
+          examples:
+          - 404
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: The resource could not be found
+          examples:
+          - The resource could not be found
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error404
+    MonitoringDebouncingIncidentPolicy:
+      properties:
+        strategy:
+          type: string
+          const: debouncing
+          title: Strategy
+          default: debouncing
+        params:
+          $ref: '#/components/schemas/MonitoringDebouncingIncidentPolicyParams'
+      additionalProperties: false
+      type: object
+      required:
+      - params
+      title: MonitoringDebouncingIncidentPolicy
     ErrorLocation:
       type: string
       enum:
@@ -1157,6 +1359,319 @@ components:
       - header
       - unknown
       title: ErrorLocation
+    Error425:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `too_early`
+          default: too_early
+          examples:
+          - too_early
+        status:
+          type: integer
+          title: Status
+          description: Always `425`.
+          default: 425
+          examples:
+          - 425
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error425
+    MonitoringAuthRateSpec:
+      properties:
+        model:
+          type: string
+          const: auth_rate
+          title: Model
+          description: The monitoring metric model type.
+          default: auth_rate
+          examples:
+          - auth_rate
+        params:
+          $ref: '#/components/schemas/MonitoringAuthRateMetricSpecParams'
+          description: The parameters for the auth rate monitoring metric model.
+          examples:
+          - filters:
+              datetime_range: PT60M/hour_start
+              payment_method_bin:
+              - '123456'
+              - '411111'
+              payment_method_scheme:
+              - visa
+      additionalProperties: false
+      type: object
+      required:
+      - params
+      title: MonitoringAuthRateSpec
+    MonitoringMetric:
+      properties:
+        type:
+          type: string
+          const: monitoring.metric
+          title: Type
+          description: Always `monitoring.metric`.
+          default: monitoring.metric
+          examples:
+          - monitoring.metric
+        id:
+          type: string
+          format: uuid
+          title: Id
+          description: The ID of the monitoring metric.
+          examples:
+          - aadb3ea8-5ad6-408b-8c3d-82da77c8d619
+        merchant_account_id:
+          type: string
+          title: Merchant Account Id
+          description: The ID of the merchant account the monitoring metric belongs to.
+          examples:
+          - default
+        display_name:
+          type: string
+          title: Display Name
+          description: The display name of the monitoring metric.
+          examples:
+          - GBP transactions in the last hour | Auth rate > 90%
+        spec:
+          additionalProperties: true
+          type: object
+          title: Spec
+          description: The monitoring metric specification.
+          examples:
+          - model: auth_rate
+            params:
+              filters:
+                datetime_range: PT60M/hour_start
+                payment_method_bin:
+                - '123456'
+                - '111111'
+                payment_method_scheme:
+                - visa
+        alerting_policy:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Alerting Policy
+          description: The alerting policy of the monitoring metric.
+          examples:
+          - params:
+              alert_gt: 99.9
+              alert_lt: 90
+            strategy: threshold
+        alerting_policy_updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Alerting Policy Updated At
+          description: The date and time when the alerting policy was last updated.
+          examples:
+          - '2025-10-28T11:47:32.566063+00:00'
+        incident_policy:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Incident Policy
+          description: The incident policy of the monitoring metric.
+          examples:
+          - params:
+              close_after_n: 6
+              create_after_n: 3
+            strategy: debouncing
+        incident_policy_updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Incident Policy Updated At
+          description: The date and time when the incident policy was last updated.
+          examples:
+          - '2025-10-28T11:47:32.566063+00:00'
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+          description: The date and time when the monitoring metric was first created.
+          examples:
+          - '2025-10-28T11:47:32.566063+00:00'
+        creator_id:
+          type: string
+          format: uuid
+          title: Creator Id
+          description: The ID of the user who created the monitoring metric.
+          examples:
+          - 3d2e0043-9459-4e86-8dad-e2afd9892f3c
+        creator_type:
+          $ref: '#/components/schemas/MonitoringMetricCreatorType'
+          description: The type of monitoring metric creator.
+          examples:
+          - user
+        creator_display_name:
+          type: string
+          title: Creator Display Name
+          description: The display name of the monitoring metric creator.
+          examples:
+          - John Smith
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+          description: The date and time when the monitoring metric was last updated.
+          examples:
+          - '2025-10-28T11:47:32.566063+00:00'
+        samples_view:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/MonitoringSample'
+            type: array
+          - type: 'null'
+          title: Samples View
+          description: The requested subset of monitoring metric samples.
+      additionalProperties: false
+      type: object
+      required:
+      - id
+      - merchant_account_id
+      - display_name
+      - spec
+      - alerting_policy
+      - alerting_policy_updated_at
+      - incident_policy
+      - incident_policy_updated_at
+      - created_at
+      - creator_id
+      - creator_type
+      - creator_display_name
+      - updated_at
+      - samples_view
+      title: MonitoringMetric
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    MonitoringMetricCreate:
+      properties:
+        display_name:
+          type: string
+          maxLength: 200
+          minLength: 1
+          title: Display Name
+          description: The display name for the monitoring metric.
+          examples:
+          - GBP transactions in the last hour | Auth rate > 90%
+        spec:
+          oneOf:
+          - $ref: '#/components/schemas/MonitoringAuthRateSpec'
+          title: Spec
+          description: The monitoring metric specification.
+          examples:
+          - model: auth_rate
+            params:
+              filters:
+                datetime_range: PT60M/hour_start
+                payment_method_bin:
+                - '123456'
+                - '411111'
+                payment_method_scheme:
+                - visa
+          discriminator:
+            propertyName: model
+            mapping:
+              auth_rate: '#/components/schemas/MonitoringAuthRateSpec'
+        alerting_policy:
+          anyOf:
+          - oneOf:
+            - $ref: '#/components/schemas/MonitoringThresholdAlertingPolicy'
+            discriminator:
+              propertyName: strategy
+              mapping:
+                threshold: '#/components/schemas/MonitoringThresholdAlertingPolicy'
+          - type: 'null'
+          title: Alerting Policy
+        incident_policy:
+          anyOf:
+          - oneOf:
+            - $ref: '#/components/schemas/MonitoringDebouncingIncidentPolicy'
+            discriminator:
+              propertyName: strategy
+              mapping:
+                debouncing: '#/components/schemas/MonitoringDebouncingIncidentPolicy'
+          - type: 'null'
+          title: Incident Policy
+      additionalProperties: false
+      type: object
+      required:
+      - display_name
+      - spec
+      - alerting_policy
+      - incident_policy
+      title: MonitoringMetricCreate
+    ErrorDetail:
+      properties:
+        location:
+          $ref: '#/components/schemas/ErrorLocation'
+          description: The part of the request where the property can be found that caused the error.
+          examples:
+          - body
+        pointer:
+          anyOf:
+          - type: string
+            format: json-pointer
+          - type: string
+          title: Pointer
+          description: A JSON pointer for the particular property that caused the error.
+          examples:
+          - /currency
+        message:
+          type: string
+          title: Message
+          description: A human-readdable explanation of the error.
+          examples:
+          - 'Unknown ISO 4217 currency code: USX'
+        type:
+          type: string
+          title: Type
+          description: The type of error that was raised for this property.
+          examples:
+          - value_error
+      additionalProperties: false
+      type: object
+      required:
+      - location
+      - pointer
+      - message
+      - type
+      title: ErrorDetail
     Error405:
       properties:
         type:
@@ -1198,42 +1713,680 @@ components:
       additionalProperties: false
       type: object
       title: Error405
-    ErrorDetail:
+    MonitoringThresholdAlertingPolicy:
       properties:
-        location:
-          $ref: '#/components/schemas/ErrorLocation'
-          description: The part of the request where the property can be found that caused the error.
-          examples:
-          - body
-        pointer:
-          anyOf:
-          - type: string
-            format: json-pointer
-          - type: string
-          title: Pointer
-          description: A JSON pointer for the particular property that caused the error.
-          examples:
-          - /currency
-        message:
+        strategy:
           type: string
-          title: Message
-          description: A human-readdable explanation of the error.
-          examples:
-          - 'Unknown ISO 4217 currency code: USX'
-        type:
-          type: string
-          title: Type
-          description: The type of error that was raised for this property.
-          examples:
-          - value_error
+          const: threshold
+          title: Strategy
+          default: threshold
+        params:
+          $ref: '#/components/schemas/MonitoringThresholdAlertingPolicyParams'
       additionalProperties: false
       type: object
       required:
-      - location
-      - pointer
-      - message
+      - params
+      title: MonitoringThresholdAlertingPolicy
+    MonitoringMetricUpdate:
+      properties:
+        display_name:
+          type: string
+          maxLength: 200
+          minLength: 1
+          title: Display Name
+          description: The display name for the monitoring metric.
+          examples:
+          - GBP transactions in the last hour | Auth rate > 90%
+        alerting_policy:
+          anyOf:
+          - oneOf:
+            - $ref: '#/components/schemas/MonitoringThresholdAlertingPolicy'
+            discriminator:
+              propertyName: strategy
+              mapping:
+                threshold: '#/components/schemas/MonitoringThresholdAlertingPolicy'
+          - type: 'null'
+          title: Alerting Policy
+        incident_policy:
+          anyOf:
+          - oneOf:
+            - $ref: '#/components/schemas/MonitoringDebouncingIncidentPolicy'
+            discriminator:
+              propertyName: strategy
+              mapping:
+                debouncing: '#/components/schemas/MonitoringDebouncingIncidentPolicy'
+          - type: 'null'
+          title: Incident Policy
+      additionalProperties: false
+      type: object
+      required:
+      - display_name
+      - alerting_policy
+      - incident_policy
+      title: MonitoringMetricUpdate
+    Error429:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `too_many_requests`
+          default: too_many_requests
+          examples:
+          - too_many_requests
+        status:
+          type: integer
+          title: Status
+          description: Always `429`.
+          default: 429
+          examples:
+          - 429
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error429
+    Error500:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `server_error`
+          default: server_error
+          examples:
+          - server_error
+        status:
+          type: integer
+          title: Status
+          description: Always `500`.
+          default: 500
+          examples:
+          - 500
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error500
+    MonitoringIncident:
+      properties:
+        type:
+          type: string
+          const: monitoring.incident
+          title: Type
+          description: Always `monitoring.incident`.
+          default: monitoring.incident
+          examples:
+          - monitoring.incident
+        id:
+          type: string
+          format: uuid
+          title: Id
+          description: The ID of the monitoring incident.
+          examples:
+          - c2e4ffaf-2463-4e8a-a9a2-b33590f3b579
+        metric_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Metric Id
+          description: The ID of the monitoring metric that the incident relates to. This value is null if the monitoring metric has been deleted.
+          examples:
+          - aadb3ea8-5ad6-408b-8c3d-82da77c8d619
+        merchant_account_id:
+          type: string
+          title: Merchant Account Id
+          description: The ID of the merchant account the monitoring incident belongs to.
+          examples:
+          - default
+        display_name:
+          type: string
+          title: Display Name
+          description: The monitoring metric display name captured at the time of incident creation.
+          examples:
+          - GBP transactions in the last hour | Auth rate > 95%
+        spec:
+          additionalProperties: true
+          type: object
+          title: Spec
+          description: The monitoring metric specification captured at the time of incident creation.
+          examples:
+          - model: auth_rate
+            params:
+              filters:
+                datetime_range: PT60M/hour_start
+                payment_method_bin:
+                - '123456'
+                - '111111'
+                payment_method_scheme:
+                - visa
+        alerting_policy:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Alerting Policy
+          description: The monitoring metric alerting policy captured at the time of incident creation.
+          examples:
+          - params:
+              alert_gt: 99.9
+              alert_lt: 90
+            strategy: threshold
+        incident_policy:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Incident Policy
+          description: The monitoring metric incident policy captured at the time of incident creation.
+          examples:
+          - params:
+              close_after_n: 6
+              create_after_n: 3
+            strategy: debouncing
+        notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notes
+          description: Notes for the monitoring incident.
+          examples:
+          - PSP-related incident
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+          description: The date and time when the monitoring incident was first created.
+          examples:
+          - '2025-10-28T11:47:32.566063+00:00'
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+          description: The date and time when the monitoring incident was last updated.
+          examples:
+          - '2025-10-28T12:03:05.120019+00:00'
+        closed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Closed At
+          description: The date and time when the monitoring incident was closed.
+          examples:
+          - '2025-10-28T11:57:32.566063+00:00'
+      additionalProperties: false
+      type: object
+      required:
+      - id
+      - metric_id
+      - merchant_account_id
+      - display_name
+      - spec
+      - alerting_policy
+      - incident_policy
+      - notes
+      - created_at
+      - updated_at
+      - closed_at
+      title: MonitoringIncident
+    MonitoringSample:
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          title: Timestamp
+          description: The date and time when the sample was taken.
+          examples:
+          - '2025-10-28T11:50:00+00:00'
+          - '2025-10-28T11:49:00+00:00'
+          - '2025-10-28T11:48:00+00:00'
+          - '2025-10-28T11:46:00+00:00'
+        value:
+          anyOf:
+          - type: integer
+          - type: number
+          - type: string
+            pattern: ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+          - type: 'null'
+          title: Value
+          description: The value of the sampled monitoring metric.
+          examples:
+          - 100
+          - 25
+          - 96.12
+          - 99.44
+        healthy:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Healthy
+          description: Indicates whether the sample value is healthy.
+          examples:
+          - null
+          - false
+          - true
+          - true
+        incident_related:
+          type: boolean
+          title: Incident Related
+          description: Indicates whether the sample is related to an incident.
+          examples:
+          - false
+          - true
+      additionalProperties: false
+      type: object
+      required:
+      - timestamp
+      - value
+      - healthy
+      - incident_related
+      title: MonitoringSample
+    Error504:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `gateway_timeout`
+          default: gateway_timeout
+          examples:
+          - gateway_timeout
+        status:
+          type: integer
+          title: Status
+          default: 504
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error504
+    Error400:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `bad_request`
+          default: bad_request
+          examples:
+          - bad_request
+        status:
+          type: integer
+          title: Status
+          description: Always `400`.
+          default: 400
+          examples:
+          - 400
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error400
+    MonitoringIncidents:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/MonitoringIncident'
+          type: array
+          title: Items
+          description: A list of items returned for this request.
+        limit:
+          type: integer
+          maximum: 100.0
+          minimum: 1.0
+          title: Limit
+          description: The number of items for this page.
+          default: 20
+          examples:
+          - 20
+        next_cursor:
+          anyOf:
+          - type: string
+            maxLength: 1000
+            minLength: 1
+          - type: 'null'
+          title: Next Cursor
+          description: The cursor pointing at the next page of items.
+          examples:
+          - ZXhhbXBsZTE
+        previous_cursor:
+          anyOf:
+          - type: string
+            maxLength: 1000
+            minLength: 1
+          - type: 'null'
+          title: Previous Cursor
+          description: The cursor pointing at the previous page of items.
+          examples:
+          - Xkjss7asS
+      additionalProperties: false
+      type: object
+      required:
+      - items
+      title: MonitoringIncidents
+    Error502:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `bad_gateway`
+          default: bad_gateway
+          examples:
+          - bad_gateway
+        status:
+          type: integer
+          title: Status
+          description: Always `502`.
+          default: 502
+          examples:
+          - 502
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error502
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
       - type
-      title: ErrorDetail
+      title: ValidationError
+    MonitoringMetrics:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/MonitoringMetric'
+          type: array
+          title: Items
+          description: A list of items returned for this request.
+        limit:
+          type: integer
+          maximum: 100.0
+          minimum: 1.0
+          title: Limit
+          description: The number of items for this page.
+          default: 20
+          examples:
+          - 20
+        next_cursor:
+          anyOf:
+          - type: string
+            maxLength: 1000
+            minLength: 1
+          - type: 'null'
+          title: Next Cursor
+          description: The cursor pointing at the next page of items.
+          examples:
+          - ZXhhbXBsZTE
+        previous_cursor:
+          anyOf:
+          - type: string
+            maxLength: 1000
+            minLength: 1
+          - type: 'null'
+          title: Previous Cursor
+          description: The cursor pointing at the previous page of items.
+          examples:
+          - Xkjss7asS
+      additionalProperties: false
+      type: object
+      required:
+      - items
+      title: MonitoringMetrics
+    Error409:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `duplicate_record`
+          default: duplicate_record
+          examples:
+          - duplicate_record
+        status:
+          type: integer
+          title: Status
+          description: Always `409`.
+          default: 409
+          examples:
+          - 409
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+        resource_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Resource Id
+          description: The ID of the conflicting resource.
+          examples:
+          - cdc70639-cb9c-4222-a73f-b8ce39f7821b
+      additionalProperties: false
+      type: object
+      title: Error409
+    Error403:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `forbidden`
+          default: forbidden
+          examples:
+          - forbidden
+        status:
+          type: integer
+          title: Status
+          description: Always `403`.
+          default: 403
+          examples:
+          - 403
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error403
+    CardScheme:
+      type: string
+      enum:
+      - accel
+      - amex
+      - bancontact
+      - carte-bancaire
+      - cirrus
+      - culiance
+      - dankort
+      - diners-club
+      - discover
+      - eftpos-australia
+      - elo
+      - hipercard
+      - jcb
+      - maestro
+      - mastercard
+      - mir
+      - nyce
+      - other
+      - pulse
+      - qcard
+      - rupay
+      - star
+      - uatp
+      - unionpay
+      - visa
+      title: CardScheme
+    MonitoringIncidentUpdate:
+      properties:
+        notes:
+          anyOf:
+          - type: string
+            maxLength: 1000
+            minLength: 1
+          - type: 'null'
+          title: Notes
+          description: Notes for the monitoring incident.
+          examples:
+          - PSP-related incident
+      additionalProperties: false
+      type: object
+      required:
+      - notes
+      title: MonitoringIncidentUpdate
     Method:
       type: string
       enum:
@@ -1394,1159 +2547,6 @@ components:
       additionalProperties: false
       type: object
       title: MonitoringThresholdAlertingPolicyParams
-    Error404:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `not_found`
-          default: not_found
-          examples:
-          - not_found
-        status:
-          type: integer
-          title: Status
-          description: Always `404`.
-          default: 404
-          examples:
-          - 404
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: The resource could not be found
-          examples:
-          - The resource could not be found
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error404
-    Error409:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `duplicate_record`
-          default: duplicate_record
-          examples:
-          - duplicate_record
-        status:
-          type: integer
-          title: Status
-          description: Always `409`.
-          default: 409
-          examples:
-          - 409
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-        resource_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Resource Id
-          description: The ID of the conflicting resource.
-          examples:
-          - cdc70639-cb9c-4222-a73f-b8ce39f7821b
-      additionalProperties: false
-      type: object
-      title: Error409
-    MonitoringDebouncingIncidentPolicyParams:
-      properties:
-        create_after_n:
-          type: integer
-          maximum: 10.0
-          minimum: 1.0
-          title: Create After N
-        close_after_n:
-          type: integer
-          maximum: 10.0
-          minimum: 1.0
-          title: Close After N
-      additionalProperties: false
-      type: object
-      required:
-      - create_after_n
-      - close_after_n
-      title: MonitoringDebouncingIncidentPolicyParams
-    MonitoringMetricCreate:
-      properties:
-        display_name:
-          type: string
-          maxLength: 200
-          minLength: 1
-          title: Display Name
-          description: The display name for the monitoring metric.
-          examples:
-          - GBP transactions in the last hour | Auth rate > 90%
-        spec:
-          oneOf:
-          - $ref: '#/components/schemas/MonitoringAuthRateSpec'
-          title: Spec
-          description: The monitoring metric specification.
-          examples:
-          - model: auth_rate
-            params:
-              filters:
-                datetime_range: PT60M/hour_start
-                payment_method_bin:
-                - '123456'
-                - '411111'
-                payment_method_scheme:
-                - visa
-          discriminator:
-            propertyName: model
-            mapping:
-              auth_rate: '#/components/schemas/MonitoringAuthRateSpec'
-        alerting_policy:
-          anyOf:
-          - oneOf:
-            - $ref: '#/components/schemas/MonitoringThresholdAlertingPolicy'
-            discriminator:
-              propertyName: strategy
-              mapping:
-                threshold: '#/components/schemas/MonitoringThresholdAlertingPolicy'
-          - type: 'null'
-          title: Alerting Policy
-        incident_policy:
-          anyOf:
-          - oneOf:
-            - $ref: '#/components/schemas/MonitoringDebouncingIncidentPolicy'
-            discriminator:
-              propertyName: strategy
-              mapping:
-                debouncing: '#/components/schemas/MonitoringDebouncingIncidentPolicy'
-          - type: 'null'
-          title: Incident Policy
-      additionalProperties: false
-      type: object
-      required:
-      - display_name
-      - spec
-      - alerting_policy
-      - incident_policy
-      title: MonitoringMetricCreate
-    CardScheme:
-      type: string
-      enum:
-      - accel
-      - amex
-      - bancontact
-      - carte-bancaire
-      - cirrus
-      - culiance
-      - dankort
-      - diners-club
-      - discover
-      - eftpos-australia
-      - elo
-      - hipercard
-      - jcb
-      - maestro
-      - mastercard
-      - mir
-      - nyce
-      - other
-      - pulse
-      - qcard
-      - rupay
-      - star
-      - uatp
-      - unionpay
-      - visa
-      title: CardScheme
-    MonitoringAuthRateSpec:
-      properties:
-        model:
-          type: string
-          const: auth_rate
-          title: Model
-          description: The monitoring metric model type.
-          default: auth_rate
-          examples:
-          - auth_rate
-        params:
-          $ref: '#/components/schemas/MonitoringAuthRateMetricSpecParams'
-          description: The parameters for the auth rate monitoring metric model.
-          examples:
-          - filters:
-              datetime_range: PT60M/hour_start
-              payment_method_bin:
-              - '123456'
-              - '411111'
-              payment_method_scheme:
-              - visa
-      additionalProperties: false
-      type: object
-      required:
-      - params
-      title: MonitoringAuthRateSpec
-    MonitoringMetricCreatorType:
-      type: string
-      enum:
-      - private_key
-      - user
-      title: MonitoringMetricCreatorType
-    Error401:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `unauthorized`
-          default: unauthorized
-          examples:
-          - unauthorized
-        status:
-          type: integer
-          title: Status
-          description: Always `401`.
-          default: 401
-          examples:
-          - 401
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: No valid API authentication found
-          examples:
-          - No valid API authentication found
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error401
-    MonitoringAuthRateMetricSpecParams:
-      properties:
-        filters:
-          $ref: '#/components/schemas/MonitoringMetricFilters'
-          description: The filters to apply on data.
-          examples:
-          - datetime_range: PT60M/hour_start
-            payment_method_bin:
-            - '123456'
-            - '411111'
-            payment_method_scheme:
-            - visa
-      additionalProperties: false
-      type: object
-      required:
-      - filters
-      title: MonitoringAuthRateMetricSpecParams
-    MonitoringSample:
-      properties:
-        timestamp:
-          type: string
-          format: date-time
-          title: Timestamp
-          description: The date and time when the sample was taken.
-          examples:
-          - '2025-10-28T11:50:00+00:00'
-          - '2025-10-28T11:49:00+00:00'
-          - '2025-10-28T11:48:00+00:00'
-          - '2025-10-28T11:46:00+00:00'
-        value:
-          anyOf:
-          - type: integer
-          - type: number
-          - type: string
-            pattern: ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-          - type: 'null'
-          title: Value
-          description: The value of the sampled monitoring metric.
-          examples:
-          - 100
-          - 25
-          - 96.12
-          - 99.44
-        healthy:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Healthy
-          description: Indicates whether the sample value is healthy.
-          examples:
-          - null
-          - false
-          - true
-          - true
-        incident_related:
-          type: boolean
-          title: Incident Related
-          description: Indicates whether the sample is related to an incident.
-          examples:
-          - false
-          - true
-      additionalProperties: false
-      type: object
-      required:
-      - timestamp
-      - value
-      - healthy
-      - incident_related
-      title: MonitoringSample
-    Error504:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `gateway_timeout`
-          default: gateway_timeout
-          examples:
-          - gateway_timeout
-        status:
-          type: integer
-          title: Status
-          default: 504
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Request could not be processed
-          examples:
-          - Request could not be processed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error504
-    Error502:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `bad_gateway`
-          default: bad_gateway
-          examples:
-          - bad_gateway
-        status:
-          type: integer
-          title: Status
-          description: Always `502`.
-          default: 502
-          examples:
-          - 502
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Request could not be processed
-          examples:
-          - Request could not be processed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error502
-    MonitoringMetricUpdate:
-      properties:
-        display_name:
-          type: string
-          maxLength: 200
-          minLength: 1
-          title: Display Name
-          description: The display name for the monitoring metric.
-          examples:
-          - GBP transactions in the last hour | Auth rate > 90%
-        alerting_policy:
-          anyOf:
-          - oneOf:
-            - $ref: '#/components/schemas/MonitoringThresholdAlertingPolicy'
-            discriminator:
-              propertyName: strategy
-              mapping:
-                threshold: '#/components/schemas/MonitoringThresholdAlertingPolicy'
-          - type: 'null'
-          title: Alerting Policy
-        incident_policy:
-          anyOf:
-          - oneOf:
-            - $ref: '#/components/schemas/MonitoringDebouncingIncidentPolicy'
-            discriminator:
-              propertyName: strategy
-              mapping:
-                debouncing: '#/components/schemas/MonitoringDebouncingIncidentPolicy'
-          - type: 'null'
-          title: Incident Policy
-      additionalProperties: false
-      type: object
-      required:
-      - display_name
-      - alerting_policy
-      - incident_policy
-      title: MonitoringMetricUpdate
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    MonitoringIncidents:
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/MonitoringIncident'
-          type: array
-          title: Items
-          description: A list of items returned for this request.
-        limit:
-          type: integer
-          maximum: 100.0
-          minimum: 1.0
-          title: Limit
-          description: The number of items for this page.
-          default: 20
-          examples:
-          - 20
-        next_cursor:
-          anyOf:
-          - type: string
-            maxLength: 1000
-            minLength: 1
-          - type: 'null'
-          title: Next Cursor
-          description: The cursor pointing at the next page of items.
-          examples:
-          - ZXhhbXBsZTE
-        previous_cursor:
-          anyOf:
-          - type: string
-            maxLength: 1000
-            minLength: 1
-          - type: 'null'
-          title: Previous Cursor
-          description: The cursor pointing at the previous page of items.
-          examples:
-          - Xkjss7asS
-      additionalProperties: false
-      type: object
-      required:
-      - items
-      title: MonitoringIncidents
-    MonitoringThresholdAlertingPolicy:
-      properties:
-        strategy:
-          type: string
-          const: threshold
-          title: Strategy
-          default: threshold
-        params:
-          $ref: '#/components/schemas/MonitoringThresholdAlertingPolicyParams'
-      additionalProperties: false
-      type: object
-      required:
-      - params
-      title: MonitoringThresholdAlertingPolicy
-    MonitoringIncidentUpdate:
-      properties:
-        notes:
-          anyOf:
-          - type: string
-            maxLength: 1000
-            minLength: 1
-          - type: 'null'
-          title: Notes
-          description: Notes for the monitoring incident.
-          examples:
-          - PSP-related incident
-      additionalProperties: false
-      type: object
-      required:
-      - notes
-      title: MonitoringIncidentUpdate
-    Error500:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `server_error`
-          default: server_error
-          examples:
-          - server_error
-        status:
-          type: integer
-          title: Status
-          description: Always `500`.
-          default: 500
-          examples:
-          - 500
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Request could not be processed
-          examples:
-          - Request could not be processed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error500
-    MonitoringDebouncingIncidentPolicy:
-      properties:
-        strategy:
-          type: string
-          const: debouncing
-          title: Strategy
-          default: debouncing
-        params:
-          $ref: '#/components/schemas/MonitoringDebouncingIncidentPolicyParams'
-      additionalProperties: false
-      type: object
-      required:
-      - params
-      title: MonitoringDebouncingIncidentPolicy
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    Error425:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `too_early`
-          default: too_early
-          examples:
-          - too_early
-        status:
-          type: integer
-          title: Status
-          description: Always `425`.
-          default: 425
-          examples:
-          - 425
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error425
-    MonitoringMetrics:
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/MonitoringMetric'
-          type: array
-          title: Items
-          description: A list of items returned for this request.
-        limit:
-          type: integer
-          maximum: 100.0
-          minimum: 1.0
-          title: Limit
-          description: The number of items for this page.
-          default: 20
-          examples:
-          - 20
-        next_cursor:
-          anyOf:
-          - type: string
-            maxLength: 1000
-            minLength: 1
-          - type: 'null'
-          title: Next Cursor
-          description: The cursor pointing at the next page of items.
-          examples:
-          - ZXhhbXBsZTE
-        previous_cursor:
-          anyOf:
-          - type: string
-            maxLength: 1000
-            minLength: 1
-          - type: 'null'
-          title: Previous Cursor
-          description: The cursor pointing at the previous page of items.
-          examples:
-          - Xkjss7asS
-      additionalProperties: false
-      type: object
-      required:
-      - items
-      title: MonitoringMetrics
-    Error400:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `bad_request`
-          default: bad_request
-          examples:
-          - bad_request
-        status:
-          type: integer
-          title: Status
-          description: Always `400`.
-          default: 400
-          examples:
-          - 400
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error400
-    MonitoringIncident:
-      properties:
-        type:
-          type: string
-          const: monitoring.incident
-          title: Type
-          description: Always `monitoring.incident`.
-          default: monitoring.incident
-          examples:
-          - monitoring.incident
-        id:
-          type: string
-          format: uuid
-          title: Id
-          description: The ID of the monitoring incident.
-          examples:
-          - c2e4ffaf-2463-4e8a-a9a2-b33590f3b579
-        metric_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Metric Id
-          description: The ID of the monitoring metric that the incident relates to. This value is null if the monitoring metric has been deleted.
-          examples:
-          - aadb3ea8-5ad6-408b-8c3d-82da77c8d619
-        merchant_account_id:
-          type: string
-          title: Merchant Account Id
-          description: The ID of the merchant account the monitoring incident belongs to.
-          examples:
-          - default
-        display_name:
-          type: string
-          title: Display Name
-          description: The monitoring metric display name captured at the time of incident creation.
-          examples:
-          - GBP transactions in the last hour | Auth rate > 95%
-        spec:
-          additionalProperties: true
-          type: object
-          title: Spec
-          description: The monitoring metric specification captured at the time of incident creation.
-          examples:
-          - model: auth_rate
-            params:
-              filters:
-                datetime_range: PT60M/hour_start
-                payment_method_bin:
-                - '123456'
-                - '111111'
-                payment_method_scheme:
-                - visa
-        alerting_policy:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Alerting Policy
-          description: The monitoring metric alerting policy captured at the time of incident creation.
-          examples:
-          - params:
-              alert_gt: 99.9
-              alert_lt: 90
-            strategy: threshold
-        incident_policy:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Incident Policy
-          description: The monitoring metric incident policy captured at the time of incident creation.
-          examples:
-          - params:
-              close_after_n: 6
-              create_after_n: 3
-            strategy: debouncing
-        notes:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Notes
-          description: Notes for the monitoring incident.
-          examples:
-          - PSP-related incident
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-          description: The date and time when the monitoring incident was first created.
-          examples:
-          - '2025-10-28T11:47:32.566063+00:00'
-        updated_at:
-          type: string
-          format: date-time
-          title: Updated At
-          description: The date and time when the monitoring incident was last updated.
-          examples:
-          - '2025-10-28T12:03:05.120019+00:00'
-        closed_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Closed At
-          description: The date and time when the monitoring incident was closed.
-          examples:
-          - '2025-10-28T11:57:32.566063+00:00'
-      additionalProperties: false
-      type: object
-      required:
-      - id
-      - metric_id
-      - merchant_account_id
-      - display_name
-      - spec
-      - alerting_policy
-      - incident_policy
-      - notes
-      - created_at
-      - updated_at
-      - closed_at
-      title: MonitoringIncident
-    Error403:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `forbidden`
-          default: forbidden
-          examples:
-          - forbidden
-        status:
-          type: integer
-          title: Status
-          description: Always `403`.
-          default: 403
-          examples:
-          - 403
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error403
-    MonitoringMetric:
-      properties:
-        type:
-          type: string
-          const: monitoring.metric
-          title: Type
-          description: Always `monitoring.metric`.
-          default: monitoring.metric
-          examples:
-          - monitoring.metric
-        id:
-          type: string
-          format: uuid
-          title: Id
-          description: The ID of the monitoring metric.
-          examples:
-          - aadb3ea8-5ad6-408b-8c3d-82da77c8d619
-        merchant_account_id:
-          type: string
-          title: Merchant Account Id
-          description: The ID of the merchant account the monitoring metric belongs to.
-          examples:
-          - default
-        display_name:
-          type: string
-          title: Display Name
-          description: The display name of the monitoring metric.
-          examples:
-          - GBP transactions in the last hour | Auth rate > 90%
-        spec:
-          additionalProperties: true
-          type: object
-          title: Spec
-          description: The monitoring metric specification.
-          examples:
-          - model: auth_rate
-            params:
-              filters:
-                datetime_range: PT60M/hour_start
-                payment_method_bin:
-                - '123456'
-                - '111111'
-                payment_method_scheme:
-                - visa
-        alerting_policy:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Alerting Policy
-          description: The alerting policy of the monitoring metric.
-          examples:
-          - params:
-              alert_gt: 99.9
-              alert_lt: 90
-            strategy: threshold
-        alerting_policy_updated_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Alerting Policy Updated At
-          description: The date and time when the alerting policy was last updated.
-          examples:
-          - '2025-10-28T11:47:32.566063+00:00'
-        incident_policy:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Incident Policy
-          description: The incident policy of the monitoring metric.
-          examples:
-          - params:
-              close_after_n: 6
-              create_after_n: 3
-            strategy: debouncing
-        incident_policy_updated_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Incident Policy Updated At
-          description: The date and time when the incident policy was last updated.
-          examples:
-          - '2025-10-28T11:47:32.566063+00:00'
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-          description: The date and time when the monitoring metric was first created.
-          examples:
-          - '2025-10-28T11:47:32.566063+00:00'
-        creator_id:
-          type: string
-          format: uuid
-          title: Creator Id
-          description: The ID of the user who created the monitoring metric.
-          examples:
-          - 3d2e0043-9459-4e86-8dad-e2afd9892f3c
-        creator_type:
-          $ref: '#/components/schemas/MonitoringMetricCreatorType'
-          description: The type of monitoring metric creator.
-          examples:
-          - user
-        creator_display_name:
-          type: string
-          title: Creator Display Name
-          description: The display name of the monitoring metric creator.
-          examples:
-          - John Smith
-        updated_at:
-          type: string
-          format: date-time
-          title: Updated At
-          description: The date and time when the monitoring metric was last updated.
-          examples:
-          - '2025-10-28T11:47:32.566063+00:00'
-        samples_view:
-          anyOf:
-          - items:
-              $ref: '#/components/schemas/MonitoringSample'
-            type: array
-          - type: 'null'
-          title: Samples View
-          description: The requested subset of monitoring metric samples.
-      additionalProperties: false
-      type: object
-      required:
-      - id
-      - merchant_account_id
-      - display_name
-      - spec
-      - alerting_policy
-      - alerting_policy_updated_at
-      - incident_policy
-      - incident_policy_updated_at
-      - created_at
-      - creator_id
-      - creator_type
-      - creator_display_name
-      - updated_at
-      - samples_view
-      title: MonitoringMetric
-    MonitoringMetricFilters:
-      properties:
-        datetime_range:
-          type: string
-          title: Datetime Range
-          description: 'Filters the results to the set of data aggregated over the duration of the specified period. The duration must be between 5 to 60 minutes. This parameter should be in the format of [ISO 8601 interval](https://en.wikipedia.org/wiki/ISO_8601#Time_intervals) while the duration only format is not accepted. Start and end are either a datetime in ISO 8601 format or a placeholder which is one of the following: `now`, `hour_start` and `hour_end`.'
-          examples:
-          - PT60M/hour_end
-        method:
-          anyOf:
-          - items:
-              anyOf:
-              - $ref: '#/components/schemas/Method'
-              - type: 'null'
-            type: array
-          - type: 'null'
-          title: Method
-          description: Filters the results to only include transactions that were processed using the specified payment method. This parameter also accepts `null` to include transactions that have a null for this field.
-          examples:
-          - card
-        payment_method_bin:
-          anyOf:
-          - items:
-              anyOf:
-              - type: string
-                maxLength: 6
-                minLength: 6
-                pattern: ^\d+$
-              - type: 'null'
-            type: array
-          - type: 'null'
-          title: Payment Method Bin
-          description: Filters the results to only include transactions that used the specified payment method bin. The payment method bin is the first 6 digits of the card number. This parameter also accepts `null` to include transactions that have a null for this field.
-          examples:
-          - '123456'
-        payment_method_scheme:
-          anyOf:
-          - items:
-              anyOf:
-              - $ref: '#/components/schemas/CardScheme'
-              - type: 'null'
-            type: array
-          - type: 'null'
-          title: Payment Method Scheme
-          description: Filters the results to only include transactions that were processed with the specified payment method scheme. This parameter also accepts `null` to include transactions that have a null for this field.
-          examples:
-          - visa
-        payment_service_id:
-          anyOf:
-          - items:
-              anyOf:
-              - type: string
-                format: uuid
-              - type: 'null'
-            type: array
-          - type: 'null'
-          title: Payment Service Id
-          description: Filters the results to only include transactions that were processed with the specified payment service ID. This parameter also accepts `null` to include transactions that have a null for this field.
-          examples:
-          - 06319aec-2c0f-4c7b-8af1-047ca037fc021
-      additionalProperties: false
-      type: object
-      required:
-      - datetime_range
-      title: MonitoringMetricFilters
-    Error429:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `too_many_requests`
-          default: too_many_requests
-          examples:
-          - too_many_requests
-        status:
-          type: integer
-          title: Status
-          description: Always `429`.
-          default: 429
-          examples:
-          - 429
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error429
   securitySchemes:
     OAuth2PasswordBearer:
       type: oauth2

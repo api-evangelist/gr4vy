@@ -54,6 +54,17 @@ paths:
                 $ref: '#/components/schemas/Error401Unauthorized'
 components:
   schemas:
+    PaymentMethodDefinitions:
+      title: Payment Method Definitions
+      type: object
+      description: A list of available payment method definitions.
+      x-tags:
+      - Payment Method Definitions
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentMethodDefinition'
     Error401Unauthorized:
       title: Unauthorized Error
       type: object
@@ -152,17 +163,6 @@ components:
           type: string
           example: field required
           description: A human readable message for this error detail.
-    PaymentMethodDefinitions:
-      title: Payment Method Definitions
-      type: object
-      description: A list of available payment method definitions.
-      x-tags:
-      - Payment Method Definitions
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/PaymentMethodDefinition'
   securitySchemes:
     bearerAuth:
       type: http

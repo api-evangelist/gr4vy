@@ -58,57 +58,61 @@ paths:
                 $ref: '#/components/schemas/Error401Unauthorized'
 components:
   schemas:
-    Connections:
-      title: Connections
+    ConnectionDefinition:
+      title: Connection Definition
       type: object
-      description: A list of configured connections.
-      x-tags:
-      - Discovery
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/Connection'
-    Connection:
-      title: Connection
-      type: object
-      description: A configured connection.
+      description: A connection that can be configured.
       x-tags:
       - Discovery
       properties:
         id:
           type: string
           description: The ID of the connection.
-          example: 7b5e02bd-fa53-4ef0-b11e-1609d0f48cc5
+          example: stripe-card
         type:
           type: string
-          description: '`connection`.'
-          default: connection
-          example: connection
+          description: '`connection-definition`.'
+          default: connection-definition
+          example: connection-definition
         name:
           type: string
           description: The name of this connection.
-          example: My Connection
-        active:
-          type: boolean
-          example: true
-          description: 'Whether this connection is currently in use. Connections can
-
-            be deactivated to allow for them to be kept around and
-
-            re-activated at a later date.'
-        silent:
-          type: boolean
-          example: false
-          description: 'Defines if this service is currently running in silent mode. In silent
-
-            mode, a service''s decisions will be created but ignored when processing
-
-            a transaction, allowing for warm-up and comparison of new services
-
-            against the active service.'
-        definition:
-          $ref: '#/components/schemas/ConnectionDefinition'
+          example: Stripe
+        count:
+          type: number
+          description: The number of configured connections.
+          example: 1
+        group:
+          type: string
+          example: payment-service
+          enum:
+          - anti-fraud-service
+          - digital-wallet
+          - gift-card-service
+          - payment-service
+        category:
+          type: string
+          example: card
+          enum:
+          - anti-fraud
+          - bank
+          - bnpl
+          - card
+          - cash
+          - stored-credit
+          - wallet
+        icon_url:
+          type:
+          - string
+          - 'null'
+          description: An icon to display for the connection.
+          example: https://cdn.gr4vy.app/stripe.svg
+        provider:
+          type:
+          - string
+          - 'null'
+          description: The provider for this connection.
+          example: Stripe
     ErrorDetail:
       title: Error details
       description: Additional detail about the part of a request body that caused an issue.
@@ -180,61 +184,57 @@ components:
           example: []
           items:
             $ref: '#/components/schemas/ErrorDetail'
-    ConnectionDefinition:
-      title: Connection Definition
+    Connection:
+      title: Connection
       type: object
-      description: A connection that can be configured.
+      description: A configured connection.
       x-tags:
       - Discovery
       properties:
         id:
           type: string
           description: The ID of the connection.
-          example: stripe-card
+          example: 7b5e02bd-fa53-4ef0-b11e-1609d0f48cc5
         type:
           type: string
-          description: '`connection-definition`.'
-          default: connection-definition
-          example: connection-definition
+          description: '`connection`.'
+          default: connection
+          example: connection
         name:
           type: string
           description: The name of this connection.
-          example: Stripe
-        count:
-          type: number
-          description: The number of configured connections.
-          example: 1
-        group:
-          type: string
-          example: payment-service
-          enum:
-          - anti-fraud-service
-          - digital-wallet
-          - gift-card-service
-          - payment-service
-        category:
-          type: string
-          example: card
-          enum:
-          - anti-fraud
-          - bank
-          - bnpl
-          - card
-          - cash
-          - stored-credit
-          - wallet
-        icon_url:
-          type:
-          - string
-          - 'null'
-          description: An icon to display for the connection.
-          example: https://cdn.gr4vy.app/stripe.svg
-        provider:
-          type:
-          - string
-          - 'null'
-          description: The provider for this connection.
-          example: Stripe
+          example: My Connection
+        active:
+          type: boolean
+          example: true
+          description: 'Whether this connection is currently in use. Connections can
+
+            be deactivated to allow for them to be kept around and
+
+            re-activated at a later date.'
+        silent:
+          type: boolean
+          example: false
+          description: 'Defines if this service is currently running in silent mode. In silent
+
+            mode, a service''s decisions will be created but ignored when processing
+
+            a transaction, allowing for warm-up and comparison of new services
+
+            against the active service.'
+        definition:
+          $ref: '#/components/schemas/ConnectionDefinition'
+    Connections:
+      title: Connections
+      type: object
+      description: A list of configured connections.
+      x-tags:
+      - Discovery
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Connection'
   securitySchemes:
     bearerAuth:
       type: http
