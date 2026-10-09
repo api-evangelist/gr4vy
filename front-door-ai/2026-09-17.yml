@@ -1,0 +1,29 @@
+# Front Door AI Index — gr4vy — 2026-09-17
+# AI vocabulary counted on the provider's root page. Generated; do not edit.
+# `score` is null unless ownership is `own` — see front_door_ai.py.
+front_door_ai:
+  slug: gr4vy
+  lexicon_version: '1.0'
+  probed_at: '2026-09-25'
+  host: gr4vy.com
+  final_host: gr4vy.com
+  ownership: own
+  owner: gr4vy
+  shares_host_with: null
+  inherited_from: null
+  alias_of: null
+  verdict: scored
+  score: 4
+  band: 3
+  band_label: light
+  host_score: 4
+  density: 2.75
+  words: 1457
+  tiers:
+    agentic: 4
+    core: 0
+    model: 0
+  ambiguous: 2
+  top_terms:
+    agentic: 4
+    agent: 2
