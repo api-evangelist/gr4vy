@@ -428,46 +428,71 @@ paths:
                 $ref: '#/components/schemas/Error404NotFound'
 components:
   schemas:
-    GooglePaySessionRequest:
-      title: Google Pay session request
+    ApplePaySessionRequest:
+      title: Apple Pay session request
       type: object
-      description: Initiates a new session with Google Pay.
+      description: Initiates a new session with Apple Pay.
       x-tags:
       - Request Bodies
       required:
-      - origin_domain
+      - validation_url
+      - domain_name
       properties:
-        origin_domain:
+        validation_url:
+          type: string
+          format: uri
+          description: 'Validation URL obtained from the event passed to a
+
+            `onvalidatemerchant` callback.'
+        domain_name:
           type: string
           description: Fully qualified domain name of the merchant.
-    DigitalWalletUpdate:
-      title: Digital Wallet (Update)
+    GooglePaySession:
+      title: Google Pay Session
       type: object
-      description: Request body to update a registered digital wallet's details.
+      x-internal: true
+      properties:
+        gateway_merchant_id:
+          type: string
+          description: Your merchant ID.
+          example: app.gr4vy.sandbox.spider.default
+        token:
+          type: string
+          description: The JWT for the current Google Pay session.
+          example: eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJtZXJjaGFudElkIjoiQkNSMkRONFQ3QzNLWDZEWSIsIm1lcmNoYW50T3JpZ2luIjoiZW1iZWQuc2FuZGJveC5zcGlkZXIuZ3I0dnkuYXBwIiwiaWF0IjoxNjgzMjExMzk5fQ.Qk99p_j96aSxGmxUyyb06rNxIY7nh9-BvHJGWBrLBSFb3HkSbYRgq9YQzscWJtLHVvIJifkzSc8BgtllfAzh9A
+    DigitalWalletRequest:
+      title: Digital Wallet (Register)
+      type: object
+      description: Merchant details used to register with a digital wallet provider.
       x-tags:
       - Request Bodies
+      required:
+      - provider
+      - merchant_name
+      - domain_names
+      - accept_terms_and_conditions
       properties:
+        provider:
+          type: string
+          example: apple
+          description: The name of the digital wallet provider.
+          enum:
+          - apple
+          - google
         merchant_name:
           type: string
-          description: 'The name of the merchant. This is used to update the value initially
+          description: 'The name of the merchant. This is used to register the merchant with a
 
-            used to register with a digital wallet provider and this name is not
-
-            displayed to the buyer.'
+            digital wallet provider and this name is not displayed to the buyer.'
           example: Gr4vy
-        domain_names:
-          type: array
-          minItems: 1
-          maxItems: 99
-          items:
-            type: string
-          example:
-          - example.com
-          description: 'The list of domain names that a digital wallet can be used on. To use a
-
-            digital wallet on a website, the domain of the site is required to be
-
-            in this list.'
+        merchant_url:
+          type:
+          - string
+          - 'null'
+          example: https://example.com
+          default: null
+          description: The main URL of the merchant.
+          format: url
         merchant_display_name:
           type:
           - string
@@ -482,10 +507,117 @@ components:
           description: The country code where the merchant is registered.
           maxLength: 2
           minLength: 2
-        merchant_url:
+        domain_names:
+          type: array
+          minItems: 1
+          maxItems: 99
+          items:
+            type: string
+          example:
+          - example.com
+          description: 'The list of domain names that a digital wallet can be used on. To use a
+
+            digital wallet on a website, the domain of the site is required to be
+
+            in this list.'
+        accept_terms_and_conditions:
+          type: boolean
+          description: 'The explicit acceptance of the digital wallet provider''s terms and
+
+            conditions by the merchant. Needs to be `true` to register a new digital
+
+            wallet.'
+          example: true
+    Error409DuplicateRecord:
+      title: Duplicate Record Error
+      type: object
+      description: Duplicate Record Error (HTTP 409).
+      x-tags:
+      - Errors
+      properties:
+        type:
           type: string
-          example: https://example.com
-          description: The main URL of the merchant.
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`duplicate_record`.'
+          example: duplicate_record
+          enum:
+          - duplicate_record
+        status:
+          type: integer
+          description: '`409`.'
+          example: 409
+          enum:
+          - 409
+        message:
+          type: string
+          description: Further details on the field that triggered the error.
+          example: A duplicate record exists with this external_identifier value
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    ClickToPaySessionRequest:
+      title: Click to Pay session request
+      type: object
+      description: Return digital payment application details for Click to Pay.
+      x-tags:
+      - Request Bodies
+      required:
+      - checkout_session_id
+      properties:
+        checkout_session_id:
+          type: string
+          example: fe26475d-ec3e-4884-9553-f7356683f7f9
+          description: The identifier for the current checkout session.
+          format: uuid
+    Error401Unauthorized:
+      title: Unauthorized Error
+      type: object
+      description: Unauthorized Error (HTTP 401).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`unauthorized`.'
+          example: unauthorized
+          enum:
+          - unauthorized
+        status:
+          type: integer
+          description: '`401`.'
+          example: 401
+          enum:
+          - 401
+        message:
+          type: string
+          description: No valid API authentication found.
+          example: No valid API authentication found
+          enum:
+          - No valid API authentication found
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
     DigitalWallet:
       title: Digital Wallet
       type: object
@@ -581,23 +713,82 @@ components:
           type: integer
           example: 1
           description: The number of expired custom certificates registered for this digital wallet (Apple Pay only).
-    DigitalWalletDomain:
-      title: Digital Wallet Domain
+    GooglePaySessionRequest:
+      title: Google Pay session request
       type: object
-      description: Domain name for a digital wallet.
+      description: Initiates a new session with Google Pay.
       x-tags:
       - Request Bodies
       required:
-      - domain_name
+      - origin_domain
       properties:
-        domain_name:
+        origin_domain:
           type: string
-          example: example.com
-          description: 'The domain name that a digital wallet can be used on. To use a
+          description: Fully qualified domain name of the merchant.
+    ClickToPaySession:
+      title: Click to Pay Session
+      type: object
+      x-internal: true
+      properties:
+        digital_payment_application_id:
+          type: string
+          description: The ID of the Digital Payment Application for Click to Pay.
+          example: a0b093e4-028a-4310-93fb-4ed0afc813fb
+        digital_payment_application_name:
+          type: string
+          description: The name of the Digital Payment Application for Click to Pay.
+          example: Plantly T4JUU1
+    ApplePaySession:
+      title: Apple Pay Session
+      type: object
+      x-internal: true
+      additionalProperties: true
+    DigitalWalletUpdate:
+      title: Digital Wallet (Update)
+      type: object
+      description: Request body to update a registered digital wallet's details.
+      x-tags:
+      - Request Bodies
+      properties:
+        merchant_name:
+          type: string
+          description: 'The name of the merchant. This is used to update the value initially
+
+            used to register with a digital wallet provider and this name is not
+
+            displayed to the buyer.'
+          example: Gr4vy
+        domain_names:
+          type: array
+          minItems: 1
+          maxItems: 99
+          items:
+            type: string
+          example:
+          - example.com
+          description: 'The list of domain names that a digital wallet can be used on. To use a
 
             digital wallet on a website, the domain of the site is required to be
 
             in this list.'
+        merchant_display_name:
+          type:
+          - string
+          - 'null'
+          example: Gr4vy
+          description: The consumer facing name of the merchant.
+        merchant_country_code:
+          type:
+          - string
+          - 'null'
+          example: US
+          description: The country code where the merchant is registered.
+          maxLength: 2
+          minLength: 2
+        merchant_url:
+          type: string
+          example: https://example.com
+          description: The main URL of the merchant.
     Error404NotFound:
       title: Not Found Error
       type: object
@@ -636,33 +827,6 @@ components:
           example: []
           items:
             $ref: '#/components/schemas/ErrorDetail'
-    GooglePaySession:
-      title: Google Pay Session
-      type: object
-      x-internal: true
-      properties:
-        gateway_merchant_id:
-          type: string
-          description: Your merchant ID.
-          example: app.gr4vy.sandbox.spider.default
-        token:
-          type: string
-          description: The JWT for the current Google Pay session.
-          example: eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJtZXJjaGFudElkIjoiQkNSMkRONFQ3QzNLWDZEWSIsIm1lcmNoYW50T3JpZ2luIjoiZW1iZWQuc2FuZGJveC5zcGlkZXIuZ3I0dnkuYXBwIiwiaWF0IjoxNjgzMjExMzk5fQ.Qk99p_j96aSxGmxUyyb06rNxIY7nh9-BvHJGWBrLBSFb3HkSbYRgq9YQzscWJtLHVvIJifkzSc8BgtllfAzh9A
-    ClickToPaySessionRequest:
-      title: Click to Pay session request
-      type: object
-      description: Return digital payment application details for Click to Pay.
-      x-tags:
-      - Request Bodies
-      required:
-      - checkout_session_id
-      properties:
-        checkout_session_id:
-          type: string
-          example: fe26475d-ec3e-4884-9553-f7356683f7f9
-          description: The identifier for the current checkout session.
-          format: uuid
     ErrorDetail:
       title: Error details
       description: Additional detail about the part of a request body that caused an issue.
@@ -695,199 +859,23 @@ components:
           type: string
           example: field required
           description: A human readable message for this error detail.
-    ClickToPaySession:
-      title: Click to Pay Session
+    DigitalWalletDomain:
+      title: Digital Wallet Domain
       type: object
-      x-internal: true
-      properties:
-        digital_payment_application_id:
-          type: string
-          description: The ID of the Digital Payment Application for Click to Pay.
-          example: a0b093e4-028a-4310-93fb-4ed0afc813fb
-        digital_payment_application_name:
-          type: string
-          description: The name of the Digital Payment Application for Click to Pay.
-          example: Plantly T4JUU1
-    ApplePaySessionRequest:
-      title: Apple Pay session request
-      type: object
-      description: Initiates a new session with Apple Pay.
+      description: Domain name for a digital wallet.
       x-tags:
       - Request Bodies
       required:
-      - validation_url
       - domain_name
       properties:
-        validation_url:
-          type: string
-          format: uri
-          description: 'Validation URL obtained from the event passed to a
-
-            `onvalidatemerchant` callback.'
         domain_name:
           type: string
-          description: Fully qualified domain name of the merchant.
-    Error409DuplicateRecord:
-      title: Duplicate Record Error
-      type: object
-      description: Duplicate Record Error (HTTP 409).
-      x-tags:
-      - Errors
-      properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: '`duplicate_record`.'
-          example: duplicate_record
-          enum:
-          - duplicate_record
-        status:
-          type: integer
-          description: '`409`.'
-          example: 409
-          enum:
-          - 409
-        message:
-          type: string
-          description: Further details on the field that triggered the error.
-          example: A duplicate record exists with this external_identifier value
-        details:
-          type: array
-          description: 'A list of detail objects that further clarify the reason for the error.
-
-            Not every error supports more detail.'
-          example: []
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-    Error401Unauthorized:
-      title: Unauthorized Error
-      type: object
-      description: Unauthorized Error (HTTP 401).
-      x-tags:
-      - Errors
-      properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: '`unauthorized`.'
-          example: unauthorized
-          enum:
-          - unauthorized
-        status:
-          type: integer
-          description: '`401`.'
-          example: 401
-          enum:
-          - 401
-        message:
-          type: string
-          description: No valid API authentication found.
-          example: No valid API authentication found
-          enum:
-          - No valid API authentication found
-        details:
-          type: array
-          description: 'A list of detail objects that further clarify the reason for the error.
-
-            Not every error supports more detail.'
-          example: []
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-    ApplePaySession:
-      title: Apple Pay Session
-      type: object
-      x-internal: true
-      additionalProperties: true
-    DigitalWallets:
-      title: Digital Wallets
-      type: object
-      description: A list of registered digital wallets.
-      x-tags:
-      - Digital Wallets
-      properties:
-        items:
-          type: array
-          description: A list of registered digital wallets.
-          items:
-            $ref: '#/components/schemas/DigitalWallet'
-    DigitalWalletRequest:
-      title: Digital Wallet (Register)
-      type: object
-      description: Merchant details used to register with a digital wallet provider.
-      x-tags:
-      - Request Bodies
-      required:
-      - provider
-      - merchant_name
-      - domain_names
-      - accept_terms_and_conditions
-      properties:
-        provider:
-          type: string
-          example: apple
-          description: The name of the digital wallet provider.
-          enum:
-          - apple
-          - google
-        merchant_name:
-          type: string
-          description: 'The name of the merchant. This is used to register the merchant with a
-
-            digital wallet provider and this name is not displayed to the buyer.'
-          example: Gr4vy
-        merchant_url:
-          type:
-          - string
-          - 'null'
-          example: https://example.com
-          default: null
-          description: The main URL of the merchant.
-          format: url
-        merchant_display_name:
-          type:
-          - string
-          - 'null'
-          example: Gr4vy
-          description: The consumer facing name of the merchant.
-        merchant_country_code:
-          type:
-          - string
-          - 'null'
-          example: US
-          description: The country code where the merchant is registered.
-          maxLength: 2
-          minLength: 2
-        domain_names:
-          type: array
-          minItems: 1
-          maxItems: 99
-          items:
-            type: string
-          example:
-          - example.com
-          description: 'The list of domain names that a digital wallet can be used on. To use a
+          example: example.com
+          description: 'The domain name that a digital wallet can be used on. To use a
 
             digital wallet on a website, the domain of the site is required to be
 
             in this list.'
-        accept_terms_and_conditions:
-          type: boolean
-          description: 'The explicit acceptance of the digital wallet provider''s terms and
-
-            conditions by the merchant. Needs to be `true` to register a new digital
-
-            wallet.'
-          example: true
     Error400BadRequest:
       title: Bad Request
       type: object
@@ -924,6 +912,18 @@ components:
           description: A list of detail objects that further clarify the reason for the error.
           items:
             $ref: '#/components/schemas/ErrorDetail'
+    DigitalWallets:
+      title: Digital Wallets
+      type: object
+      description: A list of registered digital wallets.
+      x-tags:
+      - Digital Wallets
+      properties:
+        items:
+          type: array
+          description: A list of registered digital wallets.
+          items:
+            $ref: '#/components/schemas/DigitalWallet'
     DigitalWalletClickToPayFields:
       title: Click to Pay
       type: object

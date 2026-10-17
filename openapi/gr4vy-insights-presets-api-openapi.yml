@@ -538,6 +538,15 @@ components:
       additionalProperties: false
       type: object
       title: Error401
+    ErrorLocation:
+      type: string
+      enum:
+      - query
+      - body
+      - path
+      - header
+      - unknown
+      title: ErrorLocation
     Error404:
       properties:
         type:
@@ -579,15 +588,44 @@ components:
       additionalProperties: false
       type: object
       title: Error404
-    ErrorLocation:
-      type: string
-      enum:
-      - query
-      - body
-      - path
-      - header
-      - unknown
-      title: ErrorLocation
+    Error504:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `gateway_timeout`
+          default: gateway_timeout
+          examples:
+          - gateway_timeout
+        status:
+          type: integer
+          title: Status
+          default: 504
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error504
     Error425:
       properties:
         type:
@@ -636,58 +674,6 @@ components:
       - authorization
       - monitoring
       title: MetricsExplorerSource
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    MetricsExplorerMetric:
-      type: string
-      enum:
-      - volume
-      - transactions
-      - auth_rate
-      title: MetricsExplorerMetric
-    ErrorDetail:
-      properties:
-        location:
-          $ref: '#/components/schemas/ErrorLocation'
-          description: The part of the request where the property can be found that caused the error.
-          examples:
-          - body
-        pointer:
-          anyOf:
-          - type: string
-            format: json-pointer
-          - type: string
-          title: Pointer
-          description: A JSON pointer for the particular property that caused the error.
-          examples:
-          - /currency
-        message:
-          type: string
-          title: Message
-          description: A human-readdable explanation of the error.
-          examples:
-          - 'Unknown ISO 4217 currency code: USX'
-        type:
-          type: string
-          title: Type
-          description: The type of error that was raised for this property.
-          examples:
-          - value_error
-      additionalProperties: false
-      type: object
-      required:
-      - location
-      - pointer
-      - message
-      - type
-      title: ErrorDetail
     MetricsExplorerFiltersQueryParams:
       properties:
         datetime_range:
@@ -957,7 +943,7 @@ components:
       required:
       - datetime_range
       title: MetricsExplorerFiltersQueryParams
-    Error405:
+    Error403:
       properties:
         type:
           type: string
@@ -970,58 +956,17 @@ components:
         code:
           type: string
           title: Code
-          description: Always `method_not_allowed`
-          default: method_not_allowed
+          description: Always `forbidden`
+          default: forbidden
           examples:
-          - method_not_allowed
+          - forbidden
         status:
           type: integer
           title: Status
-          description: Always `405`.
-          default: 405
+          description: Always `403`.
+          default: 403
           examples:
-          - 405
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Method Not Allowed
-          examples:
-          - Method Not Allowed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error405
-    Error429:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `too_many_requests`
-          default: too_many_requests
-          examples:
-          - too_many_requests
-        status:
-          type: integer
-          title: Status
-          description: Always `429`.
-          default: 429
-          examples:
-          - 429
+          - 403
         message:
           type: string
           title: Message
@@ -1038,7 +983,29 @@ components:
           default: []
       additionalProperties: false
       type: object
-      title: Error429
+      title: Error403
+    MetricsExplorerMetric:
+      type: string
+      enum:
+      - volume
+      - transactions
+      - auth_rate
+      title: MetricsExplorerMetric
+    MetricsExplorerPresetUpdate:
+      properties:
+        display_name:
+          type: string
+          maxLength: 255
+          minLength: 1
+          title: Display Name
+          description: The new display name to set on the preset.
+          examples:
+          - UK card transactions - Last 7 Days
+      additionalProperties: false
+      type: object
+      required:
+      - display_name
+      title: MetricsExplorerPresetUpdate
     MetricsExplorerPreset:
       properties:
         type:
@@ -1161,7 +1128,7 @@ components:
       additionalProperties: false
       type: object
       title: Error500
-    Error504:
+    Error502:
       properties:
         type:
           type: string
@@ -1174,14 +1141,17 @@ components:
         code:
           type: string
           title: Code
-          description: Always `gateway_timeout`
-          default: gateway_timeout
+          description: Always `bad_gateway`
+          default: bad_gateway
           examples:
-          - gateway_timeout
+          - bad_gateway
         status:
           type: integer
           title: Status
-          default: 504
+          description: Always `502`.
+          default: 502
+          examples:
+          - 502
         message:
           type: string
           title: Message
@@ -1198,22 +1168,48 @@ components:
           default: []
       additionalProperties: false
       type: object
-      title: Error504
-    MetricsExplorerPresetUpdate:
+      title: Error502
+    Error429:
       properties:
-        display_name:
+        type:
           type: string
-          maxLength: 255
-          minLength: 1
-          title: Display Name
-          description: The new display name to set on the preset.
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
           examples:
-          - UK card transactions - Last 7 Days
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `too_many_requests`
+          default: too_many_requests
+          examples:
+          - too_many_requests
+        status:
+          type: integer
+          title: Status
+          description: Always `429`.
+          default: 429
+          examples:
+          - 429
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
       additionalProperties: false
       type: object
-      required:
-      - display_name
-      title: MetricsExplorerPresetUpdate
+      title: Error429
     Error400:
       properties:
         type:
@@ -1281,47 +1277,82 @@ components:
       - msg
       - type
       title: ValidationError
-    Error502:
+    MetricsExplorerPresetCreate:
       properties:
-        type:
+        display_name:
           type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
+          maxLength: 255
+          minLength: 1
+          title: Display Name
+          description: The display name for the preset.
           examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `bad_gateway`
-          default: bad_gateway
+          - UK transactions - Last 7 Days
+        metric:
+          $ref: '#/components/schemas/MetricsExplorerMetric'
+          description: The metric to calculate.
           examples:
-          - bad_gateway
-        status:
-          type: integer
-          title: Status
-          description: Always `502`.
-          default: 502
+          - auth_rate
+          - transactions
+          - volume
+        filters:
+          $ref: '#/components/schemas/MetricsExplorerFiltersQueryParams'
+          description: The filters to apply on data.
           examples:
-          - 502
+          - country:
+            - GB
+            datetime_range: P7D/hour_start
+      additionalProperties: false
+      type: object
+      required:
+      - display_name
+      - metric
+      - filters
+      title: MetricsExplorerPresetCreate
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ErrorDetail:
+      properties:
+        location:
+          $ref: '#/components/schemas/ErrorLocation'
+          description: The part of the request where the property can be found that caused the error.
+          examples:
+          - body
+        pointer:
+          anyOf:
+          - type: string
+            format: json-pointer
+          - type: string
+          title: Pointer
+          description: A JSON pointer for the particular property that caused the error.
+          examples:
+          - /currency
         message:
           type: string
           title: Message
-          description: A human readable message that provides more context to the error.
-          default: Request could not be processed
+          description: A human-readdable explanation of the error.
           examples:
-          - Request could not be processed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
+          - 'Unknown ISO 4217 currency code: USX'
+        type:
+          type: string
+          title: Type
+          description: The type of error that was raised for this property.
+          examples:
+          - value_error
       additionalProperties: false
       type: object
-      title: Error502
+      required:
+      - location
+      - pointer
+      - message
+      - type
+      title: ErrorDetail
     Error409:
       properties:
         type:
@@ -1371,7 +1402,7 @@ components:
       additionalProperties: false
       type: object
       title: Error409
-    Error403:
+    Error405:
       properties:
         type:
           type: string
@@ -1384,24 +1415,24 @@ components:
         code:
           type: string
           title: Code
-          description: Always `forbidden`
-          default: forbidden
+          description: Always `method_not_allowed`
+          default: method_not_allowed
           examples:
-          - forbidden
+          - method_not_allowed
         status:
           type: integer
           title: Status
-          description: Always `403`.
-          default: 403
+          description: Always `405`.
+          default: 405
           examples:
-          - 403
+          - 405
         message:
           type: string
           title: Message
           description: A human readable message that provides more context to the error.
-          default: Generic error
+          default: Method Not Allowed
           examples:
-          - Request failed validation
+          - Method Not Allowed
         details:
           items:
             $ref: '#/components/schemas/ErrorDetail'
@@ -1411,38 +1442,7 @@ components:
           default: []
       additionalProperties: false
       type: object
-      title: Error403
-    MetricsExplorerPresetCreate:
-      properties:
-        display_name:
-          type: string
-          maxLength: 255
-          minLength: 1
-          title: Display Name
-          description: The display name for the preset.
-          examples:
-          - UK transactions - Last 7 Days
-        metric:
-          $ref: '#/components/schemas/MetricsExplorerMetric'
-          description: The metric to calculate.
-          examples:
-          - auth_rate
-          - transactions
-          - volume
-        filters:
-          $ref: '#/components/schemas/MetricsExplorerFiltersQueryParams'
-          description: The filters to apply on data.
-          examples:
-          - country:
-            - GB
-            datetime_range: P7D/hour_start
-      additionalProperties: false
-      type: object
-      required:
-      - display_name
-      - metric
-      - filters
-      title: MetricsExplorerPresetCreate
+      title: Error405
   securitySchemes:
     OAuth2PasswordBearer:
       type: oauth2

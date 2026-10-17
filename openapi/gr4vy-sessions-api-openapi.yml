@@ -130,6 +130,57 @@ paths:
                 $ref: '#/components/schemas/Error401Unauthorized'
 components:
   schemas:
+    SessionRequestToken:
+      title: Token session
+      type: object
+      description: A request to create a session using an ID token.
+      x-internal: true
+      x-tags:
+      - Authentication
+      required:
+      - token
+      properties:
+        token:
+          type: string
+          description: The Google ID token.
+          example: XYZ123
+    Error409DuplicateRecord:
+      title: Duplicate Record Error
+      type: object
+      description: Duplicate Record Error (HTTP 409).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`duplicate_record`.'
+          example: duplicate_record
+          enum:
+          - duplicate_record
+        status:
+          type: integer
+          description: '`409`.'
+          example: 409
+          enum:
+          - 409
+        message:
+          type: string
+          description: Further details on the field that triggered the error.
+          example: A duplicate record exists with this external_identifier value
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
     Session:
       title: Session
       description: A user session.
@@ -169,128 +220,6 @@ components:
           description: 'The time in seconds in seconds by which the `access_token` token will
 
             expire.'
-    Error403Forbidden:
-      title: Forbidden Error
-      type: object
-      description: Forbidden Error (HTTP 403).
-      x-tags:
-      - Errors
-      properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: '`forbidden`.'
-          example: forbidden
-          enum:
-          - forbidden
-        status:
-          type: integer
-          description: '`403`.'
-          example: 403
-          enum:
-          - 403
-        message:
-          type: string
-          description: Invalid credentials.
-          example: Invalid credentials
-          enum:
-          - Invalid credentials
-        details:
-          type: array
-          description: 'A list of detail objects that further clarify the reason for the error.
-
-            Not every error supports more detail.'
-          example: []
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-    ErrorDetail:
-      title: Error details
-      description: Additional detail about the part of a request body that caused an issue.
-      type: object
-      x-tags:
-      - Errors
-      properties:
-        location:
-          type: string
-          example: body
-          description: The location where the error caused an issue.
-          enum:
-          - query
-          - body
-          - path
-          - header
-        type:
-          type: string
-          example: value_error.missing
-          description: A unique identifier for the type of error that occurred.
-        pointer:
-          type: string
-          example: /payment_method/number
-          description: 'The exact item for which the validation did not succeed. This is a JSON
-
-            pointer for request bodies, while for query, path, and header parameters
-
-            it is the name of the parameter.'
-        message:
-          type: string
-          example: field required
-          description: A human readable message for this error detail.
-    Error409DuplicateRecord:
-      title: Duplicate Record Error
-      type: object
-      description: Duplicate Record Error (HTTP 409).
-      x-tags:
-      - Errors
-      properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: '`duplicate_record`.'
-          example: duplicate_record
-          enum:
-          - duplicate_record
-        status:
-          type: integer
-          description: '`409`.'
-          example: 409
-          enum:
-          - 409
-        message:
-          type: string
-          description: Further details on the field that triggered the error.
-          example: A duplicate record exists with this external_identifier value
-        details:
-          type: array
-          description: 'A list of detail objects that further clarify the reason for the error.
-
-            Not every error supports more detail.'
-          example: []
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-    SessionRequestToken:
-      title: Token session
-      type: object
-      description: A request to create a session using an ID token.
-      x-internal: true
-      x-tags:
-      - Authentication
-      required:
-      - token
-      properties:
-        token:
-          type: string
-          description: The Google ID token.
-          example: XYZ123
     Error401Unauthorized:
       title: Unauthorized Error
       type: object
@@ -385,6 +314,77 @@ components:
           type: string
           description: The password the user to log in as.
           example: this-is-n0t-a-secure-passw0rd
+    ErrorDetail:
+      title: Error details
+      description: Additional detail about the part of a request body that caused an issue.
+      type: object
+      x-tags:
+      - Errors
+      properties:
+        location:
+          type: string
+          example: body
+          description: The location where the error caused an issue.
+          enum:
+          - query
+          - body
+          - path
+          - header
+        type:
+          type: string
+          example: value_error.missing
+          description: A unique identifier for the type of error that occurred.
+        pointer:
+          type: string
+          example: /payment_method/number
+          description: 'The exact item for which the validation did not succeed. This is a JSON
+
+            pointer for request bodies, while for query, path, and header parameters
+
+            it is the name of the parameter.'
+        message:
+          type: string
+          example: field required
+          description: A human readable message for this error detail.
+    Error403Forbidden:
+      title: Forbidden Error
+      type: object
+      description: Forbidden Error (HTTP 403).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`forbidden`.'
+          example: forbidden
+          enum:
+          - forbidden
+        status:
+          type: integer
+          description: '`403`.'
+          example: 403
+          enum:
+          - 403
+        message:
+          type: string
+          description: Invalid credentials.
+          example: Invalid credentials
+          enum:
+          - Invalid credentials
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
   securitySchemes:
     bearerAuth:
       type: http

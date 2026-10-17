@@ -58,6 +58,96 @@ paths:
                 $ref: '#/components/schemas/Error401Unauthorized'
 components:
   schemas:
+    Connection:
+      title: Connection
+      type: object
+      description: A configured connection.
+      x-tags:
+      - Discovery
+      properties:
+        id:
+          type: string
+          description: The ID of the connection.
+          example: 7b5e02bd-fa53-4ef0-b11e-1609d0f48cc5
+        type:
+          type: string
+          description: '`connection`.'
+          default: connection
+          example: connection
+        name:
+          type: string
+          description: The name of this connection.
+          example: My Connection
+        active:
+          type: boolean
+          example: true
+          description: 'Whether this connection is currently in use. Connections can
+
+            be deactivated to allow for them to be kept around and
+
+            re-activated at a later date.'
+        silent:
+          type: boolean
+          example: false
+          description: 'Defines if this service is currently running in silent mode. In silent
+
+            mode, a service''s decisions will be created but ignored when processing
+
+            a transaction, allowing for warm-up and comparison of new services
+
+            against the active service.'
+        definition:
+          $ref: '#/components/schemas/ConnectionDefinition'
+    Error401Unauthorized:
+      title: Unauthorized Error
+      type: object
+      description: Unauthorized Error (HTTP 401).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`unauthorized`.'
+          example: unauthorized
+          enum:
+          - unauthorized
+        status:
+          type: integer
+          description: '`401`.'
+          example: 401
+          enum:
+          - 401
+        message:
+          type: string
+          description: No valid API authentication found.
+          example: No valid API authentication found
+          enum:
+          - No valid API authentication found
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    Connections:
+      title: Connections
+      type: object
+      description: A list of configured connections.
+      x-tags:
+      - Discovery
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Connection'
     ConnectionDefinition:
       title: Connection Definition
       type: object
@@ -145,96 +235,6 @@ components:
           type: string
           example: field required
           description: A human readable message for this error detail.
-    Error401Unauthorized:
-      title: Unauthorized Error
-      type: object
-      description: Unauthorized Error (HTTP 401).
-      x-tags:
-      - Errors
-      properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: '`unauthorized`.'
-          example: unauthorized
-          enum:
-          - unauthorized
-        status:
-          type: integer
-          description: '`401`.'
-          example: 401
-          enum:
-          - 401
-        message:
-          type: string
-          description: No valid API authentication found.
-          example: No valid API authentication found
-          enum:
-          - No valid API authentication found
-        details:
-          type: array
-          description: 'A list of detail objects that further clarify the reason for the error.
-
-            Not every error supports more detail.'
-          example: []
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-    Connection:
-      title: Connection
-      type: object
-      description: A configured connection.
-      x-tags:
-      - Discovery
-      properties:
-        id:
-          type: string
-          description: The ID of the connection.
-          example: 7b5e02bd-fa53-4ef0-b11e-1609d0f48cc5
-        type:
-          type: string
-          description: '`connection`.'
-          default: connection
-          example: connection
-        name:
-          type: string
-          description: The name of this connection.
-          example: My Connection
-        active:
-          type: boolean
-          example: true
-          description: 'Whether this connection is currently in use. Connections can
-
-            be deactivated to allow for them to be kept around and
-
-            re-activated at a later date.'
-        silent:
-          type: boolean
-          example: false
-          description: 'Defines if this service is currently running in silent mode. In silent
-
-            mode, a service''s decisions will be created but ignored when processing
-
-            a transaction, allowing for warm-up and comparison of new services
-
-            against the active service.'
-        definition:
-          $ref: '#/components/schemas/ConnectionDefinition'
-    Connections:
-      title: Connections
-      type: object
-      description: A list of configured connections.
-      x-tags:
-      - Discovery
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/Connection'
   securitySchemes:
     bearerAuth:
       type: http

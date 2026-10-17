@@ -633,55 +633,6 @@ paths:
       x-speakeasy-group: transactions.refunds.all
 components:
   schemas:
-    TransactionRefundCreate:
-      properties:
-        amount:
-          anyOf:
-          - type: integer
-            maximum: 99999999.0
-            minimum: 0.0
-          - type: 'null'
-          title: Amount
-          description: The amount to refund, in the smallest currency unit (e.g., cents). If omitted, a full refund will be requested.
-          examples:
-          - 1299
-        target_type:
-          $ref: '#/components/schemas/RefundTargetType'
-          description: The target type to refund for. This can be used to target a gift card to refund to instead of the main payment method.
-          default: payment-method
-          examples:
-          - payment-method
-        target_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Target Id
-          description: The optional ID of the instrument to refund for. This is only required when the `target_type` is set to `gift-card-redemption`.
-          examples:
-          - 7a6c366d-9205-45ab-8021-0d9ee37f20f2
-        reason:
-          anyOf:
-          - type: string
-            maxLength: 100
-          - type: 'null'
-          title: Reason
-          description: An optional reason to attach extra context to the refund request.
-          examples:
-          - Refund due to user request.
-        external_identifier:
-          anyOf:
-          - type: string
-            maxLength: 300
-            minLength: 1
-          - type: 'null'
-          title: External Identifier
-          description: An external identifier that can be used to match the refund against your own records.
-          examples:
-          - refund-12345
-      additionalProperties: false
-      type: object
-      title: TransactionRefundCreate
     Error401:
       properties:
         type:
@@ -764,15 +715,6 @@ components:
       additionalProperties: false
       type: object
       title: Error404
-    ErrorLocation:
-      type: string
-      enum:
-      - query
-      - body
-      - path
-      - header
-      - unknown
-      title: ErrorLocation
     api__common_schemas__Creator:
       properties:
         id:
@@ -792,7 +734,7 @@ components:
       - name
       - email_address
       title: Creator
-    Error425:
+    Error504:
       properties:
         type:
           type: string
@@ -805,24 +747,21 @@ components:
         code:
           type: string
           title: Code
-          description: Always `too_early`
-          default: too_early
+          description: Always `gateway_timeout`
+          default: gateway_timeout
           examples:
-          - too_early
+          - gateway_timeout
         status:
           type: integer
           title: Status
-          description: Always `425`.
-          default: 425
-          examples:
-          - 425
+          default: 504
         message:
           type: string
           title: Message
           description: A human readable message that provides more context to the error.
-          default: Generic error
+          default: Request could not be processed
           examples:
-          - Request failed validation
+          - Request could not be processed
         details:
           items:
             $ref: '#/components/schemas/ErrorDetail'
@@ -832,7 +771,13 @@ components:
           default: []
       additionalProperties: false
       type: object
-      title: Error425
+      title: Error504
+    RefundTargetType:
+      type: string
+      enum:
+      - payment-method
+      - gift-card-redemption
+      title: RefundTargetType
     Refund:
       properties:
         type:
@@ -1027,52 +972,7 @@ components:
       - updated_at
       - settled
       title: Refund
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ErrorDetail:
-      properties:
-        location:
-          $ref: '#/components/schemas/ErrorLocation'
-          description: The part of the request where the property can be found that caused the error.
-          examples:
-          - body
-        pointer:
-          anyOf:
-          - type: string
-            format: json-pointer
-          - type: string
-          title: Pointer
-          description: A JSON pointer for the particular property that caused the error.
-          examples:
-          - /currency
-        message:
-          type: string
-          title: Message
-          description: A human-readdable explanation of the error.
-          examples:
-          - 'Unknown ISO 4217 currency code: USX'
-        type:
-          type: string
-          title: Type
-          description: The type of error that was raised for this property.
-          examples:
-          - value_error
-      additionalProperties: false
-      type: object
-      required:
-      - location
-      - pointer
-      - message
-      - type
-      title: ErrorDetail
-    Error405:
+    Error425:
       properties:
         type:
           type: string
@@ -1085,58 +985,17 @@ components:
         code:
           type: string
           title: Code
-          description: Always `method_not_allowed`
-          default: method_not_allowed
+          description: Always `too_early`
+          default: too_early
           examples:
-          - method_not_allowed
+          - too_early
         status:
           type: integer
           title: Status
-          description: Always `405`.
-          default: 405
+          description: Always `425`.
+          default: 425
           examples:
-          - 405
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Method Not Allowed
-          examples:
-          - Method Not Allowed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error405
-    Error429:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `too_many_requests`
-          default: too_many_requests
-          examples:
-          - too_many_requests
-        status:
-          type: integer
-          title: Status
-          description: Always `429`.
-          default: 429
-          examples:
-          - 429
+          - 425
         message:
           type: string
           title: Message
@@ -1153,7 +1012,113 @@ components:
           default: []
       additionalProperties: false
       type: object
-      title: Error429
+      title: Error425
+    Error403:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `forbidden`
+          default: forbidden
+          examples:
+          - forbidden
+        status:
+          type: integer
+          title: Status
+          description: Always `403`.
+          default: 403
+          examples:
+          - 403
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error403
+    TransactionRefundAllCreate:
+      properties:
+        reason:
+          anyOf:
+          - type: string
+            maxLength: 100
+          - type: 'null'
+          title: Reason
+          description: An optional reason to attach extra context to the refund requests.
+          examples:
+          - Refund due to user request.
+        external_identifier:
+          anyOf:
+          - type: string
+            maxLength: 300
+            minLength: 1
+          - type: 'null'
+          title: External Identifier
+          description: An external identifier that can be used to match the refunds against your own records.
+          examples:
+          - refund-12345
+      additionalProperties: false
+      type: object
+      title: TransactionRefundAllCreate
+    Error500:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `server_error`
+          default: server_error
+          examples:
+          - server_error
+        status:
+          type: integer
+          title: Status
+          description: Always `500`.
+          default: 500
+          examples:
+          - 500
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error500
     Refunds:
       properties:
         items:
@@ -1196,54 +1161,65 @@ components:
       required:
       - items
       title: Refunds
-    Error500:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `server_error`
-          default: server_error
-          examples:
-          - server_error
-        status:
-          type: integer
-          title: Status
-          description: Always `500`.
-          default: 500
-          examples:
-          - 500
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Request could not be processed
-          examples:
-          - Request could not be processed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error500
-    RefundTargetType:
+    RefundStatus:
       type: string
       enum:
-      - payment-method
-      - gift-card-redemption
-      title: RefundTargetType
-    Error504:
+      - processing
+      - succeeded
+      - failed
+      - declined
+      - voided
+      title: RefundStatus
+    TransactionRefundCreate:
+      properties:
+        amount:
+          anyOf:
+          - type: integer
+            maximum: 99999999.0
+            minimum: 0.0
+          - type: 'null'
+          title: Amount
+          description: The amount to refund, in the smallest currency unit (e.g., cents). If omitted, a full refund will be requested.
+          examples:
+          - 1299
+        target_type:
+          $ref: '#/components/schemas/RefundTargetType'
+          description: The target type to refund for. This can be used to target a gift card to refund to instead of the main payment method.
+          default: payment-method
+          examples:
+          - payment-method
+        target_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Target Id
+          description: The optional ID of the instrument to refund for. This is only required when the `target_type` is set to `gift-card-redemption`.
+          examples:
+          - 7a6c366d-9205-45ab-8021-0d9ee37f20f2
+        reason:
+          anyOf:
+          - type: string
+            maxLength: 100
+          - type: 'null'
+          title: Reason
+          description: An optional reason to attach extra context to the refund request.
+          examples:
+          - Refund due to user request.
+        external_identifier:
+          anyOf:
+          - type: string
+            maxLength: 300
+            minLength: 1
+          - type: 'null'
+          title: External Identifier
+          description: An external identifier that can be used to match the refund against your own records.
+          examples:
+          - refund-12345
+      additionalProperties: false
+      type: object
+      title: TransactionRefundCreate
+    Error502:
       properties:
         type:
           type: string
@@ -1256,14 +1232,17 @@ components:
         code:
           type: string
           title: Code
-          description: Always `gateway_timeout`
-          default: gateway_timeout
+          description: Always `bad_gateway`
+          default: bad_gateway
           examples:
-          - gateway_timeout
+          - bad_gateway
         status:
           type: integer
           title: Status
-          default: 504
+          description: Always `502`.
+          default: 502
+          examples:
+          - 502
         message:
           type: string
           title: Message
@@ -1280,7 +1259,97 @@ components:
           default: []
       additionalProperties: false
       type: object
-      title: Error504
+      title: Error502
+    Error429:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `too_many_requests`
+          default: too_many_requests
+          examples:
+          - too_many_requests
+        status:
+          type: integer
+          title: Status
+          description: Always `429`.
+          default: 429
+          examples:
+          - 429
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error429
+    Error409:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `duplicate_record`
+          default: duplicate_record
+          examples:
+          - duplicate_record
+        status:
+          type: integer
+          title: Status
+          description: Always `409`.
+          default: 409
+          examples:
+          - 409
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+        resource_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Resource Id
+          description: The ID of the conflicting resource.
+          examples:
+          - cdc70639-cb9c-4222-a73f-b8ce39f7821b
+      additionalProperties: false
+      type: object
+      title: Error409
     Error400:
       properties:
         type:
@@ -1348,81 +1417,61 @@ components:
       - msg
       - type
       title: ValidationError
-    Error502:
+    HTTPValidationError:
       properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ErrorDetail:
+      properties:
+        location:
+          $ref: '#/components/schemas/ErrorLocation'
+          description: The part of the request where the property can be found that caused the error.
           examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `bad_gateway`
-          default: bad_gateway
+          - body
+        pointer:
+          anyOf:
+          - type: string
+            format: json-pointer
+          - type: string
+          title: Pointer
+          description: A JSON pointer for the particular property that caused the error.
           examples:
-          - bad_gateway
-        status:
-          type: integer
-          title: Status
-          description: Always `502`.
-          default: 502
-          examples:
-          - 502
+          - /currency
         message:
           type: string
           title: Message
-          description: A human readable message that provides more context to the error.
-          default: Request could not be processed
+          description: A human-readdable explanation of the error.
           examples:
-          - Request could not be processed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
+          - 'Unknown ISO 4217 currency code: USX'
+        type:
+          type: string
+          title: Type
+          description: The type of error that was raised for this property.
+          examples:
+          - value_error
       additionalProperties: false
       type: object
-      title: Error502
-    TransactionRefundAllCreate:
-      properties:
-        reason:
-          anyOf:
-          - type: string
-            maxLength: 100
-          - type: 'null'
-          title: Reason
-          description: An optional reason to attach extra context to the refund requests.
-          examples:
-          - Refund due to user request.
-        external_identifier:
-          anyOf:
-          - type: string
-            maxLength: 300
-            minLength: 1
-          - type: 'null'
-          title: External Identifier
-          description: An external identifier that can be used to match the refunds against your own records.
-          examples:
-          - refund-12345
-      additionalProperties: false
-      type: object
-      title: TransactionRefundAllCreate
-    RefundStatus:
+      required:
+      - location
+      - pointer
+      - message
+      - type
+      title: ErrorDetail
+    ErrorLocation:
       type: string
       enum:
-      - processing
-      - succeeded
-      - failed
-      - declined
-      - voided
-      title: RefundStatus
-    Error409:
+      - query
+      - body
+      - path
+      - header
+      - unknown
+      title: ErrorLocation
+    Error405:
       properties:
         type:
           type: string
@@ -1435,73 +1484,24 @@ components:
         code:
           type: string
           title: Code
-          description: Always `duplicate_record`
-          default: duplicate_record
+          description: Always `method_not_allowed`
+          default: method_not_allowed
           examples:
-          - duplicate_record
+          - method_not_allowed
         status:
           type: integer
           title: Status
-          description: Always `409`.
-          default: 409
+          description: Always `405`.
+          default: 405
           examples:
-          - 409
+          - 405
         message:
           type: string
           title: Message
           description: A human readable message that provides more context to the error.
-          default: Generic error
+          default: Method Not Allowed
           examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-        resource_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Resource Id
-          description: The ID of the conflicting resource.
-          examples:
-          - cdc70639-cb9c-4222-a73f-b8ce39f7821b
-      additionalProperties: false
-      type: object
-      title: Error409
-    Error403:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `forbidden`
-          default: forbidden
-          examples:
-          - forbidden
-        status:
-          type: integer
-          title: Status
-          description: Always `403`.
-          default: 403
-          examples:
-          - 403
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
+          - Method Not Allowed
         details:
           items:
             $ref: '#/components/schemas/ErrorDetail'
@@ -1511,7 +1511,7 @@ components:
           default: []
       additionalProperties: false
       type: object
-      title: Error403
+      title: Error405
   securitySchemes:
     OAuth2PasswordBearer:
       type: oauth2

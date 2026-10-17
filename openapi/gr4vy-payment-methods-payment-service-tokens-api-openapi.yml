@@ -461,15 +461,44 @@ components:
       additionalProperties: false
       type: object
       title: Error404
-    ErrorLocation:
-      type: string
-      enum:
-      - query
-      - body
-      - path
-      - header
-      - unknown
-      title: ErrorLocation
+    Error504:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `gateway_timeout`
+          default: gateway_timeout
+          examples:
+          - gateway_timeout
+        status:
+          type: integer
+          title: Status
+          default: 504
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Request could not be processed
+          examples:
+          - Request could not be processed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error504
     Error425:
       properties:
         type:
@@ -511,52 +540,7 @@ components:
       additionalProperties: false
       type: object
       title: Error425
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ErrorDetail:
-      properties:
-        location:
-          $ref: '#/components/schemas/ErrorLocation'
-          description: The part of the request where the property can be found that caused the error.
-          examples:
-          - body
-        pointer:
-          anyOf:
-          - type: string
-            format: json-pointer
-          - type: string
-          title: Pointer
-          description: A JSON pointer for the particular property that caused the error.
-          examples:
-          - /currency
-        message:
-          type: string
-          title: Message
-          description: A human-readdable explanation of the error.
-          examples:
-          - 'Unknown ISO 4217 currency code: USX'
-        type:
-          type: string
-          title: Type
-          description: The type of error that was raised for this property.
-          examples:
-          - value_error
-      additionalProperties: false
-      type: object
-      required:
-      - location
-      - pointer
-      - message
-      - type
-      title: ErrorDetail
-    Error405:
+    Error403:
       properties:
         type:
           type: string
@@ -569,58 +553,17 @@ components:
         code:
           type: string
           title: Code
-          description: Always `method_not_allowed`
-          default: method_not_allowed
+          description: Always `forbidden`
+          default: forbidden
           examples:
-          - method_not_allowed
+          - forbidden
         status:
           type: integer
           title: Status
-          description: Always `405`.
-          default: 405
+          description: Always `403`.
+          default: 403
           examples:
-          - 405
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Method Not Allowed
-          examples:
-          - Method Not Allowed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error405
-    Error429:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `too_many_requests`
-          default: too_many_requests
-          examples:
-          - too_many_requests
-        status:
-          type: integer
-          title: Status
-          description: Always `429`.
-          default: 429
-          examples:
-          - 429
+          - 403
         message:
           type: string
           title: Message
@@ -637,16 +580,7 @@ components:
           default: []
       additionalProperties: false
       type: object
-      title: Error429
-    PaymentMethodStatus:
-      type: string
-      enum:
-      - processing
-      - buyer_approval_required
-      - succeeded
-      - failed
-      - paused
-      title: PaymentMethodStatus
+      title: Error403
     Error500:
       properties:
         type:
@@ -688,160 +622,6 @@ components:
       additionalProperties: false
       type: object
       title: Error500
-    Error504:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `gateway_timeout`
-          default: gateway_timeout
-          examples:
-          - gateway_timeout
-        status:
-          type: integer
-          title: Status
-          default: 504
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Request could not be processed
-          examples:
-          - Request could not be processed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error504
-    PaymentServiceTokenCreate:
-      properties:
-        security_code:
-          anyOf:
-          - type: string
-            maxLength: 4
-            minLength: 3
-            pattern: ^\d+$
-          - type: 'null'
-          title: Security Code
-          description: The 3 or 4 digit security code often found on the card. This often referred to as the CVV or CVD.
-          examples:
-          - '123'
-        payment_service_id:
-          type: string
-          format: uuid
-          title: Payment Service Id
-          description: The ID of the payment method to use.
-          examples:
-          - fffd152a-9532-4087-9a4f-de58754210f0
-        redirect_url:
-          anyOf:
-          - type: string
-          - type: string
-            pattern: ^data:application/json;base64,.*$
-            examples:
-            - data:application/json;base64,eyJ0YXJnZXQiOiAib3BlbmVyIiwgImNoYW5uZWwiOiAiY2hhbm5lbCIsICJvcmlnaW5fdXJsIjogImh0dHBzOi8vZ3I0dnkuYXBwIn0=
-          title: Redirect Url
-          description: The redirect URL to redirect a buyer to after they have authorized the payment method.
-          examples:
-          - https://example.com/callback
-      additionalProperties: false
-      type: object
-      required:
-      - payment_service_id
-      - redirect_url
-      title: PaymentServiceTokenCreate
-    Error400:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `bad_request`
-          default: bad_request
-          examples:
-          - bad_request
-        status:
-          type: integer
-          title: Status
-          description: Always `400`.
-          default: 400
-          examples:
-          - 400
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Generic error
-          examples:
-          - Request failed validation
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error400
-    PaymentServiceTokens:
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/PaymentServiceToken'
-          type: array
-          title: Items
-          description: A list of items returned for this request.
-      type: object
-      required:
-      - items
-      title: PaymentServiceTokens
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     Error502:
       properties:
         type:
@@ -1010,7 +790,7 @@ components:
       additionalProperties: false
       type: object
       title: Error409
-    Error403:
+    Error429:
       properties:
         type:
           type: string
@@ -1023,17 +803,17 @@ components:
         code:
           type: string
           title: Code
-          description: Always `forbidden`
-          default: forbidden
+          description: Always `too_many_requests`
+          default: too_many_requests
           examples:
-          - forbidden
+          - too_many_requests
         status:
           type: integer
           title: Status
-          description: Always `403`.
-          default: 403
+          description: Always `429`.
+          default: 429
           examples:
-          - 403
+          - 429
         message:
           type: string
           title: Message
@@ -1050,7 +830,227 @@ components:
           default: []
       additionalProperties: false
       type: object
-      title: Error403
+      title: Error429
+    Error400:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `bad_request`
+          default: bad_request
+          examples:
+          - bad_request
+        status:
+          type: integer
+          title: Status
+          description: Always `400`.
+          default: 400
+          examples:
+          - 400
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error400
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    PaymentServiceTokenCreate:
+      properties:
+        security_code:
+          anyOf:
+          - type: string
+            maxLength: 4
+            minLength: 3
+            pattern: ^\d+$
+          - type: 'null'
+          title: Security Code
+          description: The 3 or 4 digit security code often found on the card. This often referred to as the CVV or CVD.
+          examples:
+          - '123'
+        payment_service_id:
+          type: string
+          format: uuid
+          title: Payment Service Id
+          description: The ID of the payment method to use.
+          examples:
+          - fffd152a-9532-4087-9a4f-de58754210f0
+        redirect_url:
+          anyOf:
+          - type: string
+          - type: string
+            pattern: ^data:application/json;base64,.*$
+            examples:
+            - data:application/json;base64,eyJ0YXJnZXQiOiAib3BlbmVyIiwgImNoYW5uZWwiOiAiY2hhbm5lbCIsICJvcmlnaW5fdXJsIjogImh0dHBzOi8vZ3I0dnkuYXBwIn0=
+          title: Redirect Url
+          description: The redirect URL to redirect a buyer to after they have authorized the payment method.
+          examples:
+          - https://example.com/callback
+      additionalProperties: false
+      type: object
+      required:
+      - payment_service_id
+      - redirect_url
+      title: PaymentServiceTokenCreate
+    PaymentMethodStatus:
+      type: string
+      enum:
+      - processing
+      - buyer_approval_required
+      - succeeded
+      - failed
+      - paused
+      title: PaymentMethodStatus
+    PaymentServiceTokens:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/PaymentServiceToken'
+          type: array
+          title: Items
+          description: A list of items returned for this request.
+      type: object
+      required:
+      - items
+      title: PaymentServiceTokens
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ErrorDetail:
+      properties:
+        location:
+          $ref: '#/components/schemas/ErrorLocation'
+          description: The part of the request where the property can be found that caused the error.
+          examples:
+          - body
+        pointer:
+          anyOf:
+          - type: string
+            format: json-pointer
+          - type: string
+          title: Pointer
+          description: A JSON pointer for the particular property that caused the error.
+          examples:
+          - /currency
+        message:
+          type: string
+          title: Message
+          description: A human-readdable explanation of the error.
+          examples:
+          - 'Unknown ISO 4217 currency code: USX'
+        type:
+          type: string
+          title: Type
+          description: The type of error that was raised for this property.
+          examples:
+          - value_error
+      additionalProperties: false
+      type: object
+      required:
+      - location
+      - pointer
+      - message
+      - type
+      title: ErrorDetail
+    ErrorLocation:
+      type: string
+      enum:
+      - query
+      - body
+      - path
+      - header
+      - unknown
+      title: ErrorLocation
+    Error405:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `method_not_allowed`
+          default: method_not_allowed
+          examples:
+          - method_not_allowed
+        status:
+          type: integer
+          title: Status
+          description: Always `405`.
+          default: 405
+          examples:
+          - 405
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Method Not Allowed
+          examples:
+          - Method Not Allowed
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error405
   securitySchemes:
     OAuth2PasswordBearer:
       type: oauth2

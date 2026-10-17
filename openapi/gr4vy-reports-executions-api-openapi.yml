@@ -609,6 +609,97 @@ paths:
       x-speakeasy-group: reports.executions
 components:
   schemas:
+    Error401:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `unauthorized`
+          default: unauthorized
+          examples:
+          - unauthorized
+        status:
+          type: integer
+          title: Status
+          description: Always `401`.
+          default: 401
+          examples:
+          - 401
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: No valid API authentication found
+          examples:
+          - No valid API authentication found
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error401
+    ErrorLocation:
+      type: string
+      enum:
+      - query
+      - body
+      - path
+      - header
+      - unknown
+      title: ErrorLocation
+    Error404:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `not_found`
+          default: not_found
+          examples:
+          - not_found
+        status:
+          type: integer
+          title: Status
+          description: Always `404`.
+          default: 404
+          examples:
+          - 404
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: The resource could not be found
+          examples:
+          - The resource could not be found
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error404
     ReportSummary:
       properties:
         type:
@@ -671,28 +762,7 @@ components:
       - merchant_account_id
       - name
       title: ReportSummary
-    ReportExecutionUrl:
-      properties:
-        url:
-          type: string
-          title: Url
-          description: A signed URL to download the report execution file.
-          examples:
-          - https://example.com/download/report.csv?signature=abc123
-        expires_at:
-          type: string
-          format: date-time
-          title: Expires At
-          description: The date and time when the download URL expires.
-          examples:
-          - '2024-06-01T00:00:00.000Z'
-      additionalProperties: false
-      type: object
-      required:
-      - url
-      - expires_at
-      title: ReportExecutionUrl
-    Error401:
+    Error504:
       properties:
         type:
           type: string
@@ -705,24 +775,21 @@ components:
         code:
           type: string
           title: Code
-          description: Always `unauthorized`
-          default: unauthorized
+          description: Always `gateway_timeout`
+          default: gateway_timeout
           examples:
-          - unauthorized
+          - gateway_timeout
         status:
           type: integer
           title: Status
-          description: Always `401`.
-          default: 401
-          examples:
-          - 401
+          default: 504
         message:
           type: string
           title: Message
           description: A human readable message that provides more context to the error.
-          default: No valid API authentication found
+          default: Request could not be processed
           examples:
-          - No valid API authentication found
+          - Request could not be processed
         details:
           items:
             $ref: '#/components/schemas/ErrorDetail'
@@ -732,57 +799,7 @@ components:
           default: []
       additionalProperties: false
       type: object
-      title: Error401
-    Error404:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `not_found`
-          default: not_found
-          examples:
-          - not_found
-        status:
-          type: integer
-          title: Status
-          description: Always `404`.
-          default: 404
-          examples:
-          - 404
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: The resource could not be found
-          examples:
-          - The resource could not be found
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error404
-    ErrorLocation:
-      type: string
-      enum:
-      - query
-      - body
-      - path
-      - header
-      - unknown
-      title: ErrorLocation
+      title: Error504
     ReportExecution:
       properties:
         type:
@@ -835,6 +852,20 @@ components:
       - context
       - report
       title: ReportExecution
+    ReportExecutionUrlGenerate:
+      properties:
+        expires_in:
+          type: integer
+          maximum: 10080.0
+          minimum: 1.0
+          title: Expires In
+          description: The URL expiration time, in minutes.
+          default: 5
+          examples:
+          - 5
+      additionalProperties: false
+      type: object
+      title: ReportExecutionUrlGenerate
     Error425:
       properties:
         type:
@@ -876,61 +907,7 @@ components:
       additionalProperties: false
       type: object
       title: Error425
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ReportExecutionStatus:
-      type: string
-      enum:
-      - dispatched
-      - failed
-      - pending
-      - processing
-      - succeeded
-      title: ReportExecutionStatus
-    ErrorDetail:
-      properties:
-        location:
-          $ref: '#/components/schemas/ErrorLocation'
-          description: The part of the request where the property can be found that caused the error.
-          examples:
-          - body
-        pointer:
-          anyOf:
-          - type: string
-            format: json-pointer
-          - type: string
-          title: Pointer
-          description: A JSON pointer for the particular property that caused the error.
-          examples:
-          - /currency
-        message:
-          type: string
-          title: Message
-          description: A human-readdable explanation of the error.
-          examples:
-          - 'Unknown ISO 4217 currency code: USX'
-        type:
-          type: string
-          title: Type
-          description: The type of error that was raised for this property.
-          examples:
-          - value_error
-      additionalProperties: false
-      type: object
-      required:
-      - location
-      - pointer
-      - message
-      - type
-      title: ErrorDetail
-    Error405:
+    Error403:
       properties:
         type:
           type: string
@@ -943,72 +920,17 @@ components:
         code:
           type: string
           title: Code
-          description: Always `method_not_allowed`
-          default: method_not_allowed
+          description: Always `forbidden`
+          default: forbidden
           examples:
-          - method_not_allowed
+          - forbidden
         status:
           type: integer
           title: Status
-          description: Always `405`.
-          default: 405
+          description: Always `403`.
+          default: 403
           examples:
-          - 405
-        message:
-          type: string
-          title: Message
-          description: A human readable message that provides more context to the error.
-          default: Method Not Allowed
-          examples:
-          - Method Not Allowed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
-      additionalProperties: false
-      type: object
-      title: Error405
-    ReportExecutionUrlGenerate:
-      properties:
-        expires_in:
-          type: integer
-          maximum: 10080.0
-          minimum: 1.0
-          title: Expires In
-          description: The URL expiration time, in minutes.
-          default: 5
-          examples:
-          - 5
-      additionalProperties: false
-      type: object
-      title: ReportExecutionUrlGenerate
-    Error429:
-      properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `too_many_requests`
-          default: too_many_requests
-          examples:
-          - too_many_requests
-        status:
-          type: integer
-          title: Status
-          description: Always `429`.
-          default: 429
-          examples:
-          - 429
+          - 403
         message:
           type: string
           title: Message
@@ -1025,7 +947,7 @@ components:
           default: []
       additionalProperties: false
       type: object
-      title: Error429
+      title: Error403
     Error500:
       properties:
         type:
@@ -1067,7 +989,34 @@ components:
       additionalProperties: false
       type: object
       title: Error500
-    Error504:
+    ReportExecutionUrl:
+      properties:
+        url:
+          type: string
+          title: Url
+          description: A signed URL to download the report execution file.
+          examples:
+          - https://example.com/download/report.csv?signature=abc123
+        expires_at:
+          type: string
+          format: date-time
+          title: Expires At
+          description: The date and time when the download URL expires.
+          examples:
+          - '2024-06-01T00:00:00.000Z'
+      additionalProperties: false
+      type: object
+      required:
+      - url
+      - expires_at
+      title: ReportExecutionUrl
+    ReportCreatorType:
+      type: string
+      enum:
+      - user
+      - private_key
+      title: ReportCreatorType
+    Error502:
       properties:
         type:
           type: string
@@ -1080,14 +1029,17 @@ components:
         code:
           type: string
           title: Code
-          description: Always `gateway_timeout`
-          default: gateway_timeout
+          description: Always `bad_gateway`
+          default: bad_gateway
           examples:
-          - gateway_timeout
+          - bad_gateway
         status:
           type: integer
           title: Status
-          default: 504
+          description: Always `502`.
+          default: 502
+          examples:
+          - 502
         message:
           type: string
           title: Message
@@ -1104,7 +1056,69 @@ components:
           default: []
       additionalProperties: false
       type: object
-      title: Error504
+      title: Error502
+    ReportExecutionContext:
+      properties:
+        reference_timestamp:
+          type: string
+          format: date-time
+          title: Reference Timestamp
+          description: The reference timestamp for the report execution context.
+          examples:
+          - '2024-05-30T12:34:56.000Z'
+        reference_timezone:
+          type: string
+          title: Reference Timezone
+          description: The reference timezone for the report execution context.
+          examples:
+          - UTC
+      additionalProperties: false
+      type: object
+      required:
+      - reference_timestamp
+      - reference_timezone
+      title: ReportExecutionContext
+    Error429:
+      properties:
+        type:
+          type: string
+          const: error
+          title: Type
+          description: Always `error`.
+          default: error
+          examples:
+          - error
+        code:
+          type: string
+          title: Code
+          description: Always `too_many_requests`
+          default: too_many_requests
+          examples:
+          - too_many_requests
+        status:
+          type: integer
+          title: Status
+          description: Always `429`.
+          default: 429
+          examples:
+          - 429
+        message:
+          type: string
+          title: Message
+          description: A human readable message that provides more context to the error.
+          default: Generic error
+          examples:
+          - Request failed validation
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: A list of details that further ellaborate on the error.
+          default: []
+      additionalProperties: false
+      type: object
+      title: Error429
     Error400:
       properties:
         type:
@@ -1172,47 +1186,102 @@ components:
       - msg
       - type
       title: ValidationError
-    Error502:
+    ReportExecutions:
       properties:
-        type:
-          type: string
-          const: error
-          title: Type
-          description: Always `error`.
-          default: error
-          examples:
-          - error
-        code:
-          type: string
-          title: Code
-          description: Always `bad_gateway`
-          default: bad_gateway
-          examples:
-          - bad_gateway
-        status:
+        items:
+          items:
+            $ref: '#/components/schemas/ReportExecution'
+          type: array
+          title: Items
+          description: A list of items returned for this request.
+        limit:
           type: integer
-          title: Status
-          description: Always `502`.
-          default: 502
+          maximum: 100.0
+          minimum: 1.0
+          title: Limit
+          description: The number of items for this page.
+          default: 20
           examples:
-          - 502
+          - 20
+        next_cursor:
+          anyOf:
+          - type: string
+            maxLength: 1000
+            minLength: 1
+          - type: 'null'
+          title: Next Cursor
+          description: The cursor pointing at the next page of items.
+          examples:
+          - ZXhhbXBsZTE
+        previous_cursor:
+          anyOf:
+          - type: string
+            maxLength: 1000
+            minLength: 1
+          - type: 'null'
+          title: Previous Cursor
+          description: The cursor pointing at the previous page of items.
+          examples:
+          - Xkjss7asS
+      additionalProperties: false
+      type: object
+      required:
+      - items
+      title: ReportExecutions
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ReportExecutionStatus:
+      type: string
+      enum:
+      - dispatched
+      - failed
+      - pending
+      - processing
+      - succeeded
+      title: ReportExecutionStatus
+    ErrorDetail:
+      properties:
+        location:
+          $ref: '#/components/schemas/ErrorLocation'
+          description: The part of the request where the property can be found that caused the error.
+          examples:
+          - body
+        pointer:
+          anyOf:
+          - type: string
+            format: json-pointer
+          - type: string
+          title: Pointer
+          description: A JSON pointer for the particular property that caused the error.
+          examples:
+          - /currency
         message:
           type: string
           title: Message
-          description: A human readable message that provides more context to the error.
-          default: Request could not be processed
+          description: A human-readdable explanation of the error.
           examples:
-          - Request could not be processed
-        details:
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-          title: Details
-          description: A list of details that further ellaborate on the error.
-          default: []
+          - 'Unknown ISO 4217 currency code: USX'
+        type:
+          type: string
+          title: Type
+          description: The type of error that was raised for this property.
+          examples:
+          - value_error
       additionalProperties: false
       type: object
-      title: Error502
+      required:
+      - location
+      - pointer
+      - message
+      - type
+      title: ErrorDetail
     Error409:
       properties:
         type:
@@ -1262,7 +1331,7 @@ components:
       additionalProperties: false
       type: object
       title: Error409
-    Error403:
+    Error405:
       properties:
         type:
           type: string
@@ -1275,24 +1344,24 @@ components:
         code:
           type: string
           title: Code
-          description: Always `forbidden`
-          default: forbidden
+          description: Always `method_not_allowed`
+          default: method_not_allowed
           examples:
-          - forbidden
+          - method_not_allowed
         status:
           type: integer
           title: Status
-          description: Always `403`.
-          default: 403
+          description: Always `405`.
+          default: 405
           examples:
-          - 403
+          - 405
         message:
           type: string
           title: Message
           description: A human readable message that provides more context to the error.
-          default: Generic error
+          default: Method Not Allowed
           examples:
-          - Request failed validation
+          - Method Not Allowed
         details:
           items:
             $ref: '#/components/schemas/ErrorDetail'
@@ -1302,76 +1371,7 @@ components:
           default: []
       additionalProperties: false
       type: object
-      title: Error403
-    ReportExecutionContext:
-      properties:
-        reference_timestamp:
-          type: string
-          format: date-time
-          title: Reference Timestamp
-          description: The reference timestamp for the report execution context.
-          examples:
-          - '2024-05-30T12:34:56.000Z'
-        reference_timezone:
-          type: string
-          title: Reference Timezone
-          description: The reference timezone for the report execution context.
-          examples:
-          - UTC
-      additionalProperties: false
-      type: object
-      required:
-      - reference_timestamp
-      - reference_timezone
-      title: ReportExecutionContext
-    ReportCreatorType:
-      type: string
-      enum:
-      - user
-      - private_key
-      title: ReportCreatorType
-    ReportExecutions:
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/ReportExecution'
-          type: array
-          title: Items
-          description: A list of items returned for this request.
-        limit:
-          type: integer
-          maximum: 100.0
-          minimum: 1.0
-          title: Limit
-          description: The number of items for this page.
-          default: 20
-          examples:
-          - 20
-        next_cursor:
-          anyOf:
-          - type: string
-            maxLength: 1000
-            minLength: 1
-          - type: 'null'
-          title: Next Cursor
-          description: The cursor pointing at the next page of items.
-          examples:
-          - ZXhhbXBsZTE
-        previous_cursor:
-          anyOf:
-          - type: string
-            maxLength: 1000
-            minLength: 1
-          - type: 'null'
-          title: Previous Cursor
-          description: The cursor pointing at the previous page of items.
-          examples:
-          - Xkjss7asS
-      additionalProperties: false
-      type: object
-      required:
-      - items
-      title: ReportExecutions
+      title: Error405
   securitySchemes:
     OAuth2PasswordBearer:
       type: oauth2

@@ -54,56 +54,6 @@ paths:
                 $ref: '#/components/schemas/Error401Unauthorized'
 components:
   schemas:
-    PaymentMethodDefinitions:
-      title: Payment Method Definitions
-      type: object
-      description: A list of available payment method definitions.
-      x-tags:
-      - Payment Method Definitions
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/PaymentMethodDefinition'
-    Error401Unauthorized:
-      title: Unauthorized Error
-      type: object
-      description: Unauthorized Error (HTTP 401).
-      x-tags:
-      - Errors
-      properties:
-        type:
-          type: string
-          description: '`error`.'
-          enum:
-          - error
-          example: error
-        code:
-          type: string
-          description: '`unauthorized`.'
-          example: unauthorized
-          enum:
-          - unauthorized
-        status:
-          type: integer
-          description: '`401`.'
-          example: 401
-          enum:
-          - 401
-        message:
-          type: string
-          description: No valid API authentication found.
-          example: No valid API authentication found
-          enum:
-          - No valid API authentication found
-        details:
-          type: array
-          description: 'A list of detail objects that further clarify the reason for the error.
-
-            Not every error supports more detail.'
-          example: []
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
     PaymentMethodDefinition:
       title: Payment Method Definition
       type: object
@@ -163,6 +113,56 @@ components:
           type: string
           example: field required
           description: A human readable message for this error detail.
+    Error401Unauthorized:
+      title: Unauthorized Error
+      type: object
+      description: Unauthorized Error (HTTP 401).
+      x-tags:
+      - Errors
+      properties:
+        type:
+          type: string
+          description: '`error`.'
+          enum:
+          - error
+          example: error
+        code:
+          type: string
+          description: '`unauthorized`.'
+          example: unauthorized
+          enum:
+          - unauthorized
+        status:
+          type: integer
+          description: '`401`.'
+          example: 401
+          enum:
+          - 401
+        message:
+          type: string
+          description: No valid API authentication found.
+          example: No valid API authentication found
+          enum:
+          - No valid API authentication found
+        details:
+          type: array
+          description: 'A list of detail objects that further clarify the reason for the error.
+
+            Not every error supports more detail.'
+          example: []
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    PaymentMethodDefinitions:
+      title: Payment Method Definitions
+      type: object
+      description: A list of available payment method definitions.
+      x-tags:
+      - Payment Method Definitions
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentMethodDefinition'
   securitySchemes:
     bearerAuth:
       type: http
