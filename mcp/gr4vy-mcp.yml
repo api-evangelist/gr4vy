@@ -2,11 +2,12 @@ generated: '2026-09-20'
 method: probed
 status: live
 source: https://docs.gr4vy.com/mcp
-description: Gr4vy serves a hosted, unauthenticated documentation MCP server (Mintlify-hosted) on its docs host.
-  It exposes search and read-only filesystem retrieval over the published docs plus a feedback tool; it does NOT
-  execute payment operations. The docs also carry a guide for building your own ChatGPT-app MCP server on top of
-  Gr4vy (https://docs.gr4vy.com/guides/payments/chatgpt-app/mcp-server) and two sample agentic-commerce repos (gr4vy/gr4vy-python-adk,
-  gr4vy/gr4vy-typescript-adk), none of which is a Gr4vy-hosted payments MCP.
+description: Gr4vy serves a hosted, unauthenticated documentation MCP server (Mintlify-hosted) on its
+  docs host. It exposes search and read-only filesystem retrieval over the published docs plus a feedback
+  tool; it does NOT execute payment operations. The docs also carry a guide for building your own ChatGPT-app
+  MCP server on top of Gr4vy (https://docs.gr4vy.com/guides/payments/chatgpt-app/mcp-server) and two sample
+  agentic-commerce repos (gr4vy/gr4vy-python-adk, gr4vy/gr4vy-typescript-adk), none of which is a Gr4vy-hosted
+  payments MCP.
 server:
   name: Gr4vy
   version: 1.0.0
@@ -17,17 +18,18 @@ server:
 tools:
 - name: search_gr4vy
   title: Search documentation
-  description: Search across the Gr4vy knowledge base to find relevant information, code examples, API references,
-    and guides. Use this tool when you need to answer questions about Gr4vy, find specific documentation, understand
-    how features work, or locate implementation details. The search returns contextual content with titles and direct
-    links to the documentation pages. If you need the full content of a speci
+  description: Search across the Gr4vy knowledge base to find relevant information, code examples, API
+    references, and guides. Use this tool when you need to answer questions about Gr4vy, find specific
+    documentation, understand how features work, or locate implementation details. The search returns
+    contextual content with titles and direct links to the documentation pages. If you need the full content
+    of a speci
   input_schema_file: mcp/gr4vy-mcp-tools-list.json
 - name: query_docs_filesystem_gr4vy
   title: null
-  description: 'Run a read-only shell-like query against a virtualized, in-memory filesystem rooted at `/` that
-    contains ONLY the Gr4vy documentation pages and OpenAPI specs. This is NOT a shell on any real machine — nothing
-    runs on the user''s computer, the server host, or any network. The filesystem is a sandbox backed by documentation
-    chunks.
+  description: 'Run a read-only shell-like query against a virtualized, in-memory filesystem rooted at
+    `/` that contains ONLY the Gr4vy documentation pages and OpenAPI specs. This is NOT a shell on any
+    real machine — nothing runs on the user''s computer, the server host, or any network. The filesystem
+    is a sandbox backed by documentation chunks.
 
 
     This is how you read documentation pages: there is no separate "get '
@@ -35,8 +37,9 @@ tools:
 - name: submit_feedback
   title: Submit documentation feedback
   description: Report a problem with this documentation site so the docs team can fix it. Use when a documentation
-    page is incorrect, outdated, confusing, incomplete, or has a broken example. This is for feedback about the
-    documentation content itself — not for product support requests or feedback about this tool or assistant.
+    page is incorrect, outdated, confusing, incomplete, or has a broken example. This is for feedback
+    about the documentation content itself — not for product support requests or feedback about this tool
+    or assistant.
   input_schema_file: mcp/gr4vy-mcp-tools-list.json
 resources:
 - name: gr4vy
@@ -52,3 +55,28 @@ deployment:
   probe: POST tools/list -> HTTP 200 text/event-stream, 3 tools with inputSchema; GET -> HTTP 200 application/json
     server descriptor
   checked: '2026-09-20'
+tool_quality:
+  tool_count: 3
+  tokens_total: 1456
+  tokens_per_tool_median: 237
+  heavy_tools: []
+  heavy_tool_count: 0
+  params_total: 4
+  params_undescribed: 0
+  params_described_pct: 100.0
+  tools_with_undescribed_params: 0
+  tools_annotated: 3
+  annotated_pct: 100.0
+  state_changing_unhinted: []
+  tools_missing_schema: 0
+  short_descriptions: 0
+  duplicate_descriptions: 0
+  duplicate_names: 0
+  nonportable_names: []
+  output_schema_count: 0
+  token_estimate: chars/3.6 of each compact tool definition
+  source: mcp/gr4vy-mcp-tools-list.json
+  measured: '2026-10-20'
+  scored: false
+  note: Facts from the saved tools/list capture (mcp_tool_quality.py); recorded, not scored. Checks learned
+    from Glimind's agent-readiness audit.
