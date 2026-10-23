@@ -851,3 +851,9 @@ components:
 x-refined-from:
 - gr4vy-docs-v1-openapi.json
 - gr4vy-openapi.json
+x-provenance:
+  method: harvested
+  publisher: Gr4vy
+  source: https://raw.githubusercontent.com/gr4vy/gr4vy-openapi/HEAD/openapi.json
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)

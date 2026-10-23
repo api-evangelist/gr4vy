@@ -1465,3 +1465,9 @@ components:
             sessions.write: Write Sessions
             users.write: Write Users
           tokenUrl: auth/token
+x-provenance:
+  method: harvested
+  publisher: Gr4vy
+  source: https://raw.githubusercontent.com/gr4vy/gr4vy-openapi/HEAD/openapi.json
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)
