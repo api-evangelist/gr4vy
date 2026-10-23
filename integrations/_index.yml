@@ -202,3 +202,34 @@
   relationship: platform-app
   status: not-a-workflow
   arazzo: null
+- slug: gr4vy-packagist
+  label: Packagist
+  partner: packagist
+  partner_name: Packagist
+  category: official SDK (PHP)
+  type: register
+  channel: package-registry
+  evidence: https://packagist.org/packages/gr4vy/gr4vy-php
+  source: edge
+  relationship: distribution-channel
+  contract_reference:
+    register: Packagist (public registry JSON)
+    spec_file: null
+    language: PHP
+    packages:
+    - name: gr4vy/gr4vy-php
+      version: v1.7.33
+      released: '2026-10-08'
+      released_field: time
+      lapsed: false
+      page: https://packagist.org/packages/gr4vy/gr4vy-php
+      repo_leg: github-org:gr4vy
+      publisher_leg: org:gr4vy
+      matched_by: github-org
+    current: true
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-php-dart-elixir-package-registries.py
+    detected: '2026-10-22'
+  status: not-a-workflow
+  arazzo: null
